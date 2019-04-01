@@ -34,3 +34,10 @@ export const SLEEP_LOADED = ItemTypes.SLEEP + '_LOADED';
 export const SLEEP_FAILED = ItemTypes.SLEEP + '_FAILED'; 
 export const SLEEP_DELETEFAILED = ItemTypes.SLEEP + '_DELETEFAILED'; 
 export const SLEEP_DELETESUCCEEDED = ItemTypes.SLEEP + '_DELETESUCCEEDED';
+
+export const ALLITEMS_LOADING = ItemTypes.ALLITEMS + '_LOADING'; 
+export const ALLITEMS_LOADED = ItemTypes.ALLITEMS + '_LOADED'; 
+export const ALLITEMS_FAILED = ItemTypes.ALLITEMS + '_FAILED'; 
+
+export const COMPONENTSTATE_LOAD = 'COMPONENTSTATE_LOAD'; 
+export const COMPONENTSTATE_UPDATE = 'COMPONENTSTATE_UPDATE'; 

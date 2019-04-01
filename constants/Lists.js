@@ -1,13 +1,25 @@
-export const moodRatingIcons = [
-    { name: 'Yay', icon: 'smile-o', color: '#ff9a55' },
-    { name: 'Meh', icon: 'meh-o', color: '#009898' },
-    { name: 'Boo', icon: 'frown-o', color: '#517fa4' }
-];
 
-export const homeScreenItems = [
-    { title: 'Gratitudes', navigatoTo: 'Gratitude', image: require('../assets/images/gratitudes.jpg') }
-    ,{ title: 'Dreams', navigatoTo: 'Dream', image: require('../assets/images/dreams.jpg') }
-    ,{ title: 'Moods', navigatoTo: 'Mood', image: require('../assets/images/mood.jpg') }
-    ,{ title: 'Sleep', navigatoTo: 'Sleep', image: require('../assets/images/sleep.jpg') }
-    ,{ title: 'Notes', navigatoTo: 'Note', image: require('../assets/images/notes.jpg') }
-];
+import * as ItemTypes from '../constants/ItemTypes';
+
+export const widgetConfig = {
+  [ItemTypes.MOOD]:
+  {
+    itemTypeName: ItemTypes.MOOD, historyScreenName: 'MoodHistory', color: '#f0ad4e', multiItem: true
+  },
+  [ItemTypes.SLEEP]:
+  {
+    itemTypeName: ItemTypes.SLEEP, historyScreenName: 'SleepHistory', color: '#9F86FF'
+  },
+  [ItemTypes.GRATITUDE]:
+  {
+    itemTypeName: ItemTypes.GRATITUDE, historyScreenName: 'GratitudeHistory', color: '#1BC98E', multiItem: true
+  },
+  [ItemTypes.DREAM]:
+  {
+    itemTypeName: ItemTypes.DREAM, historyScreenName: 'DreamHistory', color: '#E4D836'
+  },
+  [ItemTypes.NOTE]:
+  {
+    itemTypeName: ItemTypes.NOTE, historyScreenName: 'NoteHistory', color: '#1997c6'
+  }
+}

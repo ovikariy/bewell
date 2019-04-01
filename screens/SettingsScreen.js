@@ -1,25 +1,23 @@
 import React from 'react';
 import { ScrollView, SectionList, Image, StyleSheet, Text, View } from 'react-native';
-import { HeaderOptions } from '../constants/Constants';
 import { Constants } from 'expo';
 import { styles } from '../assets/styles/style';
-import { ScreenContainer } from '../components/ScreenContainer';
+import { ScreenBackground, ScreenContent, ScreenActions } from '../components/ScreenComponents';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
-    title: 'app.json',
-    ...HeaderOptions
+    title: 'Settings'
   };
 
   render() {
     /* Go ahead and delete ExpoConfigView and replace it with your
      * content, we just wanted to give you a quick view of your config */
     return (
-      <ScreenContainer imageBackgroundSource={require('../assets/images/home.jpg')}>
-        <ScrollView style={styles.screenBody}>
+      <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
+        <ScreenContent isKeyboardAvoidingView={true}>
           <ExpoConfigView />
-        </ScrollView>
-      </ScreenContainer>
+        </ScreenContent>
+      </ScreenBackground>
     )
   }
 }

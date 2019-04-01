@@ -3,7 +3,8 @@ we can re-use the reducers  */
 
 import { AsyncStorage } from "react-native";
 import * as constants from '../constants/Constants';
-
+import * as ItemTypes from '../constants/ItemTypes';
+import { widgetConfig } from '../constants/Lists';
 
 export const itemsLoading = (itemTypeName) => ({
     type: itemTypeName + '_LOADING'
@@ -30,7 +31,7 @@ export const loadItems = (itemTypeName = '') => (dispatch) => {
 }
 
 export const postItem = (itemTypeName, item) => (dispatch) => {
-    dispatch(postItems(itemTypeName, [ item ]));
+    dispatch(postItems(itemTypeName, [item]));
 }
 
 export const postItems = (itemTypeName, newItems) => (dispatch) => {
@@ -39,7 +40,17 @@ export const postItems = (itemTypeName, newItems) => (dispatch) => {
 
     getItemsFromStorage(itemTypeName)
         .then(oldItems => {
-            setItemsInStorage(itemTypeName, oldItems.concat(newItems))
+
+            /* if item has ID then overwrite, otherwise add */
+            (newItems).forEach(newItem => {
+                const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id == newItem.id);
+                if (oldItemIndex > -1)
+                    oldItems[oldItemIndex] = newItem;
+                else
+                    oldItems.push(newItem);
+            });
+
+            setItemsInStorage(itemTypeName, oldItems)
                 .then(items => {
                     dispatch(loadItems(itemTypeName));
                 }).catch(error => {
@@ -58,8 +69,8 @@ export const deleteItem = (itemTypeName, id) => (dispatch) => {
 
     getItemsFromStorage(itemTypeName)
         .then(items => {
-            const itemsFiltered = items.filter(item => item.id !== id);
-            setItemsInStorage(itemTypeName, itemsFiltered)
+            const itemsWithoutDeleted = items.filter(item => item.id !== id);
+            setItemsInStorage(itemTypeName, itemsWithoutDeleted)
                 .then(() => {
                     dispatch(itemDeleteSucceeded(itemTypeName));
                     dispatch(loadItems(itemTypeName));
@@ -77,13 +88,19 @@ export const deleteItem = (itemTypeName, id) => (dispatch) => {
 getItemsFromStorage = async (itemTypeName) => {
     try {
         if (!itemTypeName)
-            throw(constants.MustSpecifyItemTypeToGet);
-        const existingItems = await AsyncStorage.getItem(itemTypeName);
-        if (existingItems != null) {
-            const item = JSON.parse(existingItems).sort(function (x, y) {
-                return new Date(y.date) - new Date(x.date);
-            });
-            return item;
+            throw (constants.MustSpecifyItemTypeToGet);
+        if (itemTypeName === ItemTypes.ALLITEMS) {
+            const allItemTypes = listAllItemTypes();
+            return await AsyncStorage.multiGet(allItemTypes);
+        }
+        else {
+            const existingItems = await AsyncStorage.getItem(itemTypeName);
+            if (existingItems != null) {
+                const item = JSON.parse(existingItems).sort(function (x, y) {
+                    return new Date(y.date) - new Date(x.date);
+                });
+                return item;
+            }
         }
     } catch (error) {
         console.log(error);
@@ -92,10 +109,29 @@ getItemsFromStorage = async (itemTypeName) => {
     return [];
 }
 
+listAllItemTypes = () => {
+    const itemTypes = [];
+    for (var item in widgetConfig) {
+        itemTypes.push(widgetConfig[item].itemTypeName);
+    };
+    return itemTypes;
+}
+
+getMultiItemsFromStorage = async (itemTypeNames) => {
+    try {
+        if (!itemTypeNames)
+            throw (constants.MustSpecifyItemTypeToGet);
+        return existingItems = await AsyncStorage.multiGet(itemTypeNames);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 setItemsInStorage = async (itemTypeName, items) => {
     try {
         if (!itemTypeName)
-            throw(constants.MustSpecifyItemTypeToSave);        
+            throw (constants.MustSpecifyItemTypeToSave);
         await AsyncStorage.setItem(itemTypeName, JSON.stringify(items));
     } catch (error) {
         console.log(error);

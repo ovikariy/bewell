@@ -3,3 +3,5 @@ export const GRATITUDE = 'GRATITUDE';
 export const NOTE = 'NOTE';
 export const DREAM = 'DREAM';
 export const SLEEP = 'SLEEP';
+
+export const ALLITEMS = 'ALLITEMS';

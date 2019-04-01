@@ -1,7 +1,8 @@
 export default friendlyDate = (date) => {
+    //TODO: test with timezones
     const newDate = new Date(date);
     const newDateShortString = newDate.getFullYear() + newDate.getMonth() + newDate.getDate();
-    const newDateTimeString = newDate.getHours() + ':' + newDate.getMinutes();
+    const newDateTimeString = (newDate.getHours() < 10 ? '0' : '') + newDate.getHours() + ':' + (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
 
     const today = new Date();
     const yesterday = new Date();

@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import { ToastAndroid, View } from 'react-native';
 import * as ItemTypes from '../constants/ItemTypes';
 import ItemHistory from '../components/ItemHistory';
-import { ScreenContainer } from '../components/ScreenContainer';
-import { HeaderOptions } from '../constants/Constants';
-import { styles } from '../assets/styles/style';
+import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
   return {
@@ -15,8 +13,7 @@ const mapStateToProps = state => {
 
 class NoteHistoryScreen extends Component {
   static navigationOptions = {
-    title: 'Note History',
-    ...HeaderOptions
+    title: 'Note History'
   };
 
   constructor(props) {
@@ -28,11 +25,11 @@ class NoteHistoryScreen extends Component {
       ToastAndroid.show(this.props.note.errMess, ToastAndroid.LONG);
 
     return (
-      <ScreenContainer imageBackgroundSource={require('../assets/images/home.jpg')}>
-        <View style={styles.screenBody}>
+      <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
+        <ScreenContent>
           <ItemHistory items={this.props.note.notes} itemType={ItemTypes.NOTE}></ItemHistory>
-        </View>
-      </ScreenContainer>
+        </ScreenContent>
+      </ScreenBackground>
     );
   }
 }

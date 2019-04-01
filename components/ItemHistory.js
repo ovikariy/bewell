@@ -3,11 +3,10 @@ import { Button } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
-import { loadItems, deleteItem } from '../redux/CommonActionCreators';
+import { deleteItem } from '../redux/CommonActionCreators';
 import { View, Text, FlatList, TouchableNativeFeedback, Alert, ToastAndroid } from 'react-native';
 
 const mapDispatchToProps = dispatch => ({
-  loadItems: (itemType) => dispatch(loadItems(itemType)),
   deleteItem: (itemType, id) => dispatch(deleteItem(itemType, id))
 });
 
@@ -17,10 +16,6 @@ class ItemHistory extends Component {
     this.state = {
       selectedHistoryItem: -1
     }
-  }
-  
-  componentDidMount() {
-    this.props.loadItems(this.props.itemType);
   }
 
   handleDeletePress() {
@@ -52,11 +47,13 @@ class ItemHistory extends Component {
   }
 
   renderDeleteButton() {
-    return <Button type='clear' icon={{ name: 'close-circle-outline', type: 'material-community', size: 40 }}
-      onPress={() => { this.handleDeletePress() }}
-    />
+    return <View>
+      <Button type='clear'
+        icon={{ name: 'close-circle-outline', type: 'material-community', size: 40 }}
+        onPress={() => { this.handleDeletePress() }}
+      />
+    </View>
   }
-
   render() {
     const items = this.props.items;
     if (!items || items.length <= 0) {
@@ -73,12 +70,12 @@ class ItemHistory extends Component {
       also can have custom fields to show for items so we allow each screen to customine item display */
       let customItemDisplay;
       if (this.props.renderItem) {
-        customItemDisplay = this.props.renderItem(item);
+        customItemDisplay = this.props.renderItem(item, isSelectedItem);
       }
       else {
         customItemDisplay = <View>
-          <Text style={styles.historyRowTitle}>{friendlyDate(item.date)}</Text>
-          <Text style={styles.historyRowSubtitle}>{item.note}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowTitle, styles.highlightText] : styles.historyRowTitle}>{friendlyDate(item.date)}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowSubtitle, styles.highlightText] : styles.historyRowSubtitle}>{item.note}</Text>
         </View>
       };
 

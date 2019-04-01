@@ -5,10 +5,9 @@ import { Icon } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import * as ItemTypes from '../constants/ItemTypes';
 import ItemHistory from '../components/ItemHistory';
-import { moodRatingIcons } from '../constants/Lists';
+import { moodRatingIcons } from '../constants/Constants';
 import friendlyDate from '../constants/helpers';
-import { ScreenContainer } from '../components/ScreenContainer';
-import { HeaderOptions } from '../constants/Constants';
+import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
   return {
@@ -18,8 +17,7 @@ const mapStateToProps = state => {
 
 class MoodHistoryScreen extends Component {
   static navigationOptions = {
-    title: 'Mood History',
-    ...HeaderOptions
+    title: 'Mood History'
   };
 
   constructor(props) {
@@ -28,25 +26,25 @@ class MoodHistoryScreen extends Component {
 
   render() {
     return (
-      <ScreenContainer imageBackgroundSource={require('../assets/images/home.jpg')}>
-        <View style={styles.screenBody}>
+      <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
+        <ScreenContent>
           <ItemHistory items={this.props.mood.moods} itemType={ItemTypes.MOOD}
-            renderItem={(item) => { return this.renderHistoryItem(item) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
+            renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
-        </View>
-      </ScreenContainer>
+        </ScreenContent>
+      </ScreenBackground>
     );
   }
 
-  renderHistoryItem(item) {
+  renderHistoryItem(item, isSelectedItem) {
     /* custom render item to show mood icon in the row */
     const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
     return (
       <View style={styles.historyRow}>
         <Icon name={ratingIcon.icon} size={40} type='font-awesome' color={ratingIcon.color} />
         <View>
-          <Text style={styles.historyRowTitle}>{friendlyDate(item.date)}</Text>
-          <Text style={styles.historyRowSubtitle}>{item.note}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowTitle, styles.highlightText] : styles.historyRowTitle}>{friendlyDate(item.date)}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowSubtitle, styles.highlightText] : styles.historyRowSubtitle}>{item.note}</Text>
         </View>
       </View>
     );

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import Colors from '../constants/Colors';
-
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MoodScreen from '../screens/MoodScreen';
@@ -16,6 +14,7 @@ import DreamHistoryScreen from '../screens/DreamHistoryScreen';
 import SleepScreen from '../screens/SleepScreen';
 import SleepHistoryScreen from '../screens/SleepHistoryScreen';
 import { TabBarOptions } from '../constants/Constants';
+import { styles, Fonts, Colors } from '../assets/styles/style';
 
 //TODO: popToTop when clicking on tabs (bug: click to record mood then go to Links
 //via bottom tabs then Home via bottom tabs - the stack is at Mood)
@@ -53,7 +52,6 @@ const SleepStack = getStackNavigator({
   SleepHistory: SleepHistoryScreen
 }, 'Sleep', 'moon-o');
 
-
 const NoteStack = getStackNavigator({
   Note: NoteScreen,
   NoteHistory: NoteHistoryScreen
@@ -64,18 +62,34 @@ const SettingsStack = getStackNavigator({
 }, 'More', 'ellipsis-h');
 
 function getStackNavigator(stackItems, tabBarLabel, tabBarIconName) {
-  const stackNavigator = createStackNavigator(stackItems);
-  stackNavigator.navigationOptions = {
-    tabBarLabel: tabBarLabel,
-    tabBarIcon: ({ focused }) => (
-      <Icon
-        type='font-awesome'  /* try type link, material, zocial, etc */
-        name={tabBarIconName}
-        size={26}
-        color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-      />
-    ),
-  };
+  const stackNavigator = createStackNavigator(stackItems,
+    {
+      defaultNavigationOptions: {
+        headerStyle: {
+          borderWidth: 0
+        },
+        headerTitleStyle: {
+          fontFamily: Fonts.heading,
+          fontWeight: 'bold'
+        },
+
+        headerTransparent: true,
+        headerTintColor: Colors.tintColor
+      },
+      headerLayoutPreset: 'center',
+      navigationOptions: {
+        tabBarLabel: tabBarLabel,
+        //tabBarVisible: false,
+        tabBarIcon: ({ focused }) => (
+          <Icon
+            type='font-awesome'  /* default is material but can try type link, material, zocial, etc */
+            name={tabBarIconName}
+            size={26}
+            color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+          />
+        )
+      }
+    });
   return stackNavigator;
 }
 
@@ -90,7 +104,6 @@ export default createBottomTabNavigator({
 },
   {
     tabBarOptions: {
-      resetOnBlur: true,
       ...TabBarOptions
     }
   });
