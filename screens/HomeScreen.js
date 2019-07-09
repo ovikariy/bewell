@@ -5,11 +5,14 @@ import { styles, Colors } from '../assets/styles/style';
 import { ScreenBackground } from '../components/ScreenComponents';
 import { widgetConfig } from '../constants/Lists';
 import { connect } from 'react-redux';
-import * as ItemTypes from '../constants/ItemTypes';
-import { loadItems, postItems } from '../redux/CommonActionCreators';
+import { ItemTypes } from '../constants/Constants';
+import { loadItems, postItems, logStorageData } from '../redux/CommonActionCreators';
 import { RoundIconButton, StyledDatePicker } from '../components/FormFields';
 import WidgetList from '../components/WidgetList';
 import moment from 'moment';
+
+import { AES, enc } from 'crypto-js';
+import * as SecureStore from 'expo-secure-store';
 
 const mapStateToProps = state => {
   return {
@@ -20,12 +23,19 @@ const mapStateToProps = state => {
     dream: state.dream,
     componentState: state.componentState
   }
-}
+} 
 
 const mapDispatchToProps = dispatch => ({
   loadItems: (itemType) => dispatch(loadItems(itemType)),
-  postItems: (itemTypeName, item) => dispatch(postItems(itemTypeName, item))
+  postItems: (itemTypeName, item) => dispatch(postItems(itemTypeName, item)),
+  logStorageData: () => dispatch(logStorageData()) //TODO: this is for debug
 });
+
+export const getFromSecureStore = (key, options) =>
+  SecureStore.getItemAsync(key, options);
+
+export const saveToSecureStore = (key, value, options) =>
+  SecureStore.setItemAsync(key, value, options);
 
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -119,13 +129,13 @@ class HomeScreen extends React.Component {
     const selectedDateString = new Date(date).toLocaleDateString();
 
     const filtered = {};
-    filtered[ItemTypes.MOOD] = this.props.mood.moods.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    filtered[ItemTypes.SLEEP] = this.props.sleep.sleeps.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    filtered[ItemTypes.GRATITUDE] = this.props.gratitude.gratitudes.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    filtered[ItemTypes.DREAM] = this.props.dream.dreams.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    filtered[ItemTypes.NOTE] = this.props.note.notes.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+    filtered[ItemTypes.MOOD] = this.props.mood.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+    filtered[ItemTypes.SLEEP] = this.props.sleep.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+    filtered[ItemTypes.GRATITUDE] = this.props.gratitude.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+    filtered[ItemTypes.DREAM] = this.props.dream.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+    filtered[ItemTypes.NOTE] = this.props.note.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
 
-    return filtered;
+    return filtered; 
   }
 
   selectedDateChanged(newDate) {
@@ -175,6 +185,7 @@ class HomeScreen extends React.Component {
   }
 
   widgetListChanged(newDailyData) {
+    //this.props.logStorageData();  //TODO: key persist:root is loaded with data that remains unencrypted in AsyncStorage while the app is running?
     this.setState({ ...this.state, dailyData: newDailyData });
     this.props.navigation.setParams({ canSave: true });
   }

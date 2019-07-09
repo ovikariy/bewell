@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ToastAndroid, View } from 'react-native';
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
@@ -27,7 +27,7 @@ class DreamHistoryScreen extends Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true}>
-          <ItemHistory items={this.props.dream.dreams} itemType={ItemTypes.DREAM}></ItemHistory>
+          <ItemHistory itemState={this.props.dream} items={this.props.dream.items} itemType={ItemTypes.DREAM}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>
     );

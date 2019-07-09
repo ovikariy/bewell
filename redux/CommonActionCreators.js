@@ -1,10 +1,8 @@
 /* no matter what screen we're on the way it get and saves items are the same so 
 we can re-use the reducers  */
 
-import { AsyncStorage } from "react-native";
-import * as constants from '../constants/Constants';
-import * as ItemTypes from '../constants/ItemTypes';
-import { widgetConfig } from '../constants/Lists';
+import { ErrorCodes, Errors, Messages } from '../constants/Constants';
+import * as StorageHelpers from '../modules/StorageHelpers';
 
 export const itemsLoading = (itemTypeName) => ({
     type: itemTypeName + '_LOADING'
@@ -15,18 +13,36 @@ export const itemsLoaded = (itemTypeName, items) => ({
     payload: items
 })
 
-export const itemDeleteFailed = (itemTypeName) => ({
-    type: itemTypeName + '_DELETEFAILED'
+export const itemDeleteFailed = (itemTypeName, message) => ({
+    type: itemTypeName + '_DELETEFAILED',
+    payload: message
 })
 
 export const itemDeleteSucceeded = (itemTypeName) => ({
-    type: itemTypeName + '_DELETESUCCEEDED'
+    type: itemTypeName + '_DELETESUCCEEDED',
+    payload: Messages.ItemDeleted
 })
 
-export const loadItems = (itemTypeName = '') => (dispatch) => {
+export const loadItems = (itemTypeName) => (dispatch) => {
     dispatch(itemsLoading(itemTypeName));
-    getItemsFromStorage(itemTypeName).then(items => {
-        dispatch(itemsLoaded(itemTypeName, items));
+    loadItemsAsync(itemTypeName)
+        .then((items) => {
+            dispatch(itemsLoaded(itemTypeName, items))
+        })
+        .catch(error => {
+            console.log(error);
+            throw error;
+        })
+}
+
+const loadItemsAsync = async (itemTypeName) => {
+    StorageHelpers.logStorageDataAsync();
+
+    const items = await StorageHelpers.getItemsAndDecryptAsync(itemTypeName);
+    StorageHelpers.logStorageDataAsync();
+
+    return items.sort(function (x, y) {
+        return new Date(y.date) - new Date(x.date);
     });
 }
 
@@ -35,106 +51,57 @@ export const postItem = (itemTypeName, item) => (dispatch) => {
 }
 
 export const postItems = (itemTypeName, newItems) => (dispatch) => {
-    if (!newItems || newItems.length <= 0)
-        throw new Error('Cannot save an empty list');
-
-    getItemsFromStorage(itemTypeName)
-        .then(oldItems => {
-
-            /* if item has ID then overwrite, otherwise add */
-            (newItems).forEach(newItem => {
-                const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id == newItem.id);
-                if (oldItemIndex > -1)
-                    oldItems[oldItemIndex] = newItem;
-                else
-                    oldItems.push(newItem);
-            });
-
-            setItemsInStorage(itemTypeName, oldItems)
-                .then(items => {
-                    dispatch(loadItems(itemTypeName));
-                }).catch(error => {
-                    console.log(error);
-                });
-
-        }).catch(error => {
+    postItemsAsync(itemTypeName, newItems)
+        .then(() => dispatch(loadItems(itemTypeName)))
+        .catch(error => {
             console.log(error);
             throw error;
         })
+}
+const postItemsAsync = async (itemTypeName, newItems) => {
+    if (!newItems || newItems.length <= 0)
+        throw new Error('Cannot save an empty list'); //TODO: take out string into constant
+
+    const oldItems = await StorageHelpers.getItemsAndDecryptAsync(itemTypeName);
+
+    /* if item has ID then overwrite, otherwise add */
+    (newItems).forEach(newItem => {
+        const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id === newItem.id);
+        if (oldItemIndex > -1)
+            oldItems[oldItemIndex] = newItem;
+        else
+            oldItems.push(newItem);
+    });
+
+    await StorageHelpers.setItemsAndEncryptAsync(itemTypeName, oldItems);
 }
 
 export const deleteItem = (itemTypeName, id) => (dispatch) => {
+    deleteItemAsync(itemTypeName, id)
+        .then(() => {
+            dispatch(itemDeleteSucceeded(itemTypeName));
+            dispatch(loadItems(itemTypeName));
+        }).catch(err => {
+            console.log(err);
+            dispatch(itemDeleteFailed(itemTypeName, err.message));
+        });
+}
+
+export const deleteItemAsync = async (itemTypeName, id) => {
     if (!itemTypeName)
-        throw new Error(constants.MustSpecifyItemTypeToDelete);  /* TODO: this exception is not shown on screen, silent */
+        throw new Error(Errors.General + ErrorCodes.MissingItemType1);
 
-    getItemsFromStorage(itemTypeName)
-        .then(items => {
-            const itemsWithoutDeleted = items.filter(item => item.id !== id);
-            setItemsInStorage(itemTypeName, itemsWithoutDeleted)
-                .then(() => {
-                    dispatch(itemDeleteSucceeded(itemTypeName));
-                    dispatch(loadItems(itemTypeName));
-                }).catch(error => {
-                    console.log(error);
-                    dispatch(itemDeleteFailed(itemTypeName));
-                });
+    const oldItems = await StorageHelpers.getItemsAndDecryptAsync(itemTypeName);
+    const itemsWithoutDeleted = oldItems.filter(item => item.id !== id);
 
-        }).catch(error => {
-            console.log(error);
-            throw error;
-        })
+    await StorageHelpers.setItemsAndEncryptAsync(itemTypeName, itemsWithoutDeleted);
 }
 
-getItemsFromStorage = async (itemTypeName) => {
-    try {
-        if (!itemTypeName)
-            throw (constants.MustSpecifyItemTypeToGet);
-        if (itemTypeName === ItemTypes.ALLITEMS) {
-            const allItemTypes = listAllItemTypes();
-            return await AsyncStorage.multiGet(allItemTypes);
-        }
-        else {
-            const existingItems = await AsyncStorage.getItem(itemTypeName);
-            if (existingItems != null) {
-                const item = JSON.parse(existingItems).sort(function (x, y) {
-                    return new Date(y.date) - new Date(x.date);
-                });
-                return item;
-            }
-        }
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-    return [];
+export const logStorageData = () => (dispatch) => {
+    StorageHelpers.logStorageDataAsync().then();
 }
 
-listAllItemTypes = () => {
-    const itemTypes = [];
-    for (var item in widgetConfig) {
-        itemTypes.push(widgetConfig[item].itemTypeName);
-    };
-    return itemTypes;
-}
 
-getMultiItemsFromStorage = async (itemTypeNames) => {
-    try {
-        if (!itemTypeNames)
-            throw (constants.MustSpecifyItemTypeToGet);
-        return existingItems = await AsyncStorage.multiGet(itemTypeNames);
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
 
-setItemsInStorage = async (itemTypeName, items) => {
-    try {
-        if (!itemTypeName)
-            throw (constants.MustSpecifyItemTypeToSave);
-        await AsyncStorage.setItem(itemTypeName, JSON.stringify(items));
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+
+

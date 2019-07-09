@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StatusBar, View } from 'react-native';
+import { Platform, StatusBar, View, Text } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
@@ -11,6 +11,8 @@ import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
+import { runTests } from './modules/Tests'; //TODO: delete this 
+
 const { persistor, store } = ConfigureStore();
 
 export default class App extends React.Component {
@@ -19,6 +21,11 @@ export default class App extends React.Component {
   };
 
   render() {
+    //TODO: delete this 
+    // runTests().then(() => {
+    // });
+    // return (<View><Text>Tests completed</Text></View>);
+
     if (!this.state.isLoadingComplete) {
       return <AppLoading
         startAsync={this._loadResourcesAsync}

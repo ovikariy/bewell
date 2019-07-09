@@ -11,24 +11,27 @@ import NoteHistoryScreen from '../screens/NoteHistoryScreen';
 import GratitudeHistoryScreen from '../screens/GratitudeHistoryScreen';
 import DreamHistoryScreen from '../screens/DreamHistoryScreen';
 import SleepHistoryScreen from '../screens/SleepHistoryScreen';
-import DailyHistoryScreen from '../screens/DailyHistoryScreen';
 import ChartScreen from '../screens/ChartScreen';
+import PasswordScreen from '../screens/PasswordScreen';
+
+const DrawerIcon = (props) => {
+    return <Icon name='menu' containerStyle={{ margin: 16 }}
+    color='white' onPress={() => props.navigation.toggleDrawer()} />
+}
 
 const HomeNavigator = createStackNavigator({
     Home: {
         screen: HomeScreen,
         navigationOptions: ({ navigation }) => ({
             /* show drawer icon is on HomeScreen only */
-            headerLeft: <Icon name='menu' containerStyle={{ margin: 16 }}
-                color='white' onPress={() => navigation.toggleDrawer()} />
+            headerLeft: <DrawerIcon navigation={navigation} />
         })
     },
     GratitudeHistory: { screen: GratitudeHistoryScreen },
     DreamHistory: { screen: DreamHistoryScreen },
     MoodHistory: { screen: MoodHistoryScreen },
     SleepHistory: { screen: SleepHistoryScreen },
-    NoteHistory: { screen: NoteHistoryScreen },
-    DailyHistory: { screen: DailyHistoryScreen }
+    NoteHistory: { screen: NoteHistoryScreen }
 }, {
         initialRouteName: 'Home',
         headerLayoutPreset: 'center',
@@ -38,13 +41,19 @@ const HomeNavigator = createStackNavigator({
     });
 
 const SettingsNavigator = createStackNavigator({
-    Settings: { screen: SettingsScreen }
+    Settings: {
+        screen: SettingsScreen,
+        navigationOptions: ({ navigation }) => ({
+            /* show drawer icon is on initial route only */
+            headerLeft: <DrawerIcon navigation={navigation} />
+        })
+    },
+    Password: { screen: PasswordScreen }
 }, {
+        initialRouteName: 'Settings',
         headerLayoutPreset: 'center',
         defaultNavigationOptions: ({ navigation }) => ({
-            ...DrawerNavOptions,
-            headerLeft: <Icon name='menu' containerStyle={{ margin: 16 }}
-                color='white' onPress={() => navigation.toggleDrawer()} />
+            ...DrawerNavOptions
         })
     });
 
@@ -54,15 +63,14 @@ const ChartsNavigator = createStackNavigator({
         headerLayoutPreset: 'center',
         defaultNavigationOptions: ({ navigation }) => ({
             ...DrawerNavOptions,
-            headerLeft: <Icon name='menu' containerStyle={{ margin: 16 }}
-                color='white' onPress={() => navigation.toggleDrawer()} />
+            headerLeft: <DrawerIcon navigation={navigation} />
         })
     });
 
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
         <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-            <View style={[ styles.logoContainer, { flex: 1, backgroundColor: Colors.darkBackground }]}>
+            <View style={[styles.logoContainer, { flex: 1, backgroundColor: Colors.darkBackground }]}>
                 <Image source={require('../assets/images/logo.png')}
                     style={styles.logoImage} />
             </View>

@@ -28,7 +28,7 @@ class WidgetList extends React.Component {
 
     return (
       <ScrollView>
-        <Animatable.View animation="fadeInUp" duration={2000}>
+        <Animatable.View animation="fadeInUp" duration={500}>
           {widgets}
         </Animatable.View>
       </ScrollView >

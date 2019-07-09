@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ToastAndroid, View } from 'react-native';
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
@@ -27,7 +27,7 @@ class GratitudeHistoryScreen extends Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory items={this.props.gratitude.gratitudes} itemType={ItemTypes.GRATITUDE}></ItemHistory>
+          <ItemHistory itemState={this.props.gratitude} items={this.props.gratitude.items} itemType={ItemTypes.GRATITUDE}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>
     );

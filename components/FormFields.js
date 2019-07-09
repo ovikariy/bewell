@@ -1,13 +1,12 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, ActivityIndicator, View } from 'react-native';
 import { Input, Button, Icon, Badge } from 'react-native-elements';
 import { styles, Fonts, Colors, Size } from '../assets/styles/style';
 import DatePicker from 'react-native-datepicker';
-import { View } from 'react-native-animatable';
 
 export class ParagraphText extends React.Component {
   render() {
-    return <Text style={[this.props.style, styles.text]} {...this.props} />;
+    return <Text {...this.props} style={[styles.text, this.props.style]} />;
   }
 };
 
@@ -98,8 +97,8 @@ export const WidgetHeader = (props) => {
       <TouchableOpacity onPress={() => props.onPress ? props.onPress() : undefined}>
         <ParagraphText style={[styles.widgetTitle]}>{props.title}</ParagraphText>
       </TouchableOpacity>
-      {props.subTitle ? 
-        <ParagraphText style={[styles.widgetSubTitle]}>{props.subTitle}</ParagraphText> : <View />}      
+      {props.subTitle ?
+        <ParagraphText style={[styles.widgetSubTitle]}>{props.subTitle}</ParagraphText> : <View />}
       {props.showWidgetButtons ?
         <WidgetButtons /> : <View />}
       {props.children}
@@ -120,4 +119,14 @@ export const WidgetButtons = (props) => {
         badgeStyle={{ backgroundColor: 'transparent', padding: 7, paddingTop: 7, paddingBottom: 7 }} /> */}
     </View>
   )
-}
+};
+
+/* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent */
+export const Loading = () => {
+  return (
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
+      <Text style={styles.text}>Loading...</Text>
+    </View>
+  );
+};

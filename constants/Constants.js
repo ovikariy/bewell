@@ -1,19 +1,81 @@
 import { styles, Fonts, Colors } from '../assets/styles/style';
 
-export const CannotSaveEmptyItem = 'Cannot save empty item';
-export const MustSpecifyItemTypeToGet = 'Must specify item type to get';
-export const MustSpecifyItemTypeToSave = 'Must specify item type to save';
-export const MustSpecifyItemTypeToDelete = 'Must specify item type to delete';
-export const HistoryItemDeleted = 'History item deleted successfully';
-
-export const SelectItemToDelete = 'Select item to delete';
-export const AreYouSureDeleteThisItemFromHistory = 'Are you sure you wish to delete this item from history?';
-export const DeleteThisItemFromHistory = 'Delete this item from history?';
-
 export const Ok = 'Ok';
 export const Cancel = 'Cancel';
-
 export const Sample = 'Sample';
+
+/* TODO: move the above strings here */
+export const strings = { password: 'password', oldpassword: 'oldpassword', keyPrefix: '@Morning:' };
+
+/* ItemTypes correspond to data keys in storage and will be hashed with DATA ENCRYPTION KEY
+and their values will be encrypted with the DATA ENCRYPTION KEY */
+export const ItemTypes = {
+  MOOD: 'MOOD',
+  GRATITUDE: 'GRATITUDE',
+  NOTE: 'NOTE',
+  DREAM: 'DREAM',
+  SLEEP: 'SLEEP',
+  SETTINGS: 'SETTINGS'
+}
+
+/* In storage we use '@Morning:key' pattern for keys in key/value pairs */
+/* DataEncryptionStoreKey is special as it will not be hashed
+and the value will be encrypted with the user's password. When the user changes password 
+only DataEncryptionStoreKey will have to be re-encrypted in store */
+export const StoreKeys = Object.keys(ItemTypes).map((item) =>  strings.keyPrefix + item);
+export const DataEncryptionStoreKey = strings.keyPrefix + 'DATAENCRYPTIONKEY';
+
+export const Messages = {
+  AreYouSureDeleteThisItemFromHistory: 'Are you sure you wish to delete this item from history?',
+  DeleteThisItemFromHistory: 'Delete this item from history?',
+  SelectItemToDelete: 'Select item to delete',
+  ItemDeleted: 'Item deleted',
+}
+
+export const Errors = {
+  General: 'An error has occurred ',
+  InvalidData: 'Invalid data ',
+  InvalidTypeName: 'Invalid type name',
+  NewPasswordCannotBeBlank: 'New password cannot be blank',
+  ExistingPasswordWrong: 'Existing password invalid'
+}
+
+export const ErrorCodes = {
+  Encrypt1: 'E1001',
+  Encrypt2: 'E1002',
+  Encrypt3: 'E1003',
+  Encrypt4: 'E1004',
+  Encrypt5: 'E1005',
+  Encrypt6: 'E1006',
+  Encrypt7: 'E1007',
+  Encrypt8: 'E1008',
+  Decrypt1: 'D1001',
+  Decrypt2: 'D1002',
+  Decrypt3: 'D1003',
+  Decrypt4: 'D1004',
+  Decrypt5: 'D1005',
+  Decrypt6: 'D1006',
+  Decrypt7: 'D1007',
+  Decrypt8: 'D1008',
+  Decrypt9: 'D1009',
+  Decrypt10: 'D10010',
+  MissingItemType1: 'MIT1001',
+  MissingItemType2: 'MIT1002',
+  MissingKey1: 'MK1001',
+  MissingKey2: 'MK1002',
+  MissingKey3: 'MK1003',
+  MissingKey4: 'MK1004',
+  MissingKey5: 'MK1005',
+  MissingKey6: 'MK1006',
+  MissingItemType4: 'MIT1004',
+  UnableToHashWithoutPassword: 'HH1001',
+  Hash1: 'H1001',
+  Hash2: 'H1002',
+  Storage1: 'S1001',
+  Storage2: 'S1002',
+  Storage3: 'S1003',
+  Storage4: 'S1004'
+}
 
 export const moodRatingIcons = [
   { name: 'Yay', icon: 'mood-happy', color: '#ff9a55' },

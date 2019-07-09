@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollView, Text, View, StyleSheet } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { connect } from 'react-redux';
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 import { loadItems, postItem } from '../redux/CommonActionCreators';
 import moment from 'moment';
 
@@ -37,8 +37,8 @@ class ChartScreen extends React.Component {
 
     for (var i = 1; i < numDays; i++) {
       const date = moment(today).subtract(i, 'days').toDate().toLocaleDateString();
-      const mood = this.props.mood.moods.filter((mood) => new Date(mood.date).toLocaleDateString() == date)[0];
-      const sleep = this.props.sleep.sleeps.filter((sleep) => new Date(sleep.date).toLocaleDateString() == date)[0];
+      const mood = this.props.mood.items.filter((mood) => new Date(mood.date).toLocaleDateString() == date)[0];
+      const sleep = this.props.sleep.items.filter((sleep) => new Date(sleep.date).toLocaleDateString() == date)[0];
       data.push({
         date: date,
         mood: mood ? mood.rating : null,
@@ -147,11 +147,11 @@ class ChartScreen extends React.Component {
     const selectedDateString = new Date(date).toLocaleDateString();
 
     const filtered = {};
-    filtered[ItemTypes.MOOD] = this.props.mood.moods.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.SLEEP] = this.props.sleep.sleeps.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.GRATITUDE] = this.props.gratitude.gratitudes.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.DREAM] = this.props.dream.dreams.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.NOTE] = this.props.note.notes.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
+    filtered[ItemTypes.MOOD] = this.props.mood.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
+    filtered[ItemTypes.SLEEP] = this.props.sleep.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
+    filtered[ItemTypes.GRATITUDE] = this.props.gratitude.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
+    filtered[ItemTypes.DREAM] = this.props.dream.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
+    filtered[ItemTypes.NOTE] = this.props.note.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
 
     return filtered;
   }

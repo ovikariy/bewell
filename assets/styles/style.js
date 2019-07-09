@@ -132,6 +132,12 @@ export const styles = StyleSheet.create({
     marginLeft: 20,
     color: Colors.tintColor
   },
+  historyRowBig: {
+    fontSize: 20,
+    fontWeight: '200',
+    marginLeft: 20,
+    color: Colors.tintColor
+  },
   historyRowSubtitle: {
     fontSize: Fonts.defaultTextSize,
     marginLeft: 20,
@@ -202,8 +208,8 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     paddingTop: 10,
     paddingBottom: 30,
-    borderLeftWidth: 4,
-    borderRadius: 4,
+    borderLeftWidth: 8,
+    borderRadius: 4
   },
   ratingIconContainer: {
     alignContent: 'center', alignItems: 'center',
@@ -212,6 +218,7 @@ export const styles = StyleSheet.create({
     width: 60,
     height: 60,
     padding: 10,
+    paddingTop: 15,
     borderWidth: 0,
   }
 });

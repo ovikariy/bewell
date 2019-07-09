@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
-import { styles } from '../assets/styles/style';
+import { styles, Colors } from '../assets/styles/style';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
 import { deleteItem } from '../redux/CommonActionCreators';
-import { View, Text, FlatList, TouchableNativeFeedback, Alert, ToastAndroid } from 'react-native';
+import { View, Text, FlatList, TouchableNativeFeedback, Alert, ToastAndroid, ActivityIndicator } from 'react-native';
+import { friendlyDate, friendlyTime } from '../constants/helpers';
+import * as Constants from '../constants/Constants';
+import { Loading } from './FormFields';
 
 const mapDispatchToProps = dispatch => ({
   deleteItem: (itemType, id) => dispatch(deleteItem(itemType, id))
@@ -20,15 +23,15 @@ class ItemHistory extends Component {
 
   handleDeletePress() {
     Alert.alert(
-      'Delete this item from history?',
-      'Are you sure you wish to delete this item from history?',
+      Constants.Messages.DeleteThisItemFromHistory,
+      Constants.Messages.AreYouSureDeleteThisItemFromHistory,
       [
         {
-          text: 'Cancel',
-          style: 'cancel'
+          text: Constants.Cancel,
+          style: Constants.Cancel
         },
         {
-          text: 'OK',
+          text: Constants.Ok,
           onPress: () => this.deleteItem()
         }
       ],
@@ -38,12 +41,11 @@ class ItemHistory extends Component {
 
   deleteItem() {
     if (this.state.selectedHistoryItem < 0) {
-      alert("Select item to delete");
+      alert(Constants.Messages.SelectItemToDelete);
       return;
     }
     this.props.deleteItem(this.props.itemType, this.state.selectedHistoryItem);
     this.setState({ selectedHistoryItem: -1 })
-    ToastAndroid.show('Item deleted', ToastAndroid.LONG);
   }
 
   renderDeleteButton() {
@@ -55,10 +57,24 @@ class ItemHistory extends Component {
     </View>
   }
   render() {
+    if (this.props.itemState.isLoading) {
+      return (<Loading />);
+    }
+
+    if (this.props.itemState.errMess) {
+      ToastAndroid.show(this.props.itemState.errMess, ToastAndroid.LONG);
+    }
+
+    if (this.props.itemState.successMess) {
+      ToastAndroid.show(this.props.itemState.successMess, ToastAndroid.LONG);
+    }
+
     const items = this.props.items;
     if (!items || items.length <= 0) {
       return (
-        <View style={{ marginTop: 40, alignItems: "center" }} ><Text>No items to show</Text></View>
+        <View style={{ marginTop: 40, alignItems: "center" }} >
+          <Text style={{ color: Colors.tintColor }}>No items to show</Text>
+        </View>
       );
     }
 
@@ -74,8 +90,12 @@ class ItemHistory extends Component {
       }
       else {
         customItemDisplay = <View>
-          <Text style={isSelectedItem ? [styles.historyRowTitle, styles.highlightText] : styles.historyRowTitle}>{friendlyDate(item.date)}</Text>
-          <Text style={isSelectedItem ? [styles.historyRowSubtitle, styles.highlightText] : styles.historyRowSubtitle}>{item.note}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowTitle, styles.highlightText] : styles.historyRowTitle}>
+            {friendlyDate(item.date)}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowBig, styles.highlightText] : styles.historyRowBig}>
+            {friendlyTime(item.date)}</Text>
+          <Text style={isSelectedItem ? [styles.historyRowSubtitle, styles.highlightText] : styles.historyRowSubtitle}>
+            {item.note}</Text>
         </View>
       };
 
@@ -94,7 +114,7 @@ class ItemHistory extends Component {
 
     return (
       (items && items.length > 0) ?
-        <Animatable.View animation="fadeInUp" duration={2000}>
+        <Animatable.View animation="fadeInUp" duration={500}>
           <FlatList extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
             data={items}
             renderItem={renderItem}

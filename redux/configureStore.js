@@ -6,6 +6,7 @@ import { gratitude } from './gratitudeReducer';
 import { note } from './noteReducer';
 import { dream } from './dreamReducer';
 import { sleep } from './sleepReducer';
+import { security } from './securityReducer';
 import { componentState } from './componentStateReducer';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
@@ -24,10 +25,11 @@ export const ConfigureStore = () => {
             note,
             dream,
             sleep,
+            security,
             componentState
         }),
         applyMiddleware(thunk)
-        // applyMiddleware(thunk, logger)
+        //applyMiddleware(thunk, logger)
     );
 
     const persistor = persistStore(store);

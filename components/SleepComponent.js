@@ -18,26 +18,27 @@ export class SleepComponent extends Component {
     //TODO: validate
     /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
-    const now = new Date();
-    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const selectedDate = new Date(this.props.selectedDate);
+    const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
 
-    let startDatePickedByUser = new Date(Date.parse(now.toLocaleDateString() + ' ' + startDate));
-    if (startDatePickedByUser > now)
-      startDatePickedByUser = new Date(Date.parse(yesterday.toLocaleDateString() + ' ' + startDate));
+    let startDatePickedByUser = new Date(Date.parse(selectedDate.toLocaleDateString() + ' ' + startDate));
+    if (startDatePickedByUser > selectedDate)
+      startDatePickedByUser = new Date(Date.parse(theDayBefore.toLocaleDateString() + ' ' + startDate));
     startDate = startDatePickedByUser.toISOString();
     this.props.onChange({ ...this.props.value, startDate });
   }
 
   onEndDateChange(endDate) {
+    //TODO: BUG: this logic doesn't work when editing time in the past days. see June 30th entry where both start and end are on the same day but end is earlier than start
     //TODO: validate
     /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
-    const now = new Date();
-    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const selectedDate = new Date(this.props.selectedDate);
+    const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
 
-    let endDatePickedByUser = new Date(Date.parse(now.toLocaleDateString() + ' ' + endDate));
-    if (endDatePickedByUser > now)
-      endDatePickedByUser = new Date(Date.parse(yesterday.toLocaleDateString() + ' ' + endDate));
+    let endDatePickedByUser = new Date(Date.parse(selectedDate.toLocaleDateString() + ' ' + endDate));
+    if (endDatePickedByUser > selectedDate)
+      endDatePickedByUser = new Date(Date.parse(theDayBefore.toLocaleDateString() + ' ' + endDate));
     endDate = endDatePickedByUser.toISOString();
     this.props.onChange({ ...this.props.value, endDate });
   }

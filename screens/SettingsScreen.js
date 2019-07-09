@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, SectionList, Image, StyleSheet, Text, View } from 'react-native';
-import { Constants } from 'expo';
+import { ScrollView, SectionList, Image, StyleSheet, Text, View, Button } from 'react-native';
+import Constants from 'expo-constants';
 import { styles } from '../assets/styles/style';
 import { ScreenBackground, ScreenContent, ScreenActions } from '../components/ScreenComponents';
 
@@ -15,7 +15,7 @@ export default class SettingsScreen extends React.Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true}>
-          <ExpoConfigView />
+          <ExpoConfigView navigation={this.props.navigation} />
         </ScreenContent>
       </ScreenBackground>
     )
@@ -26,6 +26,13 @@ class ExpoConfigView extends React.Component {
   render() {
     const { manifest } = Constants;
     const sections = [
+      {
+        data: [{
+          value: <Button title='Configure' onPress={() => { this.props.navigation.navigate('Password') }} />,
+          type: 'component'
+        }],
+        title: 'Data Encryption'
+      },
       { data: [{ value: manifest.sdkVersion }], title: 'sdkVersion' },
       { data: [{ value: manifest.privacy }], title: 'privacy' },
       { data: [{ value: manifest.version }], title: 'version' },
@@ -90,7 +97,15 @@ class ExpoConfigView extends React.Component {
           {item.value && <Color value={item.value} />}
         </SectionContent>
       );
-    } else {
+    }
+    if (item.type === 'component') {
+      return (
+        <SectionContent>
+          {item.value}
+        </SectionContent>
+      );
+    }
+    else {
       return (
         <SectionContent>
           <Text style={styles1.sectionContentText}>

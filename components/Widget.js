@@ -3,7 +3,7 @@ import { View, ScrollView } from 'react-native';
 import { styles, Colors, Size } from '../assets/styles/style';
 import { WidgetHeader } from '../components/FormFields';
 import { widgetConfig } from '../constants/Lists';
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 import { MoodComponent } from '../components/MoodComponent';
 import { SleepComponent } from '../components/SleepComponent';
 import { GratitudeComponent } from '../components/GratitudeComponent';
@@ -80,7 +80,7 @@ class Widget extends React.Component {
     const subTitle = (this.props.dailyData.length > 1) ? ' (' + (index + 1) + ' of ' + this.props.dailyData.length + ') ' : '';
     return (
       <View key={index}
-        style={[styles.widgetContainer, { backgroundColor: widgetConfig.color + '10', borderLeftColor: widgetConfig.color }]}>
+        style={[styles.widgetContainer, { backgroundColor: widgetConfig.color + '10', borderColor: widgetConfig.color }]}>
         <WidgetHeader
           title={widgetConfig.itemTypeName}
           subTitle={subTitle}
@@ -89,6 +89,7 @@ class Widget extends React.Component {
         {
           React.createElement(this.widgetComponents[widgetConfig.itemTypeName], {
             value: dailyData,
+            selectedDate: this.props.selectedDate,
             onChange: (newValue) => {
               this.itemChanged(widgetConfig.itemTypeName, newValue);
             }

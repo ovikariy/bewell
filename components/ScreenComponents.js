@@ -11,7 +11,7 @@ export class ScreenBackground extends React.Component {
       return (
         <ImageBackground
           source={this.props.imageBackgroundSource}
-          style={[{ width: '100%', height: '100%', paddingBottom: 10 }, {...this.props.style}]}>
+          style={[{ width: '100%', height: '100%', paddingBottom: 10 }, { ...this.props.style }]}>
           <View style={[styles.container, styles.screenBackgroundOpacity]}>
             {this.props.children}
           </View>
@@ -20,7 +20,7 @@ export class ScreenBackground extends React.Component {
     }
     else {
       return (
-        <View style={[styles.container, styles.screenBackgroundSolid, {...this.props.style, paddingBottom: 10}]}>
+        <View style={[styles.container, styles.screenBackgroundSolid, { ...this.props.style, paddingBottom: 10 }]}>
           {this.props.children}
         </View>
       )
@@ -34,9 +34,10 @@ export class ScreenContent extends React.Component {
     if (this.props.isKeyboardAvoidingView) {
       return (
         <KeyboardAvoidingView
-          style={styles.screenBody}
+          {...this.props}
+          style={[styles.screenBody, this.props.style]}
           behavior="padding"
-          keyboardVerticalOffset={40}
+          keyboardVerticalOffset={this.props.keyboardVerticalOffset ? this.props.keyboardVerticalOffset : 40}
           enabled
         >
           <ScrollView>
@@ -47,7 +48,10 @@ export class ScreenContent extends React.Component {
     }
     else {
       return (
-        <View style={styles.screenBody}>
+        <View
+          {...this.props}
+          style={[styles.screenBody, this.props.style]}
+        >
           {this.props.children}
         </View>
       )

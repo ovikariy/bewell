@@ -1,5 +1,5 @@
 
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 
 export const widgetConfig = {
   [ItemTypes.MOOD]:

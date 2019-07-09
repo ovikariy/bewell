@@ -1,4 +1,4 @@
-import * as ItemTypes from '../constants/ItemTypes';
+import { ItemTypes } from '../constants/Constants';
 
 export const ADD_MOOD = 'ADD_' + ItemTypes.MOOD; 
 export const MOOD_LOADING = ItemTypes.MOOD + '_LOADING'; 
@@ -35,9 +35,10 @@ export const SLEEP_FAILED = ItemTypes.SLEEP + '_FAILED';
 export const SLEEP_DELETEFAILED = ItemTypes.SLEEP + '_DELETEFAILED'; 
 export const SLEEP_DELETESUCCEEDED = ItemTypes.SLEEP + '_DELETESUCCEEDED';
 
-export const ALLITEMS_LOADING = ItemTypes.ALLITEMS + '_LOADING'; 
-export const ALLITEMS_LOADED = ItemTypes.ALLITEMS + '_LOADED'; 
-export const ALLITEMS_FAILED = ItemTypes.ALLITEMS + '_FAILED'; 
-
 export const COMPONENTSTATE_LOAD = 'COMPONENTSTATE_LOAD'; 
 export const COMPONENTSTATE_UPDATE = 'COMPONENTSTATE_UPDATE'; 
+
+export const PASSWORD_PROCESSING = 'PASSWORD_PROCESSING'; 
+export const PASSWORD_FAILED = 'PASSWORD_FAILED'; 
+export const PASSWORD_SUCCEEDED = 'PASSWORD_SUCCEEDED'; 
+export const MESSAGES_CLEARED = 'MESSAGES_CLEARED'; 
