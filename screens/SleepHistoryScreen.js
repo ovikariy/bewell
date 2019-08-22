@@ -12,7 +12,7 @@ import moment  from 'moment';
 
 const mapStateToProps = state => {
   return {
-    sleep: state.sleep
+    [ItemTypes.SLEEP]: state[ItemTypes.SLEEP]
   }
 }
 
@@ -29,7 +29,7 @@ class SleepHistoryScreen extends Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory itemState={this.props.sleep} items={this.props.sleep.items} itemType={ItemTypes.SLEEP}
+          <ItemHistory itemState={this.props[ItemTypes.SLEEP]} items={this.props[ItemTypes.SLEEP].items} itemType={ItemTypes.SLEEP}
             renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
         </ScreenContent>
@@ -39,7 +39,6 @@ class SleepHistoryScreen extends Component {
 
   renderHistoryItem(item, isSelectedItem) {
     /* custom render item to show sleep icon in the row */
-    /* TODO: custom sleep icons */
     const ratingIcon = sleepRatingIcons[item.rating] ? sleepRatingIcons[item.rating] : {};
     return (
       <View style={styles.historyRow}>

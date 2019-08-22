@@ -7,7 +7,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 
 const mapStateToProps = state => {
   return {
-    dream: state.dream
+    [ItemTypes.DREAM]: state[ItemTypes.DREAM]
   }
 }
 
@@ -21,13 +21,10 @@ class DreamHistoryScreen extends Component {
   }
 
   render() {
-    if (this.props.dream.errMess)
-      ToastAndroid.show(this.props.dream.errMess, ToastAndroid.LONG);
-
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true}>
-          <ItemHistory itemState={this.props.dream} items={this.props.dream.items} itemType={ItemTypes.DREAM}></ItemHistory>
+          <ItemHistory itemState={this.props[ItemTypes.DREAM]} items={this.props[ItemTypes.DREAM].items} itemType={ItemTypes.DREAM}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>
     );

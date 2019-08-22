@@ -8,14 +8,14 @@ export const Sample = 'Sample';
 export const strings = { password: 'password', oldpassword: 'oldpassword', keyPrefix: '@Morning:' };
 
 /* ItemTypes correspond to data keys in storage and will be hashed with DATA ENCRYPTION KEY
-and their values will be encrypted with the DATA ENCRYPTION KEY */
+and their values will be encrypted with the DATA ENCRYPTION KEY; 
+These are only for widgets and not to be used for other storage items */
 export const ItemTypes = {
   MOOD: 'MOOD',
   GRATITUDE: 'GRATITUDE',
   NOTE: 'NOTE',
   DREAM: 'DREAM',
-  SLEEP: 'SLEEP',
-  SETTINGS: 'SETTINGS'
+  SLEEP: 'SLEEP'
 }
 
 /* In storage we use '@Morning:key' pattern for keys in key/value pairs */

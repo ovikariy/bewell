@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 
-export const note = (state = {
+export const NOTE = (state = {
     isLoading: true,
     errMess: null,
     successMess: null,

@@ -7,7 +7,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 
 const mapStateToProps = state => {
   return {
-    note: state.note
+    [ItemTypes.NOTE]: state[ItemTypes.NOTE]
   }
 }
 
@@ -21,13 +21,13 @@ class NoteHistoryScreen extends Component {
   }
 
   render() {
-    if (this.props.note.errMess)
-      ToastAndroid.show(this.props.note.errMess, ToastAndroid.LONG);
+    if (this.props[ItemTypes.NOTE].errMess)
+      ToastAndroid.show(this.props[ItemTypes.NOTE].errMess, ToastAndroid.LONG);
 
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory itemState={this.props.note} items={this.props.note.items} itemType={ItemTypes.NOTE}></ItemHistory>
+          <ItemHistory itemState={this.props[ItemTypes.NOTE]} items={this.props[ItemTypes.NOTE].items} itemType={ItemTypes.NOTE}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>
     );

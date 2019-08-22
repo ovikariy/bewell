@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 
-export const mood = (state = {
+export const MOOD = (state = {
     isLoading: true,
     errMess: null,
     successMess: null,

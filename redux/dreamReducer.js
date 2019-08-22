@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 
-export const dream = (state = {
+export const DREAM = (state = {
     isLoading: true,
     errMess: null,
     successMess: null,

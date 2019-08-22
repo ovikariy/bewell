@@ -11,7 +11,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 
 const mapStateToProps = state => {
   return {
-    mood: state.mood
+    [ItemTypes.MOOD]: state[ItemTypes.MOOD]
   }
 }
 
@@ -28,7 +28,7 @@ class MoodHistoryScreen extends Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory itemState={this.props.mood} items={this.props.mood.items} itemType={ItemTypes.MOOD}
+          <ItemHistory itemState={this.props[ItemTypes.MOOD]} items={this.props[ItemTypes.MOOD].items} itemType={ItemTypes.MOOD}
             renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
         </ScreenContent>

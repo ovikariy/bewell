@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { mood } from './moodReducer';
-import { gratitude } from './gratitudeReducer';
-import { note } from './noteReducer';
-import { dream } from './dreamReducer';
-import { sleep } from './sleepReducer';
+import { MOOD } from './moodReducer';
+import { GRATITUDE } from './gratitudeReducer';
+import { NOTE } from './noteReducer';
+import { DREAM } from './dreamReducer';
+import { SLEEP } from './sleepReducer';
 import { security } from './securityReducer';
 import { componentState } from './componentStateReducer';
 import { persistStore, persistCombineReducers } from 'redux-persist';
@@ -20,11 +20,11 @@ export const ConfigureStore = () => {
 
     const store = createStore(
         persistCombineReducers(config, {
-            mood,
-            gratitude,
-            note,
-            dream,
-            sleep,
+            MOOD,
+            GRATITUDE,
+            NOTE,
+            DREAM,
+            SLEEP,
             security,
             componentState
         }),
