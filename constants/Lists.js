@@ -14,10 +14,6 @@ export const widgetConfig = {
   {
     itemTypeName: ItemTypes.GRATITUDE, historyScreenName: 'GratitudeHistory', color: '#1BC98E', multiItem: true
   },
-  [ItemTypes.DREAM]:
-  {
-    itemTypeName: ItemTypes.DREAM, historyScreenName: 'DreamHistory', color: '#E4D836'
-  },
   [ItemTypes.NOTE]:
   {
     itemTypeName: ItemTypes.NOTE, historyScreenName: 'NoteHistory', color: '#1997c6'

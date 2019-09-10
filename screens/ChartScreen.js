@@ -14,9 +14,7 @@ const mapStateToProps = state => {
     sleep: state.sleep,
     mood: state.mood,
     gratitude: state.gratitude,
-    note: state.note,
-    dream: state.dream
-  }
+    note: state.note  }
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -150,7 +148,6 @@ class ChartScreen extends React.Component {
     filtered[ItemTypes.MOOD] = this.props.mood.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
     filtered[ItemTypes.SLEEP] = this.props.sleep.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
     filtered[ItemTypes.GRATITUDE] = this.props.gratitude.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.DREAM] = this.props.dream.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
     filtered[ItemTypes.NOTE] = this.props.note.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
 
     return filtered;

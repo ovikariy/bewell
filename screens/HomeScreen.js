@@ -80,7 +80,7 @@ class HomeScreen extends React.Component {
             />
             <StyledDatePicker
               date={new Date(this.state.selectedDate)}
-              format='ddd, MMM D Y'
+              format='ddd,  D Y'
               style={{ width: 180, borderBottomWidth: 0, paddingTop: 3 }}
               customStyles={{
                 dateInput: {
@@ -115,6 +115,7 @@ class HomeScreen extends React.Component {
   getFilteredData(date) {
     const selectedDateString = new Date(date).toLocaleDateString();
 
+    console.log('r\n\ All props ' + JSON.stringify(this.props));
     const filtered = {};
     Object.keys(ItemTypes).map((itemType) =>
       filtered[itemType] = this.props[itemType].items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)

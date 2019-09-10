@@ -8,7 +8,6 @@ import { MoodComponent } from '../components/MoodComponent';
 import { SleepComponent } from '../components/SleepComponent';
 import { GratitudeComponent } from '../components/GratitudeComponent';
 import { NoteComponent } from '../components/NoteComponent';
-import { DreamComponent } from '../components/DreamComponent';
 import { WidgetButtons } from '../components/FormFields';
 import * as Animatable from 'react-native-animatable';
 
@@ -21,7 +20,6 @@ class Widget extends React.Component {
       [ItemTypes.MOOD]: MoodComponent,
       [ItemTypes.SLEEP]: SleepComponent,
       [ItemTypes.GRATITUDE]: GratitudeComponent,
-      [ItemTypes.DREAM]: DreamComponent,
       [ItemTypes.NOTE]: NoteComponent
     };
   }

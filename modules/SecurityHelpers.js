@@ -1,23 +1,32 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
-import { ErrorCodes, Errors, strings, DataEncryptionStoreKey } from '../constants/Constants';
+import { ErrorCodes, Errors, strings, DataEncryptionStoreKey, StoreKeys } from '../constants/Constants';
 import * as SecureStore from 'expo-secure-store';
+
+export const getAllHashedStoreKeys = async (dataEncryptionKey, password = null) => {
+  const hashedStorageKeys = [];
+  for (var i = 0; i < StoreKeys.length; i++) {
+    const itemTypeNameHash = await getItemTypeNameHashAsync(StoreKeys[i], dataEncryptionKey, password);
+    hashedStorageKeys.push(itemTypeNameHash);
+  }
+  return hashedStorageKeys;
+}
 
 export const setPasswordAsync = async (oldPassword, newPassword) => {
   if (!newPassword)
     throw new Error(Errors.NewPasswordCannotBeBlank);
 
   try {
-    const passwordInStore = await getFromSecureStoreAsync(strings.password, {});
+    const passwordInStore = await getFromSecureStoreAsync(strings.password);
 
     if (passwordInStore) {
       /* there already is a password in storage, 
          ensure the user supplied it before overwritting */
       if (!oldPassword || oldPassword !== passwordInStore)
         throw new Error(Errors.ExistingPasswordWrong);
-      await setToSecureStoreAsync(strings.oldpassword, passwordInStore, {});
+      await setToSecureStoreAsync(strings.oldpassword, passwordInStore);
     }
 
-    await setToSecureStoreAsync(strings.password, newPassword, {});
+    await setToSecureStoreAsync(strings.password, newPassword);
 
   } catch (err) {
     console.log(err);
@@ -28,7 +37,32 @@ export const setPasswordAsync = async (oldPassword, newPassword) => {
   }
 }
 
-export const encryptAndHashMultiItemsAsync = async (items, password) => {
+export const isPasswordSet = async () => {
+  try {
+    const passwordInStore = await getFromSecureStoreAsync(strings.password);
+    if (passwordInStore && (passwordInStore + '').trim().length > 0)
+      return true;
+    return false;
+  } catch (err) {
+    console.log(err);
+    throw new Error(Errors.General + ' Unable to access storage'); //TODO: unique error code
+  }
+}
+
+export const isPasswordMatchingExisting = async (password) => {
+  try {
+    const passwordInStore = await getFromSecureStoreAsync(strings.password);
+    if (passwordInStore && passwordInStore === password) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.log(err);
+    throw new Error(Errors.General + ' Unable to access storage'); //TODO: unique error code
+  }
+}
+
+export const firstTimeEncryptAllAsync = async (items, password) => {
   /* data will be encrypted with a random Data Encryption Key and that 
   key is going to be encrypted with user's password and stored in Async Storage;
   if the user changes the password the Data Encryption Key will not change */
@@ -54,13 +88,52 @@ export const encryptAndHashMultiItemsAsync = async (items, password) => {
   return resultArray;
 }
 
-export const getItemTypeNameHashAsync = async (itemTypeName, dataEncryptionKey) => {
+export const decryptAllItems = async (items, dataEncryptionKey, password) => {
+  /*  items are an array of arrays of itemTypeNameHash and itemValue 
+      e.g. [[ 'itemType1hash', 'item1value' ], [ 'itemType2hash, 'item2value' ]]  */
+
+  /* create a mapping of item type names and their hashes so we know which item is which */
+  const itemTypeNamesMap = {};
+  for (var i = 0; i < StoreKeys.length; i++) {
+    const itemTypeNameHash = await getItemTypeNameHashAsync(StoreKeys[i], dataEncryptionKey, password);
+    itemTypeNamesMap[itemTypeNameHash] = StoreKeys[i];
+  }
+
+  const decryptedItems = [];
+  for (var i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    if (!item || item.length != 2)
+      throw new Error('Invalid data format');  //TODO: move text into constant
+
+    if (item[0] === DataEncryptionStoreKey)
+      continue; /* we don't want to process this */
+
+    const itemTypeNameHash = item[0];
+    const value = item[1];
+
+    const itemTypeName = itemTypeNamesMap[itemTypeNameHash];
+    if (!itemTypeName)
+      throw new Error('Invalid type name found');  //TODO: move text into constant
+
+    const valueDecrypted = await decryptDataAsync(value, dataEncryptionKey, password);
+    if (value && !valueDecrypted) {
+      throw new Error('Failed to decrypt');  //TODO: move text into constant
+    }
+
+    decryptedItems.push([itemTypeName, valueDecrypted]);
+  }
+
+  return decryptedItems;
+}
+
+export const getItemTypeNameHashAsync = async (itemTypeName, dataEncryptionKey, password = null) => {
 
   if (!dataEncryptionKey || !itemTypeName)
     throw new Error(Errors.General + ErrorCodes.Hash1);
 
   try {
-    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey);
+    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey, password);
     const itemTypeNameHash = await getHashAsync(itemTypeName, dataEncryptionKeyDecrypted);
     return itemTypeNameHash;
   } catch (err) {
@@ -69,12 +142,14 @@ export const getItemTypeNameHashAsync = async (itemTypeName, dataEncryptionKey) 
   }
 }
 
-export const decryptDataAsync = async (value, dataEncryptionKey) => {
+export const decryptDataAsync = async (value, dataEncryptionKey, password = null) => {
+  if (!value)
+    return value;
   if (!dataEncryptionKey)
     throw new Error(Errors.General + ErrorCodes.Decrypt1);
 
   try {
-    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey);
+    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey, password);
     const valueDecrypted = await decryptAsync(value, dataEncryptionKeyDecrypted, null);
 
     if (value && !valueDecrypted)
@@ -87,13 +162,24 @@ export const decryptDataAsync = async (value, dataEncryptionKey) => {
   }
 }
 
-export const encryptDataAsync = async (value, dataEncryptionKey) => {
+export const tryDecryptDataAsync = async (value, key) => {
+  try {
+    const valueDecrypted = await decryptAsync(value, key, null);
+    if (value && valueDecrypted)
+      return true;
+    return false;
+  } catch (err) {
+    return false;
+  }
+}
+
+export const encryptDataAsync = async (value, dataEncryptionKey, password = null) => {
   if (!dataEncryptionKey)
     throw new Error(Errors.General + ErrorCodes.Encrypt4);
 
   try {
     // 1. decrypt Data Encryption Key with user's password from keychain
-    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey);
+    const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey, password);
     // 2. encrypt data with Data Encryption Key
     return await encryptAsync(value, dataEncryptionKeyDecrypted);
   } catch (err) {
@@ -158,20 +244,21 @@ const decryptAsync = async (value, key) => {
   }
 }
 
-const decryptWithKeychainPasswordAsync = async (value) => {
-  const password = await getFromSecureStoreAsync(strings.password, {});
+const decryptWithKeychainPasswordAsync = async (value, password = null) => {
+  if (!password) /* if password is not passed, try getting it from keystore */
+    password = await getFromSecureStoreAsync(strings.password);
   if (!password)
     throw new Error(Errors.ExistingPasswordWrong + ErrorCodes.Decrypt9);
   const decrypted = await decryptAsync(value, password);
   if (!decrypted)
-    throw new Error(Errors.ExistingPasswordWrong + ErrorCodes.Decrypt10);
+    throw new Error(Errors.UnableToDecrypt + ErrorCodes.Decrypt10);
   return decrypted;
 }
 
-const getFromSecureStoreAsync = async (key, options) => {
-  return await SecureStore.getItemAsync(key, options);
+const getFromSecureStoreAsync = async (key) => {
+  return await SecureStore.getItemAsync(key, {});
 }
 
-const setToSecureStoreAsync = async (key, value, options) => {
-  return await SecureStore.setItemAsync(key, value, options);
+const setToSecureStoreAsync = async (key, value) => {
+  return await SecureStore.setItemAsync(key, value, {});
 }

@@ -14,7 +14,6 @@ export const ItemTypes = {
   MOOD: 'MOOD',
   GRATITUDE: 'GRATITUDE',
   NOTE: 'NOTE',
-  DREAM: 'DREAM',
   SLEEP: 'SLEEP'
 }
 
@@ -37,7 +36,8 @@ export const Errors = {
   InvalidData: 'Invalid data ',
   InvalidTypeName: 'Invalid type name',
   NewPasswordCannotBeBlank: 'New password cannot be blank',
-  ExistingPasswordWrong: 'Existing password invalid'
+  ExistingPasswordWrong: 'Password invalid',
+  UnableToDecrypt: 'Unable to decrypt'
 }
 
 export const ErrorCodes = {
@@ -74,7 +74,8 @@ export const ErrorCodes = {
   Storage1: 'S1001',
   Storage2: 'S1002',
   Storage3: 'S1003',
-  Storage4: 'S1004'
+  Storage4: 'S1004',
+  Storage5: 'S1005'
 }
 
 export const moodRatingIcons = [

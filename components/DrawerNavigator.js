@@ -9,10 +9,10 @@ import SettingsScreen from '../screens/SettingsScreen';
 import MoodHistoryScreen from '../screens/MoodHistoryScreen';
 import NoteHistoryScreen from '../screens/NoteHistoryScreen';
 import GratitudeHistoryScreen from '../screens/GratitudeHistoryScreen';
-import DreamHistoryScreen from '../screens/DreamHistoryScreen';
 import SleepHistoryScreen from '../screens/SleepHistoryScreen';
 import ChartScreen from '../screens/ChartScreen';
 import PasswordScreen from '../screens/PasswordScreen';
+import BackupRestoreScreen from '../screens/BackupRestore';
 
 const DrawerIcon = (props) => {
     return <Icon name='menu' containerStyle={{ margin: 16 }}
@@ -28,7 +28,6 @@ const HomeNavigator = createStackNavigator({
         })
     },
     GratitudeHistory: { screen: GratitudeHistoryScreen },
-    DreamHistory: { screen: DreamHistoryScreen },
     MoodHistory: { screen: MoodHistoryScreen },
     SleepHistory: { screen: SleepHistoryScreen },
     NoteHistory: { screen: NoteHistoryScreen }
@@ -48,9 +47,9 @@ const SettingsNavigator = createStackNavigator({
             headerLeft: <DrawerIcon navigation={navigation} />
         })
     },
-    Password: { screen: PasswordScreen }
+    Password: { screen: PasswordScreen },
+    BackupRestore: { screen: BackupRestoreScreen }
 }, {
-        initialRouteName: 'Settings',
         headerLayoutPreset: 'center',
         defaultNavigationOptions: ({ navigation }) => ({
             ...DrawerNavOptions
@@ -92,26 +91,26 @@ const MainDrawerNavigator = createDrawerNavigator({
             )
         })
     },
-    Charts: {
-        screen: ChartsNavigator,
-        navigationOptions: {
-            title: 'Charts',
-            drawerLabel: 'Charts',
-            drawerIcon: ({ tintColor }) => (
-                <Icon name='area-chart'
-                    type='font-awesome'
-                    size={24}
-                    color={tintColor} />
-            )
-        }
-    },
+    // Charts: {
+    //     screen: ChartsNavigator,
+    //     navigationOptions: {
+    //         title: 'Charts',
+    //         drawerLabel: 'Charts',
+    //         drawerIcon: ({ tintColor }) => ( 
+    //             <Icon name='area-chart'
+    //                 type='font-awesome'
+    //                 size={24}
+    //                 color={tintColor} />
+    //         )
+    //     }
+    // },
     Settings: {
         screen: SettingsNavigator,
         navigationOptions: {
             title: 'Settings',
             drawerLabel: 'Settings',
             drawerIcon: ({ tintColor }) => (
-                <Icon name='info-circle'
+                <Icon name='sliders'
                     type='font-awesome'
                     size={24}
                     color={tintColor} />
@@ -120,7 +119,7 @@ const MainDrawerNavigator = createDrawerNavigator({
     }
 }, {
         //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
-        initialRouteName: 'Home', /* default is to show the page of the first menu item but we want it to be Home */
+        initialRouteName: 'Settings', /* default is to show the page of the first menu item but we want it to be Home */
         //drawerBackgroundColor: '#ffffff',
         contentComponent: CustomDrawerContentComponent
     });

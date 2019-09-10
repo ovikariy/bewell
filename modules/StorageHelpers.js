@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { ErrorCodes, Errors, DataEncryptionStoreKey, strings, ItemTypes } from '../constants/Constants';
+import { ErrorCodes, Errors, DataEncryptionStoreKey, strings, ItemTypes, StoreKeys } from '../constants/Constants';
 import * as SecurityHelpers from './SecurityHelpers';
 
 export const getItemsAsync = async (key) => {
@@ -51,6 +51,46 @@ export const removeMultiItemsAsync = async (keys) => {
     } catch (err) {
         console.log(err);
         throw new Error(Errors.General + ErrorCodes.Storage4);
+    }
+}
+
+export const mergeByIdAsync = async (itemTypeName, newItems) => {
+    if (!newItems || newItems.length <= 0)
+        throw new Error(Errors.General + ErrorCodes.Storage5);
+
+    const oldItems = await getItemsAndDecryptAsync(itemTypeName);
+
+    /* if item has ID then overwrite, otherwise add */
+    (newItems).forEach(newItem => {
+        const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id === newItem.id);
+        if (oldItemIndex > -1)
+            oldItems[oldItemIndex] = newItem;
+        else
+            oldItems.push(newItem);
+    });
+
+    await setItemsAndEncryptAsync(itemTypeName, oldItems);
+}
+
+export const removeByIdAsync = async (itemTypeName, id) => {
+    if (!itemTypeName)
+        throw new Error(Errors.General + ErrorCodes.MissingItemType1);
+
+    const oldItems = await getItemsAndDecryptAsync(itemTypeName);
+    const itemsWithoutDeleted = oldItems.filter(item => item.id !== id);
+
+    await setItemsAndEncryptAsync(itemTypeName, itemsWithoutDeleted);
+}
+
+export const getStorageDataForExportAsync = async () => {
+    //TODO: test before setting the password and after
+    const encryptionKey = await getItemsAsync(DataEncryptionStoreKey);
+    if (!encryptionKey)
+        return await getMultiItemsAsync(StoreKeys);
+    else {
+        const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys(encryptionKey);
+        hashedKeys.push(DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
+        return await getMultiItemsAsync(hashedKeys);
     }
 }
 
@@ -106,6 +146,6 @@ export const encryptAsync = async (items) => {
     }
 }
 
-const isValidItemTypeName = (itemTypeName) => {
+export const isValidItemTypeName = (itemTypeName) => {
     return (ItemTypes[itemTypeName] != null);
 }

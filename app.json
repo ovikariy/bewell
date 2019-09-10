@@ -2,6 +2,7 @@
   "expo": {
     "name": "morning",
     "slug": "morning",
+    "description": "Personal joural app with an emphasis on data privacy",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

@@ -1,36 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setUserPassword, clearMessages } from '../redux/SecurityActionCreators';
-import { styles, Colors } from '../assets/styles/style';
-import { ParagraphText } from '../components/FormFields';
-import { ToastAndroid, ActivityIndicator, View, Text } from 'react-native';
-import { Input, Button, Icon } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
+import { setUserPassword } from '../redux/SecurityActionCreators';
+import { ParagraphText, PasswordInput } from '../components/FormFields';
+import { ToastAndroid, ActivityIndicator, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
   return {
-    security: state.security
+    operation: state.operation
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  setUserPassword: (oldPassword, newPassword) => dispatch(setUserPassword(oldPassword, newPassword)),
-  clearMessages: () => dispatch(clearMessages())
+  setUserPassword: (oldPassword, newPassword) => dispatch(setUserPassword(oldPassword, newPassword))
 });
-
-const PasswordInput = (props) => {
-  return <Input
-    {...props}
-    leftIcon={{ name: props.leftIconName ? props.leftIconName : 'lock', color: Colors.placeholderText }}
-    containerStyle={{ marginTop: 30, paddingLeft: 0 }}
-    inputStyle={styles.text}
-    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-    placeholderTextColor={Colors.placeholderText}
-    autoCompleteType='off'
-    autoCorrect={false}
-    secureTextEntry={true}
-  />
-};
 
 class PasswordScreen extends Component {
   static navigationOptions = {
@@ -40,15 +24,11 @@ class PasswordScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = { 
       oldPassword: null,
       newPassword: null,
       newPasswordReentered: null,
     }
-  }
-
-  componentDidMount() {
-    this.props.clearMessages();
   }
 
   applyChanges() {
@@ -67,16 +47,16 @@ class PasswordScreen extends Component {
   }
 
   render() {
-    if (this.props.security.errMess)
-      ToastAndroid.show(this.props.security.errMess, ToastAndroid.LONG);
-    if (this.props.security.successMess)
-      ToastAndroid.show(this.props.security.successMess, ToastAndroid.LONG);
+    if (this.props.operation.errMess)
+      ToastAndroid.show(this.props.operation.errMess, ToastAndroid.LONG);
+    if (this.props.operation.successMess)
+      ToastAndroid.show(this.props.operation.successMess, ToastAndroid.LONG);
       
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
           { /* TODO: test modal activity indicator while data is being encrypted and saved */
-            this.props.security.isLoading ? <ActivityIndicator /> : <View />}
+            this.props.operation.isLoading ? <ActivityIndicator /> : <View />}
           <ParagraphText>Make your data private and protect it with a password</ParagraphText>
           <PasswordInput
             placeholder='Enter current password'

@@ -2,40 +2,16 @@ import * as ActionTypes from './ActionTypes';
 import * as Constants from '../constants/Constants';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
-
-export const passwordProcessing = () => ({
-    type: ActionTypes.PASSWORD_PROCESSING
-})
-
-export const messagesCleared = () => ({
-    type: ActionTypes.MESSAGES_CLEARED
-})
-
-export const passwordFailed = (errMess) => ({
-    type: ActionTypes.PASSWORD_FAILED,
-    payload: errMess
-})
-
-export const passwordSucceeded = (successMess) => ({
-    type: ActionTypes.PASSWORD_SUCCEEDED,
-    payload: successMess
-})
-
-export const clearMessages = () => (dispatch) => {
-    /* need to clear errMess and successMess in reducer if e.g. there was an error during setUserPassword
-    because state persists between re-renders and error or success message will keep showing */
-    StorageHelpers.logStorageDataAsync();
-    dispatch(messagesCleared());
-}
+import * as GenericActions from './GenericOperationActionCreators';
 
 export const setUserPassword = (oldPassword, newPassword) => (dispatch) => {
-    dispatch(passwordProcessing());
+    dispatch(GenericActions.operationProcessing());
     setUserPasswordAsync(oldPassword, newPassword).then(() => {
-        dispatch(passwordSucceeded('Saved!'));
-        dispatch(clearMessages());
+        dispatch(GenericActions.operationSucceeded('Saved!'));
+        dispatch(GenericActions.operationCleared());
     }).catch(err => {
-        dispatch(passwordFailed(err.message));
-        dispatch(clearMessages());
+        dispatch(GenericActions.operationFailed(err.message));
+        dispatch(GenericActions.operationCleared());
     });
 }
 
@@ -57,7 +33,7 @@ const configEncryptionAsync = async (oldPassword, newPassword) => {
 const setupNewEncryptionAsync = async (newPassword) => {
     // 1. encrypt any existing data (user may have been using the app but without setting the password) */
     const existingItems = await StorageHelpers.getMultiItemsAsync(Constants.StoreKeys);
-    const existingItemsEncrypted = await SecurityHelpers.encryptAndHashMultiItemsAsync(existingItems, newPassword);
+    const existingItemsEncrypted = await SecurityHelpers.firstTimeEncryptAllAsync(existingItems, newPassword);
 
     // 2. store everything in Async Storage in one call
     await StorageHelpers.setMultiItemsAsync(existingItemsEncrypted);

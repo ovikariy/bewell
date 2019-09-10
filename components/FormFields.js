@@ -25,6 +25,20 @@ export class TextArea extends React.Component {
   }
 };
 
+export const PasswordInput = (props) => {
+  return <Input
+    {...props}
+    leftIcon={{ name: props.leftIconName ? props.leftIconName : 'lock', color: Colors.placeholderText }}
+    containerStyle={{ marginTop: 30, paddingLeft: 0 }}
+    inputStyle={styles.text}
+    leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+    placeholderTextColor={Colors.placeholderText}
+    autoCompleteType='off'
+    autoCorrect={false}
+    secureTextEntry={true}
+  />
+};
+
 export class StyledDatePicker extends React.Component {
   render() {
     return (

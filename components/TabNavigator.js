@@ -9,8 +9,6 @@ import NoteScreen from '../screens/NoteScreen';
 import NoteHistoryScreen from '../screens/NoteHistoryScreen';
 import GratitudeScreen from '../screens/GratitudeScreen';
 import GratitudeHistoryScreen from '../screens/GratitudeHistoryScreen';
-import DreamScreen from '../screens/DreamScreen';
-import DreamHistoryScreen from '../screens/DreamHistoryScreen';
 import SleepScreen from '../screens/SleepScreen';
 import SleepHistoryScreen from '../screens/SleepHistoryScreen';
 import { TabBarOptions } from '../constants/Constants';
@@ -22,8 +20,6 @@ const HomeStack = getStackNavigator({
   Home: HomeScreen,
   Gratitude: GratitudeScreen,
   GratitudeHistory: GratitudeHistoryScreen,
-  Dream: DreamScreen,
-  DreamHistory: DreamHistoryScreen,
   Mood: MoodScreen,
   MoodHistory: MoodHistoryScreen,
   Sleep: SleepScreen,
@@ -36,11 +32,6 @@ const GratitudeStack = getStackNavigator({
   Gratitude: GratitudeScreen,
   GratitudeHistory: GratitudeHistoryScreen
 }, 'Gratitude', 'heart-o');
-
-const DreamStack = getStackNavigator({
-  Dream: DreamScreen,
-  DreamHistory: DreamHistoryScreen
-}, 'Dream', 'bed');
 
 const MoodStack = getStackNavigator({
   Mood: MoodScreen,
@@ -96,7 +87,6 @@ function getStackNavigator(stackItems, tabBarLabel, tabBarIconName) {
 export default createBottomTabNavigator({
   HomeStack,
   GratitudeStack,
-  DreamStack,
   MoodStack,
   SleepStack,
   NoteStack,

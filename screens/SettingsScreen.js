@@ -1,13 +1,19 @@
 import React from 'react';
 import { ScrollView, SectionList, Image, StyleSheet, Text, View, Button } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import Constants from 'expo-constants';
 import { styles } from '../assets/styles/style';
-import { ScreenBackground, ScreenContent, ScreenActions } from '../components/ScreenComponents';
+import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: 'Settings'
   };
+
+  constructor(props) {
+    super(props);
+    this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BackupRestore' }));
+  }
 
   render() {
     /* Go ahead and delete ExpoConfigView and replace it with your
@@ -15,14 +21,14 @@ export default class SettingsScreen extends React.Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true}>
-          <ExpoConfigView navigation={this.props.navigation} />
+          <Settings navigation={this.props.navigation} />
         </ScreenContent>
       </ScreenBackground>
     )
   }
 }
 
-class ExpoConfigView extends React.Component {
+class Settings extends React.Component {
   render() {
     const { manifest } = Constants;
     const sections = [
@@ -31,46 +37,16 @@ class ExpoConfigView extends React.Component {
           value: <Button title='Configure' onPress={() => { this.props.navigation.navigate('Password') }} />,
           type: 'component'
         }],
-        title: 'Data Encryption'
-      },
-      { data: [{ value: manifest.sdkVersion }], title: 'sdkVersion' },
-      { data: [{ value: manifest.privacy }], title: 'privacy' },
-      { data: [{ value: manifest.version }], title: 'version' },
-      { data: [{ value: manifest.orientation }], title: 'orientation' },
-      {
-        data: [{ value: manifest.primaryColor, type: 'color' }],
-        title: 'primaryColor',
+        title: 'Data Privacy' //TODO: move strings into constants
       },
       {
-        data: [{ value: manifest.splash && manifest.splash.image }],
-        title: 'splash.image',
+        data: [{
+          value: <Button title='Configure' onPress={() => { this.props.navigation.navigate('BackupRestore') }} />,
+          type: 'component'
+        }],
+        title: 'Import and Export'
       },
-      {
-        data: [
-          {
-            value: manifest.splash && manifest.splash.backgroundColor,
-            type: 'color',
-          },
-        ],
-        title: 'splash.backgroundColor',
-      },
-      {
-        data: [
-          {
-            value: manifest.splash && manifest.splash.resizeMode,
-          },
-        ],
-        title: 'splash.resizeMode',
-      },
-      {
-        data: [
-          {
-            value:
-              manifest.ios && manifest.ios.supportsTablet ? 'true' : 'false',
-          },
-        ],
-        title: 'ios.supportsTablet',
-      },
+      { data: [{ value: manifest.version }], title: 'app version' }
     ];
 
     return (
@@ -129,10 +105,6 @@ const ListHeader = () => {
       <View style={styles1.titleTextContainer}>
         <Text style={styles1.nameText} numberOfLines={1}>
           {manifest.name}
-        </Text>
-
-        <Text style={styles1.slugText} numberOfLines={1}>
-          {manifest.slug}
         </Text>
 
         <Text style={styles1.descriptionText}>

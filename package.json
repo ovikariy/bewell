@@ -1,8 +1,8 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start --localhost --android",
-    "android": "expo start --android",
+    "start": "expo start --localhost --android --offline",
+    "android": "expo start --android --offline",
     "ios": "expo start --ios",
     "eject": "expo eject",
     "test": "node ./node_modules/jest/bin/jest.js --watchAll"
@@ -17,6 +17,8 @@
     "crypto-js": "^3.1.9-1",
     "expo": "^33.0.0",
     "expo-asset": "^5.0.1",
+    "expo-document-picker": "^5.0.2",
+    "expo-file-system": "^5.0.1",
     "expo-font": "^5.0.1",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
