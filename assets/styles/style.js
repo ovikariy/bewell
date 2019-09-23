@@ -95,6 +95,10 @@ export const styles = StyleSheet.create({
     fontSize: Fonts.defaultTextSize,
     fontFamily: Fonts.default
   },
+  subText: {
+    color: Colors.tintColor + '90',
+    fontSize: Fonts.defaultTextSize - 2
+  },
   textArea: {
     margin: 10,
     color: Colors.tintColor,
