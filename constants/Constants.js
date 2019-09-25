@@ -90,31 +90,6 @@ export const sleepRatingIcons = [
   { name: 'Boo', icon: 'sleep-sad', color: '#517fa4' }
 ];
 
-export const TabBarOptions = {
-  style: {
-    /* for background to be transparent also need position: 'absolute', left: 0, right: 0, bottom: 0 */
-    borderTopColor: Colors.transparent,
-    backgroundColor: Colors.transparent, //'rgba(255,255,255,0.1)',
-    position: 'absolute', left: 0, right: 0, bottom: 0
-  },
-  // labelStyle: { color: Colors.tabIconDefault } ,
-  activeTintColor: Colors.tabIconSelected,
-  inactiveTintColor: Colors.tabIconDefault,
-  labelStyle: styles.tabIconLabel
-}
-
-export const DrawerNavOptions = {
-  headerStyle: {
-    borderWidth: 0
-  },
-  headerTitleStyle: {
-    fontFamily: Fonts.heading,
-    fontWeight: 'bold'
-  },
-  headerTransparent: true,
-  headerTintColor: Colors.tintColor
-}
-
 
 
 

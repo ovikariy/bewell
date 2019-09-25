@@ -80,7 +80,7 @@ class HomeScreen extends React.Component {
             />
             <StyledDatePicker
               date={new Date(this.state.selectedDate)}
-              format='ddd,  D Y'
+              format='ddd, M D Y'
               style={{ width: 180, borderBottomWidth: 0, paddingTop: 3 }}
               customStyles={{
                 dateInput: {

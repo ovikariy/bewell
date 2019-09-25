@@ -1,12 +1,12 @@
-import { AsyncStorage } from "react-native";
 import { ErrorCodes, Errors, DataEncryptionStoreKey, strings, ItemTypes, StoreKeys } from '../constants/Constants';
 import * as SecurityHelpers from './SecurityHelpers';
+import * as AsyncStorageService from './AsyncStorageService';
 
 export const getItemsAsync = async (key) => {
     if (!key)
         throw new Error(Errors.General + ErrorCodes.MissingKey1);
     try {
-        return await AsyncStorage.getItem(key);
+        return await AsyncStorageService.getItem(key);
     } catch (err) {
         console.log(err);
         throw new Error(Errors.General + ErrorCodes.Storage1);
@@ -17,7 +17,7 @@ export const getMultiItemsAsync = async (keys) => {
     if (!keys || !(keys.length > 0))
         throw new Error(Errors.General + ErrorCodes.MissingKey2);
     try {
-        const items = await AsyncStorage.multiGet(keys);
+        const items = await AsyncStorageService.multiGet(keys);
         return items;
     } catch (err) {
         console.log(err);
@@ -36,7 +36,7 @@ export const setMultiItemsAsync = async (items) => {
     if (!items)
         throw new Error(Errors.General + ErrorCodes.MissingKey4);
     try {
-        await AsyncStorage.multiSet(items);
+        await AsyncStorageService.multiSet(items);
     } catch (err) {
         console.log(err);
         throw new Error(Errors.General + ErrorCodes.Storage3);
@@ -47,7 +47,7 @@ export const removeMultiItemsAsync = async (keys) => {
     if (!keys)
         throw new Error(Errors.General + ErrorCodes.MissingKey5);
     try {
-        return await AsyncStorage.multiRemove(keys);
+        return await AsyncStorageService.multiRemove(keys);
     } catch (err) {
         console.log(err);
         throw new Error(Errors.General + ErrorCodes.Storage4);
@@ -95,7 +95,7 @@ export const getStorageDataForExportAsync = async () => {
 }
 
 export const logStorageDataAsync = async () => {
-    const items = await AsyncStorage.multiGet(await AsyncStorage.getAllKeys());
+    const items = await AsyncStorageService.multiGet(await AsyncStorageService.getAllKeys());
     console.log('\r\nAll AsyncStorage Items:\r\n' + items);
 }
 

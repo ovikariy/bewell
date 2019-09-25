@@ -2,7 +2,6 @@ import React from 'react';
 import { Icon } from 'react-native-elements';
 import { View, ScrollView, Image } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
-import { DrawerNavOptions } from '../constants/Constants'
 import { styles, Colors } from '../assets/styles/style';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -14,9 +13,21 @@ import ChartScreen from '../screens/ChartScreen';
 import PasswordScreen from '../screens/PasswordScreen';
 import BackupRestoreScreen from '../screens/BackupRestore';
 
+const DrawerNavOptions = {
+    headerStyle: {
+        borderWidth: 0
+    },
+    headerTitleStyle: {
+        fontFamily: Fonts.heading,
+        fontWeight: 'bold'
+    },
+    headerTransparent: true,
+    headerTintColor: Colors.tintColor
+}
+
 const DrawerIcon = (props) => {
     return <Icon name='menu' containerStyle={{ margin: 16 }}
-    color='white' onPress={() => props.navigation.toggleDrawer()} />
+        color='white' onPress={() => props.navigation.toggleDrawer()} />
 }
 
 const HomeNavigator = createStackNavigator({
@@ -32,12 +43,12 @@ const HomeNavigator = createStackNavigator({
     SleepHistory: { screen: SleepHistoryScreen },
     NoteHistory: { screen: NoteHistoryScreen }
 }, {
-        initialRouteName: 'Home',
-        headerLayoutPreset: 'center',
-        defaultNavigationOptions: ({ navigation }) => ({
-            ...DrawerNavOptions
-        })
-    });
+    initialRouteName: 'Home',
+    headerLayoutPreset: 'center',
+    defaultNavigationOptions: ({ navigation }) => ({
+        ...DrawerNavOptions
+    })
+});
 
 const SettingsNavigator = createStackNavigator({
     Settings: {
@@ -50,21 +61,21 @@ const SettingsNavigator = createStackNavigator({
     Password: { screen: PasswordScreen },
     BackupRestore: { screen: BackupRestoreScreen }
 }, {
-        headerLayoutPreset: 'center',
-        defaultNavigationOptions: ({ navigation }) => ({
-            ...DrawerNavOptions
-        })
-    });
+    headerLayoutPreset: 'center',
+    defaultNavigationOptions: ({ navigation }) => ({
+        ...DrawerNavOptions
+    })
+});
 
 const ChartsNavigator = createStackNavigator({
     Charts: { screen: ChartScreen }
 }, {
-        headerLayoutPreset: 'center',
-        defaultNavigationOptions: ({ navigation }) => ({
-            ...DrawerNavOptions,
-            headerLeft: <DrawerIcon navigation={navigation} />
-        })
-    });
+    headerLayoutPreset: 'center',
+    defaultNavigationOptions: ({ navigation }) => ({
+        ...DrawerNavOptions,
+        headerLeft: <DrawerIcon navigation={navigation} />
+    })
+});
 
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
@@ -118,11 +129,11 @@ const MainDrawerNavigator = createDrawerNavigator({
         }
     }
 }, {
-        //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
-        initialRouteName: 'Settings', /* default is to show the page of the first menu item but we want it to be Home */
-        //drawerBackgroundColor: '#ffffff',
-        contentComponent: CustomDrawerContentComponent
-    });
+    //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
+    initialRouteName: 'Settings', /* default is to show the page of the first menu item but we want it to be Home */
+    //drawerBackgroundColor: '#ffffff',
+    contentComponent: CustomDrawerContentComponent
+});
 
 export default MainDrawerNavigator;
 
