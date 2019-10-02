@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ParagraphText, PasswordInput } from '../components/FormFields';
-import { ToastAndroid, ActivityIndicator, View, Text, KeyboardAvoidingView } from 'react-native';
-import { Input, Button, Icon } from 'react-native-elements';
-import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import moment from 'moment';
-
-import * as StorageHelpers from '../modules/StorageHelpers';
+import { Button, Icon } from 'react-native-elements';
+import { text, Errors, storeConstants, stateConstants } from '../modules/Constants';
+import { ParagraphText, PasswordInput, Toast, showMessages } from '../components/MiscComponents';
+import { ActivityIndicator, View, Text, KeyboardAvoidingView } from 'react-native';
+import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
+import { shareAsync } from 'expo-sharing';
+import { getDocumentAsync } from 'expo-document-picker';
+import { importItemsIntoStorage } from '../redux/BackupRestoreActionCreators';
+import { getStorageDataForExportAsync } from '../modules/StorageHelpers';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as FileHelpers from '../modules/FileHelpers';
-import * as Sharing from 'expo-sharing';
-import * as DocumentPicker from 'expo-document-picker';
-import { DataEncryptionStoreKey } from '../constants/Constants';
-import { importItemsIntoStorage } from '../redux/BackupRestoreActionCreators';
-
+ 
 const mapStateToProps = state => {
   return {
-    operation: state.operation
+    [stateConstants.OPERATION]: state[stateConstants.OPERATION]
   }
+    ;
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => ({
 
 class BackupRestoreScreen extends Component {
   static navigationOptions = {
-    title: 'Import and Export'
+    title: text.backupScreen.title
   };
 
   constructor(props) {
@@ -46,28 +46,27 @@ class BackupRestoreScreen extends Component {
 
   exportAsync = async () => {
     /*
-      1. TODO: re-prompt for password or pin 
-      2. Get the encrypted data from the Async Storage 
-      3. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
-      4. Share the file e.g. to Google Drive
-      5. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete 
+      1. Get the encrypted data from the Async Storage 
+      2. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
+      3. Share the file e.g. to Google Drive
+      4. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete 
          the sharing process in case it hangs etc)
     */
 
     try {
-      const data = await StorageHelpers.getStorageDataForExportAsync();
+      const data = await getStorageDataForExportAsync();
       const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.ExportDirectory);
       const exportFilename = 'morning-app-export-' + moment().format('YYMMMDD-hhmmss') + '.txt'; //TODO: rename to .morning or custom ext to assoc file type with app
       const exportFilepath = exportDirectory + '/' + exportFilename;
 
       const oldExportFiles = await FileHelpers.readDirectoryAsync(exportDirectory);
-      await FileHelpers.writeFileAsync(exportFilepath, JSON.stringify(data)); 
-      Sharing.shareAsync(exportFilepath);
+      await FileHelpers.writeFileAsync(exportFilepath, JSON.stringify(data));
+      shareAsync(exportFilepath);
       await FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
 
     } catch (err) {
       console.log(err);
-      ToastAndroid.show(err, ToastAndroid.LONG);
+      Toast.show(err);
     }
   }
 
@@ -77,7 +76,7 @@ class BackupRestoreScreen extends Component {
       const importFilename = 'morning-app-import-' + moment().format('YYMMMDD-hhmmss') + '.txt';
       const importFilepath = importDirectory + '/' + importFilename;
 
-      const docPickerResult = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: false });
+      const docPickerResult = await getDocumentAsync({ copyToCacheDirectory: false });
       if (docPickerResult.type !== 'success')
         return; /* the user cancelled */
 
@@ -87,7 +86,7 @@ class BackupRestoreScreen extends Component {
 
       const data = await FileHelpers.getJSONfromFileAsync(importFilepath);
       if (!data || data.length <= 0)
-        throw new Error('Looks like the file is empty');
+        throw new Error(text.backupScreen.emptyFile);
 
       this.data = data;
 
@@ -95,8 +94,8 @@ class BackupRestoreScreen extends Component {
       await FileHelpers.clearDirectoryAsync(FileHelpers.ImportDirectory);
 
     } catch (err) {
-      ToastAndroid.show('Import Error: ' + err.message, ToastAndroid.LONG);
-      console.log('\r\nImport Error: ' + err.message + '\r\n' + err.stack + '\r\n');
+      console.log('\r\n' + Errors.ImportError + err.message + '\r\n' + err.stack + '\r\n');
+      Toast.show(Errors.ImportError + err.message);
       FileHelpers.clearDirectoryAsync(FileHelpers.ImportDirectory);
     }
   }
@@ -113,9 +112,6 @@ class BackupRestoreScreen extends Component {
       const appPassword = this.state.appPassword.trim();
       let filePassword = this.state.filePassword.trim();
 
-      console.log('\r\nappPassword ' + appPassword + ' filePassword ' + filePassword + '\r\n');  //TODO: remove
-      console.log('\r\ndata ' + this.data + '\r\n');  //TODO: remove
-
       /* has the user already setup the password in the app */
       const appPasswordProtected = await SecurityHelpers.isPasswordSet();
 
@@ -127,12 +123,12 @@ class BackupRestoreScreen extends Component {
 
         const isPasswordValid = await SecurityHelpers.isPasswordMatchingExisting(appPassword);
         if (isPasswordValid !== true) {
-          ToastAndroid.show('Invalid password, please try again', ToastAndroid.LONG);
+          Toast.show(Errors.InvalidPassword);
           return;
         }
       }
 
-      const dataEncryptionKeyValuePair = this.data.find(item => item.length == 2 && item[0] == DataEncryptionStoreKey);
+      const dataEncryptionKeyValuePair = this.data.find(item => item.length == 2 && item[0] == storeConstants.DataEncryptionStoreKey);
       const dataEncryptionKey = dataEncryptionKeyValuePair ? dataEncryptionKeyValuePair[1] : null;
       if (!dataEncryptionKey) {
         /* data in the file is not encrypted */
@@ -149,7 +145,7 @@ class BackupRestoreScreen extends Component {
 
           const filePasswordCanDecrypt = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionKey, filePassword);
           if (filePasswordCanDecrypt !== true) {
-            ToastAndroid.show('Invalid password for this file, please try again', ToastAndroid.LONG);
+            Toast.show(Errors.InvalidFilePassword);
             return;
           }
         }
@@ -159,7 +155,7 @@ class BackupRestoreScreen extends Component {
       }
 
       if (!itemsToBeSaved || itemsToBeSaved.length <= 0) {
-        ToastAndroid.show('Nothing to import', ToastAndroid.LONG);
+        Toast.show(text.backupScreen.noValidRecords);
       }
       else {
         this.props.importItemsIntoStorage(itemsToBeSaved);
@@ -167,25 +163,23 @@ class BackupRestoreScreen extends Component {
       this.setState({ ...this.state, needAppPassword: false, needFilePassword: false });
 
     } catch (err) {
-      ToastAndroid.show('Import Error: ' + err.message, ToastAndroid.LONG);
-      console.log('\r\nImport Error: ' + err.message + '\r\n' + err.stack + '\r\n');
+      Toast.show(Errors.ImportError + err.message);
+      console.log('\r\n' + Errors.ImportError + err.message + '\r\n' + err.stack + '\r\n');
     }
   }
 
   render() {
-    if (this.props.operation.errMess)
-      ToastAndroid.show(this.props.operation.errMess, ToastAndroid.LONG);
-    if (this.props.operation.successMess)
-      ToastAndroid.show(this.props.operation.successMess, ToastAndroid.LONG);
+
+    showMessages(this.props[stateConstants.OPERATION]);
 
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
-          { this.props.operation.isLoading ? <ActivityIndicator /> : <View />}
-          <ParagraphText style={{ marginTop: 30 }}>Export data to file</ParagraphText>
+          {this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator /> : <View />}
+          <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.exportExplanation}</ParagraphText>
           <Button
             containerStyle={{ marginTop: 20 }}
-            title='Export'
+            title={text.backupScreen.export}
             onPress={() => { this.export() }}
             icon={<Icon
               containerStyle={{ marginRight: 20 }}
@@ -194,10 +188,10 @@ class BackupRestoreScreen extends Component {
               color='white'
             />}
           />
-          <ParagraphText style={{ marginTop: 30 }}>Import data from file</ParagraphText>
+          <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.importExplanation}</ParagraphText>
           <Button
             containerStyle={{ marginTop: 20 }}
-            title='Import'
+            title={text.backupScreen.import}
             onPress={() => { this.import() }}
             icon={<Icon
               containerStyle={{ marginRight: 20 }}
@@ -206,61 +200,68 @@ class BackupRestoreScreen extends Component {
               color='white'
             />}
           />
-          <KeyboardAvoidingView
-            style={{ display: this.state.needAppPassword ? 'flex' : 'none' }}
-            behavior="padding"
-            keyboardVerticalOffset={40}
-            enabled
-          >
-            <ParagraphText style={{ marginTop: 30 }}>Please enter your password:</ParagraphText>
-            <PasswordInput
-              placeholder='Enter password'
-              value={this.state.appPassword}
-              leftIconName='lock-outline'
-              onChangeText={(value) => { this.setState({ ...this.state, appPassword: value }) }}
-            />
-            <Button
-              containerStyle={{ marginTop: 20 }}
-              title='Proceed with import'
-              onPress={() => { this.loadImportDataIntoStorageAsync() }}
-              disabled={!this.state.appPassword}
-              icon={<Icon
-                containerStyle={{ marginRight: 20 }}
-                name='check'
-                size={20}
-                color='white'
-              />}
-            />
-          </KeyboardAvoidingView>
-          <KeyboardAvoidingView
-            style={{ display: this.state.needFilePassword ? 'flex' : 'none' }}
-            behavior="padding"
-            keyboardVerticalOffset={40}
-            enabled
-          >
-            <ParagraphText style={{ marginTop: 30 }}>Please enter the password that was used to encrypt the file:</ParagraphText>
-            <PasswordInput
-              placeholder='Enter file password'
-              value={this.state.filePassword}
-              leftIconName='lock-outline'
-              onChangeText={(value) => { this.setState({ ...this.state, filePassword: value }) }}
-            />
-            <Button
-              containerStyle={{ marginTop: 20 }}
-              title='Proceed with import'
-              onPress={() => { this.loadImportDataIntoStorageAsync() }}
-              disabled={!this.state.filePassword}
-              icon={<Icon
-                containerStyle={{ marginRight: 20 }}
-                name='check'
-                size={20}
-                color='white'
-              />}
-            />
-          </KeyboardAvoidingView>
         </ScreenContent>
       </ScreenBackground>
     );
+  }
+
+  renderAppPasswordPrompt() {
+    return (
+      <KeyboardAvoidingView
+        style={{ display: this.state.needAppPassword ? 'flex' : 'none' }}
+        behavior="padding"
+        keyboardVerticalOffset={40}
+        enabled
+      >
+        <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.passwordExplanation}</ParagraphText>
+        <PasswordInput
+          placeholder={text.backupScreen.passPlaceholder}
+          value={this.state.appPassword}
+          leftIconName='lock-outline'
+          onChangeText={(value) => { this.setState({ ...this.state, appPassword: value }) }}
+        />
+        <Button
+          containerStyle={{ marginTop: 20 }}
+          title={text.backupScreen.proceed}
+          onPress={() => { this.loadImportDataIntoStorageAsync() }}
+          disabled={!this.state.appPassword}
+          icon={<Icon
+            containerStyle={{ marginRight: 20 }}
+            name='check'
+            size={20}
+            color='white'
+          />}
+        />
+      </KeyboardAvoidingView>
+    )
+  }
+
+  renderFilePasswordPrompt() {
+    return (
+      <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={40}
+        style={{ display: this.state.needFilePassword ? 'flex' : 'none' }}
+      >
+        <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.fileExplanation}</ParagraphText>
+        <PasswordInput
+          placeholder={text.backupScreen.filePlaceholder}
+          value={this.state.filePassword}
+          leftIconName='lock-outline'
+          onChangeText={(value) => { this.setState({ ...this.state, filePassword: value }) }}
+        />
+        <Button
+          containerStyle={{ marginTop: 20 }}
+          title={text.backupScreen.proceed}
+          onPress={() => { this.loadImportDataIntoStorageAsync() }}
+          disabled={!this.state.filePassword}
+          icon={<Icon
+            containerStyle={{ marginRight: 20 }}
+            name='check'
+            size={20}
+            color='white'
+          />}
+        />
+      </KeyboardAvoidingView>
+    )
   }
 }
 

@@ -1,4 +1,5 @@
 import *  as FileSystem from 'expo-file-system';
+import { text } from './Constants';
 
 export const ExportDirectory = FileSystem.cacheDirectory + 'exports';
 export const ImportDirectory = FileSystem.cacheDirectory + 'imports';
@@ -60,7 +61,7 @@ export const getJSONfromFileAsync = async (filePath) => {
 export const copyFileAsync = async (from, to) => {
   const fromPathInfo = await FileSystem.getInfoAsync(from);
   if (!fromPathInfo.exists || fromPathInfo.size <= 0)
-    throw new Error('Invalid file to copy');
+    throw new Error(text.files.invalidFileCopy);
   await FileSystem.copyAsync({ from: from, to: to });
 }
 

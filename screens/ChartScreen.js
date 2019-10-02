@@ -2,8 +2,8 @@ import React from 'react';
 import {ScrollView, Text, View, StyleSheet } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { connect } from 'react-redux';
-import { ItemTypes } from '../constants/Constants';
-import { loadItems, postItem } from '../redux/CommonActionCreators';
+import { ItemTypes } from '../modules/Constants';
+import { loadItems, postItem } from '../redux/mainActionCreators';
 import moment from 'moment';
 
 import { AreaChart, Grid, XAxis } from 'react-native-svg-charts'
@@ -13,7 +13,6 @@ const mapStateToProps = state => {
   return {
     sleep: state.sleep,
     mood: state.mood,
-    gratitude: state.gratitude,
     note: state.note  }
 }
 
@@ -147,7 +146,6 @@ class ChartScreen extends React.Component {
     const filtered = {};
     filtered[ItemTypes.MOOD] = this.props.mood.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
     filtered[ItemTypes.SLEEP] = this.props.sleep.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
-    filtered[ItemTypes.GRATITUDE] = this.props.gratitude.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
     filtered[ItemTypes.NOTE] = this.props.note.items.filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)[0];
 
     return filtered;

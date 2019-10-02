@@ -43,7 +43,7 @@ export default class App extends React.Component {
           //   />}
           persistor={persistor}
         >
-          <View style={styles.container}>
+          <View style={styles.flex}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             <Main />
           </View>
@@ -64,13 +64,44 @@ export default class App extends React.Component {
               name={this.props.name}
               size={26}
               style={{ marginBottom: -3 }}
-              color={this.props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+              color={this.props.focused ? colors.tabIconSelected : colors.tabIconDefault}
             /> */
         ...Icon.Ionicons.font,
         // also look at material-comminuty icons https://materialdesignicons.com/
-        // We include SpaceMono because we use it in HomeScreen.js. Feel free
-        // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+
+//default android fonts are:
+/*
+  sans-serif,
+  notoserif,
+  sans-serif,
+  sans-serif-light,
+  sans-serif-thin,
+  sans-serif-condensed,
+  sans-serif-medium,
+  serif,
+  Roboto,
+  monospace,
+*/
+
+
+        'open-sans-condensed-light': require('./assets/fonts/OpenSansCondensed-Light.ttf'),
+        'open-sans-condensed-bold': require('./assets/fonts/OpenSansCondensed-Bold.ttf'),
+
+        //TODO: revisit fonts and remove unneeded ones
+
+        'saira-extra-condensed-regular': require('./assets/fonts/SairaExtraCondensed-Regular.ttf'),
+        'saira-extra-condensed-medium': require('./assets/fonts/SairaExtraCondensed-Medium.ttf'),
+        'saira-extra-condensed-bold': require('./assets/fonts/SairaExtraCondensed-Bold.ttf'),
+        'saira-extra-condensed-light': require('./assets/fonts/SairaExtraCondensed-Light.ttf'),
+        'saira-extra-condensed-extra-light': require('./assets/fonts/SairaExtraCondensed-ExtraLight.ttf'),
+        'saira-extra-condensed-semi-bold': require('./assets/fonts/SairaExtraCondensed-SemiBold.ttf'),
+        'saira-extra-condensed-thin': require('./assets/fonts/SairaExtraCondensed-Thin.ttf'),
+
+        'pt-sans-narrow-regular': require('./assets/fonts/PTSansNarrow-Regular.ttf'),
+        
+        
+
         'morning-app-icon-font': require('./assets/fonts/icomoon/morning-app-icon-font.ttf')
       }),
     ]);

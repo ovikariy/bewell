@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ToastAndroid, View } from 'react-native';
-import { ItemTypes } from '../constants/Constants';
+import { ItemTypes, stateConstants, text } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
   return {
-    [ItemTypes.NOTE]: state[ItemTypes.NOTE]
+    [stateConstants.OPERATION]: state[stateConstants.OPERATION]
   }
 }
 
 class NoteHistoryScreen extends Component {
   static navigationOptions = {
-    title: 'Note History'
+    title: text.note.title
   };
 
   constructor(props) {
@@ -21,13 +20,13 @@ class NoteHistoryScreen extends Component {
   }
 
   render() {
-    if (this.props[ItemTypes.NOTE].errMess)
-      ToastAndroid.show(this.props[ItemTypes.NOTE].errMess, ToastAndroid.LONG);
-
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory itemState={this.props[ItemTypes.NOTE]} items={this.props[ItemTypes.NOTE].items} itemType={ItemTypes.NOTE}></ItemHistory>
+          <ItemHistory
+            itemState={this.props[stateConstants.OPERATION]}
+            items={this.props[stateConstants.OPERATION].items[ItemTypes.NOTE]}
+            itemType={ItemTypes.NOTE}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>
     );

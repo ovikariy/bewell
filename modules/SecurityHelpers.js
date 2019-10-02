@@ -1,11 +1,11 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
-import { ErrorCodes, Errors, strings, DataEncryptionStoreKey, StoreKeys } from '../constants/Constants';
+import { ErrorCodes, Errors, storeConstants } from './Constants';
 import * as SecureStore from 'expo-secure-store';
 
 export const getAllHashedStoreKeys = async (dataEncryptionKey, password = null) => {
   const hashedStorageKeys = [];
-  for (var i = 0; i < StoreKeys.length; i++) {
-    const itemTypeNameHash = await getItemTypeNameHashAsync(StoreKeys[i], dataEncryptionKey, password);
+  for (var i = 0; i < storeConstants.StoreKeys.length; i++) {
+    const itemTypeNameHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
     hashedStorageKeys.push(itemTypeNameHash);
   }
   return hashedStorageKeys;
@@ -16,21 +16,21 @@ export const setPasswordAsync = async (oldPassword, newPassword) => {
     throw new Error(Errors.NewPasswordCannotBeBlank);
 
   try {
-    const passwordInStore = await getFromSecureStoreAsync(strings.password);
+    const passwordInStore = await getFromSecureStoreAsync(storeConstants.password);
 
     if (passwordInStore) {
       /* there already is a password in storage, 
          ensure the user supplied it before overwritting */
       if (!oldPassword || oldPassword !== passwordInStore)
-        throw new Error(Errors.ExistingPasswordWrong);
-      await setToSecureStoreAsync(strings.oldpassword, passwordInStore);
+        throw new Error(Errors.InvalidPassword);
+      await setToSecureStoreAsync(storeConstants.oldpassword, passwordInStore);
     }
 
-    await setToSecureStoreAsync(strings.password, newPassword);
+    await setToSecureStoreAsync(storeConstants.password, newPassword);
 
   } catch (err) {
     console.log(err);
-    if (err.message && err.message.indexOf(Errors.ExistingPasswordWrong) > -1)
+    if (err.message && err.message.indexOf(Errors.InvalidPassword) > -1)
       throw err; /* this one we don't want to obfuscate */
     else
       throw new Error(Errors.General + ErrorCodes.Encrypt1);
@@ -39,26 +39,26 @@ export const setPasswordAsync = async (oldPassword, newPassword) => {
 
 export const isPasswordSet = async () => {
   try {
-    const passwordInStore = await getFromSecureStoreAsync(strings.password);
+    const passwordInStore = await getFromSecureStoreAsync(storeConstants.password);
     if (passwordInStore && (passwordInStore + '').trim().length > 0)
       return true;
     return false;
   } catch (err) {
     console.log(err);
-    throw new Error(Errors.General + ' Unable to access storage'); //TODO: unique error code
+    throw new Error(Errors.General + Errors.AccessStorage + ErrorCodes.Storage7); 
   }
 }
 
 export const isPasswordMatchingExisting = async (password) => {
   try {
-    const passwordInStore = await getFromSecureStoreAsync(strings.password);
+    const passwordInStore = await getFromSecureStoreAsync(storeConstants.password);
     if (passwordInStore && passwordInStore === password) {
       return true;
     }
     return false;
   } catch (err) {
     console.log(err);
-    throw new Error(Errors.General + ' Unable to access storage'); //TODO: unique error code
+    throw new Error(Errors.General + Errors.AccessStorage + ErrorCodes.Storage8);
   }
 }
 
@@ -70,7 +70,7 @@ export const firstTimeEncryptAllAsync = async (items, password) => {
   const resultArray = [];
 
   // 1. encrypt the encryption key
-  resultArray.push([DataEncryptionStoreKey, await encryptAsync(encryptionKey, password)]);
+  resultArray.push([storeConstants.DataEncryptionStoreKey, await encryptAsync(encryptionKey, password)]);
 
   // items format is [['k1', 'val1'], ['k2', 'val2']] keys need to be hashed and values encrypted
   for (var index in items) {
@@ -94,9 +94,9 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
 
   /* create a mapping of item type names and their hashes so we know which item is which */
   const itemTypeNamesMap = {};
-  for (var i = 0; i < StoreKeys.length; i++) {
-    const itemTypeNameHash = await getItemTypeNameHashAsync(StoreKeys[i], dataEncryptionKey, password);
-    itemTypeNamesMap[itemTypeNameHash] = StoreKeys[i];
+  for (var i = 0; i < storeConstants.StoreKeys.length; i++) {
+    const itemTypeNameHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
+    itemTypeNamesMap[itemTypeNameHash] = storeConstants.StoreKeys[i];
   }
 
   const decryptedItems = [];
@@ -104,9 +104,9 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
     const item = items[i];
 
     if (!item || item.length != 2)
-      throw new Error('Invalid data format');  //TODO: move text into constant
+      throw new Error(Errors.InvalidData);
 
-    if (item[0] === DataEncryptionStoreKey)
+    if (item[0] === storeConstants.DataEncryptionStoreKey)
       continue; /* we don't want to process this */
 
     const itemTypeNameHash = item[0];
@@ -114,11 +114,11 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
 
     const itemTypeName = itemTypeNamesMap[itemTypeNameHash];
     if (!itemTypeName)
-      throw new Error('Invalid type name found');  //TODO: move text into constant
+      throw new Error(Errors.InvalidTypeName); 
 
     const valueDecrypted = await decryptDataAsync(value, dataEncryptionKey, password);
     if (value && !valueDecrypted) {
-      throw new Error('Failed to decrypt');  //TODO: move text into constant
+      throw new Error(Errors.UnableToDecrypt + ErrorCodes.Decrypt11);
     }
 
     decryptedItems.push([itemTypeName, valueDecrypted]);
@@ -158,7 +158,7 @@ export const decryptDataAsync = async (value, dataEncryptionKey, password = null
 
   } catch (err) {
     console.log(err);
-    throw new Error(Constants.Errors.General + ErrorCodes.Decrypt3);
+    throw new Error(Errors.General + ErrorCodes.Decrypt3);
   }
 }
 
@@ -184,7 +184,7 @@ export const encryptDataAsync = async (value, dataEncryptionKey, password = null
     return await encryptAsync(value, dataEncryptionKeyDecrypted);
   } catch (err) {
     console.log(err);
-    throw new Error(Constants.Errors.General + ErrorCodes.Decrypt5);
+    throw new Error(Errors.General + ErrorCodes.Decrypt5);
   }
 }
 
@@ -192,12 +192,12 @@ export const reEncryptAsync = async (value, oldPassword, newPassword) => {
   // 1. decrypt with the old password
   const decrypted = await decryptAsync(value, oldPassword);
   if (!decrypted)
-    throw new Error(Constants.Errors.ExistingPasswordWrong + ErrorCodes.Decrypt6);
+    throw new Error(Errors.InvalidPassword + ErrorCodes.Decrypt6);
 
   // 2. encrypt with the new password
   const encrypted = await encryptAsync(decrypted, newPassword);
   if (!encrypted)
-    throw new Error(Constants.Errors.General + ErrorCodes.Encrypt5);
+    throw new Error(Errors.General + ErrorCodes.Encrypt5);
 
   return encrypted;
 }
@@ -246,9 +246,9 @@ const decryptAsync = async (value, key) => {
 
 const decryptWithKeychainPasswordAsync = async (value, password = null) => {
   if (!password) /* if password is not passed, try getting it from keystore */
-    password = await getFromSecureStoreAsync(strings.password);
+    password = await getFromSecureStoreAsync(storeConstants.password);
   if (!password)
-    throw new Error(Errors.ExistingPasswordWrong + ErrorCodes.Decrypt9);
+    throw new Error(Errors.InvalidPassword + ErrorCodes.Decrypt9);
   const decrypted = await decryptAsync(value, password);
   if (!decrypted)
     throw new Error(Errors.UnableToDecrypt + ErrorCodes.Decrypt10);

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { moodRatingIcons } from '../constants/Constants';
+import { widgetConfig, ItemTypes } from '../modules/Constants';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import * as Animatable from 'react-native-animatable';
 
@@ -10,11 +10,11 @@ export class MoodComponent extends Component {
     if (!Number.isInteger(rating))
       return; //nothing to do since rating wasn't selected
     this.props.onChange({ ...this.props.value, rating });
-  }
+  } 
 
   render() {
     /* button group expects buttons as an array of functions that return a component object */
-    const buttons = moodRatingIcons.map((item, index) => {
+    const buttons = widgetConfig[ItemTypes.MOOD].icons.map((item, index) => {
       return ({
         element: () =>
         <CustomIconRatingItem key={index} value={item} selected={this.props.value && this.props.value.rating === index} />

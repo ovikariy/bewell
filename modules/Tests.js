@@ -1,5 +1,5 @@
 import { enc } from 'crypto-js';
-import * as Constants from '../constants/Constants';
+import { storeConstants } from '../modules/Constants';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as SecureStore from 'expo-secure-store';
@@ -86,7 +86,7 @@ const testChangePassword = async () => {
     await SecurityHelpers.setPasswordAsync(oldPassword, newPassword);
 
     /* reload data after password change */
-    testData.passwordInStore = await SecureStore.getItemAsync(Constants.strings.password, {});
+    testData.passwordInStore = await SecureStore.getItemAsync(storeConstants.password, {});
     testData.dataEncryptionKey = await SecurityHelpers.reEncryptDataEncryptionKeyAsync(testData.dataEncryptionKey, oldPassword, newPassword);
 
     console.log('\r\ndataEncryptionKey\r\n' + testData.dataEncryptionKey);
@@ -104,7 +104,7 @@ const testChangePassword = async () => {
     }
 
     /* reset password */
-    await SecureStore.setItemAsync(Constants.strings.password, oldPassword, {});
+    await SecureStore.setItemAsync(storeConstants.password, oldPassword, {});
 }
 
 const configTestData = async () => {
@@ -122,9 +122,9 @@ const configTestData = async () => {
             { "id": 1566182818365, "rating": 1, "date": "2019-08-18T02:47:00.749Z", "startDate": "2019-08-17T23:00:00.000Z", "endDate": "2019-08-17T08:00:00.000Z" }]
     }]);
     console.log('\r\nitems\r\n' + testData.items);
-    testData.passwordInStore = await SecureStore.getItemAsync(Constants.strings.password, {});
+    testData.passwordInStore = await SecureStore.getItemAsync(storeConstants.password, {});
     console.log('\r\npasswordInStore\r\n' + testData.passwordInStore);
-    testData.dataEncryptionKey = await StorageHelpers.getItemsAsync(Constants.DataEncryptionStoreKey);
+    testData.dataEncryptionKey = await StorageHelpers.getItemsAsync(storeConstants.DataEncryptionStoreKey);
     console.log('\r\ndataEncryptionKey\r\n' + testData.dataEncryptionKey);
     return testData;
 }

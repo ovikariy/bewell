@@ -1,6 +1,5 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
-//import MainTabNavigator from './TabNavigator';
 import MainDrawerNavigator from './DrawerNavigator';
 
 export default createAppContainer(createSwitchNavigator({

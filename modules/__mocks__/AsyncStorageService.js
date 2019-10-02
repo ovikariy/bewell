@@ -1,6 +1,6 @@
 const testData = {
-    'key1': 'value1',
-    'key2': 'value2'
+    // 'key1': 'value1',
+    // 'key2': 'value2'
 };
 
 export default function mockAsyncStorageService() {
@@ -8,9 +8,9 @@ export default function mockAsyncStorageService() {
         getItem: jest.fn((key) => { return testData[key]; }),
         multiGet: jest.fn((keys) => {
             const result = [];
-            keys.forEach((item) => {
-                result.push([item, testData[item]]);
-            })
+            for(var i=0; i < keys.length; i++) {
+                result.push([keys[i], testData[keys[i]]]);
+            }
             return result;
         }),
         multiSet: jest.fn((items) => {

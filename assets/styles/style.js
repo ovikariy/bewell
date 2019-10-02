@@ -1,71 +1,167 @@
-import { StyleSheet } from 'react-native';
-import { Dimensions } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 
-export const Fonts = {
-  default: 'sans-serif-light',
-  heading: 'sans-serif',
-  defaultTextSize: 18,
-  iconTextSize: 10
+export const fonts = {
+  primary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif',
+  primaryLight: Platform.OS === 'ios' ? 'Helvetica' : 'open-sans-condensed-light',
+  secondary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-thin',
+  secondaryLight: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-light',
+  defaultTextSize: 18
 };
 
-export const Size = {
-  width: Dimensions.get('window').width
+export const size = {
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height,
+  isSmallDevice: Dimensions.get('window').width < 375
 }
 
-/* don't use short notation for colors */
-const tintColor = '#cccccc';
-const headingColor = '#ffffff'
+/* don't use short notation for colors because may need to append opacity e.g. tintColor + '70' */
+const defaultColors = {
+  color1: '#FFFFFF', /* snow white */
+  color2: '#F0F3F4', /* ice super light grey */
+  color3: '#C8D1D3',  /* steel light grey */
+  color4: '#87BCBF', /* sage light aqua */
 
-export const Colors = {
-  tintColor,
-  headingColor,
-  tabIconDefault: tintColor,
-  tabIconSelected: headingColor,
+  color5: '#324755', /* drab dark grey */
+  color6: '#D97D54', /* rust burnt orange */
+  color7: '#6E8CA0', /* slate medium grey */
+  color8: '#1B1C20',  /* onyx black */
+
+  transparent: 'transparent'
+}
+
+//TODO: get rid of this colors const and replace with classes
+export const colors = {
+  tintColor: defaultColors.color5,
+  headingColor: defaultColors.color5,
+  bright: defaultColors.color5,
+  tabIconDefault: defaultColors.color5,
+  tabIconSelected: defaultColors.color5,
   hightlightText: '#555555',
   hightlightBackground: '#eeeeee',
-  darkBackground: '#3f374f',
-  placeholderText: tintColor + '70',
-  semiTransparentBG: 'rgba(0,0,0,0.2)',
-  transparent: 'transparent',  //'rgba(0,0,0,0)',
-  button: '#23a8ff',
-  primaryButton: '#23a8ff',
-  secondaryButton: '#4eb4ae',
-  disabledColor: tintColor + '40'
+  darkBackground: defaultColors.color3,
+  placeholderText: defaultColors.color5 + '70',
+  semiTransparentBG: '#00000020',
+  transparent: 'transparent',  //'rgba(0,0,0,0)' or '#00000000'
+  button: defaultColors.color2,
+  primaryButton: defaultColors.color1,
+  secondaryButton: defaultColors.color5,
+  disabledColor: defaultColors.color5 + '40'
 };
 
 export const styles = StyleSheet.create({
-  container: {
+
+  /* common */
+  flex: {
     flex: 1
   },
-  screenBody: {
-    marginTop: 80, /* equal to header of tab navigator */
-    //marginBottom: 50, /* equal to height of bottom tab navigator */
-    /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
+  centered: {
+    textAlign: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
   },
-  contentContainer: {
-    paddingTop: 20,
+
+  /* typography */
+
+  heading: {
+    fontFamily: fonts.primary,
+    fontSize: 22,
+    fontWeight: '100',
+    color: defaultColors.color1
+  },
+  subHeading: {
+    fontFamily: fonts.primary,
+    fontSize: 15,
+    color: defaultColors.color4
+  },
+  bodyText: {
+    fontFamily: fonts.primary,
+    fontSize: 15,
+    color: defaultColors.color4
+  },
+  titleText: {
+    fontFamily: fonts.primaryLight,
+    fontSize: 24,
+    fontWeight: '200',
+    color: defaultColors.color1
+  },
+  subTitleText: {
+    fontFamily: fonts.primary,
+    color: defaultColors.color1 + '95',
+    fontSize: 18
+  },
+  // subTitleText: {
+  //   fontFamily: fonts.primary,
+  //   fontSize: 18,
+  //   color: typographyColors.textColor2
+  // },
+
+  // buttonLabel: {
+  //   fontFamily: fonts.secondary,
+  //   fontSize: 14,
+  //   color: typographyColors.textColor2
+  // },
+  // buttonLabelSmall: {
+  //   fontFamily: fonts.secondary,
+  //   fontSize: 12,
+  //   color: typographyColors.textColor2
+  // },
+  // linkLabel: {
+  //   fontFamily: fonts.primaryLight,
+  //   fontSize: 12,
+  //   color: typographyColors.textColor2
+  // },
+
+
+  /* buttons */
+
+  iconPrimary: {
+    fontSize: 30,
+    color: defaultColors.color1
+  },
+
+  iconPrimarySmall: {
+    fontSize: 20,
+    color: defaultColors.color1
+  },
+
+  iconSecondary: {
+    fontSize: 30,
+    color: defaultColors.color4
+  },
+
+  buttonPrimary: {
+    backgroundColor: defaultColors.color1 + '10',
+    borderColor: defaultColors.color1 + '50',
+    borderWidth: 1,
+    borderRadius: 40,
+    paddingHorizontal: 15,
+    margin: 3
+  },
+
+  buttonSecondary: {
+    backgroundColor: defaultColors.transparent,
+    borderWidth: 0,
+    borderRadius: 50,
+    paddingHorizontal: 15,
+    margin: 3
+  },
+
+  /* containers */
+
+  screenContainer: {
+    flex: 1,
+    backgroundColor: defaultColors.color5
+  },
+  screenBodyContainer: {
+    /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
+    marginTop: 70 /* add margins equal to the navigator height (e.g. drawer or tab) */
   },
   selectedDateContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 30,
-    marginBottom: 30
+    marginBottom: 10
   },
-  logoImage: {
-    height: 60,
-    width: 150,
-    margin: 10,
-    resizeMode: 'contain'
-  },
-  h1: {
-    fontSize: 24,
-    color: Colors.headingColor,
-    lineHeight: 24,
-    textAlign: 'center',
-    marginBottom: 20,
-    fontFamily: Fonts.heading
-  },
-  formRow: {
+  rowContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -73,157 +169,149 @@ export const styles = StyleSheet.create({
     margin: 10,
     marginBottom: 0
   },
-  formLabel: {
-    fontSize: Fonts.defaultTextSize,
-    color: Colors.tintColor,
-    marginRight: 5,
-    flex: 1
-  },
-  formItem: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  formDateText: {
-    fontSize: Fonts.defaultTextSize,
-    borderBottomColor: Colors.tintColor,
-    borderBottomWidth: 1,
-    color: Colors.tintColor,
-    marginLeft: 30,
-  },
-  text: {
-    color: Colors.tintColor,
-    fontSize: Fonts.defaultTextSize,
-    fontFamily: Fonts.default
-  },
-  subText: {
-    color: Colors.tintColor + '90',
-    fontSize: Fonts.defaultTextSize - 2
-  },
-  textArea: {
+  imageContainer: {
+    height: 60,
     margin: 10,
-    color: Colors.tintColor,
-    fontFamily: Fonts.default
+    resizeMode: 'contain'
   },
-  textAreaContainer: {
-    backgroundColor: Colors.semiTransparentBG,
-    borderRadius: 5,
-    borderBottomWidth: 0
-  },
-  tabIconLabel: {
-    fontFamily: Fonts.default
-  },
-  floatingButtonBar: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
+
+  /* widgets */
+
+  addNewWidgetsButtonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end'
-  },
-  historyRow: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 10
-  },
-  highlight: {
-    backgroundColor: Colors.hightlightBackground
-  },
-  highlightText: {
-    color: Colors.hightlightText,
-  },
-  historyRowTitle: {
-    fontSize: 16,
-    marginLeft: 20,
-    color: Colors.tintColor
-  },
-  historyRowBig: {
-    fontSize: 20,
-    fontWeight: '200',
-    marginLeft: 20,
-    color: Colors.tintColor
-  },
-  historyRowSubtitle: {
-    fontSize: Fonts.defaultTextSize,
-    marginLeft: 20,
-    color: '#aaa'
-  },
-  historyRowButtons: {
-    alignItems: 'flex-end'
-  },
-  cardImage: {
-    width: 140,
-    height: 140
-  },
-  cardContainer: {
-    /* for rounded corners need borderRadius and overflow hidden */
-    borderRadius: 8,
-    borderWidth: 0,
-    overflow: 'hidden',
-    backgroundColor: Colors.transparent
-  },
-  cardWrapper: {
-    height: 140
-  },
-  cardTitle: {
-    color: Colors.headingColor,
-    fontWeight: '300',
-    fontSize: 22,
-    fontFamily: Fonts.default
-  },
-  wrappingRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     flexWrap: 'wrap',
-    flex: 1
-  },
-  link: {
-    color: Colors.button,
-    fontSize: 18,
-    fontWeight: '500',
-    fontFamily: Fonts.default
+    flexDirection: 'row',
+    marginBottom: 5,
+    backgroundColor: defaultColors.color6
   },
   widgetTitleContainer: {
-    paddingLeft: 10,
     paddingBottom: 10,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center' /* vertical align when flexDirection is set to row */
   },
   widgetTitle: {
-    color: Colors.tintColor,
+    color: defaultColors.color2,
+    textTransform: 'capitalize',
     fontSize: 20
   },
   widgetSubTitle: {
-    color: Colors.tintColor + '90',
+    color: defaultColors.color2 + '90',
     fontSize: 14,
     marginLeft: 10
   },
-  widgetButtonContainer: {
-    zIndex: 1,
-    position: 'absolute',
-    right: 7,
-    top: 9
-  },
   widgetContainer: {
-    width: Size.width - 20, /* subtract margins */
-    backgroundColor: '#f0ad4e30',
-    borderLeftColor: '#f0ad4e',
-    margin: 10,
-    marginBottom: 20,
-    paddingTop: 10,
-    paddingBottom: 30,
-    borderLeftWidth: 8,
-    borderRadius: 4
+    marginHorizontal: 20, 
+    marginBottom: 10,
+    paddingVertical: 20,
+    borderColor: 'transparent',
+    borderBottomColor: defaultColors.color7 + '50',
+    borderBottomWidth: 1
   },
-  ratingIconContainer: {
-    alignContent: 'center', alignItems: 'center',
-    flexDirection: 'row',
-    borderRadius: 50,
-    width: 60,
+
+  dontKnowWhatToNameThis: {
+    width: 300,
+    paddingHorizontal: 15,
+    marginTop: 30,
+    marginBottom: 20,
+    textAlign: 'center',
+    alignSelf: 'center'
+  },
+
+  /* nanvigator */
+
+  logoImage: {
     height: 60,
-    padding: 10,
-    paddingTop: 15,
+    width: 150,
+    margin: 10,
+    resizeMode: 'contain'
+  },
+
+  /* rating icons  */
+
+  ratingButtonGroupContainer: {
+    height: 'auto',
     borderWidth: 0,
+    backgroundColor: 'transparent'
+  },
+
+  ratingContainer: {
+    flex: 1
+  },
+
+  ratingOutlineContainer: {
+    borderRadius: 50,
+    borderWidth: 3,
+    borderStyle: 'dotted',
+    padding: 2,
+    borderColor: 'transparent'
+  },
+
+  ratingOutlineContainerSelected: {
+    borderColor: '#ffffff'
+  },
+
+  ratingIconContainer: {
+    alignItems: 'center', /* horizontal center */
+    justifyContent: 'center', /* vertical center */
+    borderRadius: 50,
+    height: 50,
+    width: 50
+  },
+
+  ratingIconStyle: {
+    fontSize: 30,
+    color: '#ffffff'
+  },
+
+  /* form fields */
+
+  formField: {
+    borderWidth: 0
+  },
+
+  formItem: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  strongText: {
+    fontWeight: 'bold'
+  },
+  spacedOut: {
+    margin: 5
+  },
+  textArea: {
+    margin: 10
+  },
+  textAreaContainer: {
+    backgroundColor: colors.semiTransparentBG,
+    borderRadius: 5,
+    borderBottomWidth: 0
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 10
+  },
+  highlightBackground: {
+    backgroundColor: defaultColors.color2
+  },
+  highlightText: {
+    color: defaultColors.color5,
+  },
+  alignEnd: {
+    alignItems: 'flex-end'
   }
+
+
+
+
+  // floatingContainer: {
+  //   zIndex: 1,
+  //   position: 'absolute',
+  //   right: 7,
+  //   top: 9
+  // },
+
 });
 

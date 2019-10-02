@@ -2,14 +2,15 @@ import React from 'react';
 import { TouchableOpacity, SectionList, Image, StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Constants from 'expo-constants';
-import { styles, Colors } from '../assets/styles/style';
+import { text } from '../modules/Constants';
+import { styles, colors } from '../assets/styles/style';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { ParagraphText } from '../components/FormFields';
+import { ParagraphText } from '../components/MiscComponents';
 import { Icon } from 'react-native-elements';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Settings'
+    title: text.settingsScreen.title
   };
 
   constructor(props) {
@@ -32,17 +33,17 @@ class Settings extends React.Component {
   render() {
     const sections = [
       {
-        data: [{ value: <SectionText text='Data Privacy' iconName='lock' onPress={() => { this.props.navigation.navigate('Password') }} /> }]
+        data: [{ value: <SectionText text={text.settingsScreen.dataPrivacy} iconName='lock' onPress={() => { this.props.navigation.navigate('Password') }} /> }]
       },
       {
-        data: [{ value: <SectionText text='Import and Export' iconName='retweet' onPress={() => { this.props.navigation.navigate('BackupRestore') }} /> }]
+        data: [{ value: <SectionText text={text.settingsScreen.importExport} iconName='retweet' onPress={() => { this.props.navigation.navigate('BackupRestore') }} /> }]
       },
       // {
       //   data: [{ }],
       //   title: 'This is a section separator'
       // },
       {
-        data: [{ value: <SectionText text='app version' iconName='info-circle' subText={Constants.manifest.version} /> }],
+        data: [{ value: <SectionText text={text.settingsScreen.version} iconName='info-circle' subText={Constants.manifest.version} /> }],
       }
     ];
 
@@ -76,7 +77,7 @@ class Settings extends React.Component {
 const SectionHeader = ({ title }) => {
   return (
     <View>
-      <Text style={styles.text}>
+      <Text style={styles.bodyText}>
         {title}
       </Text>
     </View>
@@ -96,12 +97,12 @@ const SectionText = props => {
     iconStyle={{ width: 30, height: 30 }}
     type='font-awesome'
     name={props.iconName}
-    color={Colors.tintColor}
+    color={colors.bright}
   />;
 
   const sectionText = <View>
-    <ParagraphText style={styles.widgetTitle}>{props.text}</ParagraphText>
-    <ParagraphText style={styles.subText}>{props.subText}</ParagraphText>
+    <ParagraphText style={styles.titleText}>{props.text}</ParagraphText>
+    <ParagraphText style={styles.subTitleText}>{props.subText}</ParagraphText>
   </View>;
 
   if (!props.onPress) {

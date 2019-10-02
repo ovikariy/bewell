@@ -1,9 +1,7 @@
-import { ErrorCodes, Errors, Messages, strings } from '../constants/Constants';
-import * as ActionTypes from './ActionTypes';
-import { loadItems } from './CommonActionCreators';
-import * as GenericActions from './GenericOperationActionCreators';
+import { storeConstants, text } from '../modules/Constants';
+import { loadItems } from './mainActionCreators';
+import * as GenericActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
-
 
 export const importItemsIntoStorage = (items) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -11,13 +9,13 @@ export const importItemsIntoStorage = (items) => (dispatch) => {
     try {
         for (var itemType in items) {
             if (!items[itemType] || items[itemType].length != 2)
-                throw new Error('Invalid data format');  //TODO: move text into constant
+                throw new Error(text.backupScreen.invalidFormat);
 
-            const itemTypeName = (items[itemType][0] + '').replace(strings.keyPrefix, '');
+            const itemTypeName = (items[itemType][0] + '').replace(storeConstants.keyPrefix, '');
             const itemTypeRecords = items[itemType][1] ? JSON.parse(items[itemType][1]) : []; 
 
-            if (!StorageHelpers.isValidItemTypeName(itemTypeName))
-                throw new Error('Invalid type name found');  //TODO: move text into constant
+            if (!StorageHelpers.isValidStoreKey(itemTypeName))
+                throw new Error(text.backupScreen.invalidItemName);
 
             if (!itemTypeRecords || itemTypeRecords.length <= 0)
                 continue;
@@ -25,20 +23,19 @@ export const importItemsIntoStorage = (items) => (dispatch) => {
             /* one more check, the records must have ids and dates at the minimum */
             itemTypeRecords.forEach(record => {
                 if (!record.id || !record.date)
-                    throw new Error('Invalid data found');
+                    throw new Error(text.backupScreen.invalidData);
             });
-            console.log('\r\n Ready for saving: ' + itemTypeName + '\r\n' + JSON.stringify(itemTypeRecords) + '\r\n');  //TODO: remove this
 
             StorageHelpers.mergeByIdAsync(itemTypeName, itemTypeRecords).then(() => {
                 dispatch(loadItems(itemTypeName));
             });
         }
 
-        dispatch(GenericActions.operationSucceeded("Import succeeded!"));
-        dispatch(GenericActions.operationCleared()); //TODO: how to clear the error between re-renders?
+        dispatch(GenericActions.operationSucceeded(text.backupScreen.importSucceeded));
+        dispatch(GenericActions.operationCleared());
     } catch (err) {
         console.log(err);
         dispatch(GenericActions.operationFailed(err.message));
-        dispatch(GenericActions.operationCleared()); //TODO: how to clear the error between re-renders?
+        dispatch(GenericActions.operationCleared());
     };
 }

@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { styles } from '../assets/styles/style';
-import { sleepRatingIcons } from '../constants/Constants';
-import { ParagraphText, FormTimePicker } from '../components/FormFields';
+import { widgetConfig, ItemTypes } from '../modules/Constants';
+import { ParagraphText, TimePicker, IconForButton } from '../components/MiscComponents';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import * as Animatable from 'react-native-animatable';
 
@@ -46,20 +46,15 @@ export class SleepComponent extends Component {
   render() {
     /* button group expects buttons as an array of functions that return a component object */
     /* TODO: custom sleep icons */
-    const buttons = sleepRatingIcons.map((item, index) => {
+    const buttons = widgetConfig[ItemTypes.SLEEP].icons.map((item, index) => {
       return ({
         element: () =>
           <CustomIconRatingItem key={index} value={item} selected={this.props.value && this.props.value.rating === index} />
       })
     });
 
-    let startTime = '11:00 PM';
-    if (this.props.value && this.props.value.startDate)
-      startTime = new Date(this.props.value.startDate).toLocaleTimeString();
-
-    let endTime = '8:00 AM';
-    if (this.props.value && this.props.value.endDate)
-      endTime = new Date(this.props.value.endDate).toLocaleTimeString();
+    const startTime = (this.props.value && this.props.value.startDate) ? new Date(this.props.value.startDate).toLocaleTimeString() : '';
+    const endTime = (this.props.value && this.props.value.endDate) ? new Date(this.props.value.endDate).toLocaleTimeString() : '';
 
     return (
       <View>
@@ -67,19 +62,22 @@ export class SleepComponent extends Component {
           <CustomIconRating buttons={buttons}
             onPress={(rating) => { this.onPress(rating) }} />
         </Animatable.View>
-        <View style={styles.formRow}>
-          <ParagraphText style={[styles.formLabel, { flex: 2 }]}>Bed time:</ParagraphText>
-          <FormTimePicker
+        <View style={[
+          this.props.value && Number.isInteger(this.props.value.rating) ? {} : { display: 'none' },
+          styles.rowContainer,
+          styles.buttonPrimary,
+          styles.dontKnowWhatToNameThis
+        ]}>
+          <IconForButton name='moon-o' type='font-awesome' />
+          <TimePicker
             date={startTime}
-            disabled={this.props.value ? !Number.isInteger(this.props.value.rating) : true}
+            style={{ flex: 0.8 }}
             onDateChange={(startDate) => { this.onStartDateChange(startDate) }}
           />
-        </View>
-        <View style={styles.formRow}>
-          <ParagraphText style={[styles.formLabel, { flex: 2 }]}>Wake up time:</ParagraphText>
-          <FormTimePicker
+          <IconForButton name='wb-sunny' />
+          <TimePicker
             date={endTime}
-            disabled={this.props.value ? !Number.isInteger(this.props.value.rating) : true}
+            style={{ flex: 0.8 }}
             onDateChange={(endDate) => { this.onEndDateChange(endDate) }}
           />
         </View>

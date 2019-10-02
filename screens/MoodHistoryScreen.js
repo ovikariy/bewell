@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
-import { styles, Colors } from '../assets/styles/style';
-import { ItemTypes } from '../constants/Constants';
+import { styles } from '../assets/styles/style';
+import { ItemTypes, widgetConfig, stateConstants, text } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
-import { moodRatingIcons } from '../constants/Constants';
 import { CustomIconRatingItem } from '../components/CustomIconRating';
-import { friendlyDate, friendlyTime } from '../constants/helpers';
+import { friendlyDate, friendlyTime } from '../modules/helpers';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
   return {
-    [ItemTypes.MOOD]: state[ItemTypes.MOOD]
+    [stateConstants.OPERATION]: state[stateConstants.OPERATION]
   }
 }
 
 class MoodHistoryScreen extends Component {
   static navigationOptions = {
-    title: 'Mood History'
+    title: text.moodHistoryScreen.title
   };
 
   constructor(props) {
@@ -28,7 +27,10 @@ class MoodHistoryScreen extends Component {
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
-          <ItemHistory itemState={this.props[ItemTypes.MOOD]} items={this.props[ItemTypes.MOOD].items} itemType={ItemTypes.MOOD}
+          <ItemHistory
+            itemState={this.props[stateConstants.OPERATION]}
+            items={this.props[stateConstants.OPERATION].items[ItemTypes.MOOD]}
+            itemType={ItemTypes.MOOD}
             renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
         </ScreenContent>
@@ -38,16 +40,17 @@ class MoodHistoryScreen extends Component {
 
   renderHistoryItem(item, isSelectedItem) {
     /* custom render item to show mood icon in the row */
+    const moodRatingIcons = widgetConfig[ItemTypes.MOOD].icons;
     const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
     return (
-      <View style={styles.historyRow}>
+      <View style={styles.row}>
         <CustomIconRatingItem value={ratingIcon} size={40} />
         <View>
-          <Text style={isSelectedItem ? [styles.historyRowTitle, styles.highlightText] : styles.historyRowTitle}>
+          <Text style={isSelectedItem ? [styles.titleText, styles.highlightText] : styles.titleText}>
             {friendlyDate(item.date)}</Text>
-          <Text style={isSelectedItem ? [styles.historyRowBig, styles.highlightText] : styles.historyRowBig}>
+          <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
             {friendlyTime(item.date)}</Text>
-          <Text style={isSelectedItem ? [styles.historyRowSubtitle, styles.highlightText] : styles.historyRowSubtitle}>
+          <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
             {item.note}</Text>
         </View>
       </View>
