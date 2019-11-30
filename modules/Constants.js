@@ -54,7 +54,8 @@ export const text = {
     placeholder: 'On my mind...'
   },
   homeScreen: {
-    title: 'Home',
+    title: 'YOUR WELLBEING',
+    menuLabel: 'Home',
     save: 'Save',
     dontSave: 'Don\'t save',
     confirmSave: 'Save changes?',
@@ -77,8 +78,8 @@ export const ItemTypes = {
   SLEEP: 'SLEEP'
 }
 
-/* OtherItemTypes are for other records to be stored e.g Settings or Tags  */
-export const OtherItemTypes = {
+/* WellKnownStoreKeys are for other records to be stored e.g Settings or Tags  */
+export const WellKnownStoreKeys = {
   TAGS: 'TAGS',
   SETTINGS: 'SETTINGS'
 }
@@ -86,6 +87,10 @@ export const OtherItemTypes = {
 export const stateConstants = {
   OPERATION: 'OPERATION'
 }
+
+const monthsFromEpochDate = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map((month) => {
+  return month + new Date().getUTCFullYear(); //TODO: do this better with clever logic
+});
 
 /* In storage we use '@Morning:key' pattern for keys in key/value pairs */
 /* DataEncryptionStoreKey is special as it will not be hashed
@@ -96,7 +101,10 @@ export const storeConstants = {
   password: 'password',
   oldpassword: 'oldpassword',
   keyPrefix: keyPrefix,
-  StoreKeys: Object.keys({ ...ItemTypes, ...OtherItemTypes }).map((item) => keyPrefix + item),
+  keyDateFormat: 'MMYYYY',
+  StoreKeys: [ ...monthsFromEpochDate, ...Object.keys(WellKnownStoreKeys)].map((item) => {
+    return keyPrefix + item;
+  } ),
   DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY'
 }
 
@@ -104,13 +112,13 @@ export const widgetConfig = {
   [ItemTypes.NOTE]:
   {
     itemTypeName: ItemTypes.NOTE, historyScreenName: 'NoteHistory', multiItem: true,
-    addIcon: { text: 'note',  name: 'sticky-note-o', type: 'font-awesome' },
+    addIcon: { text: 'note', name: 'sticky-note-o', type: 'font-awesome' },
     style: {}
   },
   [ItemTypes.MOOD]:
   {
     itemTypeName: ItemTypes.MOOD, historyScreenName: 'MoodHistory', multiItem: true,
-    addIcon: { text: 'mood',  name: 'smile-o', type: 'font-awesome' },
+    addIcon: { text: 'mood', name: 'smile-o', type: 'font-awesome' },
     style: {},
     icons: [
       { name: 'Happy', icon: 'mood-happy', iconStyle: {}, backgroundStyle: { backgroundColor: '#ff9a55' } },
@@ -121,7 +129,7 @@ export const widgetConfig = {
   [ItemTypes.SLEEP]:
   {
     itemTypeName: ItemTypes.SLEEP, historyScreenName: 'SleepHistory', multiItem: true,
-    addIcon: { text: 'sleep',  name:'moon-o', type:'font-awesome' },
+    addIcon: { text: 'sleep', name: 'moon-o', type: 'font-awesome' },
     style: {},
     icons: [
       { name: 'Restful', icon: 'sleep-happy', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#ff9a55' } },
@@ -138,7 +146,7 @@ export const defaultTags = [{ id: '#gratitude' }, { id: '#inspired' },
 export const Errors = {
   General: 'An error has occurred ',
   InvalidData: 'Invalid data ',
-  InvalidTypeName: 'Invalid type name ',
+  InvalidKey: 'Invalid key ',
   NewPasswordCannotBeBlank: 'New password cannot be blank ',
   InvalidPassword: 'Invalid password, please try again ',
   InvalidFilePassword: 'Invalid password for this file, please try again',

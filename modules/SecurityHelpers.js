@@ -93,10 +93,10 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
       e.g. [[ 'itemType1hash', 'item1value' ], [ 'itemType2hash, 'item2value' ]]  */
 
   /* create a mapping of item type names and their hashes so we know which item is which */
-  const itemTypeNamesMap = {};
+  const itemKeyHashMap = {};
   for (var i = 0; i < storeConstants.StoreKeys.length; i++) {
-    const itemTypeNameHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
-    itemTypeNamesMap[itemTypeNameHash] = storeConstants.StoreKeys[i];
+    const itemKeyHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
+    itemKeyHashMap[itemKeyHash] = storeConstants.StoreKeys[i];
   }
 
   const decryptedItems = [];
@@ -109,19 +109,19 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
     if (item[0] === storeConstants.DataEncryptionStoreKey)
       continue; /* we don't want to process this */
 
-    const itemTypeNameHash = item[0];
+    const hash = item[0];
     const value = item[1];
 
-    const itemTypeName = itemTypeNamesMap[itemTypeNameHash];
-    if (!itemTypeName)
-      throw new Error(Errors.InvalidTypeName); 
+    const key = itemKeyHashMap[hash];
+    if (!key)
+      throw new Error(Errors.InvalidKey); 
 
     const valueDecrypted = await decryptDataAsync(value, dataEncryptionKey, password);
     if (value && !valueDecrypted) {
       throw new Error(Errors.UnableToDecrypt + ErrorCodes.Decrypt11);
     }
 
-    decryptedItems.push([itemTypeName, valueDecrypted]);
+    decryptedItems.push([key, valueDecrypted]);
   }
 
   return decryptedItems;

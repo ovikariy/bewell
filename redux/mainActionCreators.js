@@ -1,12 +1,13 @@
 import { text } from '../modules/Constants';
+import { isEmptyItem } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 
-export const loadItems = (itemTypeName) => (dispatch) => {
+export const load = (key) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
-    loadItemsAsync(itemTypeName)
+    loadAsync(key)
         .then((items) => {
-            dispatch(GenericActions.operationCompleted(itemTypeName, items));
+            dispatch(GenericActions.operationReplaceRedux(key, items));
         })
         .catch(error => {
             console.log(error);
@@ -15,58 +16,43 @@ export const loadItems = (itemTypeName) => (dispatch) => {
         })
 }
 
-const loadItemsAsync = async (itemTypeName) => {
-    const items = await StorageHelpers.getItemsAndDecryptAsync(itemTypeName);
+const loadAsync = async (key) => {
+    const items = await StorageHelpers.getItemsAndDecryptAsync(key);
     return items.sort(function (x, y) {
         return new Date(y.date) - new Date(x.date);
-    }); 
+    });
 }
 
-export const postItem = (itemTypeName, item, options) => (dispatch) => {
-    dispatch(postItems(itemTypeName, [item], options));
+export const updateRedux = (key, newItems) => (dispatch) => {
+    dispatch(GenericActions.operationUpdateRedux(key, newItems));
 }
 
-export const postItems = (itemTypeName, newItems, options) => (dispatch) => {
-    StorageHelpers.mergeByIdAsync(itemTypeName, newItems)
-        .then((updatedItems) => {
-            console.log('posted items');
-            if (!options || !options.silent) /* sometimes we don't want to show messages e.g. when updating recently used tags */
-                dispatch(GenericActions.operationSucceeded(text.listItems.Updated));
-            dispatch(GenericActions.operationCleared());
-            dispatch(GenericActions.operationCompleted(itemTypeName, updatedItems));
-        })
-        .catch(error => {
-            console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
-            dispatch(GenericActions.operationCleared());
-        })
+export const replaceRedux = (key, newItems) => (dispatch) => {
+    dispatch(GenericActions.operationReplaceRedux(key, newItems));
 }
 
-export const deleteItem = (itemTypeName, id) => (dispatch) => {
-    /* WARNING: calling this through dispatch in a loop does not delete any items; TODO: current solution is to delete multiples at a time, maybe there is a better way */
-    StorageHelpers.removeByIdAsync(itemTypeName, id)
-        .then((updatedItems) => {
-            dispatch(GenericActions.operationSucceeded(text.listItems.ItemDeleted));
-            dispatch(GenericActions.operationCleared());
-            dispatch(GenericActions.operationCompleted(itemTypeName, updatedItems));
-        }).catch(error => {
-            console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
-            dispatch(GenericActions.operationCleared());
+export const persistRedux = (state) => (dispatch) => {
+    try {
+        if (!state.dirtyKeys || !state.store)
+            return;
+        Object.keys(state.dirtyKeys).forEach(dirtyKey => {
+            if (!state.store[dirtyKey])
+                return;
+            const nonEmptyItems = state.store[dirtyKey].filter(item => !isEmptyItem(item));
+            if (nonEmptyItems.length > 0)
+                StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems).then(() => {});
         });
+        dispatch(GenericActions.operationAfterPersist());
+    }
+    catch (error) {
+        console.log(error);
+        dispatch(GenericActions.operationFailed(error.message));
+        dispatch(GenericActions.operationCleared());
+    }
 }
 
-export const deleteMultiItems = (itemTypeName, ids) => (dispatch) => {
-    StorageHelpers.removeByIdMultipleAsync(itemTypeName, ids)
-        .then(() => {
-            dispatch(GenericActions.operationSucceeded(text.listItems.ItemDeleted));
-            dispatch(GenericActions.operationCleared());
-            dispatch(loadItems(itemTypeName));
-        }).catch(error => {
-            console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
-            dispatch(GenericActions.operationCleared());
-        });
+export const removeFromRedux = (key, id, options) => (dispatch) => {
+    dispatch(GenericActions.operationRemoveFromRedux(key, id));
 }
 
 export const logStorageData = () => (dispatch) => {

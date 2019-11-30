@@ -28,8 +28,7 @@ class MoodHistoryScreen extends Component {
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
           <ItemHistory
-            itemState={this.props[stateConstants.OPERATION]}
-            items={this.props[stateConstants.OPERATION].items[ItemTypes.MOOD]}
+            state={this.props[stateConstants.OPERATION]}
             itemType={ItemTypes.MOOD}
             renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
@@ -43,9 +42,11 @@ class MoodHistoryScreen extends Component {
     const moodRatingIcons = widgetConfig[ItemTypes.MOOD].icons;
     const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
     return (
-      <View style={styles.row}>
-        <CustomIconRatingItem value={ratingIcon} size={40} />
-        <View>
+      <View style={[styles.row]}>
+        <View style={{ flex: 1 }}>
+          <CustomIconRatingItem value={ratingIcon} size={40} />
+        </View>
+        <View style={{ flex: 2 }}>
           <Text style={isSelectedItem ? [styles.titleText, styles.highlightText] : styles.titleText}>
             {friendlyDate(item.date)}</Text>
           <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>

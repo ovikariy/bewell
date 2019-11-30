@@ -1,6 +1,7 @@
 import { ErrorCodes, Errors, ItemTypes, storeConstants } from './Constants';
 import * as SecurityHelpers from './SecurityHelpers';
 import * as AsyncStorageService from './AsyncStorageService';
+import { isDate } from './helpers';
 
 export const getItemsAsync = async (key) => {
     if (!key)
@@ -85,7 +86,7 @@ export const mergeByIdAsync = async (itemTypeName, newItems) => {
     return oldItems;
 }
 
-export const removeByIdAsync = async (itemTypeName, id) => {
+export const removeByIdAsync = async (itemTypeName, id) => { /*TODO: is this function needed? */
     if (!itemTypeName)
         throw new Error(Errors.General + ErrorCodes.MissingItemType1);
 
@@ -96,7 +97,7 @@ export const removeByIdAsync = async (itemTypeName, id) => {
     return itemsWithoutDeleted;
 }
 
-export const removeByIdMultipleAsync = async (itemTypeName, ids) => {
+export const removeByIdMultipleAsync = async (itemTypeName, ids) => {  /*TODO: is this function needed? */
     if (!itemTypeName)
         throw new Error(Errors.General + ErrorCodes.MissingItemType3);
 
@@ -125,11 +126,11 @@ export const logStorageDataAsync = async () => {
     console.log('\r\nAll AsyncStorage Items:\r\n' + JSON.stringify(items));
 }
 
-export const getItemsAndDecryptAsync = async (itemTypeName) => {
-    if (!isValidStoreKey(itemTypeName))
-        throw new Error(Errors.InvalidTypeName);
-    const storageItemTypeName = await getItemTypeNameHashAsync(itemTypeName);
-    let items = await getItemsAsync(storageItemTypeName);
+export const getItemsAndDecryptAsync = async (key) => {
+    if (!isValidStoreKey(key))
+        throw new Error(Errors.InvalidKey);
+    const storeKey = await getStoreKeyHashAsync(key);
+    let items = await getItemsAsync(storeKey);
     /* try to get Data Encryption Key and if one exists, need to decrypt with the user's password
     and then decrypt the data with Data Encryption Key */
     const dataEncryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
@@ -139,25 +140,25 @@ export const getItemsAndDecryptAsync = async (itemTypeName) => {
     return items ? JSON.parse(items) : [];
 }
 
-export const setItemsAndEncryptAsync = async (itemTypeName, items) => {
-    if (!isValidStoreKey(itemTypeName))
-        throw new Error(Errors.InvalidTypeName);
+export const setItemsAndEncryptAsync = async (key, items) => {
+    if (!isValidStoreKey(key))
+        throw new Error(Errors.InvalidKey);
     const encrypted = await encryptAsync(JSON.stringify(items));
-    const storageItemTypeName = await getItemTypeNameHashAsync(itemTypeName);
-    await setItemsAsync(storageItemTypeName, encrypted);
+    const storeKey = await getStoreKeyHashAsync(key);
+    await setItemsAsync(storeKey, encrypted);
 }
 
-export const getItemTypeNameHashAsync = async (itemTypeName) => {
-    if (!isValidStoreKey(itemTypeName))
-        throw new Error(Errors.InvalidTypeName);
-    const storageItemTypeName = storeConstants.keyPrefix + itemTypeName;
+export const getStoreKeyHashAsync = async (key) => {
+    if (!isValidStoreKey(key))
+        throw new Error(Errors.InvalidKey);
+    const storeKey = storeConstants.keyPrefix + key;
     const dataEncryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
     if (dataEncryptionKey) {
         /* the itemTypeName in storage is hashed with dataEncryptionKey */
-        const itemTypeNameHash = await SecurityHelpers.getItemTypeNameHashAsync(storageItemTypeName, dataEncryptionKey);
+        const itemTypeNameHash = await SecurityHelpers.getItemTypeNameHashAsync(storeKey, dataEncryptionKey);
         return itemTypeNameHash;
     }
-    return storageItemTypeName;
+    return storeKey;
 }
 
 export const encryptAsync = async (items) => {
@@ -172,6 +173,6 @@ export const encryptAsync = async (items) => {
     }
 }
 
-export const isValidStoreKey = (itemTypeName) => {
-    return (storeConstants.StoreKeys.indexOf(storeConstants.keyPrefix + itemTypeName) >= 0);
+export const isValidStoreKey = (key) => {
+    return storeConstants.StoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0;
 }

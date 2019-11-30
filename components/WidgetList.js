@@ -15,18 +15,20 @@ class WidgetList extends React.Component {
     super(props);
   }
 
-  onChange(itemTypeName, newWidgetDailyData) {
-    const newDailyData = updateArrayImmutable(this.props.dailyData[itemTypeName], newWidgetDailyData);
-    this.props.onChange({ ...this.props.dailyData, [itemTypeName]: newDailyData });
+  onChange(newWidgetDailyData) {
+    const newDailyData = updateArrayImmutable(this.props.dailyData, newWidgetDailyData);
+    this.props.onChange(newDailyData);
   }
 
   addBlankRecordOfType(itemTypeName) {
     const selecetedDateCurrentTime = updateTimeStringToNow(this.props.selectedDate);
     //TODO: use a better ID such as guid
-    const emptyRecord = { id: new Date(selecetedDateCurrentTime).getTime(),
-      type: itemTypeName, date: selecetedDateCurrentTime }
+    const emptyRecord = {
+      id: new Date(selecetedDateCurrentTime).getTime(),
+      type: itemTypeName, date: selecetedDateCurrentTime
+    }
 
-    this.onChange(itemTypeName, emptyRecord);
+    this.onChange(emptyRecord);
   }
 
   showMoreNewButtons() {
@@ -54,23 +56,21 @@ class WidgetList extends React.Component {
     const widgets = [];
     let key = 0;
 
-    for (const itemTypeName in widgetConfig) {
-      const records = this.props.dailyData[itemTypeName];
-      for (const record in records) {
-        widgets.push({
-          key: key,
-          date: moment(records[record].date),
-          element: <Widget key={key}
-            itemTypeName={itemTypeName}
-            value={records[record]}
-            selectedDate={this.props.selectedDate}
-            navigation={this.props.navigation}
-            onSelected={() => this.onSelectedWidget()}
-            onChange={(itemTypeName, newWidgetDailyData) => this.onChange(itemTypeName, newWidgetDailyData)} />
+    const records = this.props.dailyData;
+    for (const record in records) {
+      widgets.push({
+        key: key,
+        date: moment(records[record].date),
+        element: <Widget key={key}
+          itemTypeName={records[record].type}
+          value={records[record]}
+          selectedDate={this.props.selectedDate}
+          navigation={this.props.navigation}
+          onSelected={() => this.onSelectedWidget()}
+          onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)} />
 
-        });
-        key++;
-      }
+      });
+      key++;
     }
 
     if (!widgets.length > 0)

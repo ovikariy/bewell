@@ -1,29 +1,37 @@
 import moment from 'moment';
-import { text } from './Constants';
+import { text, storeConstants } from './Constants';
 
 export const friendlyDate = (date, options) => {
   //TODO: test with timezones
-  const newDate = new Date(date);
-  const newDateShortString = newDate.getFullYear() + newDate.getMonth() + newDate.getDate();
-  const newDateTimeString = (newDate.getHours() < 10 ? '0' : '') + newDate.getHours() + ':' + (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
+  const format = 'YYYYMMDD';
+  const newDate = moment(date);
+  const newDateShortString = newDate.format(format);
+  const newDateTimeString = newDate.format('LT');
 
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+  const today = moment();
+  const yesterday = addSubtractDays(today, -1);
 
   const showLongFormat = options && options.showLongFormat ? options.showLongFormat : false; /* show day name and date 'Today, Apr 1 2019' */
   const showTime = options && options.showTime ? options.showTime : false;                    /* show time 'at 1:20pm' */
-  const resultDateTimeString = (showLongFormat ? ', ' + moment(newDate).format('MMM D YYYY') : '') + (showTime ? ' ' + text.general.at + ' ' + newDateTimeString : '');
+  const resultDateTimeString = (showLongFormat ? ', ' + newDate.format('MMM D') : '') + (showTime ? ' ' + text.general.at + ' ' + newDateTimeString : '');
 
-  if (newDateShortString === (today.getFullYear() + today.getMonth() + today.getDate()))
+  if (newDateShortString === today.format(format))
     return text.general.today + resultDateTimeString;
-  if (newDateShortString === (yesterday.getFullYear() + yesterday.getMonth() + yesterday.getDate()))
+  if (newDateShortString === yesterday.format(format))
     return text.general.yesterday + resultDateTimeString;
-  return moment(newDate).format('dddd, MMM D');
+  return newDate.format('dddd, MMM D');
 }
 
 export const friendlyTime = (date) => {
   return moment(date).format('LT');
+}
+
+export function getStorageKeyFromDate(date) {
+  return formatDate(date, storeConstants.keyDateFormat);
+}
+
+export function formatDate(date, format) {
+  return moment(date).format(format);
 }
 
 export function updateTimeStringToNow(dateString) {
@@ -38,25 +46,47 @@ export function updateTimeStringToNow(dateString) {
   return result.toISOString();
 }
 
+export function isDate(value) {
+  return moment.isDate(value);
+}
+
+export function isEmptyItem(item) {
+  /* if an item only has an id property we don't want to save it because it is an empty item
+  added by the plus button but not updated by the user */
+  const emptyItemFields = ['id', 'date', 'type'];
+  return (Object.keys(item).filter(key => emptyItemFields.indexOf(key) < 0).length === 0)
+}
+
 export function addSubtractDays(date, numDays) {
   if (numDays < 0 || numDays > 0)
     return moment(date).add(numDays, 'days');
   return date;
 }
 
-export const updateArrayImmutable = (array, newValue) => {
+export function updateArrayImmutable(array, newValue) {
   /* without mutating the array, update an item if found by id or if id is blank but matches on date field as when adding a new record */
-  if (!array)
-    return [newValue];
-  let index = array.findIndex(item => (item.id && item.id === newValue.id)); //try to match by id
-  if (index < 0)
-    index = array.findIndex(item => (!item.id && item.date === newValue.date)); //try to match by date where id is blank
-  if (index < 0)
-    return [...array, newValue];
+  return mergeArraysImmutable(array, [newValue]);
+}
 
-  array = [...array];
-  array[index] = newValue;
-  return array;
+export function mergeArraysImmutable(array1, array2) {
+  if (!array1 || (array1.length <= 0))
+    return [...array2];
+  if (!array2 || (array2.length <= 0))
+    return [...array1];
+
+  const result = [...array1];
+
+  array2.forEach(element => {
+    let index = result.findIndex(item => (item.id && item.id === element.id)); //try to match by id
+    if (index < 0)
+      index = result.findIndex(item => (!item.id && item.date === element.date)); //try to match by date where id is blank
+    if (index < 0)
+      result.push(element);
+    else
+      result[index] = element;
+  });
+
+  return result;
 }
 
 export function getHashtagsFromText(text) {
@@ -70,4 +100,10 @@ export function getHashtagsFromText(text) {
 
 */
   return text.match(/#([^ |#]*)/gm) || [];
+}
+
+export function wait(timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
 }

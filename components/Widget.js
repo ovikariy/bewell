@@ -22,11 +22,11 @@ class Widget extends React.Component {
   }
 
   onTitlePress() {
-    this.props.navigation.navigate(widgetConfig[this.props.itemTypeName].historyScreenName);
+    this.props.navigation.navigate(widgetConfig[this.props.value.type].historyScreenName);
   }
 
   renderWidget() {
-    const config = widgetConfig[this.props.itemTypeName];
+    const config = widgetConfig[this.props.value.type];
     const subTitle = friendlyTime(this.props.value.date);
     return (
       <TouchableHighlight onPress={() => this.props.onSelected ? this.props.onSelected() : undefined}>
@@ -42,7 +42,7 @@ class Widget extends React.Component {
               value: this.props.value,
               selectedDate: this.props.selectedDate,
               onChange: (newValue) => {
-                this.props.onChange(config.itemTypeName, newValue);
+                this.props.onChange(newValue);
               }
             })}
         </View>

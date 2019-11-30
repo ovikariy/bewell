@@ -29,8 +29,8 @@ class SleepHistoryScreen extends Component {
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
           <ItemHistory
-            itemState={this.props[stateConstants.OPERATION]}
-            items={this.props[stateConstants.OPERATION].items[ItemTypes.SLEEP]}
+            state={this.props[stateConstants.OPERATION]}
+            items={this.props[stateConstants.OPERATION].store[ItemTypes.SLEEP]}
             itemType={ItemTypes.SLEEP}
             renderItem={(item, isSelectedItem) => { return this.renderHistoryItem(item, isSelectedItem) }} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
           ></ItemHistory>
@@ -45,8 +45,10 @@ class SleepHistoryScreen extends Component {
     const ratingIcon = sleepRatingIcons[item.rating] ? sleepRatingIcons[item.rating] : {};
     return (
       <View style={styles.row}>
-        <CustomIconRatingItem value={ratingIcon} size={40} />
-        <View>
+        <View style={{ flex: 1 }}>
+          <CustomIconRatingItem value={ratingIcon} size={40} />
+        </View>
+        <View style={{ flex: 2 }}>
           <Text style={isSelectedItem ? [styles.titleText, styles.highlightText] : styles.titleText}>
             {friendlyDate(item.date)}</Text>
           <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>

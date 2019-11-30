@@ -4,9 +4,28 @@ export const operationProcessing = () => ({
     type: ActionTypes.OPERATION_PROCESSING
 })
 
-export const operationCompleted = (itemTypeName, items) => ({
+export const operationUpdateRedux = (key, items) => ({
+    type: ActionTypes.UPDATE_ITEM_IN_REDUX,
+    payload: { key: key, items: items }
+})
+
+export const operationRemoveFromRedux = (key, id) => ({
+    type: ActionTypes.REMOVE_ITEM_FROM_REDUX,
+    payload: { key, id }
+})
+
+export const operationAfterPersist = (key, items) => ({
+    type: ActionTypes.AFTER_PERSIST
+})
+
+export const operationReplaceRedux = (key, items) => ({
+    type: ActionTypes.REPLACE_ITEM_IN_REDUX,
+    payload: { key: key, items }
+})
+
+export const operationCompleted = (key, items) => ({
     type: ActionTypes.OPERATION_COMPLETED,
-    payload: { itemTypeName, items }
+    payload: { key: key, items }
 })
 
 export const operationSucceeded = (message) => ({

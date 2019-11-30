@@ -3,7 +3,6 @@ import {ScrollView, Text, View, StyleSheet } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { connect } from 'react-redux';
 import { ItemTypes } from '../modules/Constants';
-import { loadItems, postItem } from '../redux/mainActionCreators';
 import moment from 'moment';
 
 import { AreaChart, Grid, XAxis } from 'react-native-svg-charts'
@@ -15,11 +14,6 @@ const mapStateToProps = state => {
     mood: state.mood,
     note: state.note  }
 }
-
-const mapDispatchToProps = dispatch => ({
-  loadItems: (itemType) => dispatch(loadItems(itemType)),
-  postItem: (itemTypeName, item) => dispatch(postItem(itemTypeName, item))
-});
 
 const numDays = 7;
 
@@ -153,7 +147,7 @@ class ChartScreen extends React.Component {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChartScreen);
+export default connect(mapStateToProps, null)(ChartScreen);
 
 
 

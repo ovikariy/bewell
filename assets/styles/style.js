@@ -227,6 +227,12 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
 
+  logoImageSmall: {
+    height: 30,
+    width: 30,
+    resizeMode: 'contain'
+  },
+
   /* rating icons  */
 
   ratingButtonGroupContainer: {

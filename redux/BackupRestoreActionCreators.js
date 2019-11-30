@@ -1,5 +1,5 @@
 import { storeConstants, text } from '../modules/Constants';
-import { loadItems } from './mainActionCreators';
+import { load } from './mainActionCreators';
 import * as GenericActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
 
@@ -27,7 +27,7 @@ export const importItemsIntoStorage = (items) => (dispatch) => {
             });
 
             StorageHelpers.mergeByIdAsync(itemTypeName, itemTypeRecords).then(() => {
-                dispatch(loadItems(itemTypeName));
+                dispatch(load(itemTypeName));
             });
         }
 

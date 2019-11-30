@@ -5,37 +5,29 @@ import { Icon, Button, Text, Image } from 'react-native-elements';
 import { styles, colors } from '../assets/styles/style';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetList from '../components/WidgetList';
-import { ItemTypes, OtherItemTypes, widgetConfig, stateConstants, text } from '../modules/Constants';
-import { loadItems, postItems, deleteMultiItems } from '../redux/mainActionCreators';
+import { WellKnownStoreKeys, storeConstants, stateConstants, text } from '../modules/Constants';
+import { load, persistRedux, updateRedux, replaceRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
-import { getHashtagsFromText } from '../modules/helpers';
+import { getHashtagsFromText, getStorageKeyFromDate } from '../modules/helpers';
 
-/*
-
-TODO: 
-* redux get's updated every time a user makes a change but not the DB 
-* remove HomeScreen local state, use redux only
-* the DB gets updated only when save is executed - after trolled amount of inactivity or when navigating away from homescreen
-* DB partitioning by date interval such as a month instead of by item type; better for loading and management
-
-*/
 const mapStateToProps = state => {
   return { [stateConstants.OPERATION]: state[stateConstants.OPERATION] };
-}
+};
 
 const mapDispatchToProps = dispatch => ({
-  loadItems: (itemType) => dispatch(loadItems(itemType)),
-  postItems: (itemTypeName, item, options) => dispatch(postItems(itemTypeName, item, options)),
-  deleteMultiItems: (itemTypeName, ids) => dispatch(deleteMultiItems(itemTypeName, ids)),
+  load: (key) => dispatch(load(key)),
+  updateRedux: (key, items) => dispatch(updateRedux(key, items)),
+  replaceRedux: (key, items) => dispatch(replaceRedux(key, items)),
+  persistRedux: (state) => dispatch(persistRedux(state))
 });
 
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'YOUR WELLBEING',
+    title: text.homeScreen.title,
     headerRight:
       <Image
         source={require('../assets/images/logo_small.png')}
-        style={{ width: 30, height: 30 }}
+        style={styles.logoImageSmall}
         containerStyle={{ paddingRight: 10 }}
       />
   })
@@ -44,14 +36,8 @@ class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      selectedDate: new Date(),
-      dailyData: this.getFilteredData(new Date())
+      selectedDate: new Date()
     }
-
-    /* navigation options doesn't have access to the insance of HomeScreen 
-    so we pass values via navigation.setParams */
-    this.props.navigation.setParams({ canSave: false });
-    this.props.navigation.setParams({ save: this.save });
   }
 
   componentDidMount() {
@@ -59,19 +45,24 @@ class HomeScreen extends React.Component {
   }
 
   refreshItems() {
-    for (var itemTypeName in widgetConfig) {
-      this.props.loadItems(itemTypeName);
-    };
+    const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
+    this.props.load(selectedMonth);
+    this.props.load(WellKnownStoreKeys.TAGS);
   }
 
   render() {
+    const selectedDateString = new Date(this.state.selectedDate).toLocaleDateString();
+    const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
+    let data = []; //
+    if (this.props[stateConstants.OPERATION] && this.props[stateConstants.OPERATION].store)
+      data = (this.props[stateConstants.OPERATION].store[selectedMonth] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true}>
+        <ScreenContent isKeyboardAvoidingView={true} onPulldownRefresh={() => this.refreshItems()}>
           <DatePickerWithArrows date={this.state.selectedDate} onChange={(newDate) => this.selectedDateChanged(newDate)} />
           <WidgetList
             navigation={this.props.navigation}
-            dailyData={this.state.dailyData}
+            dailyData={data}
             selectedDate={this.state.selectedDate}
             onChange={(newDailyData) => { this.onDataChange(newDailyData) }} />
         </ScreenContent>
@@ -79,59 +70,36 @@ class HomeScreen extends React.Component {
     );
   }
 
-  getFilteredData(date) {
-    const selectedDateString = new Date(date).toLocaleDateString();
-    const filtered = {};
-    Object.keys(ItemTypes).map((itemType) =>
-      filtered[itemType] = (this.props[stateConstants.OPERATION].items[itemType] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString)
-    );
-    return filtered;
-  }
-
   selectedDateChanged(newDate) {
-    if (this.props.navigation.getParam('canSave') === true) {
-      this.save();
-      this.selectedDateChangeConfirmed(newDate);
-    }
-    else
-      this.selectedDateChangeConfirmed(newDate);
+    this.persist();
+    this.selectedDateChangeConfirmed(newDate);
   }
 
   selectedDateChangeConfirmed(newDate) {
-    //this.refreshItems();
-    this.setState({
-      ...this.state,
-      selectedDate: new Date(newDate),
-      dailyData: this.getFilteredData(newDate)
-    });
-    this.props.navigation.setParams({ canSave: false });
+    this.setState({ ...this.state, selectedDate: new Date(newDate) });
   }
 
   onDataChange(newDailyData) {
-    this.setState({ ...this.state, dailyData: newDailyData });
-    this.saveAfterDelay();
+    const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
+    this.props.updateRedux(selectedMonth, newDailyData);
+    this.persistAfterDelay(newDailyData);
     this.props.navigation.setParams({ canSave: true });
   }
 
-  saveAfterDelay = debounce(function () {
-    this.save();
-  }, 2000);
+  persistAfterDelay = debounce(function (newDailyData) {
+    this.persist(newDailyData);
+  }, 3000);
 
-  save = () => {
-    for (var itemTypeName in widgetConfig) {
-      const widgetItems = this.state.dailyData[itemTypeName];
-      //TODO: check if the item is changed and don't post if haven't changed
-      const nonEmptyItems = widgetItems.filter(item => !this.isEmptyItem(item));
-
-      if (nonEmptyItems.length > 0) {
-        this.props.postItems(itemTypeName, nonEmptyItems, { silent: true });
-        this.saveRecentTags(nonEmptyItems);
-      }
-    }
-    this.props.navigation.setParams({ canSave: false });
+  persist = (newDailyData) => {
+    /* update tags here instead of onDataChange otherwise we'll get a separate tag when each letter is typed */
+    if (newDailyData)
+      this.updateRecentTags(newDailyData);
+    if (!this.props[stateConstants.OPERATION].dirtyKeys)
+      return;
+    this.props.persistRedux(this.props[stateConstants.OPERATION]);
   }
 
-  saveRecentTags = (records) => {
+  updateRecentTags = (records) => {
     /* if a record has a note field with hashtags in it, save them separately to be recently used */
     const tags = [];
     records.forEach(record => {
@@ -148,13 +116,7 @@ class HomeScreen extends React.Component {
     });
 
     if (tags.length > 0)
-      this.props.postItems(OtherItemTypes.TAGS, tags, { silent: true });
-  }
-
-  isEmptyItem(item) {
-    /* if an item only has an id property we don't want to save it because it is an empty item
-    added by the plus button but not updated by the user */
-    return (Object.keys(item).filter(key => (key != 'id' && key != 'date')).length === 0)
+      this.props.updateRedux(WellKnownStoreKeys.TAGS, tags);
   }
 }
 

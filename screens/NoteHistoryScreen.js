@@ -24,8 +24,8 @@ class NoteHistoryScreen extends Component {
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent>
           <ItemHistory
-            itemState={this.props[stateConstants.OPERATION]}
-            items={this.props[stateConstants.OPERATION].items[ItemTypes.NOTE]}
+            state={this.props[stateConstants.OPERATION]}
+            items={this.props[stateConstants.OPERATION].store[ItemTypes.NOTE]}
             itemType={ItemTypes.NOTE}></ItemHistory>
         </ScreenContent>
       </ScreenBackground>

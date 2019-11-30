@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TextArea } from '../components/MiscComponents';
-import { OtherItemTypes, stateConstants, text, defaultTags } from '../modules/Constants';
-import { getHashtagsFromText } from '../modules/helpers';
+import { WellKnownStoreKeys, stateConstants, text, defaultTags } from '../modules/Constants';
+import { getHashtagsFromText, mergeArraysImmutable } from '../modules/helpers';
 import Tags from '../components/Tags';
 import { connect } from 'react-redux';
-import { loadItems } from '../redux/mainActionCreators';
+import { load } from '../redux/mainActionCreators';
 
 const mapStateToProps = state => {
   return {
@@ -14,13 +14,13 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  loadItems: (itemType) => dispatch(loadItems(itemType))
+  load: (itemType) => dispatch(load(itemType))
 });
 
 class NoteComponent extends React.Component {
 
   componentDidMount() {
-    this.props.loadItems(OtherItemTypes.TAGS);
+   // this.props.load(WellKnownStoreKeys.TAGS);
   }
 
   textChanged(note) {
@@ -35,20 +35,20 @@ class NoteComponent extends React.Component {
     /* show up to ten most recent and/or default tags without the ones already showing in the text field */
     const note = this.props.value && this.props.value.note ? this.props.value.note : '';
     const tagsFromNote = getHashtagsFromText(note);
-    const tagsFromStorage = this.props[stateConstants.OPERATION].items[OtherItemTypes.TAGS];
+    const tagsFromStorage = this.props[stateConstants.OPERATION].store[WellKnownStoreKeys.TAGS];
 
-    let sortedTags = (tagsFromStorage || defaultTags).sort(function (x, y) {
-      return new Date(y.date) - new Date(x.date);
+    let result = mergeArraysImmutable(defaultTags, tagsFromStorage);
+    result = result.filter(item => tagsFromNote.indexOf(item.id) < 0);
+    result = result.sort(function (x, y) {
+      if (!x.date)
+        return true;
+      if (!y.date)
+        return false;
+      return new Date(y.date) - new Date(x.date)
     });
-
-    sortedTags = sortedTags.filter(item => tagsFromNote.indexOf(item.id) < 0);
-    if (sortedTags.length > 10)
-      return sortedTags.slice(0, 10);
-
-    /* there are less than 10 tags in storage so we add a few more from the default tags to make 10 */
-    const tagsForPadding = defaultTags.filter((defaultTag) => sortedTags.filter(sortedTag => tagsFromNote.indexOf(defaultTag.id) >= 0 || defaultTag.id == sortedTag.id).length <= 0);
-    return sortedTags.concat(tagsForPadding).slice(0, 10);
-  } 
+console.log('\r\nresult ' + JSON.stringify(result));
+    return result.slice(0, 10);
+  }
 
   render() {
     const tags = this.getMostRecentTags();
