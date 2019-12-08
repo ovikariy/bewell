@@ -1,11 +1,11 @@
 
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { styles } from '../assets/styles/style';
-import { widgetConfig, ItemTypes } from '../modules/Constants';
-import { ParagraphText, TimePicker, IconForButton } from '../components/MiscComponents';
-import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import * as Animatable from 'react-native-animatable';
+import { styles } from '../assets/styles/style';
+import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
+import { IconForButton, TimePicker } from '../components/MiscComponents';
+import { text } from '../modules/Constants';
 
 export class SleepComponent extends Component {
   onPress(rating) {
@@ -18,6 +18,7 @@ export class SleepComponent extends Component {
     //TODO: validate
     /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
+    console.log('this.props.selectedDate ' + this.props.selectedDate);
     const selectedDate = new Date(this.props.selectedDate);
     const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
 
@@ -44,13 +45,12 @@ export class SleepComponent extends Component {
   }
 
   render() {
-    /* button group expects buttons as an array of functions that return a component object */
-    /* TODO: custom sleep icons */
-    const buttons = widgetConfig[ItemTypes.SLEEP].icons.map((item, index) => {
-      return ({
-        element: () =>
-          <CustomIconRatingItem key={index} value={item} selected={this.props.value && this.props.value.rating === index} />
-      })
+    const ratings = this.props.config.icons.map((item, index) => {
+      return (
+        <CustomIconRatingItem key={index} id={index} value={item}
+          selected={this.props.value && this.props.value.rating === index}
+          onPress={(id) => this.onPress(id)} />
+      )
     });
 
     const startTime = (this.props.value && this.props.value.startDate) ? new Date(this.props.value.startDate).toLocaleTimeString() : '';
@@ -59,8 +59,7 @@ export class SleepComponent extends Component {
     return (
       <View>
         <Animatable.View animation="fadeIn" duration={500}>
-          <CustomIconRating buttons={buttons}
-            onPress={(rating) => { this.onPress(rating) }} />
+          <CustomIconRating>{ratings}</CustomIconRating>
         </Animatable.View>
         <View style={[
           this.props.value && Number.isInteger(this.props.value.rating) ? {} : { display: 'none' },
@@ -72,12 +71,14 @@ export class SleepComponent extends Component {
           <TimePicker
             date={startTime}
             style={{ flex: 0.8 }}
+            placeholder={text.sleep.bedTime}
             onDateChange={(startDate) => { this.onStartDateChange(startDate) }}
           />
           <IconForButton name='wb-sunny' />
           <TimePicker
             date={endTime}
             style={{ flex: 0.8 }}
+            placeholder={text.sleep.wakeTime}
             onDateChange={(endDate) => { this.onEndDateChange(endDate) }}
           />
         </View>

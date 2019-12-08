@@ -1,11 +1,10 @@
 import React from 'react';
+import { ActivityIndicator, Platform, Text, ToastAndroid, View, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import { Button, Icon, Input } from 'react-native-elements';
+import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import MorningAppIconFont from './CustomIconFont.js'
 import { addSubtractDays, friendlyDate } from '../modules/helpers';
-import { Input, Button, Icon } from 'react-native-elements';
-import { styles, fonts, colors } from '../assets/styles/style';
-import { Text, ActivityIndicator, View, Platform, ToastAndroid } from 'react-native';
 
 export const Heading1 = (props) => {
   return <Text {...props} style={[styles.heading, styles.centered, props.style]} />;
@@ -28,24 +27,17 @@ export const Toast = {
   }
 };
 
-export const TextArea = (props) => {
+export const ClearTextArea = (props) => {
+  /* no background no borders */
   return (
-    <TextInput
+    <Input
       multiline={true}
       numberOfLines={3}
       textAlignVertical='top'
-      inputStyle={[styles.bodyText, styles.textArea]}
-      {...props}
-    />
-  )
-};
-
-export const TextInput = (props) => {
-  return (
-    <Input
-      inputStyle={[styles.textInput]}
-      placeholderTextColor={colors.placeholderText}
-      inputContainerStyle={styles.textAreaContainer}
+      autoFocus={props.value ? false : true}
+      inputStyle={[styles.bodyText, styles.clearTextArea]}
+      placeholderTextColor={styles.placeholderText.color}
+      inputContainerStyle={styles.clearTextAreaContainer}
       {...props}
     />
   )
@@ -54,11 +46,11 @@ export const TextInput = (props) => {
 export const PasswordInput = (props) => {
   return <Input
     {...props}
-    leftIcon={{ name: props.leftIconName ? props.leftIconName : 'lock', color: colors.bright }}
+    leftIcon={{ name: props.leftIconName ? props.leftIconName : 'lock', color: styles.iconPrimary.color }}
     containerStyle={{ marginTop: 30, paddingLeft: 0 }}
     inputStyle={styles.bodyText}
     leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
-    placeholderTextColor={colors.placeholderText}
+    placeholderTextColor={styles.placeholderText}
     autoCompleteType='off'
     autoCorrect={false}
     secureTextEntry={true}
@@ -89,14 +81,14 @@ export const TimePicker = (props) => {
         {...props}
         format='LT' /* Local Time (format support by moment.js) */  /* maybe allow settings overwrite */
         mode='time'
-        placeholder={text.general.pickTime}
+        placeholder={props.placeholder || text.general.pickTime}
       />
     </View>
   )
 };
 
 export const IconForButton = (props) => {
-  return <Icon iconStyle={styles.iconPrimarySmall} {...props} />
+  return <Icon iconStyle={[styles.iconPrimarySmall, props.iconStyle]} {...props} />
 }
 
 export const DatePickerWithArrows = (props) => {
@@ -138,9 +130,13 @@ export const ButtonPrimary = (props) => {
 
 export const IconButton = (props) => {
   return (
-    <Button buttonStyle={styles.buttonSecondary}
-      icon={<IconForButton name={props.iconName} type={props.iconType} iconStyle={styles.iconPrimary} />}
-      {...props} />
+    <TouchableOpacity style={[styles.buttonSecondary, props.containerStyle]} {...props} >
+      {props.iconName ? <IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} /> : <View></View>}
+      {props.text ? <Text style={[props.titleStyle || styles.toolbarButtonText]}>{props.text}</Text> : <View></View>}
+    </TouchableOpacity>
+    // <Button buttonStyle={styles.buttonSecondary}
+    //   icon={<IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} />}
+    //   {...props} />
   )
 };
 
@@ -160,3 +156,39 @@ export const Loading = () => {
     </View>
   );
 };
+
+export const EmptyList = () => {
+  return (
+    <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
+      <Text style={styles.subTitleText}>{text.listItems.EmptyList}</Text>
+    </View>
+  )
+}
+
+export const List = (props) => {
+  return (
+    <FlatList
+      data={props.data}
+      renderItem={(item, index) => renderItem(item, index)}
+      keyExtractor={item => item.id}
+    />
+  );
+
+  function renderItem({ item, index }) {
+    return (
+      <TouchableHighlight key={item.id}
+        style={[styles.dimBackground, styles.listItemContainer]}
+        onPress={item.onPress ? item.onPress : null} >
+        <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
+          <IconForButton name={item.iconName} type='font-awesome' iconStyle={[styles.iconSecondary, styles.listItemLeftIcon]} />
+          <View style={styles.flex}>
+            <Text style={[styles.heading2]}>{item.text}</Text>
+            {item.subText ? <Text style={[styles.subHeading, styles.flex]}>{item.subText}</Text> : <View />}
+          </View>
+          {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
+        </View>
+      </TouchableHighlight>
+    );
+  };
+}
+

@@ -1,18 +1,23 @@
+import moment from 'moment';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { updateArrayImmutable, updateTimeStringToNow } from '../modules/helpers';
-import { ButtonPrimary, IconButton } from './MiscComponents';
-import Widget from '../components/Widget';
-import { widgetConfig } from '../modules/Constants';
-import { styles, colors } from '../assets/styles/style';
 import { Image, Text } from 'react-native-elements';
-import moment from 'moment';
+import { styles } from '../assets/styles/style';
+import { Widget } from '../components/Widget';
+import { text } from '../modules/Constants';
+import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/helpers';
+import { WidgetFactory } from '../modules/WidgetFactory';
+import { Toolbar, ToolbarButton } from './ToolbarComponents';
 
 class WidgetList extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      showAllAddButtons: false
+    }
   }
 
   onChange(newWidgetDailyData) {
@@ -22,56 +27,44 @@ class WidgetList extends React.Component {
 
   addBlankRecordOfType(itemTypeName) {
     const selecetedDateCurrentTime = updateTimeStringToNow(this.props.selectedDate);
-    //TODO: use a better ID such as guid
     const emptyRecord = {
-      id: new Date(selecetedDateCurrentTime).getTime(),
+      id: getNewUuid(),
       type: itemTypeName, date: selecetedDateCurrentTime
     }
 
     this.onChange(emptyRecord);
   }
 
-  showMoreNewButtons() {
-    //TODO: implement
-  }
-
   renderAddNewButtons() {
-    const widgetButtons = Object.values(widgetConfig).map((item) => {
-      return <IconButton iconName={item.addIcon.name} iconType={item.addIcon.type} key={'button' + item.itemTypeName}
-        containerStyle={styles.flex}
-        onPress={() => this.addBlankRecordOfType(item.itemTypeName)} />
+    const widgetButtons = Object.values(WidgetFactory).map((item) => {
+      if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
+        return;
+      return <ToolbarButton iconName={item.config.addIcon.name} text={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
+        onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />
     });
-    widgetButtons.push(<IconButton iconName='more-horiz' key={'more'}
-      containerStyle={styles.flex}
-      onPress={() => this.showMoreNewButtons()} />)
+    widgetButtons.push(<ToolbarButton iconType='material' containerStyle={{ alignSelf: 'flex-end' }}
+      iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
+      text={this.state.showAllAddButtons ? 'less' : 'more'}
+      onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />)
     return widgetButtons;
-  }
-
-  onSelectedWidget() {
-    console.log('widget selected ');
   }
 
   renderSortedWidgets() {
     /* collect widgets for each itemTypeName into a single array so they could be sorted by date */
-    const widgets = [];
-    let key = 0;
-
-    const records = this.props.dailyData;
-    for (const record in records) {
-      widgets.push({
-        key: key,
-        date: moment(records[record].date),
-        element: <Widget key={key}
-          itemTypeName={records[record].type}
-          value={records[record]}
+    const widgets = this.props.dailyData.map(record => {
+      return {
+        key: record.id,
+        date: moment(record.date),
+        element: <Widget key={record.id}
           selectedDate={this.props.selectedDate}
-          navigation={this.props.navigation}
-          onSelected={() => this.onSelectedWidget()}
-          onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)} />
-
-      });
-      key++;
-    }
+          isSelected={this.props.selectedItem ? (this.props.selectedItem.id === record.id || false) : false}
+          itemTypeName={record.type}
+          value={record}
+          onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)}
+          onSelected={() => this.props.onSelected(record)}
+        />
+      }
+    });
 
     if (!widgets.length > 0)
       return this.renderWelcomeMessage();
@@ -88,18 +81,18 @@ class WidgetList extends React.Component {
     return (
       <View style={[styles.centered, styles.flex]}>
         <Image source={require('../assets/images/arrow-up.png')} style={styles.imageContainer} />
-        <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>How are you?</Text>
-        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>Tap the buttons above to add to your wellbeing</Text>
-        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>(e.g. Note or Mood)</Text>
+        <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage1}</Text>
+        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage2}</Text>
+        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage3}</Text>
       </View>
     );
   }
 
   render() {
     return (
-      <View style={styles.flex}>
-        <View style={[styles.addNewWidgetsButtonContainer, styles.centered]}>{this.renderAddNewButtons()}</View>
-        <ScrollView style={styles.flex}
+      <View>
+        <Toolbar>{this.renderAddNewButtons()}</Toolbar>
+        <ScrollView style={[styles.flex, styles.toolbarBottomOffset]}
           ref={ref => this.scrollView = ref} /* this is needed for scrollTo */
           onContentSizeChange={(contentWidth, contentHeight) => {
             /* scroll to top as new items are added */

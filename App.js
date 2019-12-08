@@ -64,7 +64,6 @@ export default class App extends React.Component {
               name={this.props.name}
               size={26}
               style={{ marginBottom: -3 }}
-              color={this.props.focused ? colors.tabIconSelected : colors.tabIconDefault}
             /> */
         ...Icon.Ionicons.font,
         // also look at material-comminuty icons https://materialdesignicons.com/

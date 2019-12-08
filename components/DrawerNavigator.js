@@ -1,17 +1,17 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
-import { View, ScrollView, Image } from 'react-native';
+import { View, ScrollView, Image, Text } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
-import { styles, colors, fonts } from '../assets/styles/style';
+import { styles } from '../assets/styles/style';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import MoodHistoryScreen from '../screens/MoodHistoryScreen';
-import NoteHistoryScreen from '../screens/NoteHistoryScreen';
-import SleepHistoryScreen from '../screens/SleepHistoryScreen';
+import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import ChartScreen from '../screens/ChartScreen';
 import PasswordScreen from '../screens/PasswordScreen';
 import BackupRestoreScreen from '../screens/BackupRestore';
 import { text } from '../modules/Constants';
+import { IconForButton } from './MiscComponents';
+import InsightsScreen from '../screens/InsightsScreen';
 
 const DrawerNavOptions = {
     headerStyle: {
@@ -35,9 +35,7 @@ const HomeNavigator = createStackNavigator({
             headerLeft: <DrawerIcon navigation={navigation} />
         })
     },
-    MoodHistory: { screen: MoodHistoryScreen },
-    SleepHistory: { screen: SleepHistoryScreen },
-    NoteHistory: { screen: NoteHistoryScreen }
+    ItemHistory: { screen: ItemHistoryScreen }
 }, {
     initialRouteName: 'Home',
     headerLayoutPreset: 'center',
@@ -63,6 +61,22 @@ const SettingsNavigator = createStackNavigator({
     })
 });
 
+const InsightsNavigator = createStackNavigator({
+    Insights: {
+        screen: InsightsScreen,
+        navigationOptions: ({ navigation }) => ({
+            /* show drawer icon is on initial route only */
+            headerLeft: <DrawerIcon navigation={navigation} />
+        })
+    },
+    ItemHistory: { screen: ItemHistoryScreen }
+}, {
+    headerLayoutPreset: 'center',
+    defaultNavigationOptions: ({ navigation }) => ({
+        ...DrawerNavOptions
+    })
+});
+
 const ChartsNavigator = createStackNavigator({
     Charts: { screen: ChartScreen }
 }, {
@@ -74,13 +88,17 @@ const ChartsNavigator = createStackNavigator({
 });
 
 const CustomDrawerContentComponent = (props) => (
-    <ScrollView>
+    <ScrollView style={styles.menuBackground}>
         <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-            <View style={[styles.logoContainer, { flex: 1, backgroundColor: colors.darkBackground }]}>
-                <Image source={require('../assets/images/logo.png')}
+            <View style={[styles.flex, styles.rowContainer]}>
+                <Image source={require('../assets/images/logo_small.png')}
                     style={styles.logoImage} />
+                <Text style={styles.heading}>{text.homeScreen.title}</Text>
             </View>
-            <DrawerItems {...props} />
+            <DrawerItems activeLabelStyle={styles.bodyTextBright}
+                inactiveLabelStyle={styles.bodyText}
+                activeBackgroundColor={styles.toolbarContainer.backgroundColor}
+                {...props} />
         </SafeAreaView>
     </ScrollView>
 );
@@ -90,31 +108,28 @@ const MainDrawerNavigator = createDrawerNavigator({
         screen: HomeNavigator,
         navigationOptions: ({ navigation }) => ({
             drawerLabel: text.homeScreen.menuLabel,
-            drawerIcon: ({ tintColor }) => (
-                <Icon name='home'
-                    type='font-awesome'
-                    size={24}
-                    color={tintColor} />
-            )
+            drawerIcon: <IconForButton name='home' iconStyle={styles.iconPrimarySmall} />
         })
     },
+    Insights: {
+        screen: InsightsNavigator,
+        navigationOptions: {
+            title: text.insightsScreen.title,
+            drawerLabel: text.insightsScreen.title,
+            drawerIcon: <IconForButton name='history' type='font-awesome' iconStyle={styles.iconPrimarySmall} />
+        }
+    },    
     Settings: {
         screen: SettingsNavigator,
         navigationOptions: {
             title: text.settingsScreen.title,
             drawerLabel: text.settingsScreen.title,
-            drawerIcon: ({ tintColor }) => (
-                <Icon name='sliders'
-                    type='font-awesome'
-                    size={24}
-                    color={tintColor} />
-            )
+            drawerIcon: <IconForButton name='sliders' type='font-awesome' iconStyle={styles.iconPrimarySmall} />
         }
     }
 }, {
     //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
-    initialRouteName: 'Home', /* default is to show the page of the first menu item but we want it to be Home */
-    //drawerBackgroundColor: '#ffffff',
+    initialRouteName: 'Settings', /* default is to show the page of the first menu item but we want it to be Home */
     contentComponent: CustomDrawerContentComponent
 });
 

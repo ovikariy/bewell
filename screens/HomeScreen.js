@@ -1,13 +1,14 @@
 import React from 'react';
 import { debounce } from 'lodash';
 import { connect } from 'react-redux';
-import { Icon, Button, Text, Image } from 'react-native-elements';
-import { styles, colors } from '../assets/styles/style';
+import { Image } from 'react-native-elements';
+import { styles } from '../assets/styles/style';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetList from '../components/WidgetList';
-import { WellKnownStoreKeys, storeConstants, stateConstants, text } from '../modules/Constants';
-import { load, persistRedux, updateRedux, replaceRedux } from '../redux/mainActionCreators';
+import { WellKnownStoreKeys, storeConstants, stateConstants, text, ItemTypes } from '../modules/Constants';
+import { load, persistRedux, updateRedux, replaceRedux, removeFromRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
+import { FloatingToolbar, DeleteItemButton, ToolbarButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getHashtagsFromText, getStorageKeyFromDate } from '../modules/helpers';
 
 const mapStateToProps = state => {
@@ -18,6 +19,7 @@ const mapDispatchToProps = dispatch => ({
   load: (key) => dispatch(load(key)),
   updateRedux: (key, items) => dispatch(updateRedux(key, items)),
   replaceRedux: (key, items) => dispatch(replaceRedux(key, items)),
+  remove: (key, id) => dispatch(removeFromRedux(key, id)),
   persistRedux: (state) => dispatch(persistRedux(state))
 });
 
@@ -36,8 +38,10 @@ class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      selectedDate: new Date()
+      selectedDate: new Date(),
+      selectedItem: null
     }
+    //this.props.navigation.navigate('ItemHistory', { 'itemType': ItemTypes.SLEEP });
   }
 
   componentDidMount() {
@@ -48,12 +52,19 @@ class HomeScreen extends React.Component {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
     this.props.load(selectedMonth);
     this.props.load(WellKnownStoreKeys.TAGS);
+    this.setState({ ...this.state, selectedItem: null });
+  }
+
+  deleteItem(storeKey, itemId) {
+    this.props.remove(storeKey, itemId);
+    this.persist();
+    this.setState({ ...this.state, selectedItem: null });
   }
 
   render() {
     const selectedDateString = new Date(this.state.selectedDate).toLocaleDateString();
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
-    let data = []; //
+    let data = [];
     if (this.props[stateConstants.OPERATION] && this.props[stateConstants.OPERATION].store)
       data = (this.props[stateConstants.OPERATION].store[selectedMonth] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
     return (
@@ -64,26 +75,34 @@ class HomeScreen extends React.Component {
             navigation={this.props.navigation}
             dailyData={data}
             selectedDate={this.state.selectedDate}
-            onChange={(newDailyData) => { this.onDataChange(newDailyData) }} />
+            selectedItem={this.state.selectedItem}
+            onChange={(newDailyData) => { this.onDataChange(newDailyData) }}
+            onSelected={(selectedItem) => { this.onSelected(selectedItem) }} />
         </ScreenContent>
+        <FloatingToolbar isVisible={this.state.selectedItem != null}>
+          <DeleteItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
+          <ViewHistoryButton item={this.state.selectedItem} navigation={this.props.navigation} />
+        </FloatingToolbar>
       </ScreenBackground>
     );
   }
 
   selectedDateChanged(newDate) {
+    /* TODO: figure out how to persist on screen change also because can navigate to history screen not just change date */
     this.persist();
-    this.selectedDateChangeConfirmed(newDate);
-  }
-
-  selectedDateChangeConfirmed(newDate) {
-    this.setState({ ...this.state, selectedDate: new Date(newDate) });
+    this.setState({ ...this.state, selectedDate: new Date(newDate), selectedItem: null });
   }
 
   onDataChange(newDailyData) {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
     this.props.updateRedux(selectedMonth, newDailyData);
     this.persistAfterDelay(newDailyData);
-    this.props.navigation.setParams({ canSave: true });
+  }
+
+  onSelected(selectedItem) {
+    selectedItem === this.state.selectedItem ?
+      this.setState({ ...this.state, selectedItem: null }) :
+      this.setState({ ...this.state, selectedItem });
   }
 
   persistAfterDelay = debounce(function (newDailyData) {
@@ -91,7 +110,8 @@ class HomeScreen extends React.Component {
   }, 3000);
 
   persist = (newDailyData) => {
-    /* update tags here instead of onDataChange otherwise we'll get a separate tag when each letter is typed */
+    /* update tags here instead of onDataChange otherwise we'll get a separate tag when each letter is typed
+    TODO: make this better maybe persist tags only on blur or screen change */
     if (newDailyData)
       this.updateRecentTags(newDailyData);
     if (!this.props[stateConstants.OPERATION].dirtyKeys)

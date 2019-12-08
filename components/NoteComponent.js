@@ -1,8 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { TextArea } from '../components/MiscComponents';
+import * as Animatable from 'react-native-animatable';
+import { ClearTextArea, Spacer, IconButton } from '../components/MiscComponents';
 import { WellKnownStoreKeys, stateConstants, text, defaultTags } from '../modules/Constants';
 import { getHashtagsFromText, mergeArraysImmutable } from '../modules/helpers';
+import { styles } from '../assets/styles/style';
 import Tags from '../components/Tags';
 import { connect } from 'react-redux';
 import { load } from '../redux/mainActionCreators';
@@ -19,8 +21,16 @@ const mapDispatchToProps = dispatch => ({
 
 class NoteComponent extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = { 
+      recentTagsVisble: false
+    }
+  }
+
   componentDidMount() {
-   // this.props.load(WellKnownStoreKeys.TAGS);
+    // this.props.load(WellKnownStoreKeys.TAGS);
   }
 
   textChanged(note) {
@@ -31,7 +41,7 @@ class NoteComponent extends React.Component {
     this.props.onChange({ ...this.props.value, note: (this.props.value.note || '') + ' ' + tag.id });
   }
 
-  getMostRecentTags() {
+  getRecentTags() {
     /* show up to ten most recent and/or default tags without the ones already showing in the text field */
     const note = this.props.value && this.props.value.note ? this.props.value.note : '';
     const tagsFromNote = getHashtagsFromText(note);
@@ -39,31 +49,32 @@ class NoteComponent extends React.Component {
 
     let result = mergeArraysImmutable(defaultTags, tagsFromStorage);
     result = result.filter(item => tagsFromNote.indexOf(item.id) < 0);
-    result = result.sort(function (x, y) {
-      if (!x.date)
-        return true;
-      if (!y.date)
-        return false;
-      return new Date(y.date) - new Date(x.date)
-    });
-console.log('\r\nresult ' + JSON.stringify(result));
+    result = result.sort((x, y) => new Date(y.date) - new Date(x.date));
     return result.slice(0, 10);
   }
-
+ 
   render() {
-    const tags = this.getMostRecentTags();
-
+    const tags = this.getRecentTags();
     return (
-      <View>
-        <TextArea
+      <Animatable.View animation="fadeIn" duration={500}>
+        <ClearTextArea
+          numberOfLines={1}
           placeholder={text.note.placeholder}
           value={this.props.value ? this.props.value.note : null}
           onChangeText={(note) => { this.textChanged(note) }}
         />
-        <Tags
-          items={tags}
-          onPress={(tag) => this.onTagPress(tag)} />
-      </View>
+        <Spacer height={10} />
+        <IconButton iconName='tags' iconType='font-awesome' iconStyle={styles.iconSecondarySmall}
+          containerStyle={{ alignItems: 'flex-start', }}
+          onPress={() => { this.setState({ recentTagsVisble: !this.state.recentTagsVisble }) }} />
+        {
+          this.state.recentTagsVisble ?
+            <Tags title={text.note.tagInstruction}
+              items={tags}
+              onPress={(tag) => this.onTagPress(tag)} />
+            : <View />
+        }
+      </Animatable.View>
     );
   }
 }

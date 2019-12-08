@@ -7,9 +7,10 @@ export const text = {
   listItems: {
     AreYouSureDeleteThisItem: 'Are you sure you wish to delete this item?',
     DeleteThisItem: 'Delete this item?',
-    SelectItemToDelete: 'Select item to delete',
+    SelectItemFirst: 'Select item first',
     ItemDeleted: 'Item deleted',
-    Updated: 'Updated successfully'
+    Updated: 'Updated successfully',
+    EmptyList: 'Oops...looks like we don\'t have any items here'
   },
   passwordScreen: {
     title: 'Set Password',
@@ -41,6 +42,9 @@ export const text = {
   files: {
     invalidFileCopy: 'Invalid file to copy'
   },
+  historyScreen: {
+    title: 'History'
+  },
   moodHistoryScreen: {
     title: 'Mood History'
   },
@@ -49,9 +53,14 @@ export const text = {
     bedTime: 'Bed time:  ',
     wakeTime: 'Wake time: '
   },
+  sleep: {
+    bedTime: 'set bed time', 
+    wakeTime: 'set wake time'
+  },
   note: {
     title: 'Note History',
-    placeholder: 'On my mind...'
+    placeholder: 'What\'s on your mind?',
+    tagInstruction: 'tap a tag to add to note or type in your own: '
   },
   homeScreen: {
     title: 'YOUR WELLBEING',
@@ -63,9 +72,17 @@ export const text = {
   },
   settingsScreen: {
     title: 'Settings',
-    dataPrivacy: 'Data Privacy ...',
-    importExport: 'Import and Export ...',
+    setPassword: 'Set Password',
+    importExport: 'Import and Export',
     version: 'app version'
+  },
+  insightsScreen: {
+    title: 'Insights'
+  },
+  widgets: {
+    welcomeMessage1: 'How are you?',
+    welcomeMessage2: 'Tap the buttons above to add to your wellbeing',
+    welcomeMessage3: '(e.g. Note or Mood)'
   }
 }
 
@@ -108,40 +125,13 @@ export const storeConstants = {
   DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY'
 }
 
-export const widgetConfig = {
-  [ItemTypes.NOTE]:
-  {
-    itemTypeName: ItemTypes.NOTE, historyScreenName: 'NoteHistory', multiItem: true,
-    addIcon: { text: 'note', name: 'sticky-note-o', type: 'font-awesome' },
-    style: {}
-  },
-  [ItemTypes.MOOD]:
-  {
-    itemTypeName: ItemTypes.MOOD, historyScreenName: 'MoodHistory', multiItem: true,
-    addIcon: { text: 'mood', name: 'smile-o', type: 'font-awesome' },
-    style: {},
-    icons: [
-      { name: 'Happy', icon: 'mood-happy', iconStyle: {}, backgroundStyle: { backgroundColor: '#ff9a55' } },
-      { name: 'So-so', icon: 'mood-neutral', iconStyle: {}, backgroundStyle: { backgroundColor: '#009898' } },
-      { name: 'Could be better', icon: 'mood-sad', iconStyle: {}, backgroundStyle: { backgroundColor: '#517fa4' } }
-    ]
-  },
-  [ItemTypes.SLEEP]:
-  {
-    itemTypeName: ItemTypes.SLEEP, historyScreenName: 'SleepHistory', multiItem: true,
-    addIcon: { text: 'sleep', name: 'moon-o', type: 'font-awesome' },
-    style: {},
-    icons: [
-      { name: 'Restful', icon: 'sleep-happy', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#ff9a55' } },
-      { name: 'Interrupted', icon: 'sleep-neutral', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#009898' } },
-      { name: 'Poor', icon: 'sleep-sad', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#517fa4' } }
-    ]
-  }
-}
 
-export const defaultTags = [{ id: '#gratitude' }, { id: '#inspired' },
-{ id: '#feelingGood' }, { id: '#pain' }, { id: '#headache' }, { id: '#goals' }, { id: '#anxious' },
-{ id: '#sensitive' }, { id: '#tired' }, { id: '#happy' }, { id: '#optimistic' }];
+
+const minDateString = '1970-01-01';
+export const defaultTags = [{ id: '#gratitude', date: minDateString }, { id: '#inspired', date: minDateString },
+{ id: '#feelingGood', date: minDateString }, { id: '#pain', date: minDateString }, { id: '#headache', date: minDateString }, 
+{ id: '#goals', date: minDateString }, { id: '#anxious', date: minDateString }, { id: '#sensitive', date: minDateString }, 
+{ id: '#tired', date: minDateString }, { id: '#happy', date: minDateString }, { id: '#optimistic', date: minDateString }];
 
 export const Errors = {
   General: 'An error has occurred ',

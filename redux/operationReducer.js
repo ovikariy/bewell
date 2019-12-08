@@ -33,7 +33,7 @@ export const OPERATION = (state = {
         case ActionTypes.AFTER_PERSIST: {
             return { ...state, isLoading: false, errMess: null, successMess: null, dirtyKeys: {} };
         }
-        case ActionTypes.REPLACE_ITEM_IN_REDUX: { /* TODO: do we need this? */
+        case ActionTypes.REPLACE_ITEM_IN_REDUX: {
             const result = { ...state, isLoading: false, errMess: null, successMess: null };
             if (action.payload && action.payload.key)
                 result.store = { ...state.store, [action.payload.key]: action.payload.items }

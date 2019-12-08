@@ -22,6 +22,22 @@ export const friendlyDate = (date, options) => {
   return newDate.format('dddd, MMM D');
 }
 
+export const friendlyDay = (date) => {
+  //TODO: test with timezones
+  const format = 'YYYYMMDD';
+  const newDate = moment(date);
+  const newDateShortString = newDate.format(format);
+
+  const today = moment();
+  const yesterday = addSubtractDays(today, -1);
+
+  if (newDateShortString === today.format(format))
+    return text.general.today;
+  if (newDateShortString === yesterday.format(format))
+    return text.general.yesterday;
+  return newDate.format('dddd');
+}
+
 export const friendlyTime = (date) => {
   return moment(date).format('LT');
 }
@@ -106,4 +122,27 @@ export function wait(timeout) {
   return new Promise(resolve => {
     setTimeout(resolve, timeout);
   });
+}
+
+export function getNewUuid() {
+  //TODO: use a library mentioned in this answer for better reliability
+  //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}  
+
+export function groupBy(list, keyGetter) {
+  const map = new Map();
+  list.forEach((item) => {
+    const key = keyGetter(item);
+    const collection = map.get(key);
+    if (!collection) {
+      map.set(key, [item]);
+    } else {
+      collection.push(item);
+    }
+  });
+  return map;
 }

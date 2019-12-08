@@ -1,78 +1,27 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native-elements';
-import { connect } from 'react-redux';
-import { Loading } from './MiscComponents';
+import { FlatList, Text, ToastAndroid, TouchableHighlight, View, ScrollView } from 'react-native';
 import { styles } from '../assets/styles/style';
-import * as Animatable from 'react-native-animatable';
-import { removeFromRedux, persistRedux } from '../redux/mainActionCreators';
-import { friendlyDate, friendlyTime, getStorageKeyFromDate, isEmptyItem } from '../modules/helpers';
+import { friendlyDate, friendlyTime, isEmptyItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
+import { Loading, EmptyList, showMessages } from './MiscComponents';
 import { text } from '../modules/Constants';
-import { View, Text, FlatList, TouchableNativeFeedback, Alert, ToastAndroid } from 'react-native';
-
-const mapDispatchToProps = dispatch => ({
-  remove: (itemType, id) => dispatch(removeFromRedux(itemType, id)),
-  persistRedux: (state) => dispatch(persistRedux(state))
-});
 
 class ItemHistory extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedHistoryItem: null
-    }
-  }
-
-  handleDeletePress() {
-    Alert.alert(
-      text.listItems.DeleteThisItem,
-      text.listItems.AreYouSureDeleteThisItem,
-      [
-        {
-          text: text.general.Cancel,
-          style: text.general.Cancel
-        },
-        {
-          text: text.general.Ok,
-          onPress: () => this.remove()
-        }
-      ],
-      { cancelable: false }
-    );
-  }
-
-  remove() {
-
-    if (!this.state.selectedHistoryItem) {
-      alert(text.listItems.SelectItemToDelete);
-      return;
-    }
-    const storeKey = getStorageKeyFromDate(this.state.selectedHistoryItem.date);
-    this.props.remove(storeKey, this.state.selectedHistoryItem.id);
-    this.props.persistRedux(this.props.state);
-    this.setState({ selectedHistoryItem: null })
-  }
-
-  renderDeleteButton() {
-    return <View>
-      <Button type='clear'
-        icon={{ name: 'close-circle-outline', type: 'material-community', size: 40 }}
-        onPress={() => { this.handleDeletePress() }}
-      />
-    </View>
   }
 
   filterByItemType(store, itemType) {
-    const data = [];
+    const result = [];
     if (!store)
-      return data;
+      return result;
     Object.keys(store).forEach((key) => {
       const filtered = store[key].filter((item) => item.type == itemType);
       filtered.forEach((filteredItem) => {
         if (!isEmptyItem(filteredItem))
-          data.push(filteredItem);
+          result.push(filteredItem);
       });
     });
-    return data.sort(function (x, y) {
+    return result.sort(function (x, y) {
       return new Date(y.date) - new Date(x.date);
     });
   }
@@ -82,67 +31,76 @@ class ItemHistory extends Component {
       return (<Loading />);
     }
 
-    if (this.props.state.errMess) {
-      ToastAndroid.show(this.props.state.errMess, ToastAndroid.LONG);
-    }
-
-    if (this.props.state.successMess) {
-      ToastAndroid.show(this.props.state.successMess, ToastAndroid.LONG);
-    }
+    showMessages(this.props.state);
 
     const items = this.filterByItemType(this.props.state.store, this.props.itemType);
     if (!items || items.length <= 0) {
-      return (
-        <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
-          <Text style={styles.subTitleText}>Oops...looks like we don't have any items here</Text>
-        </View>
-      );
+      return <EmptyList />
     }
 
-    const renderItem = ({ item, index }) => {
-      const isSelectedItem = (this.state.selectedHistoryItem && this.state.selectedHistoryItem.id === item.id);
+    return (
+      <View style={[{ marginTop: 20 }, this.props.style]}>
+        {this.renderGroupedByDay(items)}
+      </View>
+    )
+  }
 
-      /* all history screens have common functionality like selecting the row and deleteing the row but
-      also can have custom fields to show for items so we allow each screen to customine item display */
-      let customItemDisplay;
-      if (this.props.renderItem) {
-        customItemDisplay = this.props.renderItem(item, isSelectedItem);
-      }
-      else {
-        customItemDisplay = <View style={styles.flex}>
-          <Text style={isSelectedItem ? [styles.titleText, styles.highlightText] : styles.titleText}>
-            {friendlyDate(item.date)}</Text>
+  renderGroupedByDay(items) {
+    const rows = [];
+
+    const groupedByDay = groupBy(items, item => friendlyDate(item.date));
+    groupedByDay.forEach(data => {
+
+      rows.push(
+        <View key={data[0].date}>
+          <View style={[styles.row, styles.centered, styles.dimBackground]}>
+            <Text style={[styles.titleText]}>
+              {friendlyDay(data[0].date)}</Text>
+            <Text style={[styles.bodyText, { marginHorizontal: 20, color: styles.bodyText.color + '80' }]}>
+              {formatDate(data[0].date, 'MMMM D')}</Text>
+          </View>
+          <FlatList extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
+            data={data}
+            horizontal={this.props.config.isHorizontalHistoryRow ? true : false}
+            renderItem={(item, index) => this.renderItem(item, index)}
+            keyExtractor={item => item.id + ''} /* keyExtractor expects a string */
+          />
+        </View>
+      );
+    });
+
+    return rows;
+  }
+
+
+  renderItem({ item, index }) {
+    const isSelectedItem = (this.props.selectedItem && this.props.selectedItem.id === item.id);
+    /* all history screens have common functionality like selecting the row and deleteing the row but
+    also can have custom fields to show for items so we allow each screen to customize item display */
+    let customItemDisplay;
+    if (this.props.renderItem) {
+      customItemDisplay = this.props.renderItem(item, isSelectedItem);
+    }
+    else {
+      customItemDisplay = <View style={styles.row}>
+        <View style={[styles.flex]}>
           <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
             {friendlyTime(item.date)}</Text>
           <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
             {item.note}</Text>
         </View>
-      };
-
-      return (
-        //TODO: TouchableNativeFeedback only works on Android, use something else if iOS
-        <TouchableNativeFeedback onPress={() => { this.setState({ selectedHistoryItem: item }) }}>
-          <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
-            {customItemDisplay}
-            <View style={styles.alignEnd}>
-              {isSelectedItem ? this.renderDeleteButton() : <View></View>}
-            </View>
-          </View>
-        </TouchableNativeFeedback>
-      );
+      </View>
     };
 
     return (
-      (items && items.length > 0) ?
-        <Animatable.View animation="fadeInUp" duration={500}>
-          <FlatList extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
-            data={items}
-            renderItem={renderItem}
-            keyExtractor={item => item.id + ''} /* keyExtractor expects a string */
-          />
-        </Animatable.View> : <View></View>
-    )
-  }
+      <TouchableHighlight onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
+        <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
+          {customItemDisplay}
+        </View>
+      </TouchableHighlight>
+    );
+  };
+
 }
 
-export default connect(null, mapDispatchToProps)(ItemHistory);
+export default ItemHistory;

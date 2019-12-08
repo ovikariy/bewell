@@ -29,25 +29,6 @@ const defaultColors = {
   transparent: 'transparent'
 }
 
-//TODO: get rid of this colors const and replace with classes
-export const colors = {
-  tintColor: defaultColors.color5,
-  headingColor: defaultColors.color5,
-  bright: defaultColors.color5,
-  tabIconDefault: defaultColors.color5,
-  tabIconSelected: defaultColors.color5,
-  hightlightText: '#555555',
-  hightlightBackground: '#eeeeee',
-  darkBackground: defaultColors.color3,
-  placeholderText: defaultColors.color5 + '70',
-  semiTransparentBG: '#00000020',
-  transparent: 'transparent',  //'rgba(0,0,0,0)' or '#00000000'
-  button: defaultColors.color2,
-  primaryButton: defaultColors.color1,
-  secondaryButton: defaultColors.color5,
-  disabledColor: defaultColors.color5 + '40'
-};
-
 export const styles = StyleSheet.create({
 
   /* common */
@@ -68,6 +49,12 @@ export const styles = StyleSheet.create({
     fontWeight: '100',
     color: defaultColors.color1
   },
+  heading2: {
+    fontFamily: fonts.primary,
+    fontSize: 18,
+    fontWeight: '100',
+    color: defaultColors.color1
+  },  
   subHeading: {
     fontFamily: fonts.primary,
     fontSize: 15,
@@ -77,6 +64,14 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.primary,
     fontSize: 15,
     color: defaultColors.color4
+  },
+  bodyTextBright: {
+    fontFamily: fonts.primary,
+    fontSize: 15,
+    color: defaultColors.color1
+  },
+  placeholderText: {
+    color: defaultColors.color4 + '70'
   },
   titleText: {
     fontFamily: fonts.primaryLight,
@@ -89,28 +84,6 @@ export const styles = StyleSheet.create({
     color: defaultColors.color1 + '95',
     fontSize: 18
   },
-  // subTitleText: {
-  //   fontFamily: fonts.primary,
-  //   fontSize: 18,
-  //   color: typographyColors.textColor2
-  // },
-
-  // buttonLabel: {
-  //   fontFamily: fonts.secondary,
-  //   fontSize: 14,
-  //   color: typographyColors.textColor2
-  // },
-  // buttonLabelSmall: {
-  //   fontFamily: fonts.secondary,
-  //   fontSize: 12,
-  //   color: typographyColors.textColor2
-  // },
-  // linkLabel: {
-  //   fontFamily: fonts.primaryLight,
-  //   fontSize: 12,
-  //   color: typographyColors.textColor2
-  // },
-
 
   /* buttons */
 
@@ -128,7 +101,10 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     color: defaultColors.color4
   },
-
+  iconSecondarySmall: {
+    fontSize: 20,
+    color: defaultColors.color4
+  },
   buttonPrimary: {
     backgroundColor: defaultColors.color1 + '10',
     borderColor: defaultColors.color1 + '50',
@@ -154,7 +130,8 @@ export const styles = StyleSheet.create({
   },
   screenBodyContainer: {
     /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
-    marginTop: 70 /* add margins equal to the navigator height (e.g. drawer or tab) */
+    /* add margins equal to the navigator height (e.g. drawer or tab) or bottom toolbar */
+    marginTop: 70
   },
   selectedDateContainer: {
     flexDirection: 'row',
@@ -177,15 +154,10 @@ export const styles = StyleSheet.create({
 
   /* widgets */
 
-  addNewWidgetsButtonContainer: {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    marginBottom: 5,
-    backgroundColor: defaultColors.color6
-  },
+
   widgetTitleContainer: {
     paddingBottom: 10,
+    paddingLeft: 10,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center' /* vertical align when flexDirection is set to row */
@@ -196,17 +168,24 @@ export const styles = StyleSheet.create({
     fontSize: 20
   },
   widgetSubTitle: {
-    color: defaultColors.color2 + '90',
-    fontSize: 14,
+    color: defaultColors.color2 + '50',
+    fontSize: 12,
     marginLeft: 10
   },
   widgetContainer: {
-    marginHorizontal: 20, 
-    marginBottom: 10,
+    paddingHorizontal: 10,
     paddingVertical: 20,
     borderColor: 'transparent',
     borderBottomColor: defaultColors.color7 + '50',
     borderBottomWidth: 1
+  },
+  widgetContainerSelected: {
+    backgroundColor: defaultColors.color7 + '80'
+  },
+
+  tagsContainer: {
+    backgroundColor: defaultColors.color7 + '90',
+    padding: 10
   },
 
   dontKnowWhatToNameThis: {
@@ -222,8 +201,8 @@ export const styles = StyleSheet.create({
 
   logoImage: {
     height: 60,
-    width: 150,
-    margin: 10,
+    width: 60,
+    margin: 5,
     resizeMode: 'contain'
   },
 
@@ -236,7 +215,7 @@ export const styles = StyleSheet.create({
   /* rating icons  */
 
   ratingButtonGroupContainer: {
-    height: 'auto',
+    flexDirection: 'row',
     borderWidth: 0,
     backgroundColor: 'transparent'
   },
@@ -284,20 +263,22 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   spacedOut: {
-    margin: 5
+    margin: 3
   },
-  textArea: {
-    margin: 10
-  },
-  textAreaContainer: {
-    backgroundColor: colors.semiTransparentBG,
-    borderRadius: 5,
-    borderBottomWidth: 0
+  clearTextAreaContainer: {
+    margin: 0,
+    padding: 0,
+    borderWidth: 0,
+    borderBottomWidth: 0,
+    backgroundColor: defaultColors.transparent
   },
   row: {
     flex: 1,
     flexDirection: 'row',
     padding: 10
+  },
+  dimBackground: {
+    backgroundColor: defaultColors.color8 + '40'
   },
   highlightBackground: {
     backgroundColor: defaultColors.color2
@@ -307,17 +288,51 @@ export const styles = StyleSheet.create({
   },
   alignEnd: {
     alignItems: 'flex-end'
+  },
+  menuBackground: {
+    backgroundColor: defaultColors.color5
+  },
+  toolbarContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    backgroundColor: defaultColors.color6
+  },
+  toolbarButtonContainer: {
+    /* flex: 0, flexGrow: 1 - stretch the buttons and don't cut if they don't fit */
+    flex: 0, 
+    flexGrow: 1,
+    alignItems: 'center', /* horizontal center */
+    justifyContent: 'center', /* vertical center */
+    textAlignVertical: 'center',
+    alignContent: 'center'
+  },
+  toolbarButtonText: {
+    fontFamily: fonts.primary,
+    fontSize: 12,
+    color: defaultColors.color1,
+    alignSelf: 'center'
+  },
+  floatingContainer: {
+    zIndex: 1,
+    position: 'absolute',
+    bottom: 0,
+    paddingVertical: 10,
+    backgroundColor: defaultColors.color7
+  },
+  toolbarBottomOffset: {
+    paddingBottom: 56 /* 52 is the height the toolbar auto renders */
+  },
+
+
+  listItemContainer: {
+    height: 70, 
+    marginBottom: 2, 
+    backgroundColor: '#ffffff20' 
+  },
+  listItemLeftIcon: { 
+    marginLeft: 5, 
+    width: 50 
   }
-
-
-
-
-  // floatingContainer: {
-  //   zIndex: 1,
-  //   position: 'absolute',
-  //   right: 7,
-  //   top: 9
-  // },
-
 });
 
