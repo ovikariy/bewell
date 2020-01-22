@@ -103,12 +103,10 @@ export const WidgetFactory = {
             <CustomIconRatingItem value={ratingIcon} size={40} />
           </View>
           <View style={{ flex: 2 }}>
-            <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
-              {friendlyTime(item.date)}</Text> 
             <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
-              {(item.startDate) ? text.sleepHistoryScreen.bedTime + formatDate(item.startDate, 'MMM D h:mm A') : ''}</Text>
+              {(item.startDate) ? text.sleepHistoryScreen.bedTime + formatDate(item.startDate, 'h:mm A') : ''}</Text>
             <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
-              {(item.endDate) ? text.sleepHistoryScreen.wakeTime + formatDate(item.endDate, 'MMM D h:mm A') : ''}</Text>
+              {(item.endDate) ? text.sleepHistoryScreen.wakeTime + formatDate(item.endDate, 'h:mm A') : ''}</Text>
           </View>
         </View>
       );
@@ -120,51 +118,6 @@ export const WidgetFactory = {
       widgetTitle: 'Custom Widget',
       editableTitle: true,
       itemTypeName: 'custom',
-      addIcon: { text: 'note', name: 'pencil', type: 'font-awesome' },
-      style: {}
-    },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
-      return (
-        <Text>Hi</Text>
-      );
-    }
-  },
-  'custom2':
-  {
-    config: {
-      widgetTitle: 'Custom Widget',
-      editableTitle: true,
-      itemTypeName: 'custom2',
-      addIcon: { text: 'note', name: 'pencil', type: 'font-awesome' },
-      style: {}
-    },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
-      return (
-        <Text>Hi</Text>
-      );
-    }
-  },
-  'custom3':
-  {
-    config: {
-      widgetTitle: 'Custom Widget',
-      editableTitle: true,
-      itemTypeName: 'custom3',
-      addIcon: { text: 'note', name: 'pencil', type: 'font-awesome' },
-      style: {}
-    },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
-      return (
-        <Text>Hi</Text>
-      );
-    }
-  },
-  'custom4':
-  {
-    config: {
-      widgetTitle: 'Custom Widget',
-      editableTitle: true,
-      itemTypeName: 'custom4',
       addIcon: { text: 'note', name: 'pencil', type: 'font-awesome' },
       style: {}
     },

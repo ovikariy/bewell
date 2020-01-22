@@ -9,7 +9,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import { shareAsync } from 'expo-sharing';
 import { getDocumentAsync } from 'expo-document-picker';
 import { importItemsIntoStorage } from '../redux/BackupRestoreActionCreators';
-import { getStorageDataForExportAsync } from '../modules/StorageHelpers';
+import { getAllStorageData } from '../modules/StorageHelpers';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as FileHelpers from '../modules/FileHelpers';
  
@@ -54,7 +54,7 @@ class BackupRestoreScreen extends Component {
     */
 
     try {
-      const data = await getStorageDataForExportAsync();
+      const data = await getAllStorageData();
       const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.ExportDirectory);
       const exportFilename = 'morning-app-export-' + moment().format('YYMMMDD-hhmmss') + '.txt'; //TODO: rename to .morning or custom ext to assoc file type with app
       const exportFilepath = exportDirectory + '/' + exportFilename;

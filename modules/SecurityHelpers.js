@@ -3,12 +3,18 @@ import { ErrorCodes, Errors, storeConstants } from './Constants';
 import * as SecureStore from 'expo-secure-store';
 
 export const getAllHashedStoreKeys = async (dataEncryptionKey, password = null) => {
-  const hashedStorageKeys = [];
-  for (var i = 0; i < storeConstants.StoreKeys.length; i++) {
-    const itemTypeNameHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
-    hashedStorageKeys.push(itemTypeNameHash);
+  return getMultipleHashedKeys(storeConstants.AllStoreKeys, dataEncryptionKey, password);
+}
+
+export const getMultipleHashedKeys = async (keysToHash, dataEncryptionKey, password = null) => {
+  if (!keysToHash || keysToHash.length < 0)
+    throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey7);
+  const hashedKeys = [];
+  for (var i = 0; i < keysToHash.length; i++) {
+    const keyHash = await getItemKeyHashAsync(keysToHash[i], dataEncryptionKey, password);
+    hashedKeys.push(keyHash);
   }
-  return hashedStorageKeys;
+  return hashedKeys;
 }
 
 export const setPasswordAsync = async (oldPassword, newPassword) => {
@@ -45,7 +51,7 @@ export const isPasswordSet = async () => {
     return false;
   } catch (err) {
     console.log(err);
-    throw new Error(Errors.General + Errors.AccessStorage + ErrorCodes.Storage7); 
+    throw new Error(Errors.General + Errors.AccessStorage + ErrorCodes.Storage7);
   }
 }
 
@@ -94,9 +100,9 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
 
   /* create a mapping of item type names and their hashes so we know which item is which */
   const itemKeyHashMap = {};
-  for (var i = 0; i < storeConstants.StoreKeys.length; i++) {
-    const itemKeyHash = await getItemTypeNameHashAsync(storeConstants.StoreKeys[i], dataEncryptionKey, password);
-    itemKeyHashMap[itemKeyHash] = storeConstants.StoreKeys[i];
+  for (var i = 0; i < storeConstants.AllStoreKeys.length; i++) {
+    const itemKeyHash = await getItemKeyHashAsync(storeConstants.AllStoreKeys[i], dataEncryptionKey, password);
+    itemKeyHashMap[itemKeyHash] = storeConstants.AllStoreKeys[i];
   }
 
   const decryptedItems = [];
@@ -114,7 +120,7 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
 
     const key = itemKeyHashMap[hash];
     if (!key)
-      throw new Error(Errors.InvalidKey); 
+      throw new Error(Errors.InvalidKey);
 
     const valueDecrypted = await decryptDataAsync(value, dataEncryptionKey, password);
     if (value && !valueDecrypted) {
@@ -127,15 +133,15 @@ export const decryptAllItems = async (items, dataEncryptionKey, password) => {
   return decryptedItems;
 }
 
-export const getItemTypeNameHashAsync = async (itemTypeName, dataEncryptionKey, password = null) => {
+export const getItemKeyHashAsync = async (itemKey, dataEncryptionKey, password = null) => {
 
-  if (!dataEncryptionKey || !itemTypeName)
+  if (!dataEncryptionKey || !itemKey)
     throw new Error(Errors.General + ErrorCodes.Hash1);
 
   try {
     const dataEncryptionKeyDecrypted = await decryptWithKeychainPasswordAsync(dataEncryptionKey, password);
-    const itemTypeNameHash = await getHashAsync(itemTypeName, dataEncryptionKeyDecrypted);
-    return itemTypeNameHash;
+    const hash = await getHashAsync(itemKey, dataEncryptionKeyDecrypted);
+    return hash;
   } catch (err) {
     console.log(err);
     throw new Error(Errors.General + ErrorCodes.Hash2);

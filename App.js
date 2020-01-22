@@ -9,6 +9,7 @@ import { styles } from './assets/styles/style';
 
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
+
 import { PersistGate } from 'redux-persist/es/integration/react';
 
 import { runTests } from './modules/Tests'; //TODO: delete this 
@@ -19,6 +20,7 @@ export default class App extends React.Component {
   state = {
     isLoadingComplete: false
   };
+
 
   render() {
     //TODO: delete this 
@@ -34,6 +36,12 @@ export default class App extends React.Component {
       />
     }
     return (
+
+      //TODO: disable persist? downsides?
+      //TODO: might need to dispatch operationClearRedux on load if preloadedState={false} doesn't help so that when the app loads it should be free 
+      //cleared from previous run. Check that it loads only requested data e.g. on HomeScreen. If need to dispatch something on load then 
+      //need to wrap Main in another connected component
+      
       <Provider store={store}>
         <PersistGate
           // loading={<AppLoading
@@ -42,9 +50,11 @@ export default class App extends React.Component {
           //     onFinish={this._handleFinishLoading}
           //   />}
           persistor={persistor}
+          preloadedState={false}
         >
           <View style={styles.flex}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+
             <Main />
           </View>
         </PersistGate>

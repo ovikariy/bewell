@@ -3,26 +3,19 @@ import * as SecurityHelpers from './SecurityHelpers';
 import * as AsyncStorageService from './AsyncStorageService';
 import { isDate } from './helpers';
 
-export const getItemsAsync = async (key) => {
-    if (!key)
+export const getItemsAsync = async (keyOrKeys) => {
+    if (!keyOrKeys)
         throw new Error(Errors.General + ErrorCodes.MissingKey1);
+    if (Array.isArray(keyOrKeys) && keyOrKeys.length <= 0)
+        throw new Error(Errors.General + ErrorCodes.MissingKey2);
     try {
-        return await AsyncStorageService.getItem(key);
+        if (Array.isArray(keyOrKeys))
+            return await AsyncStorageService.multiGet(keyOrKeys);
+        else
+            return await AsyncStorageService.getItem(keyOrKeys);
     } catch (err) {
         console.log(err);
         throw new Error(Errors.General + ErrorCodes.Storage1);
-    }
-}
-
-export const getMultiItemsAsync = async (keys) => {
-    if (!keys || !Array.isArray(keys) || keys.length <= 0)
-        throw new Error(Errors.General + ErrorCodes.MissingKey2);
-    try {
-        const items = await AsyncStorageService.multiGet(keys);
-        return items;
-    } catch (err) {
-        console.log(err);
-        throw new Error(Errors.General + ErrorCodes.Storage2);
     }
 }
 
@@ -110,15 +103,48 @@ export const removeByIdMultipleAsync = async (itemTypeName, ids) => {  /*TODO: i
     return itemsWithoutDeleted;
 }
 
-export const getStorageDataForExportAsync = async () => {
+export const getAllStorageData = async () => {
     const encryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
     if (!encryptionKey)
-        return await getMultiItemsAsync(storeConstants.StoreKeys);
+        return await getItemsAsync(storeConstants.AllStoreKeys);
     else {
         const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys(encryptionKey);
         hashedKeys.push(storeConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
-        return await getMultiItemsAsync(hashedKeys);
+        return await getItemsAsync(hashedKeys);
     }
+}
+
+export const getMultiItemsAndDecryptAsync = async (keys) => {
+    const dataEncryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
+    let items = [];
+    if (!dataEncryptionKey)
+        items = await getItemsAsync(keys);
+    else {
+        const hashedKeys = await SecurityHelpers.getMultipleHashedKeys(keys, dataEncryptionKey, null);
+        items = await getItemsAsync(hashedKeys);
+
+        if (!items || items.length < 0)
+            return [];
+        items = await SecurityHelpers.decryptAllItems(items, dataEncryptionKey, null);
+    }
+    if (!items || items.length < 0)
+        return [];
+
+    /* now need to parse the values becase items is  [[stringKey1, stringValue1], [stringKey2, stringValue2], ....] */
+    items.forEach((item) => {
+        if (item.length > 1 && item[1]) {
+            item[1] = JSON.parse(item[1]);
+        }
+    });
+
+
+    
+    //TODO: test after settings a password
+
+
+
+
+    return items;
 }
 
 export const logStorageDataAsync = async () => {
@@ -128,9 +154,10 @@ export const logStorageDataAsync = async () => {
 
 export const getItemsAndDecryptAsync = async (key) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey);
+        throw new Error(Errors.InvalidKey + key);
     const storeKey = await getStoreKeyHashAsync(key);
     let items = await getItemsAsync(storeKey);
+
     /* try to get Data Encryption Key and if one exists, need to decrypt with the user's password
     and then decrypt the data with Data Encryption Key */
     const dataEncryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
@@ -151,11 +178,11 @@ export const setItemsAndEncryptAsync = async (key, items) => {
 export const getStoreKeyHashAsync = async (key) => {
     if (!isValidStoreKey(key))
         throw new Error(Errors.InvalidKey);
-    const storeKey = storeConstants.keyPrefix + key;
+    const storeKey = key.indexOf(storeConstants.keyPrefix) < 0 ? storeConstants.keyPrefix + key : key;
     const dataEncryptionKey = await getItemsAsync(storeConstants.DataEncryptionStoreKey);
     if (dataEncryptionKey) {
         /* the itemTypeName in storage is hashed with dataEncryptionKey */
-        const itemTypeNameHash = await SecurityHelpers.getItemTypeNameHashAsync(storeKey, dataEncryptionKey);
+        const itemTypeNameHash = await SecurityHelpers.getItemKeyHashAsync(storeKey, dataEncryptionKey);
         return itemTypeNameHash;
     }
     return storeKey;
@@ -174,5 +201,5 @@ export const encryptAsync = async (items) => {
 }
 
 export const isValidStoreKey = (key) => {
-    return storeConstants.StoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0;
+    return (storeConstants.AllStoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0 || storeConstants.AllStoreKeys.indexOf(key) >= 0);
 }

@@ -34,20 +34,20 @@ class Settings extends React.Component {
     const items = [
       {
         id: 'lock',
-        text: text.settingsScreen.setPassword,
+        title: text.settingsScreen.setPassword,
         iconName: 'lock',
         onPress: () => { this.props.navigation.navigate('Password') }
       },
       {
         id: 'BackupRestore',
-        text: text.settingsScreen.importExport,
+        title: text.settingsScreen.importExport,
         iconName: 'retweet',
         onPress: () => { this.props.navigation.navigate('BackupRestore') }
       }, 
       {
         id: 'version',
-        text: text.settingsScreen.version,
-        subText: Constants.manifest.version,
+        title: text.settingsScreen.version,
+        subTitle: Constants.manifest.version,
         iconName: 'info-circle'
       }      
     ];

@@ -108,9 +108,8 @@ export const DatePickerWithArrows = (props) => {
         date={new Date(props.date)}
         format='ddd, MMM D Y'
         style={{ width: 160 }}
-        onDateChange={(newDate) => { if (props.onChange) props.onChange(newDate); }}
+        onDateChange={(formattedDateString, newDate) => { if (props.onChange) props.onChange(newDate); }}
         getDateStr={(date) => { return friendlyDate(date, { showLongFormat: true }) }}
-
       />
       <Button onPress={() => { changeDays(1) }}
         type='clear'
@@ -181,10 +180,11 @@ export const List = (props) => {
         onPress={item.onPress ? item.onPress : null} >
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
           <IconForButton name={item.iconName} type='font-awesome' iconStyle={[styles.iconSecondary, styles.listItemLeftIcon]} />
-          <View style={styles.flex}>
-            <Text style={[styles.heading2]}>{item.text}</Text>
-            {item.subText ? <Text style={[styles.subHeading, styles.flex]}>{item.subText}</Text> : <View />}
+          <View>
+            <Text style={[styles.heading2]}>{item.title}</Text>
+            {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
           </View>
+          {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: 15 }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
           {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
         </View>
       </TouchableHighlight>

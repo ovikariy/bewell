@@ -54,7 +54,7 @@ export const text = {
     wakeTime: 'Wake time: '
   },
   sleep: {
-    bedTime: 'set bed time', 
+    bedTime: 'set bed time',
     wakeTime: 'set wake time'
   },
   note: {
@@ -95,33 +95,30 @@ export const ItemTypes = {
   SLEEP: 'SLEEP'
 }
 
+/* In storage we use '@Morning:key' pattern for keys in key/value pairs */
+/* DataEncryptionStoreKey is special as it will not be hashed
+and the value will be encrypted with the user's password. When the user changes password 
+only DataEncryptionStoreKey will have to be re-encrypted in store */
+const keyPrefix = '@Morning:';
+const monthsFromEpochDate = getMonthsFromEpochDate(keyPrefix);
+
 /* WellKnownStoreKeys are for other records to be stored e.g Settings or Tags  */
 export const WellKnownStoreKeys = {
-  TAGS: 'TAGS',
-  SETTINGS: 'SETTINGS'
+  TAGS: keyPrefix + 'TAGS',
+  SETTINGS: keyPrefix + 'SETTINGS'
 }
 
 export const stateConstants = {
   OPERATION: 'OPERATION'
 }
 
-const monthsFromEpochDate = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].map((month) => {
-  return month + new Date().getUTCFullYear(); //TODO: do this better with clever logic
-});
-
-/* In storage we use '@Morning:key' pattern for keys in key/value pairs */
-/* DataEncryptionStoreKey is special as it will not be hashed
-and the value will be encrypted with the user's password. When the user changes password 
-only DataEncryptionStoreKey will have to be re-encrypted in store */
-const keyPrefix = '@Morning:';
 export const storeConstants = {
   password: 'password',
   oldpassword: 'oldpassword',
   keyPrefix: keyPrefix,
   keyDateFormat: 'MMYYYY',
-  StoreKeys: [ ...monthsFromEpochDate, ...Object.keys(WellKnownStoreKeys)].map((item) => {
-    return keyPrefix + item;
-  } ),
+  monthsFromEpochDate: monthsFromEpochDate,
+  AllStoreKeys: [...monthsFromEpochDate, ...Object.values(WellKnownStoreKeys)],
   DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY'
 }
 
@@ -129,8 +126,8 @@ export const storeConstants = {
 
 const minDateString = '1970-01-01';
 export const defaultTags = [{ id: '#gratitude', date: minDateString }, { id: '#inspired', date: minDateString },
-{ id: '#feelingGood', date: minDateString }, { id: '#pain', date: minDateString }, { id: '#headache', date: minDateString }, 
-{ id: '#goals', date: minDateString }, { id: '#anxious', date: minDateString }, { id: '#sensitive', date: minDateString }, 
+{ id: '#feelingGood', date: minDateString }, { id: '#pain', date: minDateString }, { id: '#headache', date: minDateString },
+{ id: '#goals', date: minDateString }, { id: '#anxious', date: minDateString }, { id: '#sensitive', date: minDateString },
 { id: '#tired', date: minDateString }, { id: '#happy', date: minDateString }, { id: '#optimistic', date: minDateString }];
 
 export const Errors = {
@@ -175,6 +172,7 @@ export const ErrorCodes = {
   MissingKey4: 'MK1004',
   MissingKey5: 'MK1005',
   MissingKey6: 'MK1006',
+  MissingKey7: 'MK1007',
   MissingItemType4: 'MIT1004',
   UnableToHashWithoutPassword: 'HH1001',
   Hash1: 'H1001',
@@ -190,4 +188,22 @@ export const ErrorCodes = {
   Storage9: 'S1009',
   Storage10: 'S1010',
   Storage11: 'S1011'
+}
+
+function getMonthsFromEpochDate(keyPrefix) {
+  /* data in store is partitioned by month so the keys can be potentially from 
+  when the app was first used to current year and month  ['012019', '022019', ... ] */
+  const epochYear = 2019; //TODO: override this from settings when the app was first used?
+  const currentYear = new Date().getUTCFullYear();
+  const currentMonth = new Date().getUTCMonth() + 1; /* getUTCMonth is zero based */
+  const result = [];
+
+  for (var year = epochYear; year <= currentYear; year++) {
+    for (var month = 1; month <= 12; month++) {
+      if (year == currentYear && month > currentMonth)
+        break;
+      result.push(keyPrefix + (month < 10 ? '0' : '') + month + '' + year); // 'MMYYYY' format
+    };
+  }
+  return result;
 }

@@ -31,14 +31,14 @@ const configEncryptionAsync = async (oldPassword, newPassword) => {
 
 const setupNewEncryptionAsync = async (newPassword) => {
     // 1. encrypt any existing data (user may have been using the app but without setting the password) */
-    const existingItems = await StorageHelpers.getMultiItemsAsync(storeConstants.StoreKeys);
+    const existingItems = await StorageHelpers.getItemsAsync(storeConstants.AllStoreKeys);
     const existingItemsEncrypted = await SecurityHelpers.firstTimeEncryptAllAsync(existingItems, newPassword);
 
     // 2. store everything in Async Storage in one call
     await StorageHelpers.setMultiItemsAsync(existingItemsEncrypted);
 
     // 3. delete non encrypted items from storage
-    await StorageHelpers.removeMultiItemsAsync(storeConstants.StoreKeys);
+    await StorageHelpers.removeMultiItemsAsync(storeConstants.AllStoreKeys);
 }
 
 const updateExistingEncryptionAsync = async (encryptionKey, oldPassword, newPassword) => {

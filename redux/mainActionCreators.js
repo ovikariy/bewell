@@ -1,19 +1,38 @@
-import { text } from '../modules/Constants';
-import { isEmptyItem } from '../modules/helpers';
+import { isEmptyWidgetItem } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
+import { storeConstants } from '../modules/Constants';
 
 export const load = (key) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
+    dispatch(logStorageData());
     loadAsync(key)
         .then((items) => {
-            dispatch(GenericActions.operationReplaceRedux(key, items));
+            dispatch(GenericActions.operationReplaceRedux([[key, items]]));
         })
         .catch(error => {
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message));
             dispatch(GenericActions.operationCleared());
         })
+}
+
+/* load widget data for all months e.g. on historical views or total counts */
+export const loadAllWidgetData = () => (dispatch) => {
+    dispatch(GenericActions.operationProcessing());
+    loadAllWidgetDataAsync()
+        .then((items) => {
+            dispatch(GenericActions.operationReplaceRedux(items));
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationCleared());
+        })
+}
+
+const loadAllWidgetDataAsync = async () => {
+    return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.monthsFromEpochDate);
 }
 
 const loadAsync = async (key) => {
@@ -27,28 +46,30 @@ export const updateRedux = (key, newItems) => (dispatch) => {
     dispatch(GenericActions.operationUpdateRedux(key, newItems));
 }
 
-export const replaceRedux = (key, newItems) => (dispatch) => {
-    dispatch(GenericActions.operationReplaceRedux(key, newItems));
-}
-
 export const persistRedux = (state) => (dispatch) => {
-    try {
-        if (!state.dirtyKeys || !state.store)
-            return;
-        Object.keys(state.dirtyKeys).forEach(dirtyKey => {
-            if (!state.store[dirtyKey])
-                return;
-            const nonEmptyItems = state.store[dirtyKey].filter(item => !isEmptyItem(item));
-            if (nonEmptyItems.length > 0)
-                StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems).then(() => {});
+    persistReduxAsync(state)
+        .then(() => {
+            dispatch(GenericActions.operationAfterPersist());
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationCleared());
         });
-        dispatch(GenericActions.operationAfterPersist());
-    }
-    catch (error) {
-        console.log(error);
-        dispatch(GenericActions.operationFailed(error.message));
-        dispatch(GenericActions.operationCleared());
-    }
+} 
+
+const persistReduxAsync = async (state) => {
+    if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0) || !state.store)
+        return;
+
+    for (const dirtyKey in state.dirtyKeys) {
+        if (!state.store[dirtyKey]) 
+            return;
+        const nonEmptyItems = state.store[dirtyKey].filter(item => !isEmptyWidgetItem(item));
+        if (nonEmptyItems.length > 0) {  
+            await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
+        } 
+    };
 }
 
 export const removeFromRedux = (key, id, options) => (dispatch) => {

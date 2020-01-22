@@ -20,14 +20,14 @@ it('getItemsAsync tests', async () => {
 it('getMultiItemsAsync tests', async () => {
   expect.assertions(7);
 
-  await expect(StorageHelpers.getMultiItemsAsync()).rejects.toThrow();
-  await expect(StorageHelpers.getMultiItemsAsync([])).rejects.toThrow();
-  await expect(StorageHelpers.getMultiItemsAsync('notanarray')).rejects.toThrow();
-  await expect(StorageHelpers.getMultiItemsAsync()).rejects.toThrow();
+  await expect(StorageHelpers.getItemsAsync()).rejects.toThrow();
+  await expect(StorageHelpers.getItemsAsync([])).rejects.toThrow();
+  await expect(StorageHelpers.getItemsAsync('notanarray')).rejects.toThrow();
+  await expect(StorageHelpers.getItemsAsync()).rejects.toThrow();
 
-  StorageHelpers.getMultiItemsAsync(['key5', 'key6']).then(data => expect(data).toEqual([['key5', null], ['key6', null]]))
-  StorageHelpers.getMultiItemsAsync(['key1']).then(data => expect(data).toEqual([['key1', 'value1']]))
-  StorageHelpers.getMultiItemsAsync(['key1', 'key2']).then(data => expect(data).toEqual([['key1', 'value1'], ['key2', null]]))
+  StorageHelpers.getItemsAsync(['key5', 'key6']).then(data => expect(data).toEqual([['key5', null], ['key6', null]]))
+  StorageHelpers.getItemsAsync(['key1']).then(data => expect(data).toEqual([['key1', 'value1']]))
+  StorageHelpers.getItemsAsync(['key1', 'key2']).then(data => expect(data).toEqual([['key1', 'value1'], ['key2', null]]))
 
   await StorageHelpers.logStorageDataAsync();
 });

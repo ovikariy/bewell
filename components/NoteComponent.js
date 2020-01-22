@@ -30,6 +30,7 @@ class NoteComponent extends React.Component {
   }
 
   componentDidMount() {
+    //TODO below?
     // this.props.load(WellKnownStoreKeys.TAGS);
   }
 
@@ -50,7 +51,7 @@ class NoteComponent extends React.Component {
     let result = mergeArraysImmutable(defaultTags, tagsFromStorage);
     result = result.filter(item => tagsFromNote.indexOf(item.id) < 0);
     result = result.sort((x, y) => new Date(y.date) - new Date(x.date));
-    return result.slice(0, 10);
+    return result.slice(0, 10); 
   }
  
   render() {

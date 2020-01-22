@@ -18,9 +18,13 @@ export const operationAfterPersist = (key, items) => ({
     type: ActionTypes.AFTER_PERSIST
 })
 
-export const operationReplaceRedux = (key, items) => ({
-    type: ActionTypes.REPLACE_ITEM_IN_REDUX,
-    payload: { key: key, items }
+export const operationReplaceRedux = (items) => ({
+    type: ActionTypes.REPLACE_ITEMS_IN_REDUX,
+    payload: { items }
+})
+
+export const operationClearRedux = () => ({
+    type: ActionTypes.CLEAR_REDUX
 })
 
 export const operationCompleted = (key, items) => ({

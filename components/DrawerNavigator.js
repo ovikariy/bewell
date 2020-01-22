@@ -129,7 +129,7 @@ const MainDrawerNavigator = createDrawerNavigator({
     }
 }, {
     //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
-    initialRouteName: 'Settings', /* default is to show the page of the first menu item but we want it to be Home */
+    initialRouteName: 'Home', /* default is to show the page of the first menu item but we want it to be Home */
     contentComponent: CustomDrawerContentComponent
 });
 

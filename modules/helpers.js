@@ -43,7 +43,7 @@ export const friendlyTime = (date) => {
 }
 
 export function getStorageKeyFromDate(date) {
-  return formatDate(date, storeConstants.keyDateFormat);
+  return storeConstants.keyPrefix + formatDate(date, storeConstants.keyDateFormat);
 }
 
 export function formatDate(date, format) {
@@ -66,7 +66,11 @@ export function isDate(value) {
   return moment.isDate(value);
 }
 
-export function isEmptyItem(item) {
+export function isEmptyWidgetItem(item) {
+  /* items with 'type' property are widget items and we want to check those if they are not empty */
+  if (Object.keys(item).indexOf('type') < 0)
+    return false;
+
   /* if an item only has an id property we don't want to save it because it is an empty item
   added by the plus button but not updated by the user */
   const emptyItemFields = ['id', 'date', 'type'];
@@ -127,14 +131,15 @@ export function wait(timeout) {
 export function getNewUuid() {
   //TODO: use a library mentioned in this answer for better reliability
   //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
-}  
+}
 
-export function groupBy(list, keyGetter) {
-  const map = new Map();
+export function groupBy(list, keyGetter, appendToMap) {
+  /* new map or append to existing map e.g. when items are in multiple lists by month in storage but need to be grouped by item type */
+  const map = appendToMap ? appendToMap : new Map();
   list.forEach((item) => {
     const key = keyGetter(item);
     const collection = map.get(key);
@@ -145,4 +150,16 @@ export function groupBy(list, keyGetter) {
     }
   });
   return map;
+}
+
+export function consoleLogWithColor(color, message) {
+  /* changes the color of console log statements and needs to be reset after
+    console.log('\x1b[32m', 'this text is green', '\x1b[0m'); */
+  const consoleColors = {
+    green: '\x1b[32m',
+    red: '\x1b[31m',
+    reset: '\x1b[0m'
+  }
+
+  console.log(color ? color : consoleColors.green, message, consoleColors.reset);
 }

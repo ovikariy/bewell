@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { text, ItemTypes } from '../modules/Constants';
-import { View, Text, FlatList, TouchableHighlight } from 'react-native';
+import { connect } from 'react-redux';
+import { text, stateConstants, storeConstants } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { WidgetFactory } from '../modules/WidgetFactory';
-import { styles } from '../assets/styles/style';
-import { IconForButton, List } from '../components/MiscComponents';
+import { List } from '../components/MiscComponents';
+import { groupBy } from '../modules/helpers';
+import { loadAllWidgetData } from '../redux/mainActionCreators';
+
+
+const mapStateToProps = state => {
+  return { [stateConstants.OPERATION]: state[stateConstants.OPERATION] };
+};
+
+const mapDispatchToProps = dispatch => ({
+  loadAllWidgetData: () => dispatch(loadAllWidgetData())
+});
 
 class InsightsScreen extends Component {
   static navigationOptions = {
@@ -15,46 +25,53 @@ class InsightsScreen extends Component {
     super(props);
   }
 
-  render() {
+  componentDidMount() {
+    this.refreshItems();
+  }
 
-    const data = [];
-    Object.keys(ItemTypes).forEach(itemType => {
+  refreshItems() {
+    this.props.loadAllWidgetData();
+  }
+
+  getCountsByItemType() {
+    //TODO: check for performance issues with bigger data set
+    let groupedByItemType = new Map();
+    const store = this.props[stateConstants.OPERATION].store;
+
+    storeConstants.monthsFromEpochDate.forEach((monthKey) => {
+      if (store[monthKey] && store[monthKey].length > 0) { 
+        groupBy(store[monthKey], item => item.type, groupedByItemType);
+      }
+    });
+
+    return groupedByItemType;
+  }
+  render() {
+    const listItems = [];
+    let groupedByItemType = this.getCountsByItemType();
+
+    Object.keys(WidgetFactory).forEach(itemType => {
       const widgetConfig = WidgetFactory[itemType].config;
-      data.push({
+      const itemCount = groupedByItemType.get(itemType) ? groupedByItemType.get(itemType).length : '';
+      listItems.push({
         id: itemType,
-        text: widgetConfig.widgetTitle,
+        title: widgetConfig.widgetTitle,
+        itemCount: itemCount,
         iconName: widgetConfig.addIcon.name,
         onPress: () => { this.props.navigation.navigate('ItemHistory', { 'itemType': itemType }); }
       })
     });
 
+    groupedByItemType = null;
+
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} >
-          <List data={data} />
+        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} onPulldownRefresh={() => this.refreshItems()} >
+          <List data={listItems} />
         </ScreenContent>
       </ScreenBackground>
     );
   }
-
-  // renderItem({ item, index }) {
-
-  //   const widgetConfig = WidgetFactory[item].config;
-  //   //TODO: show item count from redux in a badge
-  //   return (
-  //     <TouchableHighlight key={item}
-  //       style={[styles.dimBackground, { height: 70, marginBottom: 2, backgroundColor: '#ffffff20' }]}
-  //       onPress={() => { this.props.navigation.navigate('ItemHistory', { 'itemType': item }); }}>
-  //       <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
-  //         <IconForButton name={widgetConfig.addIcon.name} type='font-awesome' iconStyle={[styles.iconSecondary, { marginRight: 20 }]} />
-  //         <Text style={[styles.heading, { flex: 1 }]}>{widgetConfig.widgetTitle}</Text>
-  //         <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' />
-  //       </View>
-  //     </TouchableHighlight>
-  //   );
-  // };
 }
 
-export default InsightsScreen;
-
-
+export default connect(mapStateToProps, mapDispatchToProps)(InsightsScreen);

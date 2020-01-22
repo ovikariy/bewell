@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { FlatList, Text, ToastAndroid, TouchableHighlight, View, ScrollView } from 'react-native';
+import { FlatList, Text, TouchableHighlight, View, ScrollView } from 'react-native';
 import { styles } from '../assets/styles/style';
 import { friendlyDate, friendlyTime, isEmptyItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
 import { Loading, EmptyList, showMessages } from './MiscComponents';
-import { text } from '../modules/Constants';
 
 class ItemHistory extends Component {
   constructor(props) {
@@ -11,10 +10,12 @@ class ItemHistory extends Component {
   }
 
   filterByItemType(store, itemType) {
-    const result = [];
+    const result = []; 
     if (!store)
       return result;
     Object.keys(store).forEach((key) => {
+      if (!store[key])
+        return;
       const filtered = store[key].filter((item) => item.type == itemType);
       filtered.forEach((filteredItem) => {
         if (!isEmptyItem(filteredItem))
