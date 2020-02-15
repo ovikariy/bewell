@@ -14,7 +14,7 @@ export const setUserPassword = (oldPassword, newPassword) => (dispatch) => {
     });
 }
 
-setUserPasswordAsync = async (oldPassword, newPassword) => {
+const setUserPasswordAsync = async (oldPassword, newPassword) => {
     await SecurityHelpers.setPasswordAsync(oldPassword, newPassword);
     await configEncryptionAsync(oldPassword, newPassword);
 }

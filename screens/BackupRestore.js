@@ -25,10 +25,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class BackupRestoreScreen extends Component {
-  static navigationOptions = {
-    title: text.backupScreen.title
-  };
-
   constructor(props) {
     super(props);
 

@@ -1,137 +1,147 @@
-import React from 'react';
+import * as React from 'react';
+import { View, Image, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { View, ScrollView, Image, Text } from 'react-native';
-import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView, StackActions, NavigationActions } from 'react-navigation';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import { styles } from '../assets/styles/style';
-import HomeScreen from '../screens/HomeScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import ItemHistoryScreen from '../screens/ItemHistoryScreen';
-import ChartScreen from '../screens/ChartScreen';
-import PasswordScreen from '../screens/PasswordScreen';
-import BackupRestoreScreen from '../screens/BackupRestore';
 import { text } from '../modules/Constants';
 import { IconForButton } from './MiscComponents';
+
+import HomeScreen from '../screens/HomeScreen';
+import ItemHistoryScreen from '../screens/ItemHistoryScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import PasswordScreen from '../screens/PasswordScreen';
+import BackupRestoreScreen from '../screens/BackupRestore';
 import InsightsScreen from '../screens/InsightsScreen';
 
-const DrawerNavOptions = {
-    headerStyle: {
-        borderWidth: 0
-    },
-    headerTitleStyle: styles.heading,
-    headerTransparent: true,
-    headerTintColor: styles.heading.color
-}
-
-const DrawerIcon = (props) => {
+const MenuHeaderButton = (props) => {
     return <Icon name='menu' size={30} containerStyle={{ margin: 16 }}
         color='white' onPress={() => props.navigation.toggleDrawer()} />
 }
 
-const HomeNavigator = createStackNavigator({
-    Home: {
-        screen: HomeScreen,
-        navigationOptions: ({ navigation }) => ({
-            /* show drawer icon is on HomeScreen only */
-            headerLeft: <DrawerIcon navigation={navigation} />
-        })
-    },
-    ItemHistory: { screen: ItemHistoryScreen }
-}, {
-    initialRouteName: 'Home',
-    headerLayoutPreset: 'center',
-    defaultNavigationOptions: ({ navigation }) => ({
-        ...DrawerNavOptions
-    })
-});
+const ScreenNavOptions = {
+    headerStyle: { borderWidth: 0 },
+    headerTitleStyle: styles.heading,
+    headerTitleAlign: 'center',
+    headerTransparent: true,
+    headerTintColor: styles.heading.color
+}
 
-const SettingsNavigator = createStackNavigator({
-    Settings: {
-        screen: SettingsScreen,
-        navigationOptions: ({ navigation }) => ({
-            /* show drawer icon is on initial route only */
-            headerLeft: <DrawerIcon navigation={navigation} />
-        })
-    },
-    Password: { screen: PasswordScreen },
-    BackupRestore: { screen: BackupRestoreScreen }
-}, {
-    headerLayoutPreset: 'center',
-    defaultNavigationOptions: ({ navigation }) => ({
-        ...DrawerNavOptions
-    })
-});
+const HomeStack = createStackNavigator();
+function HomeNavigator() {
+    return (
+        <HomeStack.Navigator initialRouteName='Home' screenOptions={ScreenNavOptions} >
+            <HomeStack.Screen
+                name='Home'
+                component={HomeScreen}
+                options={({ route, navigation }) => ({
+                    title: text.homeScreen.title,
+                    headerLeft: () => <MenuHeaderButton navigation={navigation} />,
+                    headerRight: () => <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, {marginRight: 10}]}
+                    />
+                })}
+            />
+            <HomeStack.Screen
+                name='ItemHistory'
+                component={ItemHistoryScreen}
+                options={ItemHistoryScreen.navigationOptions} /* dynamic nav options in the component */
+            />
+        </HomeStack.Navigator>
+    );
+}
 
-const InsightsNavigator = createStackNavigator({
-    Insights: {
-        screen: InsightsScreen,
-        navigationOptions: ({ navigation }) => ({
-            /* show drawer icon is on initial route only */
-            headerLeft: <DrawerIcon navigation={navigation} />
-        })
-    },
-    ItemHistory: { screen: ItemHistoryScreen }
-}, {
-    headerLayoutPreset: 'center',
-    defaultNavigationOptions: ({ navigation }) => ({
-        ...DrawerNavOptions
-    })
-});
+const InsightsStack = createStackNavigator();
+function InsightsNavigator() {
+    return (
+        <InsightsStack.Navigator initialRouteName='Insights' screenOptions={ScreenNavOptions} >
+            <InsightsStack.Screen
+                name='Insights'
+                component={InsightsScreen}
+                options={({ route, navigation }) => ({
+                    title: text.insightsScreen.title,
+                    headerLeft: () => <MenuHeaderButton navigation={navigation} />
+                })}
+            />
+            <InsightsStack.Screen
+                name='ItemHistory'
+                component={ItemHistoryScreen}
+                options={ItemHistoryScreen.navigationOptions} /* dynamic nav options in the component */
+            />
+        </InsightsStack.Navigator>
+    );
+}
 
-const ChartsNavigator = createStackNavigator({
-    Charts: { screen: ChartScreen }
-}, {
-    headerLayoutPreset: 'center',
-    defaultNavigationOptions: ({ navigation }) => ({
-        ...DrawerNavOptions,
-        headerLeft: <DrawerIcon navigation={navigation} />
-    })
-});
+const SettingsStack = createStackNavigator();
+function SettingsNavigator() {
+    return (
+        <SettingsStack.Navigator initialRouteName='Settings' screenOptions={ScreenNavOptions} >
+            <SettingsStack.Screen
+                name='Settings'
+                component={SettingsScreen}
+                options={({ route, navigation }) => ({
+                    title: text.settingsScreen.title,
+                    headerLeft: () => <MenuHeaderButton navigation={navigation} />
+                })}
+            />
+            <SettingsStack.Screen
+                name='Password'
+                component={PasswordScreen}
+                options={{ title: text.passwordScreen.title }}
+            />
+            <SettingsStack.Screen
+                name='BackupRestore'
+                component={BackupRestoreScreen}
+                options={{ title: text.backupScreen.title }}
+            />
+        </SettingsStack.Navigator>
+    );
+}
 
-const CustomDrawerContentComponent = (props) => (
-    <ScrollView style={styles.menuBackground}>
-        <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-            <View style={[styles.flex, styles.rowContainer]}>
-                <Image source={require('../assets/images/logo_small.png')}
-                    style={styles.logoImage} />
+function CustomDrawerContent(props) {
+    return (
+        <DrawerContentScrollView style={styles.menuBackground} {...props}>
+            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20 }]}>
+                <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImage, { marginRight: 15 }]} />
                 <Text style={styles.heading}>{text.homeScreen.title}</Text>
             </View>
-            <DrawerItems activeLabelStyle={styles.bodyTextBright}
-                inactiveLabelStyle={styles.bodyText}
+            <DrawerItemList itemStyle={[styles.drawerItem]}
+                labelStyle={[styles.drawerLabel]}
+                activeTintColor={styles.bodyTextBright.color}
+                inactiveTintColor={styles.bodyText.color}
                 activeBackgroundColor={styles.toolbarContainer.backgroundColor}
                 {...props} />
-        </SafeAreaView>
-    </ScrollView>
-);
+        </DrawerContentScrollView>
+    );
+}
 
-const MainDrawerNavigator = createDrawerNavigator({
-    Home: {
-        screen: HomeNavigator,
-        navigationOptions: ({ navigation }) => ({
-            drawerLabel: text.homeScreen.menuLabel,
-            drawerIcon: <IconForButton name='home' iconStyle={styles.iconPrimarySmall} />
-        })
-    },
-    Insights: {
-        screen: InsightsNavigator,
-        navigationOptions: {
-            title: text.insightsScreen.title,
-            drawerLabel: text.insightsScreen.title,
-            drawerIcon: <IconForButton name='history' type='font-awesome' iconStyle={styles.iconPrimarySmall} />
-        }
-    },    
-    Settings: {
-        screen: SettingsNavigator,
-        navigationOptions: {
-            title: text.settingsScreen.title,
-            drawerLabel: text.settingsScreen.title,
-            drawerIcon: <IconForButton name='sliders' type='font-awesome' iconStyle={styles.iconPrimarySmall} />
-        }
-    }
-}, {
-    //resetOnBlur: true, /* reset the state of any nested navigators when switching away from a screen */
-    initialRouteName: 'Home', /* default is to show the page of the first menu item but we want it to be Home */
-    contentComponent: CustomDrawerContentComponent
-});
-
-export default MainDrawerNavigator;
-
+const Drawer = createDrawerNavigator();
+export function MainDrawerNavigator() {
+    return (
+        <Drawer.Navigator initialRouteName="Home" drawerContent={props => <CustomDrawerContent {...props} />} >
+            <Drawer.Screen name="Home" component={HomeNavigator}
+                options={{
+                    drawerLabel: text.homeScreen.menuLabel,
+                    drawerIcon: ({ focused }) => <IconForButton name='home'
+                        iconStyle={[styles.iconPrimarySmall,
+                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                }}
+            />
+            <Drawer.Screen name="Insights" component={InsightsNavigator}
+                options={{
+                    drawerLabel: text.insightsScreen.title,
+                    drawerIcon: ({ focused }) => <IconForButton name='history' type='font-awesome'
+                        iconStyle={[styles.iconPrimarySmall,
+                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                }}
+            />
+            <Drawer.Screen name="Settings" component={SettingsNavigator}
+                options={{
+                    drawerLabel: text.settingsScreen.title,
+                    drawerIcon: ({ focused }) => <IconForButton name='sliders' type='font-awesome'
+                        iconStyle={[styles.iconPrimarySmall,
+                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                }}
+            />
+        </ Drawer.Navigator>
+    );
+}

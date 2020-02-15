@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { FlatList, Text, TouchableHighlight, View, ScrollView } from 'react-native';
+import { Text, TouchableHighlight, View } from 'react-native';
 import { styles } from '../assets/styles/style';
-import { friendlyDate, friendlyTime, isEmptyItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
-import { Loading, EmptyList, showMessages } from './MiscComponents';
+import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
+import { Loading, EmptyList, showMessages, ListWithRefresh, List } from './MiscComponents';
+
 
 class ItemHistory extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class ItemHistory extends Component {
   }
 
   filterByItemType(store, itemType) {
-    const result = []; 
+    const result = [];
     if (!store)
       return result;
     Object.keys(store).forEach((key) => {
@@ -18,7 +19,7 @@ class ItemHistory extends Component {
         return;
       const filtered = store[key].filter((item) => item.type == itemType);
       filtered.forEach((filteredItem) => {
-        if (!isEmptyItem(filteredItem))
+        if (!isEmptyWidgetItem(filteredItem))
           result.push(filteredItem);
       });
     });
@@ -39,40 +40,41 @@ class ItemHistory extends Component {
       return <EmptyList />
     }
 
+    const groupedByDayMap = groupBy(items, item => friendlyDate(item.date));
+    const groupedByDayArray = []; //TODO: this is a waste of resources to copy a map into an array because map cannot be passed as data to FlatList
+    groupedByDayMap.forEach(item => groupedByDayArray.push(item));
+
     return (
-      <View style={[{ marginTop: 20 }, this.props.style]}>
-        {this.renderGroupedByDay(items)}
+      <View style={[{ marginTop: 20 }, { flex: 1 }, this.props.style]}>
+        <List
+          data={groupedByDayArray}
+          renderItem={(daysData, index) => this.renderGroupedByDay(daysData.item, daysData.index)}
+          keyExtractor={item => item[0].date + ''} /* keyExtractor expects a string */
+        />
       </View>
     )
   }
 
-  renderGroupedByDay(items) {
-    const rows = [];
-
-    const groupedByDay = groupBy(items, item => friendlyDate(item.date));
-    groupedByDay.forEach(data => {
-
-      rows.push(
-        <View key={data[0].date}>
-          <View style={[styles.row, styles.centered, styles.dimBackground]}>
-            <Text style={[styles.titleText]}>
-              {friendlyDay(data[0].date)}</Text>
-            <Text style={[styles.bodyText, { marginHorizontal: 20, color: styles.bodyText.color + '80' }]}>
-              {formatDate(data[0].date, 'MMMM D')}</Text>
-          </View>
-          <FlatList extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
-            data={data}
+  renderGroupedByDay(daysData) {
+    return (
+      <View style={[styles.flex]} key={daysData[0].date}>
+        <View style={[styles.row, styles.centered, styles.dimBackground, { flex: 0 }]}>
+          <Text style={[styles.titleText]}>
+            {friendlyDay(daysData[0].date)}</Text>
+          <Text style={[styles.bodyText, { marginHorizontal: 20, color: styles.bodyText.color + '80' }]}>
+            {formatDate(daysData[0].date, 'MMMM D')}</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <List extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
+            data={daysData}
             horizontal={this.props.config.isHorizontalHistoryRow ? true : false}
             renderItem={(item, index) => this.renderItem(item, index)}
             keyExtractor={item => item.id + ''} /* keyExtractor expects a string */
           />
         </View>
-      );
-    });
-
-    return rows;
+      </View>
+    )
   }
-
 
   renderItem({ item, index }) {
     const isSelectedItem = (this.props.selectedItem && this.props.selectedItem.id === item.id);
@@ -94,7 +96,7 @@ class ItemHistory extends Component {
     };
 
     return (
-      <TouchableHighlight onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
+      <TouchableHighlight style={{marginHorizontal: 5}} onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
         <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
           {customItemDisplay}
         </View>

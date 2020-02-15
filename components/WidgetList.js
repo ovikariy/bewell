@@ -2,13 +2,14 @@ import moment from 'moment';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Image, Text } from 'react-native-elements';
+import { Image, Text, colors } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { Widget } from '../components/Widget';
 import { text } from '../modules/Constants';
 import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/helpers';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
+import { ListWithRefresh } from './MiscComponents';
 
 class WidgetList extends React.Component {
 
@@ -90,18 +91,15 @@ class WidgetList extends React.Component {
 
   render() {
     return (
-      <View>
-        <Toolbar>{this.renderAddNewButtons()}</Toolbar>
-        <ScrollView style={[styles.flex, styles.toolbarBottomOffset]}
-          ref={ref => this.scrollView = ref} /* this is needed for scrollTo */
-          onContentSizeChange={(contentWidth, contentHeight) => {
-            /* scroll to top as new items are added */
-            this.scrollView.scrollTo({ animated: true, duration: 1000 });
-          }}>
+      <View style={[styles.flex]}>
+        <Toolbar style={{ flex: 0 }}>{this.renderAddNewButtons()}</Toolbar>
+        <ListWithRefresh style={[styles.flex, styles.toolbarBottomOffset]}
+          onPulldownRefresh={() => this.props.onPulldownRefresh()}
+        >
           <Animatable.View animation="fadeInUp" duration={100}>
             {this.renderSortedWidgets()}
           </Animatable.View>
-        </ScrollView >
+        </ListWithRefresh>
       </View>
     );
   }

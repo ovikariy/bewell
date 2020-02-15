@@ -16,10 +16,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class PasswordScreen extends Component {
-  static navigationOptions = {
-    title: text.passwordScreen.title
-  };
-
   constructor(props) {
     super(props);
 

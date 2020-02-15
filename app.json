@@ -4,7 +4,7 @@
     "slug": "morning",
     "description": "Personal joural app with an emphasis on data privacy",
     "privacy": "public",
-    "sdkVersion": "33.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"

@@ -52,7 +52,7 @@ export const WidgetFactory = {
                 onChange({ ...item, rating });
             }} />
         )
-      });
+      }); 
       return (
         <Animatable.View animation="fadeIn" duration={500}>
           <CustomIconRating>{ratings}</CustomIconRating>
@@ -65,12 +65,10 @@ export const WidgetFactory = {
       const moodRatingIcons = config.icons;
       const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
       return (
-        <View style={styles.row}>
-          <View style={[styles.flex, styles.centered]}>
+        <View style={{margin: 7}}>
             <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
               {friendlyTime(item.date)}</Text>
             <CustomIconRatingItem value={ratingIcon} size={40} />
-          </View>
         </View>
       );
     }

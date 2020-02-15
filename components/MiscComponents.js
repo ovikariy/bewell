@@ -1,10 +1,13 @@
-import React from 'react';
-import { ActivityIndicator, Platform, Text, ToastAndroid, View, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
-import DatePicker from 'react-native-datepicker';
+import React, { useState } from 'react';
+import {
+  ActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
+  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import { addSubtractDays, friendlyDate } from '../modules/helpers';
+import { addSubtractDays, friendlyDate, wait, formatDate } from '../modules/helpers';
 
 export const Heading1 = (props) => {
   return <Text {...props} style={[styles.heading, styles.centered, props.style]} />;
@@ -58,19 +61,39 @@ export const PasswordInput = (props) => {
 };
 
 export const StyledDatePicker = (props) => {
-  return (
-    <DatePicker
-      showIcon={false}
-      is24Hour={false}
-      placeholder={text.general.dateAndTime}
-      confirmBtnText={text.general.Confirm}
-      cancelBtnText={text.general.Cancel}
-      customStyles={{
-        dateText: styles.bodyText,
-        dateInput: styles.formField,
-      }}
-      {...props}
-    />
+  /* DateTimePicker shows by default when rendered so need to hide and only show e.g. on button press */
+  const [show, setShow] = useState(false);
+
+  const showDatepicker = () => {
+    setShow(true);
+  };
+
+  const onChange = (event, newDate) => {
+    setShow(false);
+    if (props.onChange) props.onChange(event, newDate);
+  };
+
+  const format = props.format ? props.format : 'ddd, MMM D Y';
+  const displayText = props.date ? formatDate(props.date, format) : (props.placeholder ? props.placeholder : text.general.dateAndTime);
+
+  return ( 
+    <View style={{ justifyContent: 'center' }}>
+      <View>
+        <TouchableOpacity onPress={showDatepicker}>
+          <Text style={[styles.bodyText, { marginHorizontal: 10 }]}>{displayText}</Text>
+        </TouchableOpacity>
+      </View>
+      {show && (
+        <DateTimePicker 
+          is24Hour={props.is24Hour ? props.is24Hour : false} 
+          display="default"
+          mode={props.mode ? props.mode : 'datetime'}
+          value={props.date ? props.date : new Date()}
+          onChange={onChange}
+          style={props.style ? props.style : {}}
+        />
+      )}
+    </View>
   )
 }
 
@@ -95,7 +118,7 @@ export const DatePickerWithArrows = (props) => {
 
   function changeDays(numDays) {
     if (props.onChange)
-      props.onChange(addSubtractDays(props.date, numDays));
+      props.onChange(null, addSubtractDays(props.date, numDays));
   }
 
   return (
@@ -104,12 +127,11 @@ export const DatePickerWithArrows = (props) => {
         type='clear'
         icon={<IconForButton name='chevron-left' iconStyle={styles.iconSecondary} />}
       />
-      <StyledDatePicker
+      <StyledDatePicker 
         date={new Date(props.date)}
         format='ddd, MMM D Y'
         style={{ width: 160 }}
-        onDateChange={(formattedDateString, newDate) => { if (props.onChange) props.onChange(newDate); }}
-        getDateStr={(date) => { return friendlyDate(date, { showLongFormat: true }) }}
+        onChange={(event, newDate) => { if (props.onChange) props.onChange(event, newDate); }}
       />
       <Button onPress={() => { changeDays(1) }}
         type='clear'
@@ -164,16 +186,43 @@ export const EmptyList = () => {
   )
 }
 
-export const List = (props) => {
-  return (
-    <FlatList
-      data={props.data}
-      renderItem={(item, index) => renderItem(item, index)}
-      keyExtractor={item => item.id}
-    />
-  );
+export class ListWithRefresh extends React.Component {
+  /* ScrollView or FlatList with pulldown refresh. 
+  Cannot be functional component because for WidgetList we use a ref to scroll to top and will get this warning 
+  "Function components cannot be given refs. Attempts to access this ref will fail. */
 
-  function renderItem({ item, index }) {
+  constructor(props) {
+    super(props);
+    this.state = { refreshing: false };
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true });
+    if (this.props.onPulldownRefresh)
+      this.props.onPulldownRefresh();
+    wait(2000).then(() => this.setState({ refreshing: false })); /* TODO: remove the wait and hook up to redux callback maybe  */
+  }
+
+  render() {
+    if (this.props.useFlatList)
+      return <List {...this.props} refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />} data={this.props.data} />;
+    /* deault to ScrollView */
+    return <ScrollView {...this.props} refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
+      ref={ref => this.scrollView = ref} /* this is needed for scrollTo */
+      onContentSizeChange={(contentWidth, contentHeight) => {
+        if (this.props.onChangeScrollToTop)
+          this.scrollView.scrollTo({ animated: true, duration: 1000 });
+      }}
+    >
+      {this.props.children}
+    </ScrollView>;
+  }
+}
+
+export const List = (props) => {
+
+  function renderListItem({ item, index }) {
+    /* list item with left icon, title, subtitle, right text and right chevron icon */
     return (
       <TouchableHighlight key={item.id}
         style={[styles.dimBackground, styles.listItemContainer]}
@@ -190,5 +239,14 @@ export const List = (props) => {
       </TouchableHighlight>
     );
   };
+
+  return (
+    <FlatList
+      data={props.data}
+      renderItem={(item, index) => props.renderItem ? props.renderItem(item, index) : renderListItem(item, index)}
+      keyExtractor={item => item.id}
+      {...props}
+    />
+  );
 }
 

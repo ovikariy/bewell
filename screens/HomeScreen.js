@@ -23,16 +23,6 @@ const mapDispatchToProps = dispatch => ({
 });  
 
 class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: text.homeScreen.title,
-    headerRight:
-      <Image
-        source={require('../assets/images/logo_small.png')}
-        style={styles.logoImageSmall}
-        containerStyle={{ paddingRight: 10 }}
-      />
-  })
-
   constructor(props) {
     super(props);
 
@@ -77,17 +67,20 @@ class HomeScreen extends React.Component {
     let data = [];
     if (this.props[stateConstants.OPERATION] && this.props[stateConstants.OPERATION].store)
       data = (this.props[stateConstants.OPERATION].store[selectedMonth] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    return (
-      <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} onPulldownRefresh={() => this.refreshItems()}>
-          <DatePickerWithArrows date={this.state.selectedDate} onChange={(newDate) => this.selectedDateChanged(newDate)} />
-          <WidgetList
+    return ( 
+      <ScreenBackground> 
+        {/*todo: move refresh */ }
+        <ScreenContent isKeyboardAvoidingView={true} > 
+          <DatePickerWithArrows date={this.state.selectedDate} onChange={(event, newDate) => this.selectedDateChanged(event, newDate)} />
+          <WidgetList 
             navigation={this.props.navigation}
             dailyData={data}
             selectedDate={this.state.selectedDate}
             selectedItem={this.state.selectedItem}
             onChange={(newDailyData) => { this.onDataChange(newDailyData) }}
-            onSelected={(selectedItem) => { this.onSelected(selectedItem) }} />
+            onSelected={(selectedItem) => { this.onSelected(selectedItem) }} 
+            onPulldownRefresh={() => this.refreshItems()}
+            />
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>
           <DeleteItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
@@ -97,7 +90,7 @@ class HomeScreen extends React.Component {
     );
   }
 
-  selectedDateChanged(newDate) {
+  selectedDateChanged(event, newDate) {
     /* TODO: figure out how to persist on screen change also because can navigate to history screen not just change date */
     this.persist();
     this.setState({ ...this.state, selectedDate: new Date(newDate), selectedItem: null });

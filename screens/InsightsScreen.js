@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Text } from 'react-native';
 import { text, stateConstants, storeConstants } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { WidgetFactory } from '../modules/WidgetFactory';
-import { List } from '../components/MiscComponents';
+import { ListWithRefresh } from '../components/MiscComponents';
 import { groupBy } from '../modules/helpers';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
 
@@ -15,12 +16,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   loadAllWidgetData: () => dispatch(loadAllWidgetData())
 });
-
+ 
 class InsightsScreen extends Component {
-  static navigationOptions = {
-    title: text.insightsScreen.title
-  };
-
   constructor(props) {
     super(props);
   }
@@ -39,7 +36,7 @@ class InsightsScreen extends Component {
     const store = this.props[stateConstants.OPERATION].store;
 
     storeConstants.monthsFromEpochDate.forEach((monthKey) => {
-      if (store[monthKey] && store[monthKey].length > 0) { 
+      if (store[monthKey] && store[monthKey].length > 0) {
         groupBy(store[monthKey], item => item.type, groupedByItemType);
       }
     });
@@ -55,19 +52,19 @@ class InsightsScreen extends Component {
       const itemCount = groupedByItemType.get(itemType) ? groupedByItemType.get(itemType).length : '';
       listItems.push({
         id: itemType,
-        title: widgetConfig.widgetTitle,
-        itemCount: itemCount,
+        title: widgetConfig.widgetTitle, 
+        itemCount: itemCount, 
         iconName: widgetConfig.addIcon.name,
         onPress: () => { this.props.navigation.navigate('ItemHistory', { 'itemType': itemType }); }
-      })
-    });
+      });
+    }); 
 
     groupedByItemType = null;
 
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} onPulldownRefresh={() => this.refreshItems()} >
-          <List data={listItems} />
+        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }}>
+          <ListWithRefresh useFlatList={true} data={listItems} onPulldownRefresh={() => this.refreshItems()} />
         </ScreenContent>
       </ScreenBackground>
     );

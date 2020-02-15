@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '100',
     color: defaultColors.color1
-  },  
+  },
   subHeading: {
     fontFamily: fonts.primary,
     fontSize: 15,
@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
     color: defaultColors.color1
   },
   placeholderText: {
-    color: defaultColors.color4 + '70'
+    color: defaultColors.color4 + '60'
   },
   titleText: {
     fontFamily: fonts.primaryLight,
@@ -131,7 +131,8 @@ export const styles = StyleSheet.create({
   screenBodyContainer: {
     /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
     /* add margins equal to the navigator height (e.g. drawer or tab) or bottom toolbar */
-    marginTop: 70
+    marginTop: 70,
+    flex: 1
   },
   selectedDateContainer: {
     flexDirection: 'row',
@@ -188,8 +189,9 @@ export const styles = StyleSheet.create({
     padding: 10
   },
 
-  dontKnowWhatToNameThis: {
+  sleepComponentTimeFieldContainer: {
     width: 300,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     marginTop: 30,
     marginBottom: 20,
@@ -200,9 +202,8 @@ export const styles = StyleSheet.create({
   /* nanvigator */
 
   logoImage: {
-    height: 60,
-    width: 60,
-    margin: 5,
+    height: 50,
+    width: 50,
     resizeMode: 'contain'
   },
 
@@ -300,7 +301,7 @@ export const styles = StyleSheet.create({
   },
   toolbarButtonContainer: {
     /* flex: 0, flexGrow: 1 - stretch the buttons and don't cut if they don't fit */
-    flex: 0, 
+    flex: 0,
     flexGrow: 1,
     alignItems: 'center', /* horizontal center */
     justifyContent: 'center', /* vertical center */
@@ -326,13 +327,25 @@ export const styles = StyleSheet.create({
 
 
   listItemContainer: {
-    height: 70, 
-    marginBottom: 2, 
-    backgroundColor: '#ffffff20' 
+    height: 70,
+    marginBottom: 2,
+    backgroundColor: '#ffffff20'
   },
-  listItemLeftIcon: { 
-    marginLeft: 5, 
-    width: 50 
+  listItemLeftIcon: {
+    marginLeft: 5,
+    width: 50
+  },
+
+  drawerItem: {
+    borderRadius: 0,
+    marginHorizontal: 0,
+    marginVertical: 0,
+    paddingHorizontal: 10,
+    minHeight: 60,
+    justifyContent: 'center'
+  },
+  drawerLabel: {
+    fontSize: 17
   }
 });
 

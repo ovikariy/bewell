@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { removeFromRedux, persistRedux } from '../redux/mainActionCreators';
 import { styles } from '../assets/styles/style';
 import { WidgetFactory } from '../modules/WidgetFactory';
-import { stateConstants, text } from '../modules/Constants';
+import { stateConstants, text, ItemTypes } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteItemButton, FloatingToolbar } from '../components/ToolbarComponents';
@@ -20,8 +20,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class ItemHistoryScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const itemType = navigation.getParam('itemType');
+  static navigationOptions = ({ route, navigation }) => {
+    const itemType = route.params.itemType;
     let title = text.historyScreen.title;
     if (itemType && WidgetFactory[itemType]) {
       title = (WidgetFactory[itemType].config.widgetTitle || '') + ' ' + text.historyScreen.title;
@@ -36,7 +36,7 @@ class ItemHistoryScreen extends Component {
     this.state = {
       selectedItem: null
     }
-    this.itemType = props.navigation.getParam('itemType');
+    this.itemType = props.route.params.itemType;
   }
 
   onSelected(selectedItem) {

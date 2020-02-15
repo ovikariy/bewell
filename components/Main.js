@@ -1,9 +1,13 @@
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { MainDrawerNavigator } from './DrawerNavigator';
 
-import MainDrawerNavigator from './DrawerNavigator';
-
-export default createAppContainer(createSwitchNavigator({
-  // You could add another route here for authentication.
-  // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-  Main: MainDrawerNavigator
-}));
+function Main() {
+  return (
+    <NavigationContainer>
+      <MainDrawerNavigator/>
+    </NavigationContainer>
+  );
+}
+ 
+export default Main;

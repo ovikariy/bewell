@@ -1,18 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, SectionList, Image, StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import Constants from 'expo-constants';
 import { text } from '../modules/Constants';
-import { styles } from '../assets/styles/style';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { ParagraphText, List } from '../components/MiscComponents';
-import { Icon } from 'react-native-elements';
+import { List } from '../components/MiscComponents';
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: text.settingsScreen.title
-  };
-
   constructor(props) {
     super(props);
     //this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BackupRestore' }));
