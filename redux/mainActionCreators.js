@@ -5,7 +5,7 @@ import { storeConstants } from '../modules/Constants';
 
 export const load = (key) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
-    dispatch(logStorageData());
+    //dispatch(logStorageData());
     loadAsync(key)
         .then((items) => {
             dispatch(GenericActions.operationReplaceRedux([[key, items]]));

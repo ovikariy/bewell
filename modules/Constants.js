@@ -1,8 +1,15 @@
 export const text = {
+  app: {
+    name: 'Wellbeing Tracker'
+  },
   general: {
     Ok: 'Ok', Cancel: 'Cancel', Confirm: 'Confirm', ApplyChanges: 'Apply Changes',
     dateAndTime: 'date and time', pickTime: 'pick time',
-    Loading: 'Loading...', Saved: 'Saved!', today: 'Today', yesterday: 'Yesterday', at: ' at '
+    Loading: 'Loading...', Saved: 'Saved!', today: 'Today', yesterday: 'Yesterday', at: ' at ',
+    SignedOut: 'Signed out'
+  },
+  successMessages: {
+    PasswordSaved: 'Password saved successfully'
   },
   listItems: {
     AreYouSureDeleteThisItem: 'Are you sure you wish to delete this item?',
@@ -20,6 +27,60 @@ export const text = {
     reEnterPlaceholder: 'Re-enter new password',
     apply: 'Apply Changes',
     message1: 'New password and re-entered new password must match'
+  },
+  welcomeScreen: {
+    title: 'Welcome friend!',
+    menuLabel: 'Welcome',
+    text1: 'Welcome \r\nfriend!',
+    text2: 'Track your wellbeing \r\nand keep your data private',
+    button1: 'QUICK SETUP',
+    button2: 'SKIP'
+  },
+  setupSecurityScreen: {
+    title: 'Secure data',
+    menuLabel: 'Secure data',
+    text1: 'Secure your data \r\nwith a password or \r\npass phrase',
+    text2: 'This can be multiple words with \r\nspaces and special characters',
+    text3: 'Please re-enter your password \r\n\r\n',
+    placeholder1: 'Enter password...',
+    placeholder2: 'Re-renter password',
+    link1: 'SKIP',
+    message1: 'Passwords don\'t match. Please try again'
+  },
+  setupPINScreen: {
+    title: 'Create PIN',
+    menuLabel: 'Create PIN',
+    text1: 'Lets secure your data with PIN. Please create a password that you will use to login to the app:',
+    text2: 'Optionally, you can also create a numeric PIN to avoid having to re-enter your password',
+    placeholder1: 'Enter password',
+    placeholder2: 'Re-renter password',
+    button1: 'Save',
+    button2: 'Create PIN',
+    button3: 'Done, take me to Home screen'
+  },
+  signInScreen: {
+    text1: 'Your data is protected',
+    text2: 'Enter your password to proceed',
+    currentPlaceholder: 'Enter password',
+    button: 'Sign In',
+    message1: 'Invalid password'
+  },
+  //TODO: need signup stuff?
+  signUpScreen: {
+    title: 'Sign Up',
+    menuLabel: 'Sign Up',
+    explanation: 'Create a password that will be used to securely encrypt your data and allow only you to access the app',
+    currentPlaceholder: 'Enter password',
+    button: 'Sign Up',
+    message1: 'Invalid password'
+  },
+  signOutScreen: {
+    title: 'Sign Out',
+    menuLabel: 'Sign Out',
+    text1: 'Click below \r\nto sign out',
+    text2: 'This will clear your session and \r\nprompt for password on the next \r\napp launch',
+    button: 'SIGN OUT',
+    link: 'NO, GO BACK'
   },
   backupScreen: {
     title: 'Import and Export',
@@ -109,12 +170,15 @@ export const WellKnownStoreKeys = {
 }
 
 export const stateConstants = {
-  OPERATION: 'OPERATION'
+  OPERATION: 'OPERATION',
+  AUTH: 'AUTH'
 }
 
 export const storeConstants = {
   password: 'password',
-  oldpassword: 'oldpassword',
+  isInitialized: 'isInitialized',
+  loginAttempts: 'loginAttempts',
+  oldpassword: 'oldpassword', /* TODO: probably need to remove the usage of this */
   keyPrefix: keyPrefix,
   keyDateFormat: 'MMYYYY',
   monthsFromEpochDate: monthsFromEpochDate,
@@ -133,6 +197,7 @@ export const defaultTags = [{ id: '#gratitude', date: minDateString }, { id: '#i
 export const Errors = {
   General: 'An error has occurred ',
   InvalidData: 'Invalid data ',
+  InvalidParameter: 'Invalid parameter ',
   InvalidKey: 'Invalid key ',
   NewPasswordCannotBeBlank: 'New password cannot be blank ',
   InvalidPassword: 'Invalid password, please try again ',
@@ -140,7 +205,8 @@ export const Errors = {
   UnableToSave: 'Unable to save ',
   UnableToDecrypt: 'Unable to decrypt ',
   ImportError: 'Import error ',
-  AccessStorage: ' Unable to access storage '
+  AccessStorage: ' Unable to access storage ',
+  PasswordAlreadySet: 'Password has already been set '
 }
 
 export const ErrorCodes = {
@@ -160,9 +226,8 @@ export const ErrorCodes = {
   Decrypt6: 'D1006',
   Decrypt7: 'D1007',
   Decrypt8: 'D1008',
-  Decrypt9: 'D1009',
-  Decrypt10: 'D10010',
   Decrypt11: 'D10011',
+  Decrypt11: 'D10012',
   MissingItemType1: 'MIT1001',
   MissingItemType2: 'MIT1002',
   MissingItemType3: 'MIT1003',
@@ -187,7 +252,11 @@ export const ErrorCodes = {
   Storage8: 'S1008',
   Storage9: 'S1009',
   Storage10: 'S1010',
-  Storage11: 'S1011'
+  Storage11: 'S1011',
+  Auth1: 'A1001',
+  Auth2: 'A1002',
+  Auth3: 'A1003',
+  Security1: 'SE1001'
 }
 
 function getMonthsFromEpochDate(keyPrefix) {

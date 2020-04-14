@@ -65,22 +65,6 @@ it('setMultiItemsAsync tests', async () => {
   await StorageHelpers.logStorageDataAsync();
 });
 
-it('removeMultiItemsAsync tests', async () => {
-  expect.assertions(7);
-
-  await expect(StorageHelpers.removeMultiItemsAsync()).rejects.toThrow();
-  await expect(StorageHelpers.removeMultiItemsAsync('somestring')).rejects.toThrow();
-  await expect(StorageHelpers.removeMultiItemsAsync([])).rejects.toThrow();
-  await expect(StorageHelpers.removeMultiItemsAsync([{ keyasobject: 'shouldthrow' }])).rejects.toThrow();
-
-  await expect(StorageHelpers.removeMultiItemsAsync(['key5'])).resolves.toBeUndefined();
-  await expect(StorageHelpers.removeMultiItemsAsync(['key3', 'key4'])).resolves.toBeUndefined();
-  await expect(StorageHelpers.getItemsAsync('key5')).resolves.toBeUndefined();
-
-  await StorageHelpers.logStorageDataAsync();
-});
-
-
 export const mergeByIdAsync = async (itemTypeName, newItems) => {
   if (!newItems || newItems.length <= 0)
     throw new Error(Errors.UnableToSave + ErrorCodes.Storage5);

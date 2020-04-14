@@ -1,10 +1,13 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
 
 export const fonts = {
+  //TODO: check iOS fonts
   primary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif',
   primaryLight: Platform.OS === 'ios' ? 'Helvetica' : 'open-sans-condensed-light',
   secondary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-thin',
   secondaryLight: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-light',
+  tirtiary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-medium',
+  tirtiaryCondensed: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-condensed',
   defaultTextSize: 18
 };
 
@@ -40,11 +43,14 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center'
   },
-
+  centeredVertical: {
+    justifyContent: 'center'
+  },
   /* typography */
 
   heading: {
     fontFamily: fonts.primary,
+    textTransform: 'uppercase',
     fontSize: 22,
     fontWeight: '100',
     color: defaultColors.color1
@@ -65,13 +71,24 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     color: defaultColors.color4
   },
+  bodyTextLarge: {
+    fontFamily: fonts.primary,
+    fontSize: 18,
+    color: defaultColors.color4
+  },
   bodyTextBright: {
     fontFamily: fonts.primary,
     fontSize: 15,
     color: defaultColors.color1
   },
+  textDark: {
+    color: defaultColors.color8
+  },
   placeholderText: {
     color: defaultColors.color4 + '60'
+  },
+  placeholderHighlight: {
+    color: defaultColors.color5 + '70',
   },
   titleText: {
     fontFamily: fonts.primaryLight,
@@ -80,9 +97,20 @@ export const styles = StyleSheet.create({
     color: defaultColors.color1
   },
   subTitleText: {
-    fontFamily: fonts.primary,
-    color: defaultColors.color1 + '95',
+    fontFamily: fonts.tirtiaryCondensed,
+    color: defaultColors.color1,
     fontSize: 18
+  },
+  hugeText: {
+    fontFamily: fonts.tirtiary,
+    fontSize: 30,
+    letterSpacing: 2
+  },
+  appName: {
+    fontFamily: fonts.tirtiaryCondensed,
+    fontSize: 30,
+    letterSpacing: 2,
+    textTransform: 'uppercase'
   },
 
   /* buttons */
@@ -105,12 +133,26 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: defaultColors.color4
   },
+  roundedButton: {
+    fontSize: 30,
+    color: defaultColors.color1
+  },
+  roundedButtonContainer: {
+    borderRadius: 50,
+    width: 40,
+    height: 40,
+    justifyContent: 'center', /* for vertical icon alignment */
+    backgroundColor: defaultColors.color6
+  },
+  rounded: {
+    borderRadius: 50,
+    padding: 5
+  },
   buttonPrimary: {
-    backgroundColor: defaultColors.color1 + '10',
-    borderColor: defaultColors.color1 + '50',
-    borderWidth: 1,
+    backgroundColor: defaultColors.color6,
     borderRadius: 40,
     paddingHorizontal: 15,
+    paddingVertical: 15,
     margin: 3
   },
 

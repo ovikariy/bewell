@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { OPERATION } from './operationReducer';
+import { AUTH } from './authReducer';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 
@@ -14,7 +15,8 @@ export const ConfigureStore = () => {
 
     const store = createStore(
         persistCombineReducers(config, {
-            OPERATION
+            OPERATION,
+            AUTH
         }),
         applyMiddleware(thunk)
         //applyMiddleware(thunk, logger)

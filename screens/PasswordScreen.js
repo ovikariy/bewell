@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Icon } from 'react-native-elements';
 import { text, stateConstants } from '../modules/Constants';
-import { setUserPassword } from '../redux/SecurityActionCreators';
-import { ParagraphText, PasswordInput } from '../components/MiscComponents';
-import { ToastAndroid, ActivityIndicator, View } from 'react-native';
+import { setUserPassword } from '../redux/securityActionCreators';
+import { ParagraphText, PasswordInput, ActivityIndicator } from '../components/MiscComponents';
+import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
 const mapStateToProps = state => {
@@ -51,7 +51,7 @@ class PasswordScreen extends Component {
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
           { /* TODO: test modal activity indicator while data is being encrypted and saved */
-            this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator /> : <View />}
+            this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           <ParagraphText>{text.passwordScreen.explanation}</ParagraphText>
           <PasswordInput
             placeholder={text.passwordScreen.currentPlaceholder}

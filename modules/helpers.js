@@ -66,6 +66,12 @@ export function isDate(value) {
   return moment.isDate(value);
 }
 
+export function isNullOrEmpty(value) {
+  if (!value || value == undefined || value == null || (value + '').trim() == '')
+    return true;
+  return false;
+}
+
 export function isEmptyWidgetItem(item) {
   /* items with 'type' property are widget items and we want to check those if they are not empty */
   if (Object.keys(item).indexOf('type') < 0)
@@ -152,14 +158,16 @@ export function groupBy(list, keyGetter, appendToMap) {
   return map;
 }
 
+export const consoleColors = {
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  reset: '\x1b[0m'
+}
+
 export function consoleLogWithColor(color, message) {
   /* changes the color of console log statements and needs to be reset after
     console.log('\x1b[32m', 'this text is green', '\x1b[0m'); */
-  const consoleColors = {
-    green: '\x1b[32m',
-    red: '\x1b[31m',
-    reset: '\x1b[0m'
-  }
+
 
   console.log(color ? color : consoleColors.green, message, consoleColors.reset);
 }

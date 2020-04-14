@@ -60,7 +60,7 @@ class HomeScreen extends React.Component {
 
   render() {
     //TODO: bug add note with tags, tags get added to redux. navigate to insights and back home, tags are blank in redux
-    console.log('\r\n home render tags ' + this.props[stateConstants.OPERATION].store[WellKnownStoreKeys.TAGS]);
+    //console.log('\r\n home render tags ' + this.props[stateConstants.OPERATION].store[WellKnownStoreKeys.TAGS]);
 
     const selectedDateString = new Date(this.state.selectedDate).toLocaleDateString();
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);

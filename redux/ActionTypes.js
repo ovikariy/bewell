@@ -11,3 +11,8 @@ export const REPLACE_ITEMS_IN_REDUX = 'REPLACE_ITEMS_IN_REDUX';
 export const CLEAR_REDUX = 'CLEAR_REDUX'; 
 
 export const AFTER_PERSIST = 'AFTER_PERSIST'
+
+export const LOAD_AUTH_DATA = 'LOAD_AUTH_DATA'
+export const SKIP_SECURITY_SETUP = 'SKIP_SECURITY_SETUP'
+export const SIGN_IN = 'SIGN_IN'
+export const SIGN_OUT = 'SIGN_OUT'
