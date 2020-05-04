@@ -1,5 +1,5 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
-import { ErrorCodes, Errors, storeConstants } from './Constants';
+import { ErrorCodes, Errors, storeConstants, text } from './Constants';
 import * as SecureStore from 'expo-secure-store';
 import { consoleColors } from './helpers';
 
@@ -18,8 +18,16 @@ export const getMultipleHashedKeys = async (keysToHash) => {
   return hashedKeys;
 }
 
-//TODO: revisit, save and encrypt if PIN entered
-// export const setPasswordAsync = async (oldPassword, newPassword) => {
+export const setupNewPINAsync = async (password, pin) => {
+  if (!password || !pin)
+    throw new Error(Errors.MissingPassword);
+
+  const encryptedPassword = await encryptAsync(password, pin); //TODO: check strong encryption even if PIN is short
+  await setToSecureStoreAsync(storeConstants.password, encryptedPassword);
+}
+
+// export const setPasswordAsync = async (oldPassword, newPassword, PIN) => {
+//   /* password is stored only if PIN has been set and is encrypted with the PIN */
 //   if (!newPassword)
 //     throw new Error(Errors.NewPasswordCannotBeBlank);
 
@@ -236,6 +244,8 @@ const resetEncryptDecryptDataFunctions = async () => {
  * re-retrieving the data encryption key or the need to pass it around
  */
 export const createEncryptDecryptDataFunctions = async (dataEncryptionKeyEncrypted, password) => {
+  //TODO: check login attempts and show error if exceeded
+
   if (!dataEncryptionKeyEncrypted || !password)
     throw new Error(Errors.InvalidParameter + ErrorCodes.Auth1);
   const dataEncryptionKeyDecrypted = await decryptAsync(dataEncryptionKeyEncrypted, password);
@@ -253,6 +263,24 @@ export const createEncryptDecryptDataFunctions = async (dataEncryptionKeyEncrypt
   };
 
   DataEncryption.canEncryptDecrypt = true;
+}
+
+/* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and 
+use it to sign in if the PIN is correct */
+export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncrypted, pin) => {
+  if (!dataEncryptionKeyEncrypted || !pin)
+    throw new Error(Errors.InvalidParameter + ErrorCodes.Auth4);
+
+  //TODO: check login attempts and show error if exceeded
+
+  const encryptedPassword = await getFromSecureStoreAsync(storeConstants.password);
+  if (!encryptedPassword)
+    throw new Error(Errors.General + ErrorCodes.Auth5);
+  const decryptedPassword = await decryptAsync(encryptedPassword, pin);
+  if (!decryptedPassword)
+    throw new Error(Errors.InvalidPIN + ErrorCodes.Auth6);
+
+  await createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted, decryptedPassword);
 }
 
 export const canEncryptDecrypt = () => {

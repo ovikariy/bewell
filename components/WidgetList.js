@@ -83,8 +83,7 @@ class WidgetList extends React.Component {
       <View style={[styles.centered, styles.flex, { paddingTop: 40 }]}>
         <Image source={require('../assets/images/arrow-up.png')} style={[styles.imageContainer, { height: 50, width: 15 }]} />
         <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage1}</Text>
-        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage2}</Text>
-        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage3}</Text>
+        <Text style={[styles.subTitleText, styles.dimColor, styles.centered, styles.spacedOut]}>{text.widgets.welcomeMessage2}</Text>
       </View>
     );
   }
@@ -92,7 +91,7 @@ class WidgetList extends React.Component {
   render() {
     return (
       <View style={[styles.flex]}>
-        <Toolbar style={{ flex: 0 }}>{this.renderAddNewButtons()}</Toolbar>
+        <Toolbar style={{ flex: 0, paddingVertical: 6 }}>{this.renderAddNewButtons()}</Toolbar>
         <ListWithRefresh style={[styles.flex, styles.toolbarBottomOffset]}
           onPulldownRefresh={() => this.props.onPulldownRefresh()}
         >

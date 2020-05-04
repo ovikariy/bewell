@@ -1,110 +1,173 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
-import { Button, Icon } from 'react-native-elements';
-import { setUserPassword } from '../redux/securityActionCreators';
 import { text, stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, PasswordInput, Toast, showMessages } from '../components/MiscComponents';
+import {
+  ActivityIndicator, ParagraphText, Toast, showMessages,
+  PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary
+} from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
-import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
+import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
+import { isNullOrEmpty } from '../modules/helpers';
+import { StackActions } from '@react-navigation/native';
+
+import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
 
 const mapStateToProps = state => {
   return {
     [stateConstants.OPERATION]: state[stateConstants.OPERATION],
+    [stateConstants.PINSETUP]: state[stateConstants.PINSETUP]
   };
 }
 
 const mapDispatchToProps = dispatch => ({
-  setUserPassword: (oldPassword, newPassword) => dispatch(setUserPassword(oldPassword, newPassword))
+  verifyPassword: (password) => dispatch(verifyPassword(password)),
+  submitPIN: (password, pin) => dispatch(submitPIN(password, pin)),
+  startPINsetup: () => dispatch(startPINsetup())
 });
 
-/* this screen is shown on app launch if the user has not setup security yet */
 class SetupPINScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newPassword: null,
-      newPasswordReentered: null
+      password: null,
+      PIN: null,
+      PINreentered: null,
+      showPINReentered: false
     }
   }
 
-  navigateHome() {
-    this.props.navigation.navigate('Home');
+  componentDidMount() {
+    this.props.startPINsetup(); /* this will reset flags used to determine if password has been verified etc */
   }
 
-  navigateToPIN() {
-    this.props.navigation.navigate('Settings', { screen: 'PIN' });
-  }
-
-  savePassword() {
-    if (this.state.newPassword !== this.state.newPasswordReentered) {
-      Toast.show(text.passwordScreen.message1);
-      return;
-    }
-    this.props.setUserPassword(null, this.state.newPassword);
-
+  reset() {
     this.setState({
       ...this.state,
-      newPassword: null,
-      newPasswordReentered: null,
+      password: null,
+      PIN: null,
+      PINreentered: null,
+      showPINReentered: false
     });
+  }
+
+  showPINfieldReenter() {
+    if (isNullOrEmpty(this.state.PIN) || this.state.PIN.length < 4) {
+      Toast.show(text.setupPINScreen.message3);
+      return;
+    }
+    this.setState({
+      ...this.state,
+      showPINReentered: true
+    });
+  }
+
+  submitPIN() {
+    if (this.state.PIN !== this.state.PINreentered) {
+      Toast.show(text.setupPINScreen.message1);
+      this.setState({
+        ...this.state,
+        PIN: null,
+        PINreentered: null,
+        showPINReentered: false
+      });
+      return;
+    }
+    this.props.submitPIN(this.state.password, this.state.PIN);
+  }
+
+  verifyPassword() {
+    if (isNullOrEmpty(this.state.password)) {
+      Toast.show(text.setupPINScreen.message2);
+      return;
+    }
+    this.props.verifyPassword(this.state.password);
+  }
+
+  renderPINSetupComplete() {
+    return <View style={styles.flex}>
+      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text6}</ParagraphText>
+      <Spacer height={70} />
+      <ButtonPrimary
+        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        title={text.setupPINScreen.button}
+        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
+      />
+    </View>;
+  }
+
+  renderPasswordField() {
+    /* re-prompt for password even if logged in; if verified then allow setting PIN */
+    return <View style={styles.flex}>
+      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text2}</ParagraphText>
+      <Spacer height={70} />
+      <PasswordInputWithButton value={this.state.password}
+        containerStyle={styles.bottomPositioned}
+        placeholder={text.setupPINScreen.placeholder2}
+        onPress={() => this.verifyPassword()}
+        onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+      />
+    </View>;
+  }
+
+  renderPINField() {
+    return <View style={styles.flex}>
+      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text3}</ParagraphText>
+      <Spacer height={20} />
+      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{text.setupPINScreen.tip1}</ParagraphText>
+      <Spacer height={70} />
+      <PINInputWithButton value={this.state.PIN}
+        containerStyle={styles.bottomPositioned}
+        placeholder={text.setupPINScreen.placeholder3}
+        onPress={() => this.showPINfieldReenter()}
+        onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
+      />
+    </View>;
+  }
+
+  renderPINReenter() {
+    return <View style={styles.flex}>
+      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text4}</ParagraphText>
+      <Spacer height={70} />
+      <PINInputWithButton value={this.state.PINreentered}
+        containerStyle={styles.bottomPositioned}
+        placeholder={text.setupPINScreen.placeholder4}
+        onPress={() => this.submitPIN()}
+        onChangeText={(value) => { this.setState({ ...this.state, PINreentered: value }) }}
+      />
+    </View>;
+  }
+
+  renderFields() {
+    if (this.props[stateConstants.PINSETUP].isPinSetupComplete === true) {
+      return this.renderPINSetupComplete();
+    }
+    if (this.props[stateConstants.PINSETUP].isPasswordVerified !== true) {
+      return this.renderPasswordField();
+    }
+    if (this.state.showPINReentered === true) {
+      return this.renderPINReenter();
+    }
+    return this.renderPINField();
   }
 
   render() {
     showMessages(this.props[stateConstants.OPERATION]);
 
     return (
-      <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
-        <ScreenContent style={{ padding: 20, paddingTop: 40 }} >
-          {/* ScrollView is used here because it handles keyboard dismiss properly, otherwise keyboard remains visible even after leaving the text input and pressing buttons on the screen
-           if cannot use a ScrollView use another approach: https://stackoverflow.com/questions/29685421/hide-keyboard-in-react-native */}
-          <ScrollView>
-            <ParagraphText style={styles.bodyTextLarge}>{text.setupSecurityScreen.text1}</ParagraphText>
-            <PasswordInput
-              placeholder={text.setupSecurityScreen.placeholder1}
-              value={this.state.newPassword}
-              leftIconName='lock-outline'
-              onChangeText={(value) => { this.setState({ ...this.state, newPassword: value }) }}
-            />
-            <PasswordInput
-              placeholder={text.setupSecurityScreen.placeholder2}
-              value={this.state.newPasswordReentered}
-              leftIconName='lock-outline'
-              onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
-            />
-            <Button
-              disabled={!this.state.newPassword || this.state.newPassword != this.state.newPasswordReentered}
-              containerStyle={{ marginTop: 50 }}
-              title={text.setupSecurityScreen.button1}
-              onPress={() => { this.savePassword() }}
-              icon={<Icon
-                containerStyle={{ marginRight: 20 }}
-                name='check'
-                size={20}
-                color='white'
-              />}
-            />
-            <ParagraphText style={[styles.centered, { marginTop: 100, marginBottom: 30 }]}>{text.setupSecurityScreen.text2}</ParagraphText>
-            <Button
-              containerStyle={{ alignItems: 'center', marginBottom: 20 }}
-              buttonStyle={[styles.buttonPrimary, { paddingHorizontal: 50 }]}
-              title={text.setupSecurityScreen.button2}
-              onPress={() => { this.navigateToPIN() }}
-            />
-            <Button
-              containerStyle={{ alignItems: 'center', marginBottom: 20 }}
-              buttonStyle={[styles.buttonPrimary, { paddingHorizontal: 50 }]}
-              title={text.setupSecurityScreen.button3}
-              onPress={() => { this.navigateHome() }}
-            />
-            {this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator /> : <View />}
-          </ScrollView>
-        </ScreenContent>
+      <ScreenBackground>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
+          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.setupPINScreen.text1}</ParagraphText>
+            <HorizontalLine />
+            {this.renderFields()}
+            {this.props[stateConstants.OPERATION].isLoading ?
+              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
+          </ScreenContent>
+        </ScrollView>
       </ScreenBackground>
     );
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SetupPINScreen);
-
-

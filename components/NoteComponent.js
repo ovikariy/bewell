@@ -66,7 +66,7 @@ class NoteComponent extends React.Component {
         />
         <Spacer height={10} />
         <IconButton iconName='tags' iconType='font-awesome' iconStyle={styles.iconSecondarySmall}
-          containerStyle={{ alignItems: 'flex-start', }}
+          containerStyle={{ paddingLeft: 10, paddingBottom: 10, alignItems: 'flex-start', }}
           onPress={() => { this.setState({ recentTagsVisble: !this.state.recentTagsVisble }) }} />
         {
           this.state.recentTagsVisble ?

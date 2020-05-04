@@ -2,7 +2,9 @@ import { storeConstants, text, Errors, ErrorCodes } from '../modules/Constants';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
+import * as ActionTypes from './ActionTypes';
 import { loadAuthData } from './authActionCreators';
+import { isNullOrEmpty } from '../modules/helpers';
 
 // export const setUserPassword = (oldPassword, newPassword) => (dispatch) => {
 //     dispatch(GenericActions.operationProcessing());
@@ -29,6 +31,7 @@ import { loadAuthData } from './authActionCreators';
 //     else
 //         await updateExistingEncryptionAsync(encryptionKey, oldPassword, newPassword);
 // }
+
 
 
 export const setupNewEncryption = (newPassword) => (dispatch) => {
@@ -58,6 +61,16 @@ const setupNewEncryptionAsync = async (newPassword) => {
 
     // 3. delete non encrypted items from storage
     await StorageHelpers.finishSetupNewEncryptionAsync(storeConstants.AllStoreKeys);
+}
+
+export const isValidPasswordAsync = async (password) => {
+    /* get data encryption key which has been encypted with user's password and 
+    try to decrypt, if successful then the password is correct */
+    const dataEncryptionStoreKeyEncrypted = await StorageHelpers.getDataEncryptionStoreKey();
+    const passwordWorks = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionStoreKeyEncrypted, password);
+    if (passwordWorks === true)
+        return true;
+    return false;
 }
 
 // const updateExistingEncryptionAsync = async (encryptionKey, oldPassword, newPassword) => {

@@ -9,7 +9,8 @@ export const text = {
     SignedOut: 'Signed out'
   },
   successMessages: {
-    PasswordSaved: 'Password saved successfully'
+    PasswordSaved: 'Password saved successfully',
+    PINSet: 'PIN set successfully'
   },
   listItems: {
     AreYouSureDeleteThisItem: 'Are you sure you wish to delete this item?',
@@ -40,30 +41,42 @@ export const text = {
     title: 'Secure data',
     menuLabel: 'Secure data',
     text1: 'Secure your data \r\nwith a password or \r\npass phrase',
-    text2: 'This can be multiple words with \r\nspaces and special characters',
+    text2: 'Please use the minimum of 8 characters and can be multiple words with spaces',
     text3: 'Please re-enter your password \r\n\r\n',
     placeholder1: 'Enter password...',
     placeholder2: 'Re-renter password',
     link1: 'SKIP',
-    message1: 'Passwords don\'t match. Please try again'
+    message1: 'Passwords don\'t match. Please try again',
+    message2: 'Password must be at least 8 characters long'
   },
   setupPINScreen: {
-    title: 'Create PIN',
-    menuLabel: 'Create PIN',
-    text1: 'Lets secure your data with PIN. Please create a password that you will use to login to the app:',
-    text2: 'Optionally, you can also create a numeric PIN to avoid having to re-enter your password',
-    placeholder1: 'Enter password',
-    placeholder2: 'Re-renter password',
-    button1: 'Save',
-    button2: 'Create PIN',
-    button3: 'Done, take me to Home screen'
+    title: 'Set PIN',
+    menuLabel: 'Set PIN',
+    text1: 'Set a numeric PIN for logging into the app',
+    text2: 'To verify it is you, please enter your current password',
+    text3: 'Enter at least a 4 digit PIN number below',
+    text4: 'Re-enter your new PIN number',
+    text5: 'Please use 4 to 6 digits',
+    text6: 'Your PIN has been set',
+    tip1: 'Tip: use a six or more digits \r\nfor stronger security',
+    placeholder2: 'Password',
+    placeholder3: 'Enter PIN',
+    placeholder4: 'Re-enter PIN',
+    message1: 'PIN and re-entered PIN numbers don\'t match. Please try again.',
+    message2: 'Please enter the password',
+    message3: 'PIN must be at least 4 digits',
+    button: 'DONE',
+    link: 'Done, go to Home screen'
   },
   signInScreen: {
     text1: 'Your data is protected',
     text2: 'Enter your password to proceed',
-    currentPlaceholder: 'Enter password',
+    text3: 'Enter your PIN to proceed',
+    currentPlaceholder2: 'Enter password',
+    currentPlaceholder3: 'Enter PIN',
     button: 'Sign In',
-    message1: 'Invalid password'
+    message2: 'Invalid password',
+    message3: 'Invalid PIN',
   },
   //TODO: need signup stuff?
   signUpScreen: {
@@ -134,6 +147,7 @@ export const text = {
   settingsScreen: {
     title: 'Settings',
     setPassword: 'Set Password',
+    setPIN: 'Set PIN',
     importExport: 'Import and Export',
     version: 'app version'
   },
@@ -171,7 +185,8 @@ export const WellKnownStoreKeys = {
 
 export const stateConstants = {
   OPERATION: 'OPERATION',
-  AUTH: 'AUTH'
+  AUTH: 'AUTH',
+  PINSETUP: 'PINSETUP'
 }
 
 export const storeConstants = {
@@ -201,12 +216,15 @@ export const Errors = {
   InvalidKey: 'Invalid key ',
   NewPasswordCannotBeBlank: 'New password cannot be blank ',
   InvalidPassword: 'Invalid password, please try again ',
+  InvalidPIN: 'Invalid PIN, please try again ',
+  MissingPassword: 'Missing password or PIN, please try again ',
   InvalidFilePassword: 'Invalid password for this file, please try again',
   UnableToSave: 'Unable to save ',
   UnableToDecrypt: 'Unable to decrypt ',
   ImportError: 'Import error ',
   AccessStorage: ' Unable to access storage ',
-  PasswordAlreadySet: 'Password has already been set '
+  PasswordAlreadySet: 'Password has already been set ',
+  CannotSetPIN: 'Cannot setup new PIN'
 }
 
 export const ErrorCodes = {
@@ -256,6 +274,9 @@ export const ErrorCodes = {
   Auth1: 'A1001',
   Auth2: 'A1002',
   Auth3: 'A1003',
+  Auth4: 'A1004',
+  Auth5: 'A1005',
+  Auth6: 'A1006',
   Security1: 'SE1001'
 }
 

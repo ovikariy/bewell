@@ -5,8 +5,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import { createStackNavigator } from '@react-navigation/stack';
 import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import { isNullOrEmpty } from '../modules/helpers';
-import { IconForButton, IconButton } from './MiscComponents';
+import { IconForButton } from './MiscComponents';
 
 import HomeScreen from '../screens/HomeScreen';
 import ItemHistoryScreen from '../screens/ItemHistoryScreen';
@@ -16,7 +15,6 @@ import BackupRestoreScreen from '../screens/BackupRestore';
 import InsightsScreen from '../screens/InsightsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
 import SignOutScreen from '../screens/SignOutScreen';
 import SetupSecurityScreen from '../screens/SetupSecurityScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
@@ -50,7 +48,7 @@ function WelcomeNavigator() {
                 component={SetupSecurityScreen}
                 options={({ route, navigation }) => ({
                     title: ''
-                })}                
+                })}
             />
         </WelcomeStack.Navigator>
     );
@@ -117,6 +115,12 @@ function SettingsNavigator() {
                 component={PasswordScreen}
                 options={{ title: text.passwordScreen.title }}
             />
+            {/*TODO: SetupPINScreen should not be visible if not password has been created yet */}
+            <SettingsStack.Screen
+                name='SetupPINScreen'
+                component={SetupPINScreen}
+                options={{ title: text.setupPINScreen.title }}
+            />
             <SettingsStack.Screen
                 name='BackupRestore'
                 component={BackupRestoreScreen}
@@ -140,15 +144,15 @@ function SignOutNavigator() {
                 })}
             />
         </SignOutStack.Navigator>
-    );
+    )
 }
 
 function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView style={styles.menuBackground} {...props}>
             <View style={[styles.flex, styles.rowContainer, { marginBottom: 20 }]}>
-                <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImage, { marginRight: 15 }]} />
-                <Text style={styles.heading}>{text.app.title}</Text>
+                <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />
+                <Text style={styles.heading}>{text.app.name}</Text>
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}
@@ -160,7 +164,7 @@ function CustomDrawerContent(props) {
     );
 }
 
-function getPasswordSigninScreens() {
+function getPasswordSigninScreens(props) {
     return (
         <React.Fragment>
             <Drawer.Screen name='SignIn'
@@ -176,7 +180,7 @@ function getPasswordSigninScreens() {
 function getFirstTimeUserScreens() {
     return (
         <React.Fragment>
-            <Drawer.Screen name="Welcome" component={WelcomeNavigator} />        
+            <Drawer.Screen name="Welcome" component={WelcomeNavigator} />
         </React.Fragment>
     )
 }
@@ -233,17 +237,16 @@ function getAuthenticatedUserScreens() {
 const Drawer = createDrawerNavigator();
 export function MainDrawerNavigator(props) {
     let drawerContent;
-    let initialRouteName = "Home";
+    let initialRouteName = "SetupPINScreen";
 
     //return testScreens(props);
 
-    console.log('MainDrawerNavigator ' + JSON.stringify(props.auth));
 
     if (props.auth.isInitialized !== true) {
         drawerContent = getFirstTimeUserScreens(); /* first time user (TODO: or maybe new phone? Think about restore flow maybe) */
     }
     else if (props.auth.isDataEncrypted === true && props.auth.isSignedIn !== true) {
-        drawerContent = getPasswordSigninScreens();
+        drawerContent = getPasswordSigninScreens(props);
     }
     else if (props.auth.isSignedIn !== true && props.auth.isSkippedSecuritySetup !== true) {
         drawerContent = getSetupSecurityScreens();

@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { setupNewEncryption } from '../redux/securityActionCreators';
-import { initialize, skipSecuritySetup } from '../redux/authActionCreators';
+import { initialize, skipSecuritySetup } from '../redux/welcomeActionCreators';
 import { text, stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, PasswordInput, Toast, showMessages, PasswordInputWithButton, Spacer, HorizontalLine, LinkButton } from '../components/MiscComponents';
-import { View, ScrollView, ImageBackground } from 'react-native';
+import { ActivityIndicator, ParagraphText, Toast, showMessages, PasswordInputWithButton, Spacer, HorizontalLine, LinkButton } from '../components/MiscComponents';
+import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { Image } from 'react-native-animatable';
+import { isNullOrEmpty } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -26,9 +26,9 @@ class SetupSecurityScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newPassword: null,
-      newPasswordReentered: null,
-      showNewPasswordReentered: false,
+      password: null,
+      passwordReentered: null,
+      showPasswordReentered: false,
       instructionText: text.setupSecurityScreen.text2
     }
   }
@@ -36,34 +36,37 @@ class SetupSecurityScreen extends Component {
   reset() {
     this.setState({
       ...this.state,
-      newPassword: null,
-      newPasswordReentered: null,
-      showNewPasswordReentered: false,
+      password: null,
+      passwordReentered: null,
+      showPasswordReentered: false,
       instructionText: text.setupSecurityScreen.text2
     });
   }
 
   showPasswordReenter() {
-    this.setState({ ...this.state, showNewPasswordReentered: true, instructionText: text.setupSecurityScreen.text3 });
+    if (isNullOrEmpty(this.state.password) || this.state.password.length < 8) {
+      Toast.show(text.setupSecurityScreen.message2);
+      return;
+    }
+    this.setState({ ...this.state, showPasswordReentered: true, instructionText: text.setupSecurityScreen.text3 });
   }
 
   skipSecuritySetup() {
     this.props.skipSecuritySetup();
-    this.props.initialize();
     this.reset();
   }
 
   submitPassword() {
-    if (this.state.newPassword !== this.state.newPasswordReentered) {
+    if (this.state.password !== this.state.passwordReentered) {
       Toast.show(text.setupSecurityScreen.message1);
       this.setState({
         ...this.state,
-        newPassword: null,
-        newPasswordReentered: null,
-        showNewPasswordReentered: false
+        password: null,
+        passwordReentered: null,
+        showPasswordReentered: false
       });
     }
-    this.props.setupNewEncryption(this.state.newPassword);
+    this.props.setupNewEncryption(this.state.password);
     this.props.initialize();
     this.reset();
   }
@@ -73,37 +76,38 @@ class SetupSecurityScreen extends Component {
 
     return (
       <ScreenBackground>
-        <ScrollView /** @see devnotes.md#region 1.1 */>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.setupSecurityScreen.text1}</ParagraphText>
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
             <Spacer height={40} />
-            {this.state.showNewPasswordReentered == false ?
-              <View style={styles.flex}>
+            <View style={[styles.bottomPositioned]} >
+              {this.state.showPasswordReentered == false ?
                 <PasswordInputWithButton
+                  containerStyle={{ minWidth: 300 }}
                   placeholder={text.setupSecurityScreen.placeholder1}
                   onPress={() => this.showPasswordReenter()}
-                  value={this.state.newPassword}
+                  value={this.state.password}
                   leftIconName='lock-outline'
-                  onChangeText={(value) => { this.setState({ ...this.state, newPassword: value }) }}
-                />
-              </View> : <View>
+                  onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+                /> :
                 <PasswordInputWithButton
+                  containerStyle={{ minWidth: 300 }}
                   placeholder={text.setupSecurityScreen.placeholder2}
                   onPress={() => this.submitPassword()}
-                  value={this.state.newPasswordReentered}
+                  value={this.state.passwordReentered}
                   leftIconName='lock-outline'
-                  onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
+                  onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }) }}
                 />
-              </View>
-            }
-            <Spacer height={40} />
-            <LinkButton title={text.setupSecurityScreen.link1} titleStyle={{ opacity: 0.5 }}
-              onPress={() => this.skipSecuritySetup()} />
+              }
+              <Spacer height={20} />
+              <LinkButton title={text.setupSecurityScreen.link1} titleStyle={{ opacity: 0.5 }}
+                onPress={() => this.skipSecuritySetup()} />
+            </View>
             {this.props[stateConstants.OPERATION].isLoading ?
-              <ActivityIndicator style={{ marginTop: 40 }} /> : <View />}
+              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

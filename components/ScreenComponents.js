@@ -4,25 +4,28 @@ import { ImageBackground, View, KeyboardAvoidingView, Platform, Image } from 're
 import { text } from '../modules/Constants';
 import { styles } from '../assets/styles/style';
 import { Spacer, ParagraphText } from './MiscComponents';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /* Wrapper for a screen component; simplifies setting image background on various screens */
 export const ScreenBackground = (props) => {
   if (props.imageBackgroundSource) {
     return (
-      <ImageBackground
-        source={props.imageBackgroundSource}
-        style={styles.flex}>
-        <View style={styles.screenContainer}>
-          {props.children}
-        </View>
-      </ImageBackground>
+      <SafeAreaView style={styles.flex}>
+        <ImageBackground
+          source={props.imageBackgroundSource}
+          style={styles.flex}>
+          <View style={styles.screenContainer}>
+            {props.children}
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
     )
   }
   else {
     return (
-      <View style={styles.screenContainer}>
+      <SafeAreaView style={styles.screenContainer}>
         {props.children}
-      </View>
+      </SafeAreaView>
     )
   }
 }
@@ -30,7 +33,7 @@ export const ScreenBackground = (props) => {
 /* Commnly used large header with image background, app name and logo */
 export const ScreenHeader = (props) => {
   return (
-    <ImageBackground source={require('../assets/images/header.jpg')} style={{ height: 250 }}>
+    <ImageBackground source={require('../assets/images/header.jpg')} style={[{ height: 250 }, props.style]}>
       <View style={[styles.centered, styles.flex, styles.centeredVertical]}>
         <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImage]} />
         <Spacer height={30} />

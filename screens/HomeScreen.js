@@ -69,7 +69,6 @@ class HomeScreen extends React.Component {
       data = (this.props[stateConstants.OPERATION].store[selectedMonth] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
     return ( 
       <ScreenBackground> 
-        {/*todo: move refresh */ }
         <ScreenContent isKeyboardAvoidingView={true} > 
           <DatePickerWithArrows date={this.state.selectedDate} onChange={(event, newDate) => this.selectedDateChanged(event, newDate)} />
           <WidgetList 

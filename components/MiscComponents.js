@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, ShadowPropTypesIOS
+  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, ShadowPropTypesIOS, TextInput
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import { addSubtractDays, friendlyDate, wait, formatDate } from '../modules/helpers';
+import { addSubtractDays, friendlyDate, wait, formatDate, isNullOrEmpty } from '../modules/helpers';
 
 export const Spacer = (props) => {
   return <View style={[
@@ -70,7 +70,40 @@ export const PasswordInputWithButton = (props) => {
     autoCorrect={false}
     secureTextEntry={true}
     rightIcon={<RoundButton name="keyboard-arrow-right" onPress={props.onPress} />}
+    onSubmitEditing={() => {
+      if (props.onPress)
+        props.onPress();
+    }}
   />
+};
+
+export const PINInputWithButton = (props) => {
+  function onChangeText(value) {
+    if (props.onChangeText)
+      props.onChangeText(value.replace(/[^0-9]/g, ''));
+  }
+
+  return <View style={[{ flexDirection: 'row', alignItems: 'center' }, props.containerStyle]}>
+    <TextInput
+      {...props}
+      style={[styles.bodyText, styles.hugeText, {
+        paddingVertical: 7, borderBottomWidth: 1,
+        borderColor: styles.buttonPrimary.borderColor
+      }]}
+      placeholderTextColor={props.placeholderHighlight ?? styles.placeholderText.color}
+      autoCompleteType='off'
+      autoFocus={true}
+      autoCorrect={false}
+      secureTextEntry={true}
+      keyboardType='numeric'
+      onChangeText={(value) => { onChangeText(value) }}
+      onSubmitEditing={() => {
+        if (props.onPress)
+          props.onPress();
+      }}
+    />
+    <RoundButton containerStyle={{ marginLeft: 30 }} name="keyboard-arrow-right" onPress={props.onPress} />
+  </View>
 };
 
 export const RoundButton = (props) => {
@@ -164,15 +197,14 @@ export const DatePickerWithArrows = (props) => {
 
 export const ButtonPrimary = (props) => {
   return (
-    <Button buttonStyle={styles.buttonPrimary} titleStyle={[styles.subTitleText, {opacity: 1}]}
-      icon={props.name ? <IconForButton name={props.name} iconStyle={props.iconStyle} /> : {}}
-      {...props} />
+    <Button {...props} buttonStyle={[styles.buttonPrimary, props.buttonStyle]} titleStyle={[styles.subTitleText, { opacity: 1 }]}
+      icon={props.name ? <IconForButton name={props.name} iconStyle={props.iconStyle} /> : {}} />
   )
 };
 
 export const IconButton = (props) => {
   return (
-    <TouchableOpacity style={[styles.buttonSecondary, props.containerStyle]} {...props} >
+    <TouchableOpacity style={[props.containerStyle]} {...props} >
       {props.iconName ? <IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} /> : <View></View>}
       {props.text ? <Text style={[props.titleStyle || styles.toolbarButtonText]}>{props.text}</Text> : <View></View>}
     </TouchableOpacity>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { Button, Icon } from 'react-native-elements';
 import { text, Errors, storeConstants, stateConstants } from '../modules/Constants';
-import { ParagraphText, PasswordInput, Toast, ActivityIndicator, showMessages } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, Toast, ActivityIndicator, showMessages, ButtonPrimary } from '../components/MiscComponents';
 import { View, Text, KeyboardAvoidingView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { shareAsync } from 'expo-sharing';
@@ -173,7 +173,7 @@ class BackupRestoreScreen extends Component {
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
           {this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator /> : <View />}
           <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.exportExplanation}</ParagraphText>
-          <Button
+          <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
             title={text.backupScreen.export}
             onPress={() => { this.export() }}
@@ -185,7 +185,7 @@ class BackupRestoreScreen extends Component {
             />}
           />
           <ParagraphText style={{ marginTop: 30 }}>{text.backupScreen.importExplanation}</ParagraphText>
-          <Button
+          <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
             title={text.backupScreen.import}
             onPress={() => { this.import() }}

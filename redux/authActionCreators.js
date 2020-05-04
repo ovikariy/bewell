@@ -2,7 +2,6 @@ import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 import * as ActionTypes from './ActionTypes';
-import { Errors, text, storeConstants, ErrorCodes } from '../modules/Constants';
 
 export const loadAuthData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -34,9 +33,9 @@ const loadAuthDataAsync = async () => {
     return authData;
 };
 
-export const signIn = (password) => (dispatch) => {
+export const signInPassword = (password) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
-    signInAsync(password)
+    signInPasswordAsync(password)
         .then(() => {
             dispatch(loadAuthData());
         })
@@ -47,9 +46,28 @@ export const signIn = (password) => (dispatch) => {
         })
 }
 
-const signInAsync = async (password) => {
+export const signInPIN = (pin) => (dispatch) => {
+    dispatch(GenericActions.operationProcessing());
+    signInPINAsync(pin)
+        .then(() => {
+            dispatch(loadAuthData());
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationCleared());
+        })
+}
+
+
+const signInPasswordAsync = async (password) => {
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     await SecurityHelpers.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
+}
+
+const signInPINAsync = async (pin) => {
+    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
+    await SecurityHelpers.createEncryptDecryptDataFunctionsPIN(dataEncryptionStoreKey, pin);
 }
 
 export const signOut = () => (dispatch) => {
@@ -66,25 +84,6 @@ export const signOut = () => (dispatch) => {
             dispatch(GenericActions.operationCleared());
         })
 };
-
-export const initialize = () => (dispatch) => {
-    /* this should be called once on intitial app launch */
-    dispatch(GenericActions.operationProcessing());
-    StorageHelpers.setItemsAsync(storeConstants.isInitialized, 'true')
-        .then(() => {
-            dispatch(loadAuthData());
-        })
-        .catch(error => {
-            console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
-            dispatch(GenericActions.operationCleared());
-        })
-}
-
-export const skipSecuritySetup = () => (dispatch) => {
-    /* this updates a flag in redux to prevent showing the setup security screen again in current session */
-    dispatch({ type: ActionTypes.SKIP_SECURITY_SETUP });
-}
 
 
 

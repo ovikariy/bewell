@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Icon } from 'react-native-elements';
 import { text, stateConstants } from '../modules/Constants';
 import { setUserPassword } from '../redux/securityActionCreators';
-import { ParagraphText, PasswordInput, ActivityIndicator } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 
@@ -70,7 +70,7 @@ class PasswordScreen extends Component {
             leftIconName='lock-outline'
             onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
           />
-          <Button
+          <ButtonPrimary
             disabled={!this.state.newPassword || this.state.newPassword != this.state.newPasswordReentered}
             containerStyle={{ marginTop: 50 }}
             title={text.passwordScreen.apply}

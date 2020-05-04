@@ -46,6 +46,12 @@ export const styles = StyleSheet.create({
   centeredVertical: {
     justifyContent: 'center'
   },
+  bottomPositioned: {
+    alignSelf: 'center', 
+    position: 'absolute', 
+    bottom: 40
+  },
+
   /* typography */
 
   heading: {
@@ -106,6 +112,9 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     letterSpacing: 2
   },
+  dimColor: {
+    color: defaultColors.color4 + '80'
+  },
   appName: {
     fontFamily: fonts.tirtiaryCondensed,
     fontSize: 30,
@@ -149,18 +158,20 @@ export const styles = StyleSheet.create({
     padding: 5
   },
   buttonPrimary: {
-    backgroundColor: defaultColors.color6,
+    backgroundColor: defaultColors.color1 + '10',
+    borderColor: defaultColors.color1 + '50',
+    borderWidth: 1,
     borderRadius: 40,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     margin: 3
   },
-
   buttonSecondary: {
-    backgroundColor: defaultColors.transparent,
+    backgroundColor: defaultColors.color6,
     borderWidth: 0,
-    borderRadius: 50,
-    paddingHorizontal: 15,
+    borderRadius: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     margin: 3
   },
 
@@ -173,7 +184,7 @@ export const styles = StyleSheet.create({
   screenBodyContainer: {
     /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
     /* add margins equal to the navigator height (e.g. drawer or tab) or bottom toolbar */
-    marginTop: 70,
+    marginTop: 50,
     flex: 1
   },
   selectedDateContainer: {
@@ -241,7 +252,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center'
   },
 
-  /* nanvigator */
+  /* navigator */
 
   logoImage: {
     height: 50,
