@@ -30,7 +30,7 @@ class SignOutScreen extends Component {
           <ParagraphText style={[styles.bodyTextLarge]}>{text.signOutScreen.text2}</ParagraphText>
           <Spacer height={70} />
           <ButtonPrimary
-            containerStyle={{ marginTop: 20 }}
+            containerStyle={{ alignSelf: 'center', marginTop: 20 }}
             title={text.signOutScreen.button}
             onPress={() => { this.props.signOut(); }}
           />

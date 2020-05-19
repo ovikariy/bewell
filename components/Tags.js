@@ -17,7 +17,7 @@ export const Tag = (props) => {
     return (
         /* when tag is pressed, update its date for ordering in the recently used tags */
         <TouchableOpacity onPress={() => props.onTagPress({ ...props.value, date: new Date().toISOString() })} >
-            <Text {...props} style={[styles.bodyTextBright, styles.strongText, styles.spacedOut, props.style]}>
+            <Text {...props} style={[styles.bodyText, styles.brightColor, styles.strongText, styles.spacedOut, props.style]}>
                 {props.value.id}
             </Text>
         </TouchableOpacity>

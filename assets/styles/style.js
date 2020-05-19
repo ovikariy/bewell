@@ -82,11 +82,6 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: defaultColors.color4
   },
-  bodyTextBright: {
-    fontFamily: fonts.primary,
-    fontSize: 15,
-    color: defaultColors.color1
-  },
   textDark: {
     color: defaultColors.color8
   },
@@ -111,9 +106,6 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.tirtiary,
     fontSize: 30,
     letterSpacing: 2
-  },
-  dimColor: {
-    color: defaultColors.color4 + '80'
   },
   appName: {
     fontFamily: fonts.tirtiaryCondensed,
@@ -332,13 +324,19 @@ export const styles = StyleSheet.create({
     padding: 10
   },
   dimBackground: {
-    backgroundColor: defaultColors.color8 + '40'
+    backgroundColor: defaultColors.color8 + '40'  /* dark color e.g. black */
   },
   highlightBackground: {
-    backgroundColor: defaultColors.color2
+    backgroundColor: defaultColors.color2 /* e.g. when user selects a row, usually dark text and light background */
   },
-  highlightText: {
-    color: defaultColors.color5,
+  dimColor: {
+    color: defaultColors.color4 + '80' /* dark color e.g. black */
+  },
+  brightColor: {
+    color: defaultColors.color1, /* light color e.g. white */
+  },
+  highlightColor: {
+    color: defaultColors.color5, 
   },
   alignEnd: {
     alignItems: 'flex-end'

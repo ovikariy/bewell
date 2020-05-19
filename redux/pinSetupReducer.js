@@ -1,8 +1,8 @@
 import * as ActionTypes from './ActionTypes';
 
 export const PINSETUP = (state = {
-  isPasswordVerified: false,
-  isPinSetupComplete: false
+  isPasswordVerified: null,
+  isPinSetupComplete: null
 }, action) => {
   switch (action.type) {
     case ActionTypes.PIN_SETUP_STARTED:

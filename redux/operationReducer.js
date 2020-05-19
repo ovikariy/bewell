@@ -16,7 +16,6 @@ export const OPERATION = (state = {
                 newState.dirtyKeys = { ...state.dirtyKeys, [action.payload.key]: action.payload.key }
                 newState.store = { ...state.store, [action.payload.key]: updatedItems };
             }
-            //console.log('operationReducer update redux ' + action.payload.key + ' new staTE ' + JSON.stringify(newState));
             return newState;
         }
         case ActionTypes.REMOVE_ITEM_FROM_REDUX: {

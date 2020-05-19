@@ -12,11 +12,13 @@ import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import PasswordScreen from '../screens/PasswordScreen';
 import BackupRestoreScreen from '../screens/BackupRestore';
+import RestoreScreen from '../screens/RestoreScreen';
+import BackupScreen from '../screens/BackupScreen';
 import InsightsScreen from '../screens/InsightsScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignOutScreen from '../screens/SignOutScreen';
-import SetupSecurityScreen from '../screens/SetupSecurityScreen';
+import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
 
 const MenuHeaderButton = (props) => {
@@ -44,12 +46,18 @@ function WelcomeNavigator() {
                 })}
             />
             <WelcomeStack.Screen
-                name='SetupSecurity'
-                component={SetupSecurityScreen}
+                name='SetupPassword'
+                component={SetupPasswordScreen}
                 options={({ route, navigation }) => ({
                     title: ''
                 })}
             />
+            <Drawer.Screen name='SignIn'
+                component={SignInScreen}
+                options={({ route, navigation }) => ({
+                    title: ''
+                })}
+            />            
         </WelcomeStack.Navigator>
     );
 }
@@ -124,6 +132,16 @@ function SettingsNavigator() {
             <SettingsStack.Screen
                 name='BackupRestore'
                 component={BackupRestoreScreen}
+                options={{ title: text.backupRestoreScreen.title }}
+            />
+            <SettingsStack.Screen
+                name='Restore'
+                component={RestoreScreen}
+                options={{ title: text.restoreScreen.title }}
+            />
+            <SettingsStack.Screen
+                name='Backup'
+                component={BackupScreen}
                 options={{ title: text.backupScreen.title }}
             />
         </SettingsStack.Navigator>
@@ -156,7 +174,7 @@ function CustomDrawerContent(props) {
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}
-                activeTintColor={styles.bodyTextBright.color}
+                activeTintColor={styles.brightColor.color}
                 inactiveTintColor={styles.bodyText.color}
                 activeBackgroundColor={styles.toolbarContainer.backgroundColor}
                 {...props} />
@@ -164,7 +182,7 @@ function CustomDrawerContent(props) {
     );
 }
 
-function getPasswordSigninScreens(props) {
+function getSigninScreens(props) {
     return (
         <React.Fragment>
             <Drawer.Screen name='SignIn'
@@ -185,14 +203,6 @@ function getFirstTimeUserScreens() {
     )
 }
 
-function getSetupSecurityScreens() {
-    return (
-        <React.Fragment>
-            <Drawer.Screen name="SetupSecurityScreen" component={SetupSecurityScreen} />
-        </React.Fragment>
-    )
-}
-
 function getAuthenticatedUserScreens() {
     return (
         <React.Fragment>
@@ -201,7 +211,7 @@ function getAuthenticatedUserScreens() {
                     drawerLabel: text.homeScreen.menuLabel,
                     drawerIcon: ({ focused }) => <IconForButton name='home'
                         iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                        { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
                 }}
             />
             <Drawer.Screen name="Insights" component={InsightsNavigator}
@@ -209,7 +219,7 @@ function getAuthenticatedUserScreens() {
                     drawerLabel: text.insightsScreen.title,
                     drawerIcon: ({ focused }) => <IconForButton name='history' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                        { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
                 }}
             />
             <Drawer.Screen name="Settings" component={SettingsNavigator}
@@ -217,7 +227,7 @@ function getAuthenticatedUserScreens() {
                     drawerLabel: text.settingsScreen.title,
                     drawerIcon: ({ focused }) => <IconForButton name='sliders' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                        { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
                 }}
             />
             <Drawer.Screen name="SignOut" component={SignOutNavigator}
@@ -225,34 +235,30 @@ function getAuthenticatedUserScreens() {
                     drawerLabel: text.signOutScreen.title,
                     drawerIcon: ({ focused }) => <IconForButton name='sign-out' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
+                        { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
                 }}
             />
         </React.Fragment>
     )
 }
-
-
 
 const Drawer = createDrawerNavigator();
 export function MainDrawerNavigator(props) {
     let drawerContent;
-    let initialRouteName = "SetupPINScreen";
+    let initialRouteName = "SignIn";
 
-    //return testScreens(props);
 
+    //todo: check isEncrypted here and show login 
 
     if (props.auth.isInitialized !== true) {
         drawerContent = getFirstTimeUserScreens(); /* first time user (TODO: or maybe new phone? Think about restore flow maybe) */
     }
-    else if (props.auth.isDataEncrypted === true && props.auth.isSignedIn !== true) {
-        drawerContent = getPasswordSigninScreens(props);
-    }
-    else if (props.auth.isSignedIn !== true && props.auth.isSkippedSecuritySetup !== true) {
-        drawerContent = getSetupSecurityScreens();
-    }
-    else
+    else if (props.auth.isSignedIn === true) {
         drawerContent = getAuthenticatedUserScreens();
+    }
+    else {
+        drawerContent = getSigninScreens(props);        
+    }
 
     return (
         <Drawer.Navigator initialRouteName={initialRouteName} drawerContent={(config) =>
@@ -261,82 +267,4 @@ export function MainDrawerNavigator(props) {
             {drawerContent}
         </ Drawer.Navigator>
     );
-}
-
-//TODO: below funcitons for testing
-function testScreens(props) {
-    let drawerContent;
-    let initialRouteName = "SetupSecurity";
-    drawerContent = getAllScreensForTesting();
-
-    return (
-        <Drawer.Navigator initialRouteName={initialRouteName} drawerContent={(config) =>
-            <CustomDrawerContent {...config} userToken={props.userToken} signOut={props.signOut} />
-        }>
-            {drawerContent}
-        </ Drawer.Navigator>
-    );
-}
-
-function getAllScreensForTesting() {
-    return (
-        <React.Fragment>
-            <Drawer.Screen name="Welcome" component={WelcomeNavigator}
-                options={{
-                    drawerLabel: text.welcomeScreen.menuLabel,
-                    drawerIcon: ({ focused }) => <IconForButton name='lock-open'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="SetupSecurity" component={SetupSecurityScreen}
-                options={{
-                    drawerLabel: text.setupSecurityScreen.menuLabel,
-                    drawerIcon: ({ focused }) => <IconForButton name='lock-open'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="SetupPIN" component={SetupPINScreen}
-                options={{
-                    drawerLabel: text.setupPINScreen.menuLabel,
-                    drawerIcon: ({ focused }) => <IconForButton name='lock-open'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="Home" component={HomeNavigator}
-                options={{
-                    drawerLabel: text.homeScreen.menuLabel,
-                    drawerIcon: ({ focused }) => <IconForButton name='home'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="Insights" component={InsightsNavigator}
-                options={{
-                    drawerLabel: text.insightsScreen.title,
-                    drawerIcon: ({ focused }) => <IconForButton name='history' type='font-awesome'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="Settings" component={SettingsNavigator}
-                options={{
-                    drawerLabel: text.settingsScreen.title,
-                    drawerIcon: ({ focused }) => <IconForButton name='sliders' type='font-awesome'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-            <Drawer.Screen name="SignOut" component={SignOutNavigator}
-                options={{
-                    drawerLabel: text.signOutScreen.title,
-                    drawerIcon: ({ focused }) => <IconForButton name='sign-out' type='font-awesome'
-                        iconStyle={[styles.iconPrimarySmall,
-                        { color: (focused ? styles.bodyTextBright.color : styles.bodyText.color) }]} />
-                }}
-            />
-        </React.Fragment>
-    )
 }

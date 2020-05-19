@@ -1,30 +1,25 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { OPERATION } from './operationReducer';
 import { AUTH } from './authReducer';
 import { PINSETUP } from './pinSetupReducer';
-import { persistStore, persistCombineReducers } from 'redux-persist';
-import storage from 'redux-persist/es/storage';
+import { BACKUPRESTORE } from './backupRestoreReducer';
+import { CHANGEPASSWORD } from './passwordReducer';
 
 export const ConfigureStore = () => {
-    const config = {
-        key: 'root',
-        storage,
-        //debug: true
-    }; 
 
     const store = createStore(
-        persistCombineReducers(config, {
+        combineReducers({
             OPERATION,
             AUTH,
-            PINSETUP
+            PINSETUP,
+            BACKUPRESTORE,
+            CHANGEPASSWORD
         }),
         applyMiddleware(thunk)
         //applyMiddleware(thunk, logger)
     );
 
-    const persistor = persistStore(store);
-
-    return { persistor, store };
+    return { store };
 }

@@ -87,9 +87,9 @@ class ItemHistory extends Component {
     else {
       customItemDisplay = <View style={styles.row}>
         <View style={[styles.flex]}>
-          <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
+          <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
             {friendlyTime(item.date)}</Text>
-          <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
+          <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
             {item.note}</Text>
         </View>
       </View>

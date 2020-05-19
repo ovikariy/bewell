@@ -197,8 +197,11 @@ export const DatePickerWithArrows = (props) => {
 
 export const ButtonPrimary = (props) => {
   return (
-    <Button {...props} buttonStyle={[styles.buttonPrimary, props.buttonStyle]} titleStyle={[styles.subTitleText, { opacity: 1 }]}
-      icon={props.name ? <IconForButton name={props.name} iconStyle={props.iconStyle} /> : {}} />
+    <Button {...props}
+      containerStyle={[{ width: 250 }, props.containerStyle]}
+      buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
+      titleStyle={[styles.subTitleText, { opacity: 1 }]}
+      icon={props.name ? <IconForButton name={props.name} iconStyle={[{ marginRight: 20, color: styles.subTitleText.color }, props.iconStyle]} /> : null} />
   )
 };
 
@@ -208,9 +211,6 @@ export const IconButton = (props) => {
       {props.iconName ? <IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} /> : <View></View>}
       {props.text ? <Text style={[props.titleStyle || styles.toolbarButtonText]}>{props.text}</Text> : <View></View>}
     </TouchableOpacity>
-    // <Button buttonStyle={styles.buttonSecondary}
-    //   icon={<IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} />}
-    //   {...props} />
   )
 };
 

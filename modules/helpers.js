@@ -160,6 +160,8 @@ export function groupBy(list, keyGetter, appendToMap) {
 
 export const consoleColors = {
   green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  cyan: '\x1b[36m',
   red: '\x1b[31m',
   reset: '\x1b[0m'
 }

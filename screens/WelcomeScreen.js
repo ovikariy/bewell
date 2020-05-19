@@ -1,36 +1,47 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { initialize } from '../redux/welcomeActionCreators';
 import { styles } from '../assets/styles/style';
 import { text, stateConstants } from '../modules/Constants';
-import { skipSecuritySetup } from '../redux/welcomeActionCreators';
 import { ActivityIndicator, ParagraphText, showMessages, Spacer, HorizontalLine, LinkButton, ButtonPrimary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
+import { consoleLogWithColor, consoleColors } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
     [stateConstants.OPERATION]: state[stateConstants.OPERATION],
+    [stateConstants.AUTH]: state[stateConstants.AUTH]
   };
 }
 
 const mapDispatchToProps = dispatch => ({
-  skipSecuritySetup: () => dispatch(skipSecuritySetup())
+  initialize: () => dispatch(initialize())
 });
 
 class WelcomeScreen extends Component {
   constructor(props) {
     super(props);
+  } 
+
+  componentDidMount() {
+    if (this.props[stateConstants.AUTH].isInitialized !== true && this.props[stateConstants.AUTH].isEncrypted === true) {
+      /* we can get here if isInitialized flag in the keychain was cleared somehow 
+      but user data is present and encrypted in AsyncStorage, we should set isInitialized 
+      and the user should be redirected to login  */
+      this.props.initialize();
+    }
   }
 
   quickSetup() {
-    this.props.navigation.navigate('SetupSecurity');
-  }
-
-  skipSetup() {
-    this.props.skipSecuritySetup();
+    if (this.props[stateConstants.AUTH].isEncrypted === true)
+      this.props.navigation.navigate('SignIn');
+    else
+      this.props.navigation.navigate('SetupPassword');
   }
 
   render() {
+
     showMessages(this.props[stateConstants.OPERATION]);
 
     return (
@@ -42,17 +53,13 @@ class WelcomeScreen extends Component {
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{text.welcomeScreen.text2}</ParagraphText>
             <Spacer height={40} />
-            <View style={[styles.bottomPositioned]} >
-              <ButtonPrimary
-                buttonStyle={{ paddingHorizontal: 50 }}
-                title={text.welcomeScreen.button1}
-                onPress={() => { this.quickSetup() }}
-                name='chevron-right' iconRight={true} iconStyle={[styles.iconPrimary]}
-              />
-              <Spacer height={20} />
-              <LinkButton title={text.welcomeScreen.button2} titleStyle={{ opacity: 0.5 }}
-                onPress={() => this.skipSetup()} />
-            </View>
+            <ButtonPrimary
+              containerStyle={styles.bottomPositioned}
+              buttonStyle={{ paddingHorizontal: 50 }}
+              title={text.welcomeScreen.button1}
+              onPress={() => { this.quickSetup() }}
+              name='chevron-right' iconRight={true} iconStyle={[styles.iconPrimary]}
+            />
             {this.props[stateConstants.OPERATION].isLoading ?
               <ActivityIndicator style={{ position: 'absolute' }} /> : <React.Fragment />}
           </ScreenContent>

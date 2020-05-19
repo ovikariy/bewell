@@ -2,6 +2,7 @@ import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 import * as ActionTypes from './ActionTypes';
+import { isNullOrEmpty } from '../modules/helpers';
 
 export const loadAuthData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -18,18 +19,10 @@ export const loadAuthData = () => (dispatch) => {
 }
 
 const loadAuthDataAsync = async () => {
-    const userDataInfo = await StorageHelpers.getUserDataInfo();
-    const loginInfo = await SecurityHelpers.getLoginInfo();
-
-    const authData = {};
-    authData.isInitialized = userDataInfo.isInitialized;
-    authData.isDataEncrypted = userDataInfo.isDataEncrypted;
-    authData.hasPasswordInStore = loginInfo.hasPasswordInStore;
-    authData.loginAttempts = loginInfo.loginAttempts;
-    authData.isSignedIn = loginInfo.isSignedIn;
-
-    console.log('authData ' + JSON.stringify(authData));
-
+    //await signInPasswordAsync('testpassword'); //TODO: remove after testing
+    const authData = await SecurityHelpers.getLoginInfo();
+    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
+    authData.isEncrypted = isNullOrEmpty(dataEncryptionStoreKey) ? false : true;
     return authData;
 };
 
@@ -74,8 +67,7 @@ export const signOut = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     SecurityHelpers.signOut()
         .then(() => {
-            //TODO: clear data redux?
-            dispatch({ type: ActionTypes.SIGN_OUT });
+            dispatch(GenericActions.operationClearRedux());
             dispatch(loadAuthData());
         })
         .catch(error => {

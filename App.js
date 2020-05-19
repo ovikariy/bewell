@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { Platform, StatusBar, View, Text } from 'react-native';
 import { AppLoading } from 'expo';
@@ -10,10 +8,8 @@ import { styles } from './assets/styles/style';
 
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
-import { PersistGate } from 'redux-persist/es/integration/react';
 
-const { persistor, store } = ConfigureStore();
-
+const { store } = ConfigureStore();
 
 export default class App extends React.Component {
   state = {
@@ -30,17 +26,15 @@ export default class App extends React.Component {
     }
     return (
       <Provider store={store}>
-        <PersistGate persistor={persistor} preloadedState={false} >
-          <View style={styles.flex}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <Main />
-          </View>
-        </PersistGate>
+        <View style={styles.flex}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <Main />
+        </View>
       </Provider>
-    ) 
-  } 
+    )
+  }
 
-  loadResourcesAsync = async () => { 
+  loadResourcesAsync = async () => {
     return Promise.all([
       Asset.loadAsync([
         require('./assets/images/robot-dev.png'),
@@ -73,13 +67,6 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
-
-
-//TODO: disable persist? downsides?
-//TODO: might need to dispatch operationClearRedux on load if preloadedState={false} doesn't help so that when the app loads it should be free 
-//cleared from previous run. Check that it loads only requested data e.g. on HomeScreen. If need to dispatch something on load then 
-//need to wrap Main in another connected component
-
 
 /* default android fonts are:
   sans-serif,

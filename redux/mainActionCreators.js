@@ -35,6 +35,25 @@ const loadAllWidgetDataAsync = async () => {
     return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.monthsFromEpochDate);
 }
 
+/* load all storage data e.g. all widget data plus settings and anything else;
+useful during the import/restore process  */
+export const loadAllData = () => (dispatch) => {
+    dispatch(GenericActions.operationProcessing());
+    loadAllDataAsync()
+        .then((items) => {
+            dispatch(GenericActions.operationReplaceRedux(items));
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationCleared());
+        })
+}
+
+const loadAllDataAsync = async () => {
+    return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.AllStoreKeys);
+}
+
 const loadAsync = async (key) => {
     const items = await StorageHelpers.getItemsAndDecryptAsync(key);
     return items.sort(function (x, y) {
@@ -56,19 +75,19 @@ export const persistRedux = (state) => (dispatch) => {
             dispatch(GenericActions.operationFailed(error.message));
             dispatch(GenericActions.operationCleared());
         });
-} 
+}
 
 const persistReduxAsync = async (state) => {
     if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0) || !state.store)
         return;
 
     for (const dirtyKey in state.dirtyKeys) {
-        if (!state.store[dirtyKey]) 
+        if (!state.store[dirtyKey])
             return;
         const nonEmptyItems = state.store[dirtyKey].filter(item => !isEmptyWidgetItem(item));
-        if (nonEmptyItems.length > 0) {  
+        if (nonEmptyItems.length > 0) {
             await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
-        } 
+        }
     };
 }
 

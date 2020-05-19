@@ -1,38 +1,46 @@
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as GenericActions from './operationActionCreators';
-import { isValidPasswordAsync } from './securityActionCreators';
+import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './ActionTypes';
-import { Errors, text} from '../modules/Constants';
+import { Errors, text } from '../modules/Constants';
 import { isNullOrEmpty } from '../modules/helpers';
 import { loadAuthData } from './authActionCreators';
 
 export const startPINsetup = () => (dispatch) => {
+    dispatch(GenericActions.operationCleared());
+    if (SecurityHelpers.isSignedIn() !== true) {
+        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        return;
+    }
     dispatch({ type: ActionTypes.PIN_SETUP_STARTED });
 }
 
 export const verifyPassword = (password) => (dispatch) => {
+    if (SecurityHelpers.isSignedIn() !== true) {
+        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        return;
+    }
     dispatch(GenericActions.operationProcessing());
-    isValidPasswordAsync(password)
-        .then((passwordWorks) => {
-            if (passwordWorks === true)
-                dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_VERIFIED });
-            else {
-                dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
-                dispatch(GenericActions.operationFailed(Errors.InvalidPassword));
-            }
+    validatePasswordAsync(password)
+        .then(() => {
+            dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_VERIFIED });
             dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
+            dispatch(GenericActions.operationFailed(Errors.InvalidPassword));
             dispatch(GenericActions.operationCleared());
         })
 }
 
 export const submitPIN = (password, pin) => (dispatch) => {
+    if (SecurityHelpers.isSignedIn() !== true) {
+        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        return;
+    }
     if (isNullOrEmpty(pin)) {
         dispatch(GenericActions.operationFailed(Errors.InvalidParameter));
-        dispatch(GenericActions.operationCleared());
         return;
     }
     dispatch(GenericActions.operationProcessing());
@@ -52,7 +60,7 @@ export const submitPIN = (password, pin) => (dispatch) => {
 
 const submitPINAsync = async (password, pin) => {
     /* verify password one more time */
-    const isValidPassword = await isValidPasswordAsync(password);
+    const isValidPassword = await validatePasswordAsync(password);
     if (!isValidPassword) {
         throw new Error(Errors.InvalidPassword);
     }

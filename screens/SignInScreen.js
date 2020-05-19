@@ -4,9 +4,8 @@ import { styles } from '../assets/styles/style';
 import { signInPassword, signInPIN } from '../redux/authActionCreators';
 import { text, stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Toast, showMessages, PasswordInputWithButton, Spacer, HorizontalLine, LinkButton, PINInputWithButton } from '../components/MiscComponents';
-import { View, ScrollView, ImageBackground } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { Image } from 'react-native-animatable';
 
 const mapStateToProps = state => {
   return {
@@ -35,6 +34,7 @@ class SignInScreen extends Component {
       return;
     }
     this.props.signInPassword(this.state.password);
+    this.setState({ ...this.state, password: null });
   }
 
   submitPIN() {
@@ -43,48 +43,38 @@ class SignInScreen extends Component {
       return;
     }
     this.props.signInPIN(this.state.PIN);
-    this.setState({ ...this.state, PIN: null })
+    this.setState({ ...this.state, PIN: null });
   }
 
   render() {
     showMessages(this.props[stateConstants.OPERATION]);
 
-    /* if the password is saved in store, it means it has been ecnrypted with a PIN number and 
-    the user opted for a PIN login */
-    const isPasswordSignIn = this.props[stateConstants.AUTH] && this.props[stateConstants.AUTH].hasPasswordInStore !== true;
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenHeader />
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }} >
+          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 30 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.signInScreen.text1}</ParagraphText>
             <HorizontalLine />
-            {isPasswordSignIn ?
-              <React.Fragment>
-                <ParagraphText style={[styles.bodyTextLarge]}>{text.signInScreen.text2}</ParagraphText>
-                <Spacer height={70} />
-                <PasswordInputWithButton
-                  containerStyle={[styles.bottomPositioned]}
-                  placeholder={text.signInScreen.currentPlaceholder2}
-                  onPress={() => this.submitPassword()}
-                  value={this.state.password}
-                  leftIconName='lock-outline'
-                  onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
-                />
-              </React.Fragment>
-              : <React.Fragment>
-                <ParagraphText style={[styles.bodyTextLarge]}>{text.signInScreen.text3}</ParagraphText>
-                <Spacer height={70} />
-                <PINInputWithButton
-                  containerStyle={[styles.bottomPositioned]}
-                  placeholder={text.signInScreen.currentPlaceholder3}
-                  onPress={() => this.submitPIN()}
-                  value={this.state.PIN}
-                  leftIconName='lock-outline'
-                  onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
-                />
-              </React.Fragment>
+            <Spacer height={70} />
+            {this.props[stateConstants.AUTH].isPinLocked ?
+              <PINInputWithButton
+                containerStyle={[styles.bottomPositioned]}
+                placeholder={text.signInScreen.currentPlaceholder3}
+                onPress={() => this.submitPIN()}
+                value={this.state.PIN}
+                leftIconName='lock-outline'
+                onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
+              />
+              :
+              <PasswordInputWithButton
+                containerStyle={[styles.bottomPositioned]}
+                placeholder={text.signInScreen.currentPlaceholder2}
+                onPress={() => this.submitPassword()}
+                value={this.state.password}
+                leftIconName='lock-outline'
+                onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+              />
             }
             {this.props[stateConstants.OPERATION].isLoading ?
               <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}

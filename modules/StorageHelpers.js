@@ -81,45 +81,30 @@ export const mergeByIdAsync = async (itemTypeName, newItems) => {
 }
 
 export const getAllStorageData = async () => {
-    if (SecurityHelpers.canEncryptDecrypt !== true)
-        return await getItemsAsync(storeConstants.AllStoreKeys);
-    else {
-        const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys();
-        hashedKeys.push(storeConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
-        return await getItemsAsync(hashedKeys);
-    }
+    const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys();
+    hashedKeys.push(storeConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
+    return await getItemsAsync(hashedKeys);
 }
 
 export const getMultiItemsAndDecryptAsync = async (keys) => {
-    let items = [];
-    if (SecurityHelpers.canEncryptDecrypt !== true)
-        items = await getItemsAsync(keys);
-    else {
-        const hashedKeys = await SecurityHelpers.getMultipleHashedKeys(keys);
-        items = await getItemsAsync(hashedKeys);
+    const hashedKeys = await SecurityHelpers.getMultipleHashedKeys(keys);
+    const items = await getItemsAsync(hashedKeys);
 
-        if (!items || items.length < 0)
-            return [];
-        items = await SecurityHelpers.decryptAllItems(items);
-    }
     if (!items || items.length < 0)
+        return [];
+    const decryptedItems = await SecurityHelpers.decryptAllItems(items);
+
+    if (!decryptedItems || decryptedItems.length < 0)
         return [];
 
     /* now need to parse the values becase items is  [[stringKey1, stringValue1], [stringKey2, stringValue2], ....] */
-    items.forEach((item) => {
+    decryptedItems.forEach((item) => {
         if (item.length > 1 && item[1]) {
             item[1] = JSON.parse(item[1]);
         }
     });
 
-
-
-    //TODO: test after settings a password
-
-
-
-
-    return items;
+    return decryptedItems;
 }
 
 export const logStorageDataAsync = async () => {
@@ -129,19 +114,17 @@ export const logStorageDataAsync = async () => {
 
 export const getItemsAndDecryptAsync = async (key) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey + key);
+        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey9);
     const storeKey = await getStoreKeyHashAsync(key);
-    let items = await getItemsAsync(storeKey);
+    const items = await getItemsAsync(storeKey);
+    const decryptedItems = await SecurityHelpers.decryptDataAsync(items);
 
-    if (SecurityHelpers.canEncryptDecrypt === true)
-        items = await SecurityHelpers.decryptDataAsync(items);
-
-    return items ? JSON.parse(items) : [];
+    return decryptedItems ? JSON.parse(decryptedItems) : [];
 }
 
 export const setItemsAndEncryptAsync = async (key, items) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey);
+        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey8);
     const encrypted = await encryptAsync(JSON.stringify(items));
     const storeKey = await getStoreKeyHashAsync(key);
     await setItemsAsync(storeKey, encrypted);
@@ -149,36 +132,21 @@ export const setItemsAndEncryptAsync = async (key, items) => {
 
 export const getStoreKeyHashAsync = async (key) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey);
+        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey11);
     const storeKey = key.indexOf(storeConstants.keyPrefix) < 0 ? storeConstants.keyPrefix + key : key;
-    if (SecurityHelpers.canEncryptDecrypt === true) {
-        /* the itemTypeName in storage is hashed with dataEncryptionKey */
-        const itemTypeNameHash = await SecurityHelpers.getItemKeyHashAsync(storeKey);
-        return itemTypeNameHash;
-    }
-    return storeKey;
+    /* the itemTypeName in storage is hashed with dataEncryptionKey */
+    const itemTypeNameHash = await SecurityHelpers.getItemKeyHashAsync(storeKey);
+    return itemTypeNameHash;
 }
 
 export const encryptAsync = async (items) => {
-    if (SecurityHelpers.canEncryptDecrypt === true) {
-        return await SecurityHelpers.encryptDataAsync(items)
-    }
-    else {
-        return items;
-    }
+    return await SecurityHelpers.encryptDataAsync(items);
 }
 
 export const isValidStoreKey = (key) => {
     return (storeConstants.AllStoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0 || storeConstants.AllStoreKeys.indexOf(key) >= 0);
 }
 
-export const getDataEncryptionStoreKey = async() => {
+export const getDataEncryptionStoreKey = async () => {
     return await getItemsAsync(storeConstants.DataEncryptionStoreKey);
-}
-
-export const getUserDataInfo = async () => {
-    /* this is used for authentication purposes */
-    const isInitialized = await getItemsAsync(storeConstants.isInitialized) === 'true' ? true : false;
-    const isDataEncrypted = await getDataEncryptionStoreKey() ? true : false;
-    return { isInitialized, isDataEncrypted };
 }

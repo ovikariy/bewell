@@ -66,7 +66,7 @@ export const WidgetFactory = {
       const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
       return (
         <View style={{margin: 7}}>
-            <Text style={isSelectedItem ? [styles.bodyText, styles.highlightText] : styles.bodyText}>
+            <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
               {friendlyTime(item.date)}</Text>
             <CustomIconRatingItem value={ratingIcon} size={40} />
         </View>
@@ -101,9 +101,9 @@ export const WidgetFactory = {
             <CustomIconRatingItem value={ratingIcon} size={40} />
           </View>
           <View style={{ flex: 2 }}>
-            <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
+            <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
               {(item.startDate) ? text.sleepHistoryScreen.bedTime + formatDate(item.startDate, 'h:mm A') : ''}</Text>
-            <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightText] : styles.subTitleText}>
+            <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
               {(item.endDate) ? text.sleepHistoryScreen.wakeTime + formatDate(item.endDate, 'h:mm A') : ''}</Text>
           </View>
         </View>

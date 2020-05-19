@@ -7,9 +7,9 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import WidgetList from '../components/WidgetList';
 import { WellKnownStoreKeys, stateConstants, text } from '../modules/Constants';
 import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
-import { DatePickerWithArrows } from '../components/MiscComponents';
+import { DatePickerWithArrows, showMessages } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteItemButton, ToolbarButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getHashtagsFromText, getStorageKeyFromDate } from '../modules/helpers';
+import { getHashtagsFromText, getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
 
 const mapStateToProps = state => { 
   return { [stateConstants.OPERATION]: state[stateConstants.OPERATION] }; 
@@ -31,6 +31,7 @@ class HomeScreen extends React.Component {
       selectedItem: null
     }
     //this.props.navigation.navigate('ItemHistory', { 'itemType': ItemTypes.SLEEP });
+    //this.props.navigation.navigate('Settings', { screen: 'Password' });
   }
 
   componentDidMount() {
@@ -59,6 +60,8 @@ class HomeScreen extends React.Component {
   }
 
   render() {
+    showMessages(this.props[stateConstants.OPERATION]);
+
     //TODO: bug add note with tags, tags get added to redux. navigate to insights and back home, tags are blank in redux
     //console.log('\r\n home render tags ' + this.props[stateConstants.OPERATION].store[WellKnownStoreKeys.TAGS]);
 
