@@ -8,7 +8,7 @@ export const loadAuthData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAuthDataAsync()
         .then((authData) => {
-            dispatch({ type: ActionTypes.LOAD_AUTH_DATA, authData: authData });
+            dispatch({ type: ActionTypes.LOADED_AUTH_DATA, authData: authData });
             dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
@@ -67,7 +67,7 @@ export const signOut = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     SecurityHelpers.signOut()
         .then(() => {
-            dispatch(GenericActions.operationClearRedux());
+            dispatch({ type: ActionTypes.CLEAR_REDUX_STORE });
             dispatch(loadAuthData());
         })
         .catch(error => {

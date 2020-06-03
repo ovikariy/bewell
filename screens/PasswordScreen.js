@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { text, stateConstants } from '../modules/Constants';
 import { startChangePassword, verifyCredentials, updatePassword } from '../redux/passwordActionCreators';
-import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, showMessages, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { styles } from '../assets/styles/style';
@@ -175,8 +175,6 @@ class PasswordScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>

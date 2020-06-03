@@ -52,30 +52,25 @@ class WidgetList extends React.Component {
 
   renderSortedWidgets() {
     /* collect widgets for each itemTypeName into a single array so they could be sorted by date */
-    const widgets = this.props.dailyData.map(record => {
-      return {
-        key: record.id,
-        date: moment(record.date),
-        element: <Widget key={record.id}
-          selectedDate={this.props.selectedDate}
-          isSelected={this.props.selectedItem ? (this.props.selectedItem.id === record.id || false) : false}
-          itemTypeName={record.type}
-          value={record}
-          onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)}
-          onSelected={() => this.props.onSelected(record)}
-        />
-      }
+    const sortedData = this.props.dailyData.sort((a, b) => moment(b.date).diff(moment(a.date)));
+    const widgets = sortedData.map(record => {
+      return this.renderWidget(record, this.props);
     });
 
     if (!widgets.length > 0)
       return this.renderWelcomeMessage();
+    return widgets;
+  }
 
-    //TODO: sort isn't the best for dates because milliseconds are not accurate enough especially in automated testing. 
-    // Tried UTC strings, moment().valueOf(), moment.diff with precise flag, new Date, new Date().getTime() none of these have more than 3 digit millis precision
-    const sortedWidgets = widgets.sort((a, b) => b.date.diff(a.date));
-    return sortedWidgets.map((item) => {
-      return item.element;
-    });
+  renderWidget(record, props) { 
+    return <Widget key={record.id}
+      selectedDate={props.selectedDate}
+      isSelected={props.selectedItem ? (props.selectedItem.id === record.id || false) : false}
+      itemTypeName={record.type}
+      value={record}
+      onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)}
+      onSelected={() => props.onSelected(record)}
+    />
   }
 
   renderWelcomeMessage() {

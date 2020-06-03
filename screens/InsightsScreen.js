@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text } from 'react-native';
 import { text, stateConstants, storeConstants } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { WidgetFactory } from '../modules/WidgetFactory';
@@ -10,7 +9,7 @@ import { loadAllWidgetData } from '../redux/mainActionCreators';
 
 
 const mapStateToProps = state => {
-  return { [stateConstants.OPERATION]: state[stateConstants.OPERATION] };
+  return { [stateConstants.STORE]: state[stateConstants.STORE] };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -33,11 +32,11 @@ class InsightsScreen extends Component {
   getCountsByItemType() {
     //TODO: check for performance issues with bigger data set
     let groupedByItemType = new Map();
-    const store = this.props[stateConstants.OPERATION].store;
+    const items = this.props[stateConstants.STORE].items;
 
     storeConstants.monthsFromEpochDate.forEach((monthKey) => {
-      if (store[monthKey] && store[monthKey].length > 0) {
-        groupBy(store[monthKey], item => item.type, groupedByItemType);
+      if (items[monthKey] && items[monthKey].length > 0) {
+        groupBy(items[monthKey], item => item.type, groupedByItemType);
       }
     });
 

@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { text, stateConstants, Errors } from '../modules/Constants';
-import {
-  ActivityIndicator, ParagraphText, Toast, showMessages,
-  PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary, IconForButton, LinkButton
-} from '../components/MiscComponents';
+import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate, consoleLogWithColor, consoleColors } from '../modules/helpers';
@@ -226,27 +223,6 @@ class RestoreScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
-
-
-
-/**
- * TODO:
- * 
- * better toast design
- * export shouldn't have empty months, only export ones with data
- */
-
-
-
-
-
-
-
-
-
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>

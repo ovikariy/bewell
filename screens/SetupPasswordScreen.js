@@ -4,7 +4,7 @@ import { styles } from '../assets/styles/style';
 import { setupNewEncryption } from '../redux/passwordActionCreators';
 import { initialize } from '../redux/welcomeActionCreators';
 import { text, stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, Toast, showMessages, PasswordInputWithButton, Spacer, HorizontalLine, LinkButton } from '../components/MiscComponents';
+import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
 import { isNullOrEmpty } from '../modules/helpers';
@@ -66,8 +66,6 @@ class SetupPasswordScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>

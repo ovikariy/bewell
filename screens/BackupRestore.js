@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { text, stateConstants } from '../modules/Constants';
-import { ParagraphText, ActivityIndicator, showMessages, ButtonPrimary } from '../components/MiscComponents';
+import { ParagraphText, ActivityIndicator, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { styles } from '../assets/styles/style';
@@ -22,9 +22,6 @@ class BackupRestoreScreen extends Component {
   }
 
   render() {
-
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >

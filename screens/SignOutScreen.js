@@ -4,7 +4,7 @@ import { styles } from '../assets/styles/style';
 import { Button, Icon } from 'react-native-elements';
 import { text, stateConstants } from '../modules/Constants';
 import { signOut } from '../redux/authActionCreators';
-import { ActivityIndicator, ParagraphText, showMessages, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
+import { ActivityIndicator, ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CommonActions } from '@react-navigation/native';
@@ -20,8 +20,6 @@ const mapDispatchToProps = dispatch => ({
 class SignOutScreen extends Component {
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >

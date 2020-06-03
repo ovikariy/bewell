@@ -229,11 +229,6 @@ export const styles = StyleSheet.create({
     backgroundColor: defaultColors.color7 + '80'
   },
 
-  tagsContainer: {
-    backgroundColor: defaultColors.color7 + '90',
-    padding: 10
-  },
-
   sleepComponentTimeFieldContainer: {
     width: 300,
     paddingVertical: 10,

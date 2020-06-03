@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, ShadowPropTypesIOS, TextInput
+  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, TextInput
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import { addSubtractDays, friendlyDate, wait, formatDate, isNullOrEmpty } from '../modules/helpers';
+import { addSubtractDays, isValidDate, wait, formatDate, isNullOrEmpty } from '../modules/helpers';
 
 export const Spacer = (props) => {
   return <View style={[
@@ -175,6 +175,11 @@ export const DatePickerWithArrows = (props) => {
       props.onChange(null, addSubtractDays(props.date, numDays));
   }
 
+  function onChange(event, newDate) {
+    if (isValidDate(newDate) && props.onChange)
+      props.onChange(event, newDate);
+  }
+
   return (
     <View style={styles.selectedDateContainer}>
       <Button onPress={() => { changeDays(-1) }}
@@ -185,7 +190,7 @@ export const DatePickerWithArrows = (props) => {
         date={new Date(props.date)}
         format='ddd, MMM D Y'
         style={{ width: 160 }}
-        onChange={(event, newDate) => { if (props.onChange) props.onChange(event, newDate); }}
+        onChange={onChange}
       />
       <Button onPress={() => { changeDays(1) }}
         type='clear'

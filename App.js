@@ -13,11 +13,11 @@ const { store } = ConfigureStore();
 
 export default class App extends React.Component {
   state = {
-    isLoadingComplete: false
+    isLoading: true
   };
 
   render() {
-    if (!this.state.isLoadingComplete) {
+    if (this.state.isLoading) {
       return <AppLoading
         startAsync={this.loadResourcesAsync}
         onError={this.handleLoadingError}
@@ -64,7 +64,7 @@ export default class App extends React.Component {
   };
 
   handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
+    this.setState({ isLoading: false });
   };
 }
 

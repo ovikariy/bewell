@@ -156,8 +156,7 @@ export const text = {
   },
   note: {
     title: 'Note History',
-    placeholder: 'What\'s on your mind?',
-    tagInstruction: 'tap a tag to add to note or simply type in your own: '
+    placeholder: 'What\'s on your mind?'
   },
   homeScreen: {
     title: 'YOUR WELLBEING',
@@ -196,13 +195,13 @@ only DataEncryptionStoreKey will have to be re-encrypted in store */
 const keyPrefix = '@Morning:';
 const monthsFromEpochDate = getMonthsFromEpochDate(keyPrefix);
 
-/* WellKnownStoreKeys are for other records to be stored e.g Settings or Tags  */
+/* WellKnownStoreKeys are for other records to be stored e.g Settings  */
 export const WellKnownStoreKeys = {
-  TAGS: keyPrefix + 'TAGS',
   SETTINGS: keyPrefix + 'SETTINGS'
 }
 
 export const stateConstants = {
+  STORE: 'STORE',
   OPERATION: 'OPERATION',
   AUTH: 'AUTH',
   PINSETUP: 'PINSETUP',
@@ -221,14 +220,6 @@ export const storeConstants = {
   AllStoreKeys: [...monthsFromEpochDate, ...Object.values(WellKnownStoreKeys)],
   DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY'
 }
-
-
-
-const minDateString = '1970-01-01';
-export const defaultTags = [{ id: '#gratitude', date: minDateString }, { id: '#inspired', date: minDateString },
-{ id: '#feelingGood', date: minDateString }, { id: '#pain', date: minDateString }, { id: '#headache', date: minDateString },
-{ id: '#goals', date: minDateString }, { id: '#anxious', date: minDateString }, { id: '#sensitive', date: minDateString },
-{ id: '#tired', date: minDateString }, { id: '#happy', date: minDateString }, { id: '#optimistic', date: minDateString }];
 
 export const Errors = {
   General: 'An error has occurred ',

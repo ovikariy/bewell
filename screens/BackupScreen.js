@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
-import { text, stateConstants, Errors } from '../modules/Constants';
+import { text, stateConstants } from '../modules/Constants';
 import {
-  ActivityIndicator, ParagraphText, Toast, showMessages,
-  PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary
+  ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView, Share } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
@@ -137,8 +136,6 @@ class BackupScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>

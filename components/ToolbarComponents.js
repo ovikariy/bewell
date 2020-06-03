@@ -41,7 +41,7 @@ export const ViewHistoryButton = (props) => {
     return <ToolbarButton iconName='history' onPress={() => { onPress() }} />
 }
 
-export const DeleteItemButton = (props) => {
+export const DeleteButton = (props) => {
     function onPress() {
         Alert.alert(
             text.listItems.DeleteThisItem,
@@ -66,9 +66,16 @@ export const DeleteItemButton = (props) => {
             alert(text.listItems.SelectItemFirst);
             return;
         }
-        const storeKey = getStorageKeyFromDate(item.date);
-        props.onDelete(storeKey, item.id);
+        props.onDelete(item);
     }
 
     return <ToolbarButton iconName='trash-o' onPress={() => { onPress() }} />
+}
+
+export const DeleteWidgetItemButton = (props) => {
+    function onDelete(item) {
+        const storeKey = getStorageKeyFromDate(item.date);
+        props.onDelete(storeKey, item.id);
+    }
+    return <DeleteButton item={props.item} onDelete={(item) => { onDelete(item) }} />
 }

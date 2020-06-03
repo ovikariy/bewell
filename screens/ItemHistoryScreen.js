@@ -6,11 +6,11 @@ import { WidgetFactory } from '../modules/WidgetFactory';
 import { stateConstants, text, ItemTypes } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { DeleteItemButton, FloatingToolbar } from '../components/ToolbarComponents';
+import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 
-const mapStateToProps = state => {
+const mapStateToProps = state => { 
   return {
-    [stateConstants.OPERATION]: state[stateConstants.OPERATION]
+    [stateConstants.STORE]: state[stateConstants.STORE]
   }
 } 
 
@@ -47,12 +47,11 @@ class ItemHistoryScreen extends Component {
 
   deleteItem(storeKey, itemId) {
     this.props.remove(storeKey, itemId);
-    this.props.persistRedux(this.props[stateConstants.OPERATION]);
+    this.props.persistRedux(this.props[stateConstants.STORE]);
     this.setState({ ...this.state, selectedItem: null })
   }
 
   render() {
-
     const renderHistoryItem = WidgetFactory[this.itemType].renderHistoryItem ?
       function (item, isSelectedItem) {
         return WidgetFactory[this.itemType].renderHistoryItem(item, isSelectedItem, WidgetFactory[this.itemType].config)
@@ -63,7 +62,7 @@ class ItemHistoryScreen extends Component {
       <ScreenBackground>
         <ScreenContent  isKeyboardAvoidingView={true}>
           <ItemHistory style={[styles.toolbarBottomOffset]}
-            state={this.props[stateConstants.OPERATION]}
+            state={this.props[stateConstants.STORE]}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
             onSelected={(item) => { this.onSelected(item) }}
@@ -72,7 +71,7 @@ class ItemHistoryScreen extends Component {
           ></ItemHistory>
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>
-          <DeleteItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
+          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
         </FloatingToolbar>
       </ScreenBackground>
     );

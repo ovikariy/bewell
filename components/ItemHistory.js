@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, TouchableHighlight, View } from 'react-native';
 import { styles } from '../assets/styles/style';
 import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
-import { Loading, EmptyList, showMessages, ListWithRefresh, List } from './MiscComponents';
+import { Loading, EmptyList, List } from './MiscComponents';
 
 
 class ItemHistory extends Component {
@@ -10,14 +10,14 @@ class ItemHistory extends Component {
     super(props);
   }
 
-  filterByItemType(store, itemType) {
+  filterByItemType(items, itemType) {
     const result = [];
-    if (!store)
+    if (!items)
       return result;
-    Object.keys(store).forEach((key) => {
-      if (!store[key])
+    Object.keys(items).forEach((key) => {
+      if (!items[key])
         return;
-      const filtered = store[key].filter((item) => item.type == itemType);
+      const filtered = items[key].filter((item) => item.type == itemType);
       filtered.forEach((filteredItem) => {
         if (!isEmptyWidgetItem(filteredItem))
           result.push(filteredItem);
@@ -29,13 +29,11 @@ class ItemHistory extends Component {
   }
 
   render() {
-    if (this.props.state.isLoading) {
+    if (this.props.state.isLoading) {  //TODO: isLoading will always be false because split items from operation reducer so take this out or change
       return (<Loading />);
     }
 
-    showMessages(this.props.state);
-
-    const items = this.filterByItemType(this.props.state.store, this.props.itemType);
+    const items = this.filterByItemType(this.props.state.items, this.props.itemType);
     if (!items || items.length <= 0) {
       return <EmptyList />
     }

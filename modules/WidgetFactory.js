@@ -3,25 +3,30 @@ import { Text, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { styles } from '../assets/styles/style';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
-import NoteComponent from '../components/NoteComponent';
 import { SleepComponent } from '../components/SleepComponent';
 import { ItemTypes, text } from './Constants';
-import { formatDate, friendlyDate, friendlyTime } from './helpers';
+import { formatDate, friendlyTime } from './helpers';
+import { ClearTextArea } from '../components/MiscComponents';
 
 export const WidgetFactory = {
   [ItemTypes.NOTE]:
   {
     config: {
       widgetTitle: 'Note',
-      editableTitle: true,
+      editableTitle: true, 
       itemTypeName: ItemTypes.NOTE,
       isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
       addIcon: { text: 'note', name: 'pencil-square-o', type: 'font-awesome' },
       style: {}
     },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
+    renderWidgetItem: (props, config) => {
       return (
-        <NoteComponent value={item} onChange={onChange} />
+        <ClearTextArea
+          numberOfLines={1}
+          placeholder={text.note.placeholder}
+          value={props.value ? props.value.note : null}
+          onChangeText={(note) => { props.onChange({ ...props.value, note }) }}
+        />
       );
     }
   },
@@ -40,19 +45,19 @@ export const WidgetFactory = {
         { name: 'Could be better', icon: 'mood-sad', iconStyle: {}, backgroundStyle: { backgroundColor: '#517fa4' } }
       ]
     },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
+    renderWidgetItem: (props, config) => {
       const ratings = config.icons.map((icon, index) => {
         return (
           <CustomIconRatingItem key={index} id={index} value={icon}
-            selected={item && item.rating === index}
+            selected={props.value && props.value.rating === index}
             onPress={(rating) => {
               if (!Number.isInteger(rating))
                 return; //nothing to do since rating wasn't selected
-              if (onChange)
-                onChange({ ...item, rating });
+              if (props.onChange)
+                props.onChange({ ...props.value, rating });
             }} />
         )
-      }); 
+      });
       return (
         <Animatable.View animation="fadeIn" duration={500}>
           <CustomIconRating>{ratings}</CustomIconRating>
@@ -65,10 +70,10 @@ export const WidgetFactory = {
       const moodRatingIcons = config.icons;
       const ratingIcon = moodRatingIcons[item.rating] ? moodRatingIcons[item.rating] : {};
       return (
-        <View style={{margin: 7}}>
-            <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
-              {friendlyTime(item.date)}</Text>
-            <CustomIconRatingItem value={ratingIcon} size={40} />
+        <View style={{ margin: 7 }}>
+          <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
+            {friendlyTime(item.date)}</Text>
+          <CustomIconRatingItem value={ratingIcon} size={40} />
         </View>
       );
     }
@@ -87,9 +92,9 @@ export const WidgetFactory = {
         { name: 'Poor', icon: 'sleep-sad', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#517fa4' } }
       ]
     },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
+    renderWidgetItem: (props, config) => {
       return (
-        <SleepComponent value={item} config={config} selectedDate={selectedDate} onChange={onChange} />
+        <SleepComponent {...props} config={config} />
       );
     },
     renderHistoryItem: (item, isSelectedItem, config) => {
@@ -119,7 +124,7 @@ export const WidgetFactory = {
       addIcon: { text: 'note', name: 'pencil', type: 'font-awesome' },
       style: {}
     },
-    renderWidgetItem: (item, selectedDate, config, onChange) => {
+    renderWidgetItem: (props, config) => {
       return (
         <Text>Hi</Text>
       );

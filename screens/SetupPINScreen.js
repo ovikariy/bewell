@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { text, stateConstants } from '../modules/Constants';
 import {
-  ActivityIndicator, ParagraphText, Toast, showMessages,
-  PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary
+  ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, 
+  HorizontalLine, PINInputWithButton, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
@@ -152,8 +152,6 @@ class SetupPINScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>

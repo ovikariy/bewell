@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { initialize } from '../redux/welcomeActionCreators';
 import { styles } from '../assets/styles/style';
 import { text, stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, showMessages, Spacer, HorizontalLine, LinkButton, ButtonPrimary } from '../components/MiscComponents';
-import { View, ScrollView } from 'react-native';
+import { ActivityIndicator, ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
+import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { consoleLogWithColor, consoleColors } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -41,9 +40,6 @@ class WelcomeScreen extends Component {
   }
 
   render() {
-
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>

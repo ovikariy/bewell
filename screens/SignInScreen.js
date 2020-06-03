@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { signInPassword, signInPIN } from '../redux/authActionCreators';
 import { text, stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, Toast, showMessages, PasswordInputWithButton, Spacer, HorizontalLine, LinkButton, PINInputWithButton } from '../components/MiscComponents';
+import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
 
@@ -47,8 +47,6 @@ class SignInScreen extends Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
-
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>

@@ -23,9 +23,9 @@ export class Main extends React.Component {
   }
 
   render() {
-    showMessages(this.props[stateConstants.OPERATION]);
+    showMessages(this.props[stateConstants.OPERATION]);  /* global error and success message handler */
 
-    if (!this.props[stateConstants.AUTH].isLoadingComplete) {
+    if (this.props[stateConstants.AUTH].isLoading) {
       return this.renderSecondarySplash();
     }
 

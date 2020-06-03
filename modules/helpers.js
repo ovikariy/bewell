@@ -66,6 +66,15 @@ export function isDate(value) {
   return moment.isDate(value);
 }
 
+export function isValidDate(value) {
+  try {
+    var date = moment(new Date(value));
+    return date.isValid();
+  } catch (err) {
+    return false;
+  }
+}
+
 export function isNullOrEmpty(value) {
   if (!value || value == undefined || value == null || (value + '').trim() == '')
     return true;

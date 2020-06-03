@@ -142,8 +142,6 @@ export const getExportData = (password) => (dispatch) => {
 }
 
 const getExportDataAsync = async (password) => {
-    const isValidPassword = await validatePasswordAsync(password);
-    if (!isValidPassword)
-        throw new Error(Errors.InvalidPassword);
+    await validatePasswordAsync(password);
     return await StorageHelpers.getAllStorageData();
 }

@@ -1,14 +1,16 @@
-import { isEmptyWidgetItem } from '../modules/helpers';
+import { isEmptyWidgetItem, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 import { storeConstants } from '../modules/Constants';
+import * as ActionTypes from './ActionTypes';
 
 export const load = (key) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     //dispatch(logStorageData());
     loadAsync(key)
         .then((items) => {
-            dispatch(GenericActions.operationReplaceRedux([[key, items]]));
+            dispatch(replaceRedux([[key, items]]));
+            dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
@@ -22,7 +24,8 @@ export const loadAllWidgetData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAllWidgetDataAsync()
         .then((items) => {
-            dispatch(GenericActions.operationReplaceRedux(items));
+            dispatch(replaceRedux(items));
+            dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
@@ -41,7 +44,8 @@ export const loadAllData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAllDataAsync()
         .then((items) => {
-            dispatch(GenericActions.operationReplaceRedux(items));
+            dispatch(replaceRedux(items));
+            dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
@@ -62,13 +66,16 @@ const loadAsync = async (key) => {
 }
 
 export const updateRedux = (key, newItems) => (dispatch) => {
-    dispatch(GenericActions.operationUpdateRedux(key, newItems));
+    dispatch({
+        type: ActionTypes.UPDATE_ITEM_IN_REDUX_STORE,
+        payload: { key: key, items: newItems }
+    });
 }
 
 export const persistRedux = (state) => (dispatch) => {
     persistReduxAsync(state)
         .then(() => {
-            dispatch(GenericActions.operationAfterPersist());
+            dispatch({ type: ActionTypes.RESET_DIRTY_KEYS_REDUX_STORE });
         })
         .catch(error => {
             console.log(error);
@@ -78,13 +85,13 @@ export const persistRedux = (state) => (dispatch) => {
 }
 
 const persistReduxAsync = async (state) => {
-    if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0) || !state.store)
+    if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0) || !state.items)
         return;
 
     for (const dirtyKey in state.dirtyKeys) {
-        if (!state.store[dirtyKey])
+        if (!state.items[dirtyKey])
             return;
-        const nonEmptyItems = state.store[dirtyKey].filter(item => !isEmptyWidgetItem(item));
+        const nonEmptyItems = state.items[dirtyKey].filter(item => !isEmptyWidgetItem(item));
         if (nonEmptyItems.length > 0) {
             await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
         }
@@ -92,8 +99,16 @@ const persistReduxAsync = async (state) => {
 }
 
 export const removeFromRedux = (key, id, options) => (dispatch) => {
-    dispatch(GenericActions.operationRemoveFromRedux(key, id));
+    dispatch({
+        type: ActionTypes.REMOVE_ITEM_FROM_REDUX_STORE,
+        payload: { key, id }
+    });
 }
+
+const replaceRedux = (items) => ({
+    type: ActionTypes.REPLACE_ITEMS_IN_REDUX_STORE,
+    payload: { items }
+})
 
 export const logStorageData = () => (dispatch) => {
     StorageHelpers.logStorageDataAsync().then();

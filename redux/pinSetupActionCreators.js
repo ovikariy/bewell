@@ -3,7 +3,7 @@ import * as GenericActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './ActionTypes';
 import { Errors, text } from '../modules/Constants';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty, consoleColors } from '../modules/helpers';
 import { loadAuthData } from './authActionCreators';
 
 export const startPINsetup = () => (dispatch) => {
@@ -60,10 +60,7 @@ export const submitPIN = (password, pin) => (dispatch) => {
 
 const submitPINAsync = async (password, pin) => {
     /* verify password one more time */
-    const isValidPassword = await validatePasswordAsync(password);
-    if (!isValidPassword) {
-        throw new Error(Errors.InvalidPassword);
-    }
+    await validatePasswordAsync(password);
     await SecurityHelpers.setupNewPINAsync(password, pin);
 }
 

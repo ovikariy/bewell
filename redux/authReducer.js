@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 
 export const AUTH = (state = {
-  isLoadingComplete: null,
+  isLoading: true,
   isInitialized: null,
   isEncrypted: null,
   isPinLocked: null,
@@ -9,10 +9,10 @@ export const AUTH = (state = {
   isSignedIn: null
 }, action) => {
   switch (action.type) {
-    case ActionTypes.LOAD_AUTH_DATA:
+    case ActionTypes.LOADED_AUTH_DATA:
       return {
         ...state,
-        isLoadingComplete: true,
+        isLoading: false,
         isSignedIn: action.authData.isSignedIn,
         isInitialized: action.authData.isInitialized,
         isEncrypted: action.authData.isEncrypted,

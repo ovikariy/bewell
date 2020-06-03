@@ -28,7 +28,7 @@ export const Widget = (props) => {
       <View key={props.value.date}
         style={[styles.widgetContainer, props.isSelected ? styles.widgetContainerSelected : '', widgetFactory.config.style]}>
         <WidgetHeader title={title} subTitle={subTitle} />
-        {widgetFactory.renderWidgetItem(props.value, props.selectedDate, widgetFactory.config, props.onChange)}
+        {widgetFactory.renderWidgetItem(props, widgetFactory.config)}
       </View>
     </TouchableOpacity>
   )
