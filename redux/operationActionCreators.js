@@ -4,14 +4,14 @@ export const operationProcessing = () => ({
     type: ActionTypes.OPERATION_PROCESSING
 })
 
-export const operationSucceeded = (message) => ({
+export const operationSucceeded = (successCodes) => ({
     type: ActionTypes.OPERATION_SUCCEEDED,
-    payload: { successMess: message }
+    payload: { successCodes }
 })
 
-export const operationFailed = (message) => ({
+export const operationFailed = (errCodes) => ({
     type: ActionTypes.OPERATION_FAILED,
-    payload: { errMess: message }
+    payload: { errCodes }
 })
 
 export const operationCleared = () => ({

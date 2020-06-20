@@ -13,11 +13,11 @@ export const AUTH = (state = {
       return {
         ...state,
         isLoading: false,
-        isSignedIn: action.authData.isSignedIn,
-        isInitialized: action.authData.isInitialized,
-        isEncrypted: action.authData.isEncrypted,
-        loginAttempts: action.authData.loginAttempts,
-        isPinLocked: action.authData.isPinLocked
+        isSignedIn: action.payload.authData.isSignedIn,
+        isInitialized: action.payload.authData.isInitialized,
+        isEncrypted: action.payload.authData.isEncrypted,
+        loginAttempts: action.payload.authData.loginAttempts,
+        isPinLocked: action.payload.authData.isPinLocked
       };
     default:
       return state;

@@ -3,24 +3,25 @@ import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetList from '../components/WidgetList';
-import { stateConstants, text } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
+import { getStorageKeyFromDate, consoleColors, consoleLogWithColor, LanguageContext } from '../modules/helpers';
 
-const mapStateToProps = state => { 
-  return { [stateConstants.STORE]: state[stateConstants.STORE] }; 
-}; 
+const mapStateToProps = state => {
+  return { [stateConstants.STORE]: state[stateConstants.STORE] };
+};
 
 const mapDispatchToProps = dispatch => ({
   load: (key) => dispatch(load(key)),
-  updateRedux: (key, items) => dispatch(updateRedux(key, items)), 
+  updateRedux: (key, items) => dispatch(updateRedux(key, items)),
   remove: (key, id) => dispatch(removeFromRedux(key, id)),
-  persistRedux: (state) => dispatch(persistRedux(state))
-});  
+  persistRedux: (items, dirtyKeys) => dispatch(persistRedux(items, dirtyKeys))
+});
 
 class HomeScreen extends React.Component {
+  static contextType = LanguageContext;
   constructor(props) {
     super(props);
 
@@ -28,12 +29,14 @@ class HomeScreen extends React.Component {
       selectedDate: new Date(),
       selectedItem: null
     }
-    //this.props.navigation.navigate('ItemHistory', { 'itemType': ItemTypes.SLEEP });
-    //this.props.navigation.navigate('Settings', { screen: 'Password' });
   }
 
   componentDidMount() {
     this.refreshItems();
+
+    const language = this.context;
+    //this.props.navigation.navigate('Settings', { screen: 'System' });
+    //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
   }
 
   refreshItems() {
@@ -54,19 +57,19 @@ class HomeScreen extends React.Component {
     let data = [];
     if (this.props[stateConstants.STORE] && this.props[stateConstants.STORE].items)
       data = (this.props[stateConstants.STORE].items[selectedMonth] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
-    return ( 
-      <ScreenBackground> 
-        <ScreenContent isKeyboardAvoidingView={true} > 
+    return (
+      <ScreenBackground>
+        <ScreenContent isKeyboardAvoidingView={true} >
           <DatePickerWithArrows date={this.state.selectedDate} onChange={(event, newDate) => this.selectedDateChanged(event, newDate)} />
-          <WidgetList 
+          <WidgetList
             navigation={this.props.navigation}
             dailyData={data}
             selectedDate={this.state.selectedDate}
             selectedItem={this.state.selectedItem}
             onChange={(newDailyData) => { this.onDataChange(newDailyData) }}
-            onSelected={(selectedItem) => { this.onSelected(selectedItem) }} 
+            onSelected={(selectedItem) => { this.onSelected(selectedItem) }}
             onPulldownRefresh={() => this.refreshItems()}
-            />
+          />
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>
           <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
@@ -78,29 +81,29 @@ class HomeScreen extends React.Component {
 
   selectedDateChanged(event, newDate) {
     this.setState({ ...this.state, selectedDate: new Date(newDate), selectedItem: null });
-  } 
+  }
 
   onDataChange(newDailyData) {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
     this.props.updateRedux(selectedMonth, newDailyData);
-    this.persistAfterDelay(); 
+    this.persistAfterDelay();
   }
 
   onSelected(selectedItem) {
     selectedItem === this.state.selectedItem ?
       this.setState({ ...this.state, selectedItem: null }) :
-      this.setState({ ...this.state, selectedItem }); 
+      this.setState({ ...this.state, selectedItem });
   }
 
   persistAfterDelay = debounce(function () {
     this.persist();
-  }, 6000); 
+  }, 6000);
 
   persist = () => {
     const state = this.props[stateConstants.STORE];
     if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0))
       return;
-    this.props.persistRedux(state);
+    this.props.persistRedux(state.items, state.dirtyKeys);
   }
 }
 

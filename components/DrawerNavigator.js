@@ -4,12 +4,13 @@ import { Icon } from 'react-native-elements';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { styles } from '../assets/styles/style';
-import { text } from '../modules/Constants';
 import { IconForButton } from './MiscComponents';
+import { LanguageContext } from '../modules/helpers';
 
 import HomeScreen from '../screens/HomeScreen';
 import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SystemSettingsScreen from '../screens/SystemSettingsScreen';
 import PasswordScreen from '../screens/PasswordScreen';
 import BackupRestoreScreen from '../screens/BackupRestore';
 import RestoreScreen from '../screens/RestoreScreen';
@@ -57,20 +58,23 @@ function WelcomeNavigator() {
                 options={({ route, navigation }) => ({
                     title: ''
                 })}
-            />            
+            />
         </WelcomeStack.Navigator>
     );
 }
 
 const HomeStack = createStackNavigator();
 function HomeNavigator() {
+
+    const language = React.useContext(LanguageContext);
+
     return (
         <HomeStack.Navigator initialRouteName='Home' screenOptions={ScreenNavOptions} >
             <HomeStack.Screen
                 name='Home'
                 component={HomeScreen}
                 options={({ route, navigation }) => ({
-                    title: text.homeScreen.title,
+                    title: language.yourWellbeing,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />,
                     headerRight: () => <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]}
                     />
@@ -87,13 +91,15 @@ function HomeNavigator() {
 
 const InsightsStack = createStackNavigator();
 function InsightsNavigator() {
+    const language = React.useContext(LanguageContext);
+
     return (
         <InsightsStack.Navigator initialRouteName='Insights' screenOptions={ScreenNavOptions} >
             <InsightsStack.Screen
                 name='Insights'
                 component={InsightsScreen}
                 options={({ route, navigation }) => ({
-                    title: text.insightsScreen.title,
+                    title: language.history,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />
                 })}
             />
@@ -108,41 +114,48 @@ function InsightsNavigator() {
 
 const SettingsStack = createStackNavigator();
 function SettingsNavigator() {
+    const language = React.useContext(LanguageContext);
+
     return (
         <SettingsStack.Navigator initialRouteName='Settings' screenOptions={ScreenNavOptions} >
             <SettingsStack.Screen
                 name='Settings'
                 component={SettingsScreen}
                 options={({ route, navigation }) => ({
-                    title: text.settingsScreen.title,
+                    title: language.settings,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />
                 })}
             />
             <SettingsStack.Screen
+                name='SystemSettings'
+                component={SystemSettingsScreen}
+                options={{ title: language.system, }}
+            />
+            <SettingsStack.Screen
                 name='Password'
                 component={PasswordScreen}
-                options={{ title: text.passwordScreen.title }}
+                options={{ title: language.password }}
             />
             {/*TODO: SetupPINScreen should not be visible if not password has been created yet */}
             <SettingsStack.Screen
                 name='SetupPINScreen'
                 component={SetupPINScreen}
-                options={{ title: text.setupPINScreen.title }}
+                options={{ title: language.pinLock }}
             />
             <SettingsStack.Screen
                 name='BackupRestore'
                 component={BackupRestoreScreen}
-                options={{ title: text.backupRestoreScreen.title }}
+                options={{ title: language.importExport }}
             />
             <SettingsStack.Screen
                 name='Restore'
                 component={RestoreScreen}
-                options={{ title: text.restoreScreen.title }}
+                options={{ title: language.import }}
             />
             <SettingsStack.Screen
                 name='Backup'
                 component={BackupScreen}
-                options={{ title: text.backupScreen.title }}
+                options={{ title: language.export }}
             />
         </SettingsStack.Navigator>
     );
@@ -150,13 +163,15 @@ function SettingsNavigator() {
 
 const SignOutStack = createStackNavigator();
 function SignOutNavigator() {
+    const language = React.useContext(LanguageContext);
+
     return (
         <SignOutStack.Navigator initialRouteName='SignOut' screenOptions={ScreenNavOptions} >
             <SignOutStack.Screen
                 name='SignOut'
                 component={SignOutScreen}
                 options={({ route, navigation }) => ({
-                    title: text.signOutScreen.title,
+                    title: language.signOut,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />,
                     headerRight: () => <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />
                 })}
@@ -166,11 +181,13 @@ function SignOutNavigator() {
 }
 
 function CustomDrawerContent(props) {
+    const language = React.useContext(LanguageContext);
+
     return (
         <DrawerContentScrollView style={styles.menuBackground} {...props}>
             <View style={[styles.flex, styles.rowContainer, { marginBottom: 20 }]}>
                 <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />
-                <Text style={styles.heading}>{text.app.name}</Text>
+                <Text style={styles.heading}>{language.appName}</Text>
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}
@@ -204,11 +221,13 @@ function getFirstTimeUserScreens() {
 }
 
 function getAuthenticatedUserScreens() {
+    const language = React.useContext(LanguageContext);
+    
     return (
         <React.Fragment>
             <Drawer.Screen name="Home" component={HomeNavigator}
                 options={{
-                    drawerLabel: text.homeScreen.menuLabel,
+                    drawerLabel: language.home,
                     drawerIcon: ({ focused }) => <IconForButton name='home'
                         iconStyle={[styles.iconPrimarySmall,
                         { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
@@ -216,7 +235,7 @@ function getAuthenticatedUserScreens() {
             />
             <Drawer.Screen name="Insights" component={InsightsNavigator}
                 options={{
-                    drawerLabel: text.insightsScreen.title,
+                    drawerLabel: language.history,
                     drawerIcon: ({ focused }) => <IconForButton name='history' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
                         { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
@@ -224,7 +243,7 @@ function getAuthenticatedUserScreens() {
             />
             <Drawer.Screen name="Settings" component={SettingsNavigator}
                 options={{
-                    drawerLabel: text.settingsScreen.title,
+                    drawerLabel: language.settings,
                     drawerIcon: ({ focused }) => <IconForButton name='sliders' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
                         { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
@@ -232,7 +251,7 @@ function getAuthenticatedUserScreens() {
             />
             <Drawer.Screen name="SignOut" component={SignOutNavigator}
                 options={{
-                    drawerLabel: text.signOutScreen.title,
+                    drawerLabel: language.signOut,
                     drawerIcon: ({ focused }) => <IconForButton name='sign-out' type='font-awesome'
                         iconStyle={[styles.iconPrimarySmall,
                         { color: (focused ? styles.brightColor.color : styles.bodyText.color) }]} />
@@ -247,9 +266,6 @@ export function MainDrawerNavigator(props) {
     let drawerContent;
     let initialRouteName = "SignIn";
 
-
-    //todo: check isEncrypted here and show login 
-
     if (props.auth.isInitialized !== true) {
         drawerContent = getFirstTimeUserScreens(); /* first time user (TODO: or maybe new phone? Think about restore flow maybe) */
     }
@@ -257,7 +273,7 @@ export function MainDrawerNavigator(props) {
         drawerContent = getAuthenticatedUserScreens();
     }
     else {
-        drawerContent = getSigninScreens(props);        
+        drawerContent = getSigninScreens(props);
     }
 
     return (

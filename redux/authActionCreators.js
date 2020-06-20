@@ -3,23 +3,25 @@ import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 import * as ActionTypes from './ActionTypes';
 import { isNullOrEmpty } from '../modules/helpers';
+import { Errors, ErrorCodes } from '../modules/Constants';
 
 export const loadAuthData = () => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAuthDataAsync()
         .then((authData) => {
-            dispatch({ type: ActionTypes.LOADED_AUTH_DATA, authData: authData });
+            dispatch({ type: ActionTypes.LOADED_AUTH_DATA, payload: { authData } });
             dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth3] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
 
 const loadAuthDataAsync = async () => {
     //await signInPasswordAsync('testpassword'); //TODO: remove after testing
+    //await signInPINAsync('1234'); //TODO: remove after testing 
     const authData = await SecurityHelpers.getLoginInfo();
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     authData.isEncrypted = isNullOrEmpty(dataEncryptionStoreKey) ? false : true;
@@ -34,7 +36,7 @@ export const signInPassword = (password) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -47,7 +49,7 @@ export const signInPIN = (pin) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -72,7 +74,7 @@ export const signOut = () => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth9] : error));
             dispatch(GenericActions.operationCleared());
         })
 };

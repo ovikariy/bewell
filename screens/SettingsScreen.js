@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import { text } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { List } from '../components/MiscComponents';
+import { LanguageContext } from '../modules/helpers';
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -22,31 +23,35 @@ export default class SettingsScreen extends React.Component {
 }
 
 class Settings extends React.Component {
+  static contextType = LanguageContext;
+
   render() {
+    const language = this.context;
     const items = [
       {
         id: 'lock',
-        title: text.settingsScreen.setPassword,
+        title: language.password,
         iconName: 'lock',
         onPress: () => { this.props.navigation.navigate('Password') }
       },
       {
         id: 'SetupPINScreen',
-        title: text.settingsScreen.setPIN,
+        title: language.pinLock,
         iconName: 'lock',
         onPress: () => { this.props.navigation.navigate('SetupPINScreen') }
       },
       {
         id: 'BackupRestore',
-        title: text.settingsScreen.importExport,
+        title: language.importExport,
         iconName: 'retweet',
         onPress: () => { this.props.navigation.navigate('BackupRestore') }
       },
       {
-        id: 'version',
-        title: text.settingsScreen.version,
-        subTitle: Constants.manifest.version,
-        iconName: 'info-circle'
+        id: 'System',
+        title: language.system,
+        subTitle: language.systemSubtitle,
+        iconName: 'info',
+        onPress: () => { this.props.navigation.navigate('SystemSettings') }
       }
     ];
 

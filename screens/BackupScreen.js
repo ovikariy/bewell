@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import {
   ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView, Share } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty, formatDate, consoleLogWithColor, consoleColors } from '../modules/helpers';
+import { isNullOrEmpty, formatDate, consoleLogWithColor, consoleColors, LanguageContext } from '../modules/helpers';
 import { startBackup, getExportData, finishBackup } from '../redux/backupRestoreActionCreators';
 import * as FileHelpers from '../modules/FileHelpers';
 import { StackActions } from '@react-navigation/native';
@@ -27,6 +27,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class BackupScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -46,23 +48,29 @@ class BackupScreen extends Component {
   }
 
   getExportData() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.password)) {
-      Toast.show(text.backupScreen.message1);
+      Toast.show(language.passwordPleaseEnter);
       return;
     }
     this.props.getExportData(this.state.password);
   }
 
   export() {
+    const language = this.context;
+
     const data = this.props[stateConstants.BACKUPRESTORE].backupData;
     if (!data) {
-      Toast.show(text.backupScreen.message2);
+      Toast.show(language.exportNoData);
       return;
     }
     this.exportAsync(data).then(() => { });
   }
 
   exportAsync = async (data) => {
+    const language = this.context;
+
     /*
       1. After encrypted data has been loaded from the Async Storage 
       2. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
@@ -80,20 +88,22 @@ class BackupScreen extends Component {
       shareAsync(exportFilepath);
       FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
       this.props.finishBackup();
-    } catch (err) {
-      console.log(err);
-      Toast.show(err);
+    } catch (error) {
+      console.log(error);
+      Toast.showTranslated(error.message ? error.message : error, language);
     }
   }
 
   renderPasswordField() {
+    const language = this.context;
+
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.backupScreen.textPassword}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
       <Spacer height={70} />
       <PasswordInputWithButton value={this.state.password}
         containerStyle={styles.bottomPositioned}
-        placeholder={text.backupScreen.placeholder1}
+        placeholder={language.passwordEnter}
         onPress={() => this.getExportData()}
         onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
       />
@@ -101,25 +111,29 @@ class BackupScreen extends Component {
   }
 
   renderExportButton() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.backupScreen.exportSubExplanation}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.exportSubExplanation}</ParagraphText>
       <Spacer height={70} />
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 280 }]}
         buttonStyle={styles.buttonSecondary}
-        title={text.backupScreen.buttonExport}
+        title={language.export}
         onPress={() => { this.export() }}
       />
     </View>;
   }
 
   renderExportComplete() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.backupScreen.textComplete}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.exportComplete}</ParagraphText>
       <Spacer height={70} />
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
-        title={text.backupScreen.buttonDone}
+        title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
       />
     </View>;
@@ -136,11 +150,13 @@ class BackupScreen extends Component {
   }
 
   render() {
+    const language = this.context;
+
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
-            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.backupScreen.exportExplanation}</ParagraphText>
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
             {this.props[stateConstants.OPERATION].isLoading ?

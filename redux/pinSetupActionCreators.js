@@ -2,8 +2,8 @@ import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as GenericActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './ActionTypes';
-import { Errors, text } from '../modules/Constants';
-import { isNullOrEmpty, consoleColors } from '../modules/helpers';
+import { Errors, ErrorCodes } from '../modules/Constants';
+import { isNullOrEmpty } from '../modules/helpers';
 import { loadAuthData } from './authActionCreators';
 
 export const startPINsetup = () => (dispatch) => {
@@ -29,7 +29,7 @@ export const verifyPassword = (password) => (dispatch) => {
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
-            dispatch(GenericActions.operationFailed(Errors.InvalidPassword));
+            dispatch(GenericActions.operationFailed(error.message ? Errors.InvalidPassword : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -48,12 +48,12 @@ export const submitPIN = (password, pin) => (dispatch) => {
         .then(() => {
             dispatch({ type: ActionTypes.PIN_SETUP_COMPLETE });
             dispatch(loadAuthData());
-            dispatch(GenericActions.operationSucceeded(text.successMessages.PINSet));
+            dispatch(GenericActions.operationSucceeded(Errors.PinSet));
             dispatch(GenericActions.operationCleared());
         })
-        .catch(err => {
+        .catch(error => {
             dispatch({ type: ActionTypes.PIN_SETUP_FAILED });
-            dispatch(GenericActions.operationFailed(err.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security8] : error));
             dispatch(GenericActions.operationCleared());
         });
 }

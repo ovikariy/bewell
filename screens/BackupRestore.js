@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { ParagraphText, ActivityIndicator, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { styles } from '../assets/styles/style';
+import { LanguageContext } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -15,6 +16,8 @@ const mapStateToProps = state => {
 }
 
 class BackupRestoreScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
 
@@ -22,14 +25,16 @@ class BackupRestoreScreen extends Component {
   }
 
   render() {
+    const language = this.context;
+
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
           {this.props[stateConstants.OPERATION].isLoading ? <ActivityIndicator /> : <View />}
-          <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{text.backupRestoreScreen.exportExplanation}</ParagraphText>
+          <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{language.exportExplanation}</ParagraphText>
           <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
-            title={text.backupRestoreScreen.buttonExport}
+            title={language.export}
             onPress={() => { this.props.navigation.navigate('Backup') }}
             icon={<Icon
               containerStyle={{ marginRight: 20 }}
@@ -38,10 +43,10 @@ class BackupRestoreScreen extends Component {
               color='white'
             />}
           />
-          <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{text.backupRestoreScreen.importExplanation}</ParagraphText>
+          <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{language.importExplanationLong}</ParagraphText>
           <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
-            title={text.backupRestoreScreen.buttonImport}
+            title={language.import}
             onPress={() => { this.props.navigation.navigate('Restore') }}
             icon={<Icon
               containerStyle={{ marginRight: 20 }}

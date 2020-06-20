@@ -1,6 +1,7 @@
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as GenericActions from './operationActionCreators';
 import { loadAuthData } from './authActionCreators';
+import { Errors, ErrorCodes } from '../modules/Constants';
 
 export const initialize = () => (dispatch) => {
     /* this should be called once on intitial app launch */
@@ -11,7 +12,7 @@ export const initialize = () => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security8] : error));
             dispatch(GenericActions.operationCleared());
         })
 }

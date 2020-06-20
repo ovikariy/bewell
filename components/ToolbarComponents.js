@@ -3,7 +3,8 @@ import { Alert, View, Text } from 'react-native';
 import { text } from '../modules/Constants';
 import { styles } from '../assets/styles/style';
 import { IconButton } from './MiscComponents';
-import { getStorageKeyFromDate } from '../modules/helpers';
+import { getStorageKeyFromDate, LanguageContext, consoleColors } from '../modules/helpers';
+import { WidgetFactory } from '../modules/WidgetFactory';
 
 export const Toolbar = (props) => {
     return (
@@ -29,30 +30,36 @@ export const ToolbarButton = (props) => {
 }
 
 export const ViewHistoryButton = (props) => {
+    const language = React.useContext(LanguageContext);
+    const widgetFactory = WidgetFactory(language);
+    const widgetConfig = widgetFactory[props.item.type].config;
+    const historyTitle = widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle;
+
     function onPress() {
         const item = props.item;
         if (!item) {
-            alert(text.listItems.SelectItemFirst);
+            alert(language.selectItemFirst);
             return;
         }
-        props.navigation.navigate('ItemHistory', { 'itemType': props.item.type });
+        props.navigation.navigate('ItemHistory', { 'itemType': props.item.type, 'title': historyTitle }); 
     }
 
     return <ToolbarButton iconName='history' onPress={() => { onPress() }} />
 }
 
 export const DeleteButton = (props) => {
+    const language = React.useContext(LanguageContext);
+
     function onPress() {
         Alert.alert(
-            text.listItems.DeleteThisItem,
-            text.listItems.AreYouSureDeleteThisItem,
+            language.deleteThisItem,
+            language.areYouSureDeleteThisItem,
             [
                 {
-                    text: text.general.Cancel,
-                    style: text.general.Cancel
+                    text: language.cancel
                 },
                 {
-                    text: text.general.Ok,
+                    text: language.ok,
                     onPress: () => remove()
                 }
             ],
@@ -63,7 +70,7 @@ export const DeleteButton = (props) => {
     function remove() {
         const item = props.item;
         if (!item) {
-            alert(text.listItems.SelectItemFirst);
+            alert(language.selectItemFirst);
             return;
         }
         props.onDelete(item);

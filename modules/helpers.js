@@ -1,5 +1,14 @@
-import moment from 'moment';
-import { text, storeConstants } from './Constants';
+import React from 'react';
+import moment from 'moment/min/moment-with-locales';
+import { storeConstants } from './Constants';
+import { translations } from '../modules/translations';
+
+export const LanguageContext = React.createContext(translations.en);
+
+export function configLocale(language) {
+  if (moment.locale() != language)
+    moment.locale(language);  //TODO: set default from defaults
+}
 
 export const friendlyDate = (date, options) => {
   //TODO: test with timezones
@@ -11,18 +20,14 @@ export const friendlyDate = (date, options) => {
   const today = moment();
   const yesterday = addSubtractDays(today, -1);
 
-  const showLongFormat = options && options.showLongFormat ? options.showLongFormat : false; /* show day name and date 'Today, Apr 1 2019' */
-  const showTime = options && options.showTime ? options.showTime : false;                    /* show time 'at 1:20pm' */
-  const resultDateTimeString = (showLongFormat ? ', ' + newDate.format('MMM D') : '') + (showTime ? ' ' + text.general.at + ' ' + newDateTimeString : '');
-
   if (newDateShortString === today.format(format))
-    return text.general.today + resultDateTimeString;
+    return options.language.today;
   if (newDateShortString === yesterday.format(format))
-    return text.general.yesterday + resultDateTimeString;
+    return options.language.yesterday;
   return newDate.format('dddd, MMM D');
 }
 
-export const friendlyDay = (date) => {
+export const friendlyDay = (date, options) => {
   //TODO: test with timezones
   const format = 'YYYYMMDD';
   const newDate = moment(date);
@@ -32,9 +37,9 @@ export const friendlyDay = (date) => {
   const yesterday = addSubtractDays(today, -1);
 
   if (newDateShortString === today.format(format))
-    return text.general.today;
+    return options.language.today;
   if (newDateShortString === yesterday.format(format))
-    return text.general.yesterday;
+    return options.language.yesterday;
   return newDate.format('dddd');
 }
 
@@ -70,7 +75,7 @@ export function isValidDate(value) {
   try {
     var date = moment(new Date(value));
     return date.isValid();
-  } catch (err) {
+  } catch (error) {
     return false;
   }
 }
@@ -96,6 +101,10 @@ export function addSubtractDays(date, numDays) {
   if (numDays < 0 || numDays > 0)
     return moment(date).add(numDays, 'days');
   return date;
+}
+
+export function dateDiff(dateA, dateB) {
+  return moment(dateB).diff(moment(dateA));
 }
 
 export function updateArrayImmutable(array, newValue) {

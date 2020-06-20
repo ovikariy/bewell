@@ -67,14 +67,14 @@ it('setMultiItemsAsync tests', async () => {
 
 export const mergeByIdAsync = async (itemTypeName, newItems) => {
   if (!newItems || newItems.length <= 0)
-    throw new Error(Errors.UnableToSave + ErrorCodes.Storage5);
+    throw [Errors.UnableToSave, ErrorCodes.Storage5];
 
   const oldItems = await getItemsAndDecryptAsync(itemTypeName);
 
   /* if item has ID then overwrite, otherwise add */
   (newItems).forEach(newItem => {
     if (!newItem.id)
-      throw new Error(Errors.UnableToSave + ErrorCodes.Storage6);
+      throw [Errors.UnableToSave, ErrorCodes.Storage6];
     const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id === newItem.id);
     if (oldItemIndex > -1)
       oldItems[oldItemIndex] = newItem;
@@ -119,7 +119,7 @@ it('mergeByIdAsync tests', async () => {
 
 export const removeByIdAsync = async (itemTypeName, id) => {
   if (!itemTypeName)
-      throw new Error(Errors.General + ErrorCodes.MissingItemType1);
+      throw [Errors.General, ErrorCodes.MissingItemType1];
 
   const oldItems = await getItemsAndDecryptAsync(itemTypeName);
   const itemsWithoutDeleted = oldItems.filter(item => item.id !== id);

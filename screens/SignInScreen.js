@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { signInPassword, signInPIN } from '../redux/authActionCreators';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
+import { LanguageContext } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -20,6 +21,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SignInScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -29,8 +32,10 @@ class SignInScreen extends Component {
   }
 
   submitPassword() {
+    const language = this.context;
+
     if (!this.state.password) {
-      Toast.show(text.signInScreen.message2);
+      Toast.show(language.passwordInvalid);
       return;
     }
     this.props.signInPassword(this.state.password);
@@ -38,8 +43,10 @@ class SignInScreen extends Component {
   }
 
   submitPIN() {
+    const language = this.context;
+
     if (!this.state.PIN) {
-      Toast.show(text.signInScreen.message3);
+      Toast.show(language.pinInvalid);
       return;
     }
     this.props.signInPIN(this.state.PIN);
@@ -47,18 +54,20 @@ class SignInScreen extends Component {
   }
 
   render() {
+    const language = this.context;
+
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 30 }} >
-            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.signInScreen.text1}</ParagraphText>
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeBack}</ParagraphText>
             <HorizontalLine />
             <Spacer height={70} />
             {this.props[stateConstants.AUTH].isPinLocked ?
               <PINInputWithButton
                 containerStyle={[styles.bottomPositioned]}
-                placeholder={text.signInScreen.currentPlaceholder3}
+                placeholder={language.pinEnter}
                 onPress={() => this.submitPIN()}
                 value={this.state.PIN}
                 leftIconName='lock-outline'
@@ -67,7 +76,7 @@ class SignInScreen extends Component {
               :
               <PasswordInputWithButton
                 containerStyle={[styles.bottomPositioned]}
-                placeholder={text.signInScreen.currentPlaceholder2}
+                placeholder={language.passwordEnter}
                 onPress={() => this.submitPassword()}
                 value={this.state.password}
                 leftIconName='lock-outline'

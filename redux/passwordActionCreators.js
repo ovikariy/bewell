@@ -1,4 +1,4 @@
-import { storeConstants, text, Errors, ErrorCodes } from '../modules/Constants';
+import { storeConstants, Errors, ErrorCodes } from '../modules/Constants';
 import * as GenericActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
@@ -21,17 +21,17 @@ export const verifyCredentials = (password, pin) => (dispatch) => {
             dispatch({ type: ActionTypes.CHANGEPASSWORD_CREDENTIALS_VERIFIED });
             dispatch(GenericActions.operationCleared());
         })
-        .catch(err => {
-            console.log(err);
+        .catch(error => {
+            console.log(error);
             dispatch({ type: ActionTypes.CHANGEPASSWORD_CREDENTIALS_FAILED });
-            dispatch(GenericActions.operationFailed(err.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security5] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
 
 const verifyCredentialsAsync = async (password, pin) => {
     if (isNullOrEmpty(password) && isNullOrEmpty(pin))
-        throw new Error(Errors.InvalidCredentials);
+        throw Errors.InvalidCredentials;
     if (password)
         await validatePasswordAsync(password);
     if (pin)
@@ -47,8 +47,9 @@ export const updatePassword = (oldPassword, newPassword, pin) => (dispatch) => {
     updatePasswordAsync(oldPassword, newPassword, pin).then(() => {
         dispatch({ type: ActionTypes.CHANGEPASSWORD_COMPLETE });
         dispatch(signInPassword(newPassword));
-    }).catch(err => {
-        dispatch(GenericActions.operationFailed(err.message));
+    })
+    .catch(error => {
+        dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security6] : error));
         dispatch(GenericActions.operationCleared());
     });
 }
@@ -59,12 +60,12 @@ const updatePasswordAsync = async (oldPassword, newPassword, pin) => {
 
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     if (isNullOrEmpty(dataEncryptionStoreKey))
-        throw new Error(Errors.InvalidKey + ErrorCodes.Security2);
+        throw [Errors.InvalidKey, ErrorCodes.Security2];
 
     /* 2. re-encrypt Data Encryption Key with the new password */
     const encryptionKeyEncrypted = await SecurityHelpers.reEncryptAsync(dataEncryptionStoreKey, oldPassword, newPassword);
     if (isNullOrEmpty(encryptionKeyEncrypted))
-        throw new Error(Errors.InvalidKey + ErrorCodes.Security3);
+        throw [Errors.InvalidKey, ErrorCodes.Security3];
 
     /* 3. persist Data Encryption Key */
     await StorageHelpers.setItemsAsync(storeConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
@@ -78,11 +79,11 @@ export const setupNewEncryption = (newPassword) => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     setupNewEncryptionAsync(newPassword)
         .then(() => {
-            dispatch(GenericActions.operationSucceeded(text.successMessages.PasswordSaved));
+            dispatch(GenericActions.operationSucceeded(Errors.PasswordSet));
             dispatch(loadAuthData());
         })
-        .catch(err => {
-            dispatch(GenericActions.operationFailed(err.message));
+        .catch(error => {
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security7] : error));
             dispatch(GenericActions.operationCleared());
         });
 }
@@ -90,7 +91,7 @@ export const setupNewEncryption = (newPassword) => (dispatch) => {
 const setupNewEncryptionAsync = async (newPassword) => {
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     if (!isNullOrEmpty(dataEncryptionStoreKey)) /* cannot create new encryption, data is already encrypted */
-        throw new Error(Errors.PasswordAlreadySet + ErrorCodes.Security1);
+        throw [Errors.PasswordAlreadySet, ErrorCodes.Security1];
 
     // 1. encrypt any existing data (user may have been using the app but without setting the password) */
     const existingItems = await StorageHelpers.getItemsAsync(storeConstants.AllStoreKeys);
@@ -109,5 +110,5 @@ export const validatePasswordAsync = async (password) => {
     const dataEncryptionStoreKeyEncrypted = await StorageHelpers.getDataEncryptionStoreKey();
     const validPassword = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionStoreKeyEncrypted, password);
     if (validPassword !== true)
-        throw new Error(Errors.InvalidPassword);
+        throw Errors.InvalidPassword;
 }

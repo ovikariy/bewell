@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { startChangePassword, verifyCredentials, updatePassword } from '../redux/passwordActionCreators';
-import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { styles } from '../assets/styles/style';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StackActions } from '@react-navigation/native';
-import { isNullOrEmpty, consoleColors } from '../modules/helpers';
+import { isNullOrEmpty, consoleColors, LanguageContext } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -25,6 +25,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class PasswordScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
 
@@ -41,16 +43,19 @@ class PasswordScreen extends Component {
   }
 
   verifyPassword() {
+    const language = this.context;
     if (isNullOrEmpty(this.state.oldPassword)) {
-      Toast.show(text.passwordScreen.textConfirmPassword);
+      Toast.show(language.passwordConfirm);
       return;
     }
     this.props.verifyCredentials(this.state.oldPassword, null);
   }
 
   verifyPin() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.PIN)) {
-      Toast.show(text.passwordScreen.textConfirmPIN);
+      Toast.show(language.pinConfirm);
       return;
     }
     this.props.verifyCredentials(null, this.state.PIN);
@@ -68,38 +73,44 @@ class PasswordScreen extends Component {
   }
 
   save() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.oldPassword) || isNullOrEmpty(this.state.newPassword) || this.state.newPassword.length < 8) {
-      ToastAndroid.show(text.passwordScreen.message2, ToastAndroid.LONG);
+      ToastAndroid.show(language.passwordFieldsRequired, ToastAndroid.LONG);
       return;
     }
     if (this.state.newPassword !== this.state.newPasswordReentered) {
-      ToastAndroid.show(text.passwordScreen.message1, ToastAndroid.LONG);
+      ToastAndroid.show(language.passwordsMatch, ToastAndroid.LONG);
       return;
     }
     this.props.updatePassword(this.state.oldPassword, this.state.newPassword, this.state.PIN);
   }
 
   renderPasswordChangeComplete() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.passwordScreen.textDone}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChanged}</ParagraphText>
       <Spacer height={70} />
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
-        title={text.passwordScreen.buttonDone}
+        title={language.done}
         onPress={() => { this.done() }}
       />
     </View>;
   }
 
   renderCredentialsReprompt() {
+    const language = this.context;
+
     /* re-prompt for credentials */
     if (this.props[stateConstants.AUTH].isPinLocked) {
       return <View style={styles.flex}>
-        <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.passwordScreen.textConfirmPIN}</ParagraphText>
+        <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.pinConfirm}</ParagraphText>
         <HorizontalLine />
         <PINInputWithButton
           containerStyle={[styles.bottomPositioned]}
-          placeholder={text.passwordScreen.pinPlaceholder}
+          placeholder={language.pinEnter}
           onPress={() => this.verifyPin()}
           value={this.state.PIN}
           leftIconName='lock-outline'
@@ -109,11 +120,11 @@ class PasswordScreen extends Component {
     }
     else {
       return <View style={styles.flex}>
-        <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.passwordScreen.textConfirmPassword}</ParagraphText>
+        <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.passwordConfirm}</ParagraphText>
         <HorizontalLine />
         <PasswordInputWithButton
           containerStyle={[styles.bottomPositioned]}
-          placeholder={text.passwordScreen.currentPlaceholder}
+          placeholder={language.passwordEnter}
           onPress={() => this.verifyPassword()}
           value={this.state.password}
           leftIconName='lock-outline'
@@ -124,31 +135,33 @@ class PasswordScreen extends Component {
   }
 
   renderPasswordFields() {
+    const language = this.context;
+
     /* if the user uses PIN lock then we ask for both PIN and password; 
     password for security reasons and PIN for encrypting new password */
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.passwordScreen.explanation}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChoose}</ParagraphText>
       <Spacer height={20} />
-      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{text.passwordScreen.textInstructions}</ParagraphText>
+      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{language.passwordMinimum}</ParagraphText>
       <Spacer height={20} />
       {this.props[stateConstants.AUTH].isPinLocked ?
         <PasswordInput
           inputStyle={styles.bodyTextLarge}
-          placeholder={text.passwordScreen.currentPlaceholder}
+          placeholder={language.passwordConfirmPlaceholder}
           value={this.state.oldPassword}
           leftIconName='lock-outline'
           onChangeText={(value) => { this.setState({ ...this.state, oldPassword: value }) }}
         /> : <React.Fragment />}
       <PasswordInput
         inputStyle={styles.bodyTextLarge}
-        placeholder={text.passwordScreen.newPlaceholder}
+        placeholder={language.passwordEnterNewPlaceholder}
         value={this.state.newPassword}
         leftIconName='lock-outline'
         onChangeText={(value) => { this.setState({ ...this.state, newPassword: value }) }}
       />
       <PasswordInput
         inputStyle={styles.bodyTextLarge}
-        placeholder={text.passwordScreen.reEnterPlaceholder}
+        placeholder={language.passwordReEnterPlaceholder}
         value={this.state.newPasswordReentered}
         leftIconName='lock-outline'
         onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
@@ -157,7 +170,7 @@ class PasswordScreen extends Component {
       <ButtonPrimary
         containerStyle={[{ marginTop: 60, width: 200, alignSelf: 'center' }]}
         buttonStyle={styles.buttonSecondary}
-        title={text.passwordScreen.apply}
+        title={language.save}
         onPress={() => { this.save() }}
         name='check'
       />
@@ -178,7 +191,7 @@ class PasswordScreen extends Component {
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 70 }} >
             {this.renderFields()}
             {this.props[stateConstants.OPERATION].isLoading ?
               <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}

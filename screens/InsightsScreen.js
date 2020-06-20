@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { text, stateConstants, storeConstants } from '../modules/Constants';
+import { stateConstants, storeConstants } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { ListWithRefresh } from '../components/MiscComponents';
-import { groupBy } from '../modules/helpers';
+import { groupBy, LanguageContext } from '../modules/helpers';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
+import { Widget } from '../components/Widget';
 
 
 const mapStateToProps = state => {
@@ -15,8 +16,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   loadAllWidgetData: () => dispatch(loadAllWidgetData())
 });
- 
+
 class InsightsScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
   }
@@ -43,20 +46,24 @@ class InsightsScreen extends Component {
     return groupedByItemType;
   }
   render() {
+    const language = this.context;
+
     const listItems = [];
     let groupedByItemType = this.getCountsByItemType();
 
-    Object.keys(WidgetFactory).forEach(itemType => {
-      const widgetConfig = WidgetFactory[itemType].config;
+    const widgetFactory = WidgetFactory(language);
+
+    Object.keys(widgetFactory).forEach(itemType => {
+      const widgetConfig = widgetFactory[itemType].config;
       const itemCount = groupedByItemType.get(itemType) ? groupedByItemType.get(itemType).length : '';
       listItems.push({
         id: itemType,
-        title: widgetConfig.widgetTitle, 
-        itemCount: itemCount, 
+        title: widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle,
+        itemCount: itemCount,
         iconName: widgetConfig.addIcon.name,
-        onPress: () => { this.props.navigation.navigate('ItemHistory', { 'itemType': itemType }); }
+        onPress: () => { this.props.navigation.navigate('ItemHistory', { 'itemType': itemType, 'title': (widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle) }); }
       });
-    }); 
+    });
 
     groupedByItemType = null;
 

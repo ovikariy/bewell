@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
 import { setupNewEncryption } from '../redux/passwordActionCreators';
 import { initialize } from '../redux/welcomeActionCreators';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty, LanguageContext } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -22,37 +22,47 @@ const mapDispatchToProps = dispatch => ({
 
 /* this screen is shown on app launch if the user has not setup security yet */
 class SetupPasswordScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
+    const language = this.context;
+
     super(props);
     this.state = {
       password: null,
       passwordReentered: null,
       showPasswordReentered: false,
-      instructionText: text.setupPasswordScreen.text2
+      instructionText: language.passwordMinimum
     }
   }
 
   reset() {
+    const language = this.context;
+
     this.setState({
       ...this.state,
       password: null,
       passwordReentered: null,
       showPasswordReentered: false,
-      instructionText: text.setupPasswordScreen.text2
+      instructionText: language.passwordMinimum
     });
   }
 
   showPasswordReenter() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.password) || this.state.password.length < 8) {
-      Toast.show(text.setupPasswordScreen.message2);
+      Toast.show(language.passwordMinimum);
       return;
     }
-    this.setState({ ...this.state, showPasswordReentered: true, instructionText: text.setupPasswordScreen.text3 });
+    this.setState({ ...this.state, showPasswordReentered: true, instructionText: language.passwordPleaseReEnter });
   }
 
   submitPassword() {
+    const language = this.context;
+
     if (this.state.password !== this.state.passwordReentered) {
-      Toast.show(text.setupPasswordScreen.message1);
+      Toast.show(language.passwordsMatch);
       this.setState({
         ...this.state,
         password: null,
@@ -66,12 +76,14 @@ class SetupPasswordScreen extends Component {
   }
 
   render() {
+    const language = this.context;
+
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }} >
-            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.setupPasswordScreen.text1}</ParagraphText>
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.secureDataWith}</ParagraphText>
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
             <Spacer height={40} />
@@ -79,7 +91,7 @@ class SetupPasswordScreen extends Component {
               {this.state.showPasswordReentered == false ?
                 <PasswordInputWithButton
                   containerStyle={{ minWidth: 300 }}
-                  placeholder={text.setupPasswordScreen.placeholder1}
+                  placeholder={language.passwordEnterNewPlaceholder}
                   onPress={() => this.showPasswordReenter()}
                   value={this.state.password}
                   leftIconName='lock-outline'
@@ -87,7 +99,7 @@ class SetupPasswordScreen extends Component {
                 /> :
                 <PasswordInputWithButton
                   containerStyle={{ minWidth: 300 }}
-                  placeholder={text.setupPasswordScreen.placeholder2}
+                  placeholder={language.passwordReEnterPlaceholder}
                   onPress={() => this.submitPassword()}
                   value={this.state.passwordReentered}
                   leftIconName='lock-outline'

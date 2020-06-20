@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { styles } from '../assets/styles/style';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import {
   ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, 
   HorizontalLine, PINInputWithButton, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty, LanguageContext } from '../modules/helpers';
 import { StackActions } from '@react-navigation/native';
 
 import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
@@ -27,6 +27,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SetupPINScreen extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -52,8 +54,10 @@ class SetupPINScreen extends Component {
   }
 
   showPINfieldReenter() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.PIN) || this.state.PIN.length < 4) {
-      Toast.show(text.setupPINScreen.message3);
+      Toast.show(language.pinUseDigits);
       return;
     }
     this.setState({
@@ -63,8 +67,10 @@ class SetupPINScreen extends Component {
   }
 
   submitPIN() {
+    const language = this.context;
+
     if (this.state.PIN !== this.state.PINreentered) {
-      Toast.show(text.setupPINScreen.message1);
+      Toast.show(language.pinMatch);
       this.setState({
         ...this.state,
         PIN: null,
@@ -77,33 +83,39 @@ class SetupPINScreen extends Component {
   }
 
   verifyPassword() {
+    const language = this.context;
+
     if (isNullOrEmpty(this.state.password)) {
-      Toast.show(text.setupPINScreen.message2);
+      Toast.show(language.passwordPleaseEnter);
       return;
     }
     this.props.verifyPassword(this.state.password);
   }
 
   renderPINSetupComplete() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text6}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.pinHasSet}</ParagraphText>
       <Spacer height={70} />
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
-        title={text.setupPINScreen.button}
+        title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
       />
     </View>;
   }
 
   renderPasswordField() {
+    const language = this.context;
+
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text2}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
       <Spacer height={70} />
       <PasswordInputWithButton value={this.state.password}
         containerStyle={styles.bottomPositioned}
-        placeholder={text.setupPINScreen.placeholder2}
+        placeholder={language.password}
         onPress={() => this.verifyPassword()}
         onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
       />
@@ -111,14 +123,16 @@ class SetupPINScreen extends Component {
   }
 
   renderPINField() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text3}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.pinEnter}</ParagraphText>
       <Spacer height={20} />
-      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{text.setupPINScreen.tip1}</ParagraphText>
+      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{language.pinTip}</ParagraphText>
       <Spacer height={70} />
       <PINInputWithButton value={this.state.PIN}
         containerStyle={styles.bottomPositioned}
-        placeholder={text.setupPINScreen.placeholder3}
+        placeholder={language.pinEnter}
         onPress={() => this.showPINfieldReenter()}
         onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
       />
@@ -126,12 +140,14 @@ class SetupPINScreen extends Component {
   }
 
   renderPINReenter() {
+    const language = this.context;
+
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge]}>{text.setupPINScreen.text4}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge]}>{language.pinReEnter}</ParagraphText>
       <Spacer height={70} />
       <PINInputWithButton value={this.state.PINreentered}
         containerStyle={styles.bottomPositioned}
-        placeholder={text.setupPINScreen.placeholder4}
+        placeholder={language.pinReEnterPlaceholder}
         onPress={() => this.submitPIN()}
         onChangeText={(value) => { this.setState({ ...this.state, PINreentered: value }) }}
       />
@@ -152,11 +168,13 @@ class SetupPINScreen extends Component {
   }
 
   render() {
+    const language = this.context;
+
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
-            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.setupPINScreen.text1}</ParagraphText>
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.pinLockYourApp}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
             {this.props[stateConstants.OPERATION].isLoading ?

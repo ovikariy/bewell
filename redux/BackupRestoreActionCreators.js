@@ -1,4 +1,4 @@
-import { storeConstants, text, Errors, ErrorCodes } from '../modules/Constants';
+import { storeConstants, Errors, ErrorCodes } from '../modules/Constants';
 import { loadAllData } from './mainActionCreators';
 import * as GenericActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
@@ -28,7 +28,7 @@ export const verifyPasswordForRestore = (password) => (dispatch) => {
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.RESTORE_PASSWORD_FAILED });
-            dispatch(GenericActions.operationFailed(Errors.InvalidPassword));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.InvalidPassword, ErrorCodes.BackupRestore1] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -47,14 +47,14 @@ export const tryDecryptFileData = (data, password) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore2] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
 
 export const tryDecryptFileDataAsync = async (data, password) => {
     if (!data || !(data.length > 0) || !password)
-        throw new Error(Errors.InvalidParameter);
+        throw Errors.InvalidParameter;
     const dataEncryptionKey = getDataEncryptionKeyFromFileData(data);
     const passwordWorks = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionKey, password);
     return passwordWorks ? true : false;
@@ -70,7 +70,7 @@ function getDataEncryptionKeyFromFileData(data) {
     const dataEncryptionKeyValuePair = data.find(item => item.length == 2 && item[0] == storeConstants.DataEncryptionStoreKey);
     const dataEncryptionKey = dataEncryptionKeyValuePair ? dataEncryptionKeyValuePair[1] : null;
     if (!dataEncryptionKey)
-        throw new Error(Errors.InvalidFileData);
+        throw Errors.InvalidFileData;
     return dataEncryptionKey;
 }
 
@@ -83,7 +83,7 @@ export const importData = (data, password) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore3] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -99,18 +99,18 @@ const importDataAsync = async (data, password) => {
     const items = await SecurityHelpers.decryptAllItemsFromImport(data, cryptoFunctions.getHashAsync, cryptoFunctions.decryptDataAsync);
 
     if (!items || items.length <= 0) {
-        throw new Error(Errors.NoRecordsInFile + ErrorCodes.Import1);
+        throw [Errors.NoRecordsInFile, ErrorCodes.Import1];
     }
 
     for (var itemType in items) {
         if (!items[itemType] || items[itemType].length != 2)
-            throw new Error(Errors.InvalidFormat);
+            throw Errors.InvalidFormat;
 
         const itemTypeName = (items[itemType][0] + '').replace(storeConstants.keyPrefix, '');
         const itemTypeRecords = items[itemType][1] ? JSON.parse(items[itemType][1]) : [];
 
         if (!StorageHelpers.isValidStoreKey(itemTypeName))
-            throw new Error(Errors.InvalidFileData + ErrorCodes.Import2);
+            throw [Errors.InvalidFileData, ErrorCodes.Import2];
 
         if (!itemTypeRecords || itemTypeRecords.length <= 0)
             continue;
@@ -118,7 +118,7 @@ const importDataAsync = async (data, password) => {
         /* one more check, the records must have ids and dates at the minimum */
         itemTypeRecords.forEach(record => {
             if (!record.id || !record.date)
-                throw new Error(Errors.InvalidFileData + ErrorCodes.Import3);
+                throw [Errors.InvalidFileData, ErrorCodes.Import3];
         });
 
         /* persist records by item type */
@@ -136,7 +136,7 @@ export const getExportData = (password) => (dispatch) => {
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.BACKUP_DATA_FAILED });
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore4] : error));
             dispatch(GenericActions.operationCleared());
         })
 }

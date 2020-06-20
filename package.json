@@ -26,6 +26,7 @@
     "expo-document-picker": "~8.0.0",
     "expo-file-system": "~8.0.0",
     "expo-font": "~8.0.0",
+    "expo-localization": "~8.0.0",
     "expo-secure-store": "~8.0.0",
     "expo-sharing": "~8.0.0",
     "lodash": "^4.17.15",

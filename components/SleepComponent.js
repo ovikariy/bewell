@@ -6,8 +6,11 @@ import { styles } from '../assets/styles/style';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import { IconForButton, TimePicker } from '../components/MiscComponents';
 import { text } from '../modules/Constants';
+import { LanguageContext } from '../modules/helpers';
 
 export class SleepComponent extends Component {
+  static contextType = LanguageContext;
+
   onPress(rating) {
     if (!Number.isInteger(rating))
       return; //nothing to do since rating wasn't selected
@@ -65,6 +68,8 @@ export class SleepComponent extends Component {
     const startTime = (this.props.value && this.props.value.startDate) ? new Date(this.props.value.startDate) : null;
     const endTime = (this.props.value && this.props.value.endDate) ? new Date(this.props.value.endDate) : null;
 
+    const language = this.context;
+    
     return (
       <View>
         <Animatable.View animation="fadeIn" duration={500}>
@@ -80,14 +85,14 @@ export class SleepComponent extends Component {
           <TimePicker
             date={startTime}
             style={{ flex: 0.8 }}
-            placeholder={text.sleep.bedTime}
+            placeholder={language.bedTime}
             onChange={(event, startDate) => { this.onStartDateChange(event, startDate) }}
           />
           <IconForButton name='wb-sunny' />
           <TimePicker
             date={endTime}
             style={{ flex: 0.8 }}
-            placeholder={text.sleep.wakeTime}
+            placeholder={language.wakeTime}
             onChange={(event, endDate) => { this.onEndDateChange(event, endDate) }}
           />
         </View>

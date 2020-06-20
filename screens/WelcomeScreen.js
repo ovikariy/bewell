@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { initialize } from '../redux/welcomeActionCreators';
 import { styles } from '../assets/styles/style';
-import { text, stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
+import { LanguageContext } from '../modules/helpers';
 
 const mapStateToProps = state => {
   return {
@@ -19,6 +20,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class WelcomeScreen extends Component {
+  static contextType = LanguageContext;
   constructor(props) {
     super(props);
   } 
@@ -40,19 +42,20 @@ class WelcomeScreen extends Component {
   }
 
   render() {
+    const language = this.context;
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }}   >
-            <ParagraphText style={[styles.titleText, styles.hugeText]}>{text.welcomeScreen.text1}</ParagraphText>
+            <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeFriend}</ParagraphText>
             <HorizontalLine />
-            <ParagraphText style={[styles.bodyTextLarge]}>{text.welcomeScreen.text2}</ParagraphText>
+            <ParagraphText style={[styles.bodyTextLarge]}>{language.track}</ParagraphText>
             <Spacer height={40} />
             <ButtonPrimary
               containerStyle={styles.bottomPositioned}
               buttonStyle={{ paddingHorizontal: 50 }}
-              title={text.welcomeScreen.button1}
+              title={language.quickSetup}
               onPress={() => { this.quickSetup() }}
               name='chevron-right' iconRight={true} iconStyle={[styles.iconPrimary]}
             />

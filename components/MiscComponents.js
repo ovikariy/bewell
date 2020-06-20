@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, TextInput
+  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, TextInput, Picker
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { text } from '../modules/Constants';
-import { addSubtractDays, isValidDate, wait, formatDate, isNullOrEmpty } from '../modules/helpers';
+import { addSubtractDays, isValidDate, wait, formatDate, isNullOrEmpty, LanguageContext } from '../modules/helpers';
 
 export const Spacer = (props) => {
   return <View style={[
@@ -23,6 +23,34 @@ export const ParagraphText = (props) => {
 export const Toast = {
   show(message, duration) {
     Platform.OS === 'ios' ? alert(message) : ToastAndroid.show(message, duration || ToastAndroid.LONG);
+  },
+  showTranslated(codes, context) {
+    /*
+      codes param can be a string or an array and is used for looking up translation of messages
+      the codes without a matching translation will be shown as is
+      e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
+      e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
+    */
+    const language = context;
+    if (typeof codes === 'string') {
+      if (language[codes])
+        this.show(language[codes]);
+      else
+        this.show(codes);
+      return;
+    }
+
+    if (Array.isArray(codes)) {
+      const translated = [];
+      for (code in codes) {
+        if (language[codes[code]])
+          translated.push(language[codes[code]]);
+        else
+          translated.push(codes[code]);
+      }
+      this.show(translated.join(' '));
+      return;
+    }
   }
 };
 
@@ -115,6 +143,8 @@ export const RoundButton = (props) => {
 }
 
 export const StyledDatePicker = (props) => {
+  const language = React.useContext(LanguageContext);
+
   /* DateTimePicker shows by default when rendered so need to hide and only show e.g. on button press */
   const [show, setShow] = useState(false);
 
@@ -128,7 +158,7 @@ export const StyledDatePicker = (props) => {
   };
 
   const format = props.format ? props.format : 'ddd, MMM D Y';
-  const displayText = props.date ? formatDate(props.date, format) : (props.placeholder ? props.placeholder : text.general.dateAndTime);
+  const displayText = props.date ? formatDate(props.date, format) : (props.placeholder ? props.placeholder : language.dateAndTime);
 
   return (
     <View style={{ justifyContent: 'center' }}>
@@ -152,13 +182,15 @@ export const StyledDatePicker = (props) => {
 }
 
 export const TimePicker = (props) => {
+  const language = React.useContext(LanguageContext);
+
   return (
     <View style={styles.formItem}>
       <StyledDatePicker
         {...props}
         format='LT' /* Local Time (format support by moment.js) */  /* maybe allow settings overwrite */
         mode='time'
-        placeholder={props.placeholder || text.general.pickTime}
+        placeholder={props.placeholder || language.pickTime}
       />
     </View>
   )
@@ -225,27 +257,41 @@ export const LinkButton = (props) => {
   )
 };
 
-export function showMessages(operation) {
-  if (operation.errMess)
-    Toast.show(operation.errMess);
-  if (operation.successMess)
-    Toast.show(operation.successMess);
+export function showMessages(operation, context) {
+  /*
+      errCodes and successCodes are used for looking up translation of messages
+      the codes without a matching translation will be shown as is
+      errCodes and successCodes can be an array or a string if just one code
+      e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
+      e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
+  */
+
+  if (!operation.errCodes && !operation.successCodes)
+    return;
+
+  const language = context;
+  const codes = operation.errCodes ? operation.errCodes : operation.successCodes;
+  Toast.showTranslated(codes, language);
 }
 
 /* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent on the bottom like a Toast */
 export const Loading = () => {
+  const language = React.useContext(LanguageContext);
+
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
-      <Text style={styles.bodyText}>{text.general.Loading}</Text>
+      <Text style={styles.bodyText}>{language.loading}</Text>
     </View>
   );
 };
 
 export const EmptyList = () => {
+  const language = React.useContext(LanguageContext);
+
   return (
     <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
-      <Text style={styles.subTitleText}>{text.listItems.EmptyList}</Text>
+      <Text style={styles.subTitleText}>{language.emptyList}</Text>
     </View>
   )
 }
@@ -292,11 +338,12 @@ export const List = (props) => {
         style={[styles.dimBackground, styles.listItemContainer]}
         onPress={item.onPress ? item.onPress : null} >
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
-          <IconForButton name={item.iconName} type='font-awesome' iconStyle={[styles.iconSecondary, styles.listItemLeftIcon]} />
-          <View>
-            <Text style={[styles.heading2]}>{item.title}</Text>
-            {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
-          </View>
+          {item.iconName ? <IconForButton name={item.iconName} type='font-awesome' iconStyle={[styles.iconSecondary, styles.listItemLeftIcon]} /> : <React.Fragment />}
+          {item.itemContent ? item.itemContent :
+            <View>
+              <Text style={[styles.heading2]}>{item.title}</Text>
+              {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
+            </View>}
           {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: 15 }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
           {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
         </View>
@@ -322,4 +369,15 @@ export const ActivityIndicator = (props) => {
 
 export const HorizontalLine = (props) => {
   return <Divider style={[styles.highlightBackground, { marginVertical: 15 }, props.style]} width={props.width ?? 50} height={props.height ?? 2} />
+}
+
+export const StyledPicker = (props) => {
+  return <Picker
+    {...props}
+    style={[{ width: 200, height: 20, marginLeft: -9 }, styles.bodyText, props.style]}
+  >
+    {props.items.map((item) => {
+      return <Picker.Item label={item.label} value={item.value} key={item.label} />
+    })}
+  </Picker>
 }

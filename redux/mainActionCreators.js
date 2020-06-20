@@ -1,7 +1,7 @@
 import { isEmptyWidgetItem, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
-import { storeConstants } from '../modules/Constants';
+import { storeConstants, Errors, ErrorCodes, WellKnownStoreKeys } from '../modules/Constants';
 import * as ActionTypes from './ActionTypes';
 
 export const load = (key) => (dispatch) => {
@@ -14,7 +14,7 @@ export const load = (key) => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage12] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -29,7 +29,7 @@ export const loadAllWidgetData = () => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage13] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -49,7 +49,7 @@ export const loadAllData = () => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage14] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -59,10 +59,18 @@ const loadAllDataAsync = async () => {
 }
 
 const loadAsync = async (key) => {
-    const items = await StorageHelpers.getItemsAndDecryptAsync(key);
-    return items.sort(function (x, y) {
-        return new Date(y.date) - new Date(x.date);
-    });
+    if (key === WellKnownStoreKeys.SETTINGS) { /* settings are stored unencrypted because need theme, language etc before user logs in */
+        const items = await StorageHelpers.getItemsAsync(key);
+        if (!items)
+            return null;
+        return JSON.parse(items);
+    }
+    else {
+        const items = await StorageHelpers.getItemsAndDecryptAsync(key);
+        return items.sort(function (x, y) {
+            return new Date(y.date) - new Date(x.date);
+        });
+    }
 }
 
 export const updateRedux = (key, newItems) => (dispatch) => {
@@ -72,28 +80,31 @@ export const updateRedux = (key, newItems) => (dispatch) => {
     });
 }
 
-export const persistRedux = (state) => (dispatch) => {
-    persistReduxAsync(state)
+export const persistRedux = (items, dirtyKeys) => (dispatch) => {
+    persistReduxAsync(items, dirtyKeys)
         .then(() => {
             dispatch({ type: ActionTypes.RESET_DIRTY_KEYS_REDUX_STORE });
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage15] : error));
             dispatch(GenericActions.operationCleared());
         });
 }
 
-const persistReduxAsync = async (state) => {
-    if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0) || !state.items)
+const persistReduxAsync = async (items, dirtyKeys) => {
+    if (!dirtyKeys || !(Object.keys(dirtyKeys).length > 0) || !items)
         return;
 
-    for (const dirtyKey in state.dirtyKeys) {
-        if (!state.items[dirtyKey])
+    for (const dirtyKey in dirtyKeys) {
+        if (!items[dirtyKey])
             return;
-        const nonEmptyItems = state.items[dirtyKey].filter(item => !isEmptyWidgetItem(item));
+        const nonEmptyItems = items[dirtyKey].filter(item => !isEmptyWidgetItem(item));
         if (nonEmptyItems.length > 0) {
-            await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
+            if (dirtyKey == WellKnownStoreKeys.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
+                await StorageHelpers.setItemsAsync(dirtyKey, JSON.stringify(nonEmptyItems));
+            else
+                await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
         }
     };
 }

@@ -3,31 +3,29 @@ import { connect } from 'react-redux';
 import { removeFromRedux, persistRedux } from '../redux/mainActionCreators';
 import { styles } from '../assets/styles/style';
 import { WidgetFactory } from '../modules/WidgetFactory';
-import { stateConstants, text, ItemTypes } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
+import { LanguageContext } from '../modules/helpers';
 
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
   return {
     [stateConstants.STORE]: state[stateConstants.STORE]
   }
-} 
+}
 
 const mapDispatchToProps = dispatch => ({
   remove: (key, id) => dispatch(removeFromRedux(key, id)),
-  persistRedux: (state) => dispatch(persistRedux(state))
+  persistRedux: (items, dirtyKeys) => dispatch(persistRedux(items, dirtyKeys))
 });
 
 class ItemHistoryScreen extends Component {
+  static contextType = LanguageContext;
+
   static navigationOptions = ({ route, navigation }) => {
-    const itemType = route.params.itemType;
-    let title = text.historyScreen.title;
-    if (itemType && WidgetFactory[itemType]) {
-      title = (WidgetFactory[itemType].config.widgetTitle || '') + ' ' + text.historyScreen.title;
-    }
     return ({
-      title: title
+      title: route.params.title
     })
   };
 
@@ -47,27 +45,29 @@ class ItemHistoryScreen extends Component {
 
   deleteItem(storeKey, itemId) {
     this.props.remove(storeKey, itemId);
-    this.props.persistRedux(this.props[stateConstants.STORE]);
+    this.props.persistRedux(this.props[stateConstants.STORE].items, this.props[stateConstants.STORE].dirtyKeys);
     this.setState({ ...this.state, selectedItem: null })
   }
 
   render() {
-    const renderHistoryItem = WidgetFactory[this.itemType].renderHistoryItem ?
+    const language = this.context;
+    const widgetFactory = WidgetFactory(language);
+    const renderHistoryItem = widgetFactory[this.itemType].renderHistoryItem ?
       function (item, isSelectedItem) {
-        return WidgetFactory[this.itemType].renderHistoryItem(item, isSelectedItem, WidgetFactory[this.itemType].config)
+        return widgetFactory[this.itemType].renderHistoryItem(item, isSelectedItem, widgetFactory[this.itemType].config)
       }
       : null;
 
     return (
       <ScreenBackground>
-        <ScreenContent  isKeyboardAvoidingView={true}>
+        <ScreenContent isKeyboardAvoidingView={true}>
           <ItemHistory style={[styles.toolbarBottomOffset]}
             state={this.props[stateConstants.STORE]}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
             onSelected={(item) => { this.onSelected(item) }}
             renderItem={renderHistoryItem} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
-            config={WidgetFactory[this.itemType].config}
+            config={widgetFactory[this.itemType].config}
           ></ItemHistory>
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>

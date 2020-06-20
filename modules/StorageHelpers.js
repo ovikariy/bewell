@@ -5,40 +5,40 @@ import { consoleLogWithColor, consoleColors } from './helpers';
 
 export const getItemsAsync = async (keyOrKeys) => {
     if (!keyOrKeys)
-        throw new Error(Errors.General + ErrorCodes.MissingKey1);
+        throw [Errors.General, ErrorCodes.MissingKey1];
     if (Array.isArray(keyOrKeys) && keyOrKeys.length <= 0)
-        throw new Error(Errors.General + ErrorCodes.MissingKey2);
+        throw [Errors.General, ErrorCodes.MissingKey2];
     try {
         if (Array.isArray(keyOrKeys))
             return await AsyncStorageService.multiGet(keyOrKeys);
         else
             return await AsyncStorageService.getItem(keyOrKeys);
-    } catch (err) {
-        console.log(err);
-        throw new Error(Errors.General + ErrorCodes.Storage1);
+    } catch (error) {
+        console.log(error);
+        throw [Errors.General, ErrorCodes.Storage1];
     }
 }
 
 export const setItemsAsync = async (key, value) => {
     if (!key)
-        throw new Error(Errors.UnableToSave + ErrorCodes.MissingKey3);
+        throw [Errors.UnableToSave, ErrorCodes.MissingKey3];
     await setMultiItemsAsync([[key, value]]);
 }
 
 export const setMultiItemsAsync = async (items) => {
     /* multiSet([['k1', 'val1'], ['k2', 'val2']]) */
     if (!items || !Array.isArray(items) || items.length <= 0)
-        throw new Error(Errors.UnableToSave + ErrorCodes.MissingKey4);
+        throw [Errors.UnableToSave, ErrorCodes.MissingKey4];
     /* check items format and that each key is a type of string */
     items.forEach(item => {
         if (item.length < 2 || typeof item[0] != 'string')
-            throw new Error(Errors.InvalidData + ErrorCodes.Storage10);
+            throw [Errors.InvalidData, ErrorCodes.Storage10];
     })
     try {
         await AsyncStorageService.multiSet(items);
-    } catch (err) {
-        console.log(err);
-        throw new Error(Errors.UnableToSave + ErrorCodes.Storage3);
+    } catch (error) {
+        console.log(error);
+        throw [Errors.UnableToSave, ErrorCodes.Storage3];
     }
 }
 
@@ -46,29 +46,29 @@ export const finishSetupNewEncryptionAsync = async (keys) => {
     /* this is a one time run function that removes all unencrypted storage 
     key/values (e.g. NOTES, MOODS) after they were copied into the newly encrypted key/values */
     if (!keys || !Array.isArray(keys) || keys.length <= 0)
-        throw new Error(Errors.General + ErrorCodes.MissingKey5);
+        throw [Errors.General, ErrorCodes.MissingKey5];
     keys.forEach(key => {
         if (typeof key != 'string')
-            throw new Error(Errors.InvalidData + ErrorCodes.Storage11);
+            throw [Errors.InvalidData, ErrorCodes.Storage11];
     })
     try {
         await AsyncStorageService.multiRemove(keys);
-    } catch (err) {
-        console.log(err);
-        throw new Error(Errors.General + ErrorCodes.Storage4);
+    } catch (error) {
+        console.log(error);
+        throw [Errors.General, ErrorCodes.Storage4];
     }
 }
 
 export const mergeByIdAsync = async (itemTypeName, newItems) => {
     if (!newItems || !Array.isArray(newItems) || newItems.length <= 0)
-        throw new Error(Errors.UnableToSave + ErrorCodes.Storage5);
+        throw [Errors.UnableToSave, ErrorCodes.Storage5];
 
     const oldItems = await getItemsAndDecryptAsync(itemTypeName);
 
     /* if item has ID then overwrite, otherwise add */
     (newItems).forEach(newItem => {
         if (!newItem.id)
-            throw new Error(Errors.UnableToSave + ErrorCodes.Storage6);
+            throw [Errors.UnableToSave, ErrorCodes.Storage6];
         const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id === newItem.id);
         if (oldItemIndex > -1)
             oldItems[oldItemIndex] = newItem;
@@ -114,7 +114,7 @@ export const logStorageDataAsync = async () => {
 
 export const getItemsAndDecryptAsync = async (key) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey9);
+        throw [Errors.InvalidKey, ErrorCodes.MissingKey9];
     const storeKey = await getStoreKeyHashAsync(key);
     const items = await getItemsAsync(storeKey);
     const decryptedItems = await SecurityHelpers.decryptDataAsync(items);
@@ -124,7 +124,7 @@ export const getItemsAndDecryptAsync = async (key) => {
 
 export const setItemsAndEncryptAsync = async (key, items) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey8);
+        throw [Errors.InvalidKey, ErrorCodes.MissingKey8];
     const encrypted = await encryptAsync(JSON.stringify(items));
     const storeKey = await getStoreKeyHashAsync(key);
     await setItemsAsync(storeKey, encrypted);
@@ -132,7 +132,7 @@ export const setItemsAndEncryptAsync = async (key, items) => {
 
 export const getStoreKeyHashAsync = async (key) => {
     if (!isValidStoreKey(key))
-        throw new Error(Errors.InvalidKey + ErrorCodes.MissingKey11);
+        throw [Errors.InvalidKey, ErrorCodes.MissingKey11];
     const storeKey = key.indexOf(storeConstants.keyPrefix) < 0 ? storeConstants.keyPrefix + key : key;
     /* the itemTypeName in storage is hashed with dataEncryptionKey */
     const itemTypeNameHash = await SecurityHelpers.getItemKeyHashAsync(storeKey);

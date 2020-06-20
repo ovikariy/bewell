@@ -5,6 +5,7 @@ import { text } from '../modules/Constants';
 import { styles } from '../assets/styles/style';
 import { Spacer, ParagraphText } from './MiscComponents';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LanguageContext } from '../modules/helpers';
 
 /* Wrapper for a screen component; simplifies setting image background on various screens */
 export const ScreenBackground = (props) => {
@@ -32,12 +33,14 @@ export const ScreenBackground = (props) => {
 
 /* Commnly used large header with image background, app name and logo */
 export const ScreenHeader = (props) => {
+  const language = React.useContext(LanguageContext);
+
   return (
     <ImageBackground source={require('../assets/images/header.jpg')} style={[{ height: 250 }, props.style]}>
       <View style={[styles.centered, styles.flex, styles.centeredVertical]}>
         <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImage]} />
         <Spacer height={30} />
-        <ParagraphText style={[styles.heading, styles.appName]}>{text.app.name}</ParagraphText>
+        <ParagraphText style={[styles.heading, styles.appName]}>{language.appName}</ParagraphText>
       </View>
     </ImageBackground>
   )

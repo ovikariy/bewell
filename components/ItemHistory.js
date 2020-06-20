@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Text, TouchableHighlight, View } from 'react-native';
 import { styles } from '../assets/styles/style';
-import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
+import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate, LanguageContext } from '../modules/helpers';
 import { Loading, EmptyList, List } from './MiscComponents';
 
 
 class ItemHistory extends Component {
+  static contextType = LanguageContext;
+
   constructor(props) {
     super(props);
   }
@@ -33,12 +35,14 @@ class ItemHistory extends Component {
       return (<Loading />);
     }
 
+    const language = this.context;
+
     const items = this.filterByItemType(this.props.state.items, this.props.itemType);
     if (!items || items.length <= 0) {
       return <EmptyList />
     }
 
-    const groupedByDayMap = groupBy(items, item => friendlyDate(item.date));
+    const groupedByDayMap = groupBy(items, item => friendlyDate(item.date, { language }));
     const groupedByDayArray = []; //TODO: this is a waste of resources to copy a map into an array because map cannot be passed as data to FlatList
     groupedByDayMap.forEach(item => groupedByDayArray.push(item));
 
@@ -54,11 +58,13 @@ class ItemHistory extends Component {
   }
 
   renderGroupedByDay(daysData) {
+    const language = this.context;
+
     return (
       <View style={[styles.flex]} key={daysData[0].date}>
         <View style={[styles.row, styles.centered, styles.dimBackground, { flex: 0 }]}>
           <Text style={[styles.titleText]}>
-            {friendlyDay(daysData[0].date)}</Text>
+            {friendlyDay(daysData[0].date, { language })}</Text>
           <Text style={[styles.bodyText, { marginHorizontal: 20, color: styles.bodyText.color + '80' }]}>
             {formatDate(daysData[0].date, 'MMMM D')}</Text>
         </View>

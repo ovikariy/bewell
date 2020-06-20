@@ -99,8 +99,8 @@ const testChangePassword = async () => {
             console.log(consoleColors.green, '\r\nPASSED\r\n', consoleColors.reset);
         else
             console.log(consoleColors.red, '\r\nFAILED\r\n', consoleColors.reset);
-    } catch (err) {
-        console.log(consoleColors.red, '\r\nFAILED with error\r\n' + err, consoleColors.reset);
+    } catch (error) {
+        console.log(consoleColors.red, '\r\nFAILED with error\r\n' + error, consoleColors.reset);
     }
 
     /* reset password */
