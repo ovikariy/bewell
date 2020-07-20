@@ -1,9 +1,7 @@
 import React from 'react';
-import Constants from 'expo-constants';
-import { text } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { List } from '../components/MiscComponents';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -23,10 +21,10 @@ export default class SettingsScreen extends React.Component {
 }
 
 class Settings extends React.Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
     const items = [
       {
         id: 'lock',

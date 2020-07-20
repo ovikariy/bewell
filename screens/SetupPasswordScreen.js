@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { styles } from '../assets/styles/style';
 import { setupNewEncryption } from '../redux/passwordActionCreators';
 import { initialize } from '../redux/welcomeActionCreators';
 import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { isNullOrEmpty, LanguageContext } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -22,10 +22,10 @@ const mapDispatchToProps = dispatch => ({
 
 /* this screen is shown on app launch if the user has not setup security yet */
 class SetupPasswordScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
-    const language = this.context;
+    const language = this.context.language;
 
     super(props);
     this.state = {
@@ -37,7 +37,7 @@ class SetupPasswordScreen extends Component {
   }
 
   reset() {
-    const language = this.context;
+    const language = this.context.language;
 
     this.setState({
       ...this.state,
@@ -49,7 +49,7 @@ class SetupPasswordScreen extends Component {
   }
 
   showPasswordReenter() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (isNullOrEmpty(this.state.password) || this.state.password.length < 8) {
       Toast.show(language.passwordMinimum);
@@ -59,7 +59,7 @@ class SetupPasswordScreen extends Component {
   }
 
   submitPassword() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (this.state.password !== this.state.passwordReentered) {
       Toast.show(language.passwordsMatch);
@@ -76,7 +76,8 @@ class SetupPasswordScreen extends Component {
   }
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     return (
       <ScreenBackground>

@@ -3,58 +3,46 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MainDrawerNavigator } from './DrawerNavigator';
 import { connect } from 'react-redux';
 import { loadAuthData } from '../redux/authActionCreators';
-import { load } from '../redux/mainActionCreators';
-import { configLocale, LanguageContext } from '../modules/helpers';
+import { loadAppContextFromSettings } from '../redux/mainActionCreators';
+import { configLocale } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 import { stateConstants, WellKnownStoreKeys } from '../modules/Constants';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
-import { translations } from '../modules/translations';
 
 const mapStateToProps = state => {
   return {
     [stateConstants.OPERATION]: state[stateConstants.OPERATION],
     [stateConstants.AUTH]: state[stateConstants.AUTH],
-    [WellKnownStoreKeys.SETTINGS]: state[stateConstants.STORE].items[WellKnownStoreKeys.SETTINGS]
+    [stateConstants.APPCONTEXT]: state[stateConstants.APPCONTEXT]
   };
 }
 
 const mapDispatchToProps = dispatch => ({
   loadAuthData: () => dispatch(loadAuthData()),
-  load: (key) => dispatch(load(key))
+  loadAppContextFromSettings: (key) => dispatch(loadAppContextFromSettings(key))
 });
-
-export class Main extends React.Component {
-  static contextType = LanguageContext;
+/**
+ * MainWrapper is mainly an HOC to serve as a context provider for language/theme/etc
+ */
+export class MainWrapper extends React.Component {
 
   componentDidMount() {
     this.props.loadAuthData();
-    this.props.load(WellKnownStoreKeys.SETTINGS);
+    this.props.loadAppContextFromSettings();
   }
 
   render() {
-    const language = this.getLanguage();
-
-    configLocale(language);
-    showMessages(this.props[stateConstants.OPERATION], translations[language]);  /* global error and success message handler */
-
-    if (this.props[stateConstants.AUTH].isLoading) {
+    if (this.props[stateConstants.AUTH].isLoading || !this.props[stateConstants.APPCONTEXT].context) {
       return this.renderSecondarySplash();
     }
 
     return (
-      <LanguageContext.Provider value={translations[language]}>
-        <NavigationContainer>
-          <MainDrawerNavigator auth={this.props[stateConstants.AUTH]} />
-        </NavigationContainer>
-      </LanguageContext.Provider>
+      <AppContext.Provider value={this.props[stateConstants.APPCONTEXT].context}>
+        <Main auth={this.props[stateConstants.AUTH]}
+          operation={this.props[stateConstants.OPERATION]}  />
+      </AppContext.Provider>
     )
-  }
-
-  getLanguage() {
-    const userSelectedLanguage = this.props[WellKnownStoreKeys.SETTINGS] ? this.props[WellKnownStoreKeys.SETTINGS].find((setting) => setting.id == 'language') : null; //TODO: move 'language' into constant
-    if (userSelectedLanguage)
-      return userSelectedLanguage.value;
-    return 'en'; //TODO: get from defaults. don't get from device in case no translation available
   }
 
   renderSecondarySplash() {
@@ -77,4 +65,21 @@ export class Main extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(MainWrapper);
+
+class Main extends React.Component {
+  static contextType = AppContext;
+
+  render() {
+    configLocale(this.context.locale);
+    showMessages(this.props.operation, this.context);  /* global error and success message handler */
+
+    return (
+      <NavigationContainer>
+        <MainDrawerNavigator auth={this.props.auth} />
+      </NavigationContainer>
+    )
+  }
+}
+
+

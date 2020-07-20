@@ -4,7 +4,6 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import Main from './components/Main';
-import { styles } from './assets/styles/style';
 
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
@@ -26,7 +25,7 @@ export default class App extends React.Component {
     }
     return (
       <Provider store={store}>
-        <View style={styles.flex}>
+        <View style={{ flex: 1 }}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <Main />
         </View>

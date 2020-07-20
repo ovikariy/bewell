@@ -3,10 +3,8 @@ import { View, Image, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { styles } from '../assets/styles/style';
 import { IconForButton } from './MiscComponents';
-import { LanguageContext } from '../modules/helpers';
-
+import { AppContext } from '../modules/AppContext';
 import HomeScreen from '../screens/HomeScreen';
 import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -23,22 +21,37 @@ import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
 
 const MenuHeaderButton = (props) => {
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
     return <Icon name='menu' size={30} containerStyle={{ margin: 16 }}
-        color='white' onPress={() => props.navigation.toggleDrawer()} />
+        color={styles.bodyText.color} onPress={() => props.navigation.toggleDrawer()} />
 }
 
-const ScreenNavOptions = {
-    headerStyle: { borderWidth: 0 },
-    headerTitleStyle: styles.heading,
-    headerTitleAlign: 'center',
-    headerTransparent: true,
-    headerTintColor: styles.heading.color
+const LogoImage = (props) => {
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
+    return <Image source={require('../assets/images/logo_small.png')} tintColor={styles.toolbarContainer.backgroundColor} style={[styles.logoImageSmall, { marginRight: 10 }]} />
+}
+
+const ScreenNavOptions = (styles) => {
+    return {
+        headerStyle: { borderWidth: 0 },
+        headerTitleStyle: styles.heading,
+        headerTitleAlign: 'center',
+        headerTransparent: true,
+        headerTintColor: styles.heading.color
+    }
 }
 
 const WelcomeStack = createStackNavigator();
 function WelcomeNavigator() {
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
     return (
-        <WelcomeStack.Navigator initialRouteName='Welcome' screenOptions={ScreenNavOptions} >
+        <WelcomeStack.Navigator initialRouteName='Welcome' screenOptions={ScreenNavOptions(styles)} >
             <WelcomeStack.Screen
                 name='Welcome'
                 component={WelcomeScreen}
@@ -66,18 +79,19 @@ function WelcomeNavigator() {
 const HomeStack = createStackNavigator();
 function HomeNavigator() {
 
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
 
     return (
-        <HomeStack.Navigator initialRouteName='Home' screenOptions={ScreenNavOptions} >
+        <HomeStack.Navigator initialRouteName='Home' screenOptions={ScreenNavOptions(styles)} >
             <HomeStack.Screen
                 name='Home'
                 component={HomeScreen}
                 options={({ route, navigation }) => ({
                     title: language.yourWellbeing,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />,
-                    headerRight: () => <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]}
-                    />
+                    headerRight: () => <LogoImage />
                 })}
             />
             <HomeStack.Screen
@@ -91,16 +105,19 @@ function HomeNavigator() {
 
 const InsightsStack = createStackNavigator();
 function InsightsNavigator() {
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
 
     return (
-        <InsightsStack.Navigator initialRouteName='Insights' screenOptions={ScreenNavOptions} >
+        <InsightsStack.Navigator initialRouteName='Insights' screenOptions={ScreenNavOptions(styles)} >
             <InsightsStack.Screen
                 name='Insights'
                 component={InsightsScreen}
                 options={({ route, navigation }) => ({
                     title: language.history,
-                    headerLeft: () => <MenuHeaderButton navigation={navigation} />
+                    headerLeft: () => <MenuHeaderButton navigation={navigation} />,
+                    headerRight: () => <LogoImage />
                 })}
             />
             <InsightsStack.Screen
@@ -114,16 +131,19 @@ function InsightsNavigator() {
 
 const SettingsStack = createStackNavigator();
 function SettingsNavigator() {
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
 
     return (
-        <SettingsStack.Navigator initialRouteName='Settings' screenOptions={ScreenNavOptions} >
+        <SettingsStack.Navigator initialRouteName='Settings' screenOptions={ScreenNavOptions(styles)} >
             <SettingsStack.Screen
                 name='Settings'
                 component={SettingsScreen}
                 options={({ route, navigation }) => ({
                     title: language.settings,
-                    headerLeft: () => <MenuHeaderButton navigation={navigation} />
+                    headerLeft: () => <MenuHeaderButton navigation={navigation} />,
+                    headerRight: () => <LogoImage />
                 })}
             />
             <SettingsStack.Screen
@@ -163,17 +183,19 @@ function SettingsNavigator() {
 
 const SignOutStack = createStackNavigator();
 function SignOutNavigator() {
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
 
     return (
-        <SignOutStack.Navigator initialRouteName='SignOut' screenOptions={ScreenNavOptions} >
+        <SignOutStack.Navigator initialRouteName='SignOut' screenOptions={ScreenNavOptions(styles)} >
             <SignOutStack.Screen
                 name='SignOut'
                 component={SignOutScreen}
                 options={({ route, navigation }) => ({
                     title: language.signOut,
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />,
-                    headerRight: () => <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />
+                    headerRight: () => <LogoImage />
                 })}
             />
         </SignOutStack.Navigator>
@@ -181,12 +203,14 @@ function SignOutNavigator() {
 }
 
 function CustomDrawerContent(props) {
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
 
     return (
-        <DrawerContentScrollView style={styles.menuBackground} {...props}>
+        <DrawerContentScrollView style={styles.drawerBackground} {...props}>
             <View style={[styles.flex, styles.rowContainer, { marginBottom: 20 }]}>
-                <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />
+                <LogoImage />
                 <Text style={styles.heading}>{language.appName}</Text>
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
@@ -221,8 +245,10 @@ function getFirstTimeUserScreens() {
 }
 
 function getAuthenticatedUserScreens() {
-    const language = React.useContext(LanguageContext);
-    
+    const context = React.useContext(AppContext);
+    const language = context.language;
+    const styles = context.styles;
+
     return (
         <React.Fragment>
             <Drawer.Screen name="Home" component={HomeNavigator}

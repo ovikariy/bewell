@@ -2,14 +2,12 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { styles } from '../assets/styles/style';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import { IconForButton, TimePicker } from '../components/MiscComponents';
-import { text } from '../modules/Constants';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 export class SleepComponent extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   onPress(rating) {
     if (!Number.isInteger(rating))
@@ -68,8 +66,8 @@ export class SleepComponent extends Component {
     const startTime = (this.props.value && this.props.value.startDate) ? new Date(this.props.value.startDate) : null;
     const endTime = (this.props.value && this.props.value.endDate) ? new Date(this.props.value.endDate) : null;
 
-    const language = this.context;
-    
+    const language = this.context.language;
+    const styles = this.context.styles;
     return (
       <View>
         <Animatable.View animation="fadeIn" duration={500}>

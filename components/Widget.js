@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { styles } from '../assets/styles/style';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { ParagraphText } from './MiscComponents';
-import { friendlyTime, LanguageContext } from '../modules/helpers';
+import { friendlyTime } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const WidgetHeader = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   return (
     <View style={[styles.widgetTitleContainer]}>
       {props.title ?
@@ -18,8 +20,9 @@ const WidgetHeader = (props) => {
 };
 
 export const Widget = (props) => {
-  const language = React.useContext(LanguageContext);
-  const widgetFactory = WidgetFactory(language);
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+  const widgetFactory = WidgetFactory(context);
   const widgetFactoryType = widgetFactory[props.value.type];
   const title = props.value.title || widgetFactoryType.config.widgetTitle;
   const subTitle = friendlyTime(props.value.date);

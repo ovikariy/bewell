@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { initialize } from '../redux/welcomeActionCreators';
-import { styles } from '../assets/styles/style';
 import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -20,7 +19,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class WelcomeScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
   constructor(props) {
     super(props);
   } 
@@ -42,7 +41,9 @@ class WelcomeScreen extends Component {
   }
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
+
     return (
       <ScreenBackground>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>

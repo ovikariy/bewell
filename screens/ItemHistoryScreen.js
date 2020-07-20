@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { removeFromRedux, persistRedux } from '../redux/mainActionCreators';
-import { styles } from '../assets/styles/style';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { stateConstants } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -21,7 +20,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class ItemHistoryScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   static navigationOptions = ({ route, navigation }) => {
     return ({
@@ -50,14 +49,14 @@ class ItemHistoryScreen extends Component {
   }
 
   render() {
-    const language = this.context;
-    const widgetFactory = WidgetFactory(language);
+    const widgetFactory = WidgetFactory(this.context);
     const renderHistoryItem = widgetFactory[this.itemType].renderHistoryItem ?
       function (item, isSelectedItem) {
         return widgetFactory[this.itemType].renderHistoryItem(item, isSelectedItem, widgetFactory[this.itemType].config)
       }
       : null;
 
+    const styles = this.context.styles;
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true}>

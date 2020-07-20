@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Text, TouchableHighlight, View } from 'react-native';
-import { styles } from '../assets/styles/style';
-import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate, LanguageContext } from '../modules/helpers';
+import { Text, View } from 'react-native';
+import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 import { Loading, EmptyList, List } from './MiscComponents';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 class ItemHistory extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ class ItemHistory extends Component {
       return (<Loading />);
     }
 
-    const language = this.context;
+    const language = this.context.language;
 
     const items = this.filterByItemType(this.props.state.items, this.props.itemType);
     if (!items || items.length <= 0) {
@@ -56,7 +57,8 @@ class ItemHistory extends Component {
   }
 
   renderGroupedByDay(daysData) {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     return (
       <View style={[styles.flex]} key={daysData[0].date}>
@@ -79,6 +81,8 @@ class ItemHistory extends Component {
   }
 
   renderItem({ item, index }) {
+    const styles = this.context.styles;
+
     const isSelectedItem = (this.props.selectedItem && this.props.selectedItem.id === item.id);
     /* all history screens have common functionality like selecting the row and deleteing the row but
     also can have custom fields to show for items so we allow each screen to customize item display */
@@ -98,11 +102,11 @@ class ItemHistory extends Component {
     };
 
     return (
-      <TouchableHighlight style={{marginHorizontal: 5}} onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
+      <TouchableOpacity activeOpacity={0.7} style={{marginHorizontal: 5}} onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
         <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
           {customItemDisplay}
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { styles } from '../assets/styles/style';
 import { CustomIconRating, CustomIconRatingItem } from '../components/CustomIconRating';
 import { SleepComponent } from '../components/SleepComponent';
 import { ItemTypes, text } from './Constants';
@@ -9,7 +8,8 @@ import { formatDate, friendlyTime } from './helpers';
 import { ClearTextArea } from '../components/MiscComponents';
 
 export function WidgetFactory(context) {
-  const language = context;
+  const language = context.language;
+  const styles = context.styles;
   return {
     [ItemTypes.NOTE]:
     {
@@ -43,9 +43,9 @@ export function WidgetFactory(context) {
         addIcon: { text: language.mood, name: 'smile-o', type: 'font-awesome' },
         style: {},
         icons: [
-          { name: language.happy, icon: 'mood-happy', iconStyle: {}, backgroundStyle: { backgroundColor: '#ff9a55' } },
-          { name: language.soso, icon: 'mood-neutral', iconStyle: {}, backgroundStyle: { backgroundColor: '#009898' } },
-          { name: language.couldBeBetter, icon: 'mood-sad', iconStyle: {}, backgroundStyle: { backgroundColor: '#517fa4' } }
+          { name: language.happy, icon: 'mood-happy', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#ff9a55' } },
+          { name: language.soso, icon: 'mood-neutral', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#009898' } },
+          { name: language.couldBeBetter, icon: 'mood-sad', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#517fa4' } }
         ]
       },
       renderWidgetItem: (props, config) => {
@@ -76,7 +76,7 @@ export function WidgetFactory(context) {
           <View style={{ margin: 7 }}>
             <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
               {friendlyTime(item.date)}</Text>
-            <CustomIconRatingItem value={ratingIcon} size={40} />
+            <CustomIconRatingItem value={ratingIcon} size={40} textColor={isSelectedItem ? styles.highlightColor.color : null} />
           </View>
         );
       }
@@ -91,9 +91,9 @@ export function WidgetFactory(context) {
         addIcon: { text: language.sleep, name: 'moon-o', type: 'font-awesome' },
         style: {},
         icons: [
-          { name: language.restful, icon: 'sleep-happy', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#ff9a55' } },
-          { name: language.interrupted, icon: 'sleep-neutral', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#009898' } },
-          { name: language.poor, icon: 'sleep-sad', iconStyle: { color: '#ffffff' }, backgroundStyle: { backgroundColor: '#517fa4' } }
+          { name: language.restful, icon: 'sleep-happy', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#ff9a55' } },
+          { name: language.interrupted, icon: 'sleep-neutral', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#009898' } },
+          { name: language.poor, icon: 'sleep-sad', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#517fa4' } }
         ]
       },
       renderWidgetItem: (props, config) => {
@@ -107,7 +107,7 @@ export function WidgetFactory(context) {
         return (
           <View style={styles.row}>
             <View style={[styles.flex, styles.centered]}>
-              <CustomIconRatingItem value={ratingIcon} size={40} />
+              <CustomIconRatingItem value={ratingIcon} size={40} textColor={isSelectedItem ? styles.highlightColor.color : null} />
             </View>
             <View style={{ flex: 2 }}>
               <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>

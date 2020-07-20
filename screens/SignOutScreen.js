@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { styles } from '../assets/styles/style';
 import { stateConstants } from '../modules/Constants';
 import { signOut } from '../redux/authActionCreators';
 import { ActivityIndicator, ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CommonActions } from '@react-navigation/native';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return { [stateConstants.OPERATION]: state[stateConstants.OPERATION] };
@@ -18,10 +17,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SignOutScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
+
     return (
       <ScreenBackground>
         <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >

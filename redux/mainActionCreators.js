@@ -11,6 +11,8 @@ export const load = (key) => (dispatch) => {
         .then((items) => {
             dispatch(replaceRedux([[key, items]]));
             dispatch(GenericActions.operationCleared());
+            if (key === WellKnownStoreKeys.SETTINGS)
+                dispatch(settingsChanged(items));
         })
         .catch(error => {
             console.log(error);
@@ -18,6 +20,15 @@ export const load = (key) => (dispatch) => {
             dispatch(GenericActions.operationCleared());
         })
 }
+
+export const loadAppContextFromSettings = () => (dispatch) => {
+    dispatch(load(WellKnownStoreKeys.SETTINGS));
+}
+
+const settingsChanged = (settings) => ({
+    type: ActionTypes.SETTINGS_CHANGED,
+    payload: { settings }
+})
 
 /* load widget data for all months e.g. on historical views or total counts */
 export const loadAllWidgetData = () => (dispatch) => {
@@ -76,6 +87,8 @@ export const updateRedux = (key, newItems) => (dispatch) => {
         type: ActionTypes.UPDATE_ITEM_IN_REDUX_STORE,
         payload: { key: key, items: newItems }
     });
+    if (key === WellKnownStoreKeys.SETTINGS)
+        dispatch(settingsChanged(newItems));
 }
 
 export const persistRedux = (items, dirtyKeys) => (dispatch) => {

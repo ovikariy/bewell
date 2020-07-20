@@ -4,10 +4,10 @@ import Constants from 'expo-constants';
 import { View, Text } from 'react-native';
 import { StyledPicker } from '../components/MiscComponents';
 import { settingsConstants } from './Constants';
-import { styles } from '../assets/styles/style';
 
 export function DefaultSettings(context) {
-    const language = context;
+    const language = context.language;
+    const styles = context.styles;
 
     const languageItems = [
         { label: language.english, value: "en" },

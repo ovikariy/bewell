@@ -4,9 +4,9 @@ import { stateConstants, storeConstants } from '../modules/Constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { ListWithRefresh } from '../components/MiscComponents';
-import { groupBy, LanguageContext } from '../modules/helpers';
+import { groupBy } from '../modules/helpers';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
-import { Widget } from '../components/Widget';
+import { AppContext } from '../modules/AppContext';
 
 
 const mapStateToProps = state => {
@@ -18,7 +18,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class InsightsScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -46,12 +46,10 @@ class InsightsScreen extends Component {
     return groupedByItemType;
   }
   render() {
-    const language = this.context;
-
     const listItems = [];
     let groupedByItemType = this.getCountsByItemType();
 
-    const widgetFactory = WidgetFactory(language);
+    const widgetFactory = WidgetFactory(this.context);
 
     Object.keys(widgetFactory).forEach(itemType => {
       const widgetConfig = widgetFactory[itemType].config;

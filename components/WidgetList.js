@@ -2,15 +2,15 @@ import React from 'react';
 import { View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Image, Text } from 'react-native-elements';
-import { styles } from '../assets/styles/style';
 import { Widget } from '../components/Widget';
-import { updateArrayImmutable, updateTimeStringToNow, getNewUuid, LanguageContext } from '../modules/helpers';
+import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
 
 class WidgetList extends React.Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -36,8 +36,8 @@ class WidgetList extends React.Component {
   }
 
   renderAddNewButtons() {
-    const language = this.context;
-    const widgetFactory = WidgetFactory(language);
+    const language = this.context.language;
+    const widgetFactory = WidgetFactory(this.context);
     const widgetButtons = Object.values(widgetFactory).map((item) => {
       if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
         return;
@@ -75,17 +75,19 @@ class WidgetList extends React.Component {
   }
 
   renderWelcomeMessage() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
     return (
       <View style={[styles.centered, styles.flex, { paddingTop: 40 }]}>
-        <Image source={require('../assets/images/arrow-up.png')} style={[styles.imageContainer, { height: 50, width: 15 }]} />
+        <Image source={require('../assets/images/arrow-up.png')} tintColor={styles.titleText.color}  style={[styles.widgetArrowContainer]} />
         <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>{language.howAreYou}</Text>
-        <Text style={[styles.subTitleText, styles.dimColor, styles.centered, styles.spacedOut]}>{language.tapAddButtons}</Text>
+        <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{language.tapAddButtons}</Text>
       </View>
     );
   }
 
   render() {
+    const styles = this.context.styles;
     return (
       <View style={[styles.flex]}>
         <Toolbar style={{ flex: 0, paddingVertical: 6 }}>{this.renderAddNewButtons()}</Toolbar>

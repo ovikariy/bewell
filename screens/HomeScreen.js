@@ -7,7 +7,8 @@ import { stateConstants } from '../modules/Constants';
 import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getStorageKeyFromDate, consoleColors, consoleLogWithColor, LanguageContext } from '../modules/helpers';
+import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return { [stateConstants.STORE]: state[stateConstants.STORE] };
@@ -21,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class HomeScreen extends React.Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
   constructor(props) {
     super(props);
 
@@ -34,8 +35,8 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     this.refreshItems();
 
-    const language = this.context;
-    //this.props.navigation.navigate('Settings', { screen: 'System' });
+    const language = this.context.language;
+    //this.props.navigation.navigate('Settings', { screen: 'Restore' });
     //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
   }
 

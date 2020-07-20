@@ -6,7 +6,7 @@ import { DefaultSettings } from '../modules/SettingsFactory';
 import { WellKnownStoreKeys, stateConstants } from '../modules/Constants';
 import { load, persistRedux, updateRedux } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return { [stateConstants.STORE]: state[stateConstants.STORE] };
@@ -60,7 +60,7 @@ class SystemSettingsScreen extends React.Component {
 export default connect(mapStateToProps, mapDispatchToProps)(SystemSettingsScreen)
 
 class SystemSettings extends React.Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   onChange(id, newValue) {
     this.props.onChange({ id, value: newValue });
@@ -69,8 +69,7 @@ class SystemSettings extends React.Component {
   render() {
     const userOverrides = this.props.settings ? this.props.settings : [];
 
-    const language = this.context;
-    const defaultSettings = DefaultSettings(language);
+    const defaultSettings = DefaultSettings(this.context);
 
     const listItems = defaultSettings.map((defaultSetting) => {
 

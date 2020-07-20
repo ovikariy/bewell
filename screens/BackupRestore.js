@@ -5,8 +5,7 @@ import { stateConstants } from '../modules/Constants';
 import { ParagraphText, ActivityIndicator, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { styles } from '../assets/styles/style';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -16,7 +15,7 @@ const mapStateToProps = state => {
 }
 
 class BackupRestoreScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -25,7 +24,8 @@ class BackupRestoreScreen extends Component {
   }
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     return (
       <ScreenBackground imageBackgroundSource={require('../assets/images/home.jpg')}>

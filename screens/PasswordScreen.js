@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { stateConstants } from '../modules/Constants';
 import { startChangePassword, verifyCredentials, updatePassword } from '../redux/passwordActionCreators';
-import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast, ButtonSecondary } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { styles } from '../assets/styles/style';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StackActions } from '@react-navigation/native';
-import { isNullOrEmpty, consoleColors, LanguageContext } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class PasswordScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ class PasswordScreen extends Component {
   }
 
   verifyPassword() {
-    const language = this.context;
+    const language = this.context.language;
     if (isNullOrEmpty(this.state.oldPassword)) {
       Toast.show(language.passwordConfirm);
       return;
@@ -52,7 +52,7 @@ class PasswordScreen extends Component {
   }
 
   verifyPin() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (isNullOrEmpty(this.state.PIN)) {
       Toast.show(language.pinConfirm);
@@ -73,7 +73,7 @@ class PasswordScreen extends Component {
   }
 
   save() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (isNullOrEmpty(this.state.oldPassword) || isNullOrEmpty(this.state.newPassword) || this.state.newPassword.length < 8) {
       ToastAndroid.show(language.passwordFieldsRequired, ToastAndroid.LONG);
@@ -87,7 +87,8 @@ class PasswordScreen extends Component {
   }
 
   renderPasswordChangeComplete() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChanged}</ParagraphText>
@@ -101,7 +102,8 @@ class PasswordScreen extends Component {
   }
 
   renderCredentialsReprompt() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     /* re-prompt for credentials */
     if (this.props[stateConstants.AUTH].isPinLocked) {
@@ -135,7 +137,8 @@ class PasswordScreen extends Component {
   }
 
   renderPasswordFields() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     /* if the user uses PIN lock then we ask for both PIN and password; 
     password for security reasons and PIN for encrypting new password */
@@ -167,9 +170,8 @@ class PasswordScreen extends Component {
         onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
         onSubmitEditing={() => { this.save() }}
       />
-      <ButtonPrimary
+      <ButtonSecondary 
         containerStyle={[{ marginTop: 60, width: 200, alignSelf: 'center' }]}
-        buttonStyle={styles.buttonSecondary}
         title={language.save}
         onPress={() => { this.save() }}
         name='check'

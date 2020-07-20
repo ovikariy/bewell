@@ -1,18 +1,23 @@
 import React from 'react';
-import { Alert, View, Text } from 'react-native';
-import { text } from '../modules/Constants';
-import { styles } from '../assets/styles/style';
+import { Alert, View } from 'react-native';
 import { IconButton } from './MiscComponents';
-import { getStorageKeyFromDate, LanguageContext, consoleColors } from '../modules/helpers';
+import { getStorageKeyFromDate } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 import { WidgetFactory } from '../modules/WidgetFactory';
 
 export const Toolbar = (props) => {
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
     return (
         <View style={[styles.toolbarContainer, styles.centered, props.style]}>{props.children}</View>
     )
 }
 
 export const FloatingToolbar = (props) => {
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
     if (props.isVisible)
         return (
             <Toolbar style={[styles.floatingContainer, props.style]}>
@@ -26,19 +31,26 @@ export const FloatingToolbar = (props) => {
 }
 
 export const ToolbarButton = (props) => {
-    return <IconButton iconType={props.iconType || 'font-awesome'} containerStyle={styles.toolbarButtonContainer} {...props} />
+    const context = React.useContext(AppContext);
+    const styles = context.styles;
+
+    return <IconButton iconType={props.iconType || 'font-awesome'} 
+    containerStyle={styles.toolbarButtonContainer} 
+    iconStyle={props.iconStyle || [styles.iconPrimary, { color: styles.brightColor.color}]}
+    titleStyle={props.titleStyle || [styles.toolbarButtonText, { color: styles.brightColor.color}]}
+    {...props} />
 }
 
 export const ViewHistoryButton = (props) => {
-    const language = React.useContext(LanguageContext);
-    const widgetFactory = WidgetFactory(language);
+    const context = React.useContext(AppContext);
+    const widgetFactory = WidgetFactory(context);
     const widgetConfig = widgetFactory[props.item.type].config;
     const historyTitle = widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle;
 
     function onPress() {
         const item = props.item;
         if (!item) {
-            alert(language.selectItemFirst);
+            alert(context.language.selectItemFirst);
             return;
         }
         props.navigation.navigate('ItemHistory', { 'itemType': props.item.type, 'title': historyTitle }); 
@@ -48,7 +60,8 @@ export const ViewHistoryButton = (props) => {
 }
 
 export const DeleteButton = (props) => {
-    const language = React.useContext(LanguageContext);
+    const context = React.useContext(AppContext);
+    const language = context.language;
 
     function onPress() {
         Alert.alert(

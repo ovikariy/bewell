@@ -7,6 +7,7 @@ import { AUTH } from './authReducer';
 import { PINSETUP } from './pinSetupReducer';
 import { BACKUPRESTORE } from './backupRestoreReducer';
 import { CHANGEPASSWORD } from './passwordReducer';
+import { APPCONTEXT } from './appContextReducer';
 
 export const ConfigureStore = () => {
 
@@ -17,7 +18,8 @@ export const ConfigureStore = () => {
             AUTH,
             PINSETUP,
             BACKUPRESTORE,
-            CHANGEPASSWORD
+            CHANGEPASSWORD,
+            APPCONTEXT
         }),
         applyMiddleware(thunk)
         //applyMiddleware(thunk, logger)

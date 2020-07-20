@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { styles } from '../assets/styles/style';
 import { signInPassword, signInPIN } from '../redux/authActionCreators';
 import { stateConstants } from '../modules/Constants';
 import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenHeader } from '../components/ScreenComponents';
-import { LanguageContext } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 const mapStateToProps = state => {
   return {
@@ -21,7 +20,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class SignInScreen extends Component {
-  static contextType = LanguageContext;
+  static contextType = AppContext;
 
   constructor(props) {
     super(props);
@@ -32,7 +31,7 @@ class SignInScreen extends Component {
   }
 
   submitPassword() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (!this.state.password) {
       Toast.show(language.passwordInvalid);
@@ -43,7 +42,7 @@ class SignInScreen extends Component {
   }
 
   submitPIN() {
-    const language = this.context;
+    const language = this.context.language;
 
     if (!this.state.PIN) {
       Toast.show(language.pinInvalid);
@@ -54,7 +53,8 @@ class SignInScreen extends Component {
   }
 
   render() {
-    const language = this.context;
+    const language = this.context.language;
+    const styles = this.context.styles;
 
     return (
       <ScreenBackground>

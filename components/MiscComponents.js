@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, TouchableHighlight, RefreshControl, TextInput, Picker
+  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider } from 'react-native-elements';
-import { styles } from '../assets/styles/style';
-import { text } from '../modules/Constants';
-import { addSubtractDays, isValidDate, wait, formatDate, isNullOrEmpty, LanguageContext } from '../modules/helpers';
+import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
+import { AppContext } from '../modules/AppContext';
 
 export const Spacer = (props) => {
   return <View style={[
@@ -17,6 +16,8 @@ export const Spacer = (props) => {
 };
 
 export const ParagraphText = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   return <Text {...props} style={[styles.bodyText, props.style]} />;
 };
 
@@ -31,7 +32,7 @@ export const Toast = {
       e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
       e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
     */
-    const language = context;
+    const language = context.language;
     if (typeof codes === 'string') {
       if (language[codes])
         this.show(language[codes]);
@@ -55,6 +56,8 @@ export const Toast = {
 };
 
 export const ClearTextArea = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   /* no background no borders */
   return (
     <Input
@@ -73,6 +76,9 @@ export const ClearTextArea = (props) => {
 //route.params?.someParam ?? 'defaultValue';
 
 export const PasswordInput = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return <Input
     {...props}
     leftIcon={{ name: props.leftIconName ?? 'lock', color: styles.iconPrimary.color }}
@@ -88,12 +94,15 @@ export const PasswordInput = (props) => {
 };
 
 export const PasswordInputWithButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return <Input
     {...props}
     inputContainerStyle={[{ borderBottomWidth: 0 }, props.inputContainerStyle]}
-    inputStyle={[{ marginLeft: 10 }, styles.bodyTextLarge, styles.textDark, props.inputStyle]}
-    containerStyle={[styles.highlightBackground, styles.rounded, props.containerStyle]}
-    placeholderTextColor={props.placeholderHighlight ?? styles.placeholderHighlight.color}
+    inputStyle={[{ marginLeft: 10 }, styles.bodyTextLarge, props.inputStyle]}
+    containerStyle={[styles.brightBackground, styles.rounded, styles.border, props.containerStyle]}
+    placeholderTextColor={styles.placeholderHighlight.color}
     autoCompleteType='off'
     autoCorrect={false}
     secureTextEntry={true}
@@ -106,6 +115,9 @@ export const PasswordInputWithButton = (props) => {
 };
 
 export const PINInputWithButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   function onChangeText(value) {
     if (props.onChangeText)
       props.onChangeText(value.replace(/[^0-9]/g, ''));
@@ -118,7 +130,7 @@ export const PINInputWithButton = (props) => {
         paddingVertical: 7, borderBottomWidth: 1,
         borderColor: styles.buttonPrimary.borderColor
       }]}
-      placeholderTextColor={props.placeholderHighlight ?? styles.placeholderText.color}
+      placeholderTextColor={styles.placeholderText.color}
       autoCompleteType='off'
       autoFocus={true}
       autoCorrect={false}
@@ -135,6 +147,8 @@ export const PINInputWithButton = (props) => {
 };
 
 export const RoundButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   return <Icon {...props}
     onPress={props.onPress}
     iconStyle={[styles.roundedButton, props.iconStyle]}
@@ -143,8 +157,9 @@ export const RoundButton = (props) => {
 }
 
 export const StyledDatePicker = (props) => {
-  const language = React.useContext(LanguageContext);
-
+  const context = React.useContext(AppContext);
+  const language = context.language;
+  const styles = context.styles;
   /* DateTimePicker shows by default when rendered so need to hide and only show e.g. on button press */
   const [show, setShow] = useState(false);
 
@@ -182,8 +197,9 @@ export const StyledDatePicker = (props) => {
 }
 
 export const TimePicker = (props) => {
-  const language = React.useContext(LanguageContext);
-
+  const context = React.useContext(AppContext);
+  const language = context.language;
+  const styles = context.styles;
   return (
     <View style={styles.formItem}>
       <StyledDatePicker
@@ -197,10 +213,14 @@ export const TimePicker = (props) => {
 };
 
 export const IconForButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   return <Icon iconStyle={[styles.iconPrimarySmall, props.iconStyle]} {...props} />
 }
 
 export const DatePickerWithArrows = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
 
   function changeDays(numDays) {
     if (props.onChange)
@@ -232,17 +252,35 @@ export const DatePickerWithArrows = (props) => {
   );
 };
 
+export const ButtonSecondary = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  return (
+    <ButtonPrimary {...props}
+      buttonStyle={[styles.buttonSecondary, props.buttonStyle]}
+      titleStyle={[styles.brightColor, { opacity: 1 }, props.titleStyle]}
+    />
+  )
+};
+
 export const ButtonPrimary = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return (
     <Button {...props}
       containerStyle={[{ width: 250 }, props.containerStyle]}
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
-      titleStyle={[styles.subTitleText, { opacity: 1 }]}
-      icon={props.name ? <IconForButton name={props.name} iconStyle={[{ marginRight: 20, color: styles.subTitleText.color }, props.iconStyle]} /> : null} />
+      titleStyle={[styles.subTitleText, { opacity: 1 }, props.titleStyle]}
+      icon={props.name ? <IconForButton name={props.name} iconStyle={[{ marginRight: 20, color: styles.brightColor.color }, props.iconStyle]} /> : null} />
   )
 };
 
 export const IconButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return (
     <TouchableOpacity style={[props.containerStyle]} {...props} >
       {props.iconName ? <IconForButton name={props.iconName} type={props.iconType} iconStyle={[props.iconStyle || styles.iconPrimary]} /> : <View></View>}
@@ -252,6 +290,9 @@ export const IconButton = (props) => {
 };
 
 export const LinkButton = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return (
     <Button {...props} titleStyle={[styles.subTitleText, props.titleStyle]} type="clear" />
   )
@@ -269,15 +310,15 @@ export function showMessages(operation, context) {
   if (!operation.errCodes && !operation.successCodes)
     return;
 
-  const language = context;
   const codes = operation.errCodes ? operation.errCodes : operation.successCodes;
-  Toast.showTranslated(codes, language);
+  Toast.showTranslated(codes, context);
 }
 
 /* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent on the bottom like a Toast */
 export const Loading = () => {
-  const language = React.useContext(LanguageContext);
-
+  const context = React.useContext(AppContext);
+  const language = context.language;
+  const styles = context.styles;
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
@@ -287,8 +328,9 @@ export const Loading = () => {
 };
 
 export const EmptyList = () => {
-  const language = React.useContext(LanguageContext);
-
+  const context = React.useContext(AppContext);
+  const language = context.language;
+  const styles = context.styles;
   return (
     <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
       <Text style={styles.subTitleText}>{language.emptyList}</Text>
@@ -330,11 +372,13 @@ export class ListWithRefresh extends React.Component {
 }
 
 export const List = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
 
   function renderListItem({ item, index }) {
     /* list item with left icon, title, subtitle, right text and right chevron icon */
     return (
-      <TouchableHighlight key={item.id}
+      <TouchableOpacity key={item.id} activeOpacity={0.7}
         style={[styles.dimBackground, styles.listItemContainer]}
         onPress={item.onPress ? item.onPress : null} >
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
@@ -347,7 +391,7 @@ export const List = (props) => {
           {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: 15 }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
           {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   };
 
@@ -362,16 +406,25 @@ export const List = (props) => {
 }
 
 export const ActivityIndicator = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return <NativeActivityIndicator {...props} size={props.size ?? 'large'}
-    style={[{ alignSelf: 'center', borderRadius: 50, padding: 2, opacity: 0.8 }, styles.highlightBackground, props.style]}
+    style={[{ alignSelf: 'center', borderRadius: 50, padding: 2, opacity: 0.8, backgroundColor: styles.brightColor.color }, props.style]}
   />
 };
 
 export const HorizontalLine = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return <Divider style={[styles.highlightBackground, { marginVertical: 15 }, props.style]} width={props.width ?? 50} height={props.height ?? 2} />
 }
 
 export const StyledPicker = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
   return <Picker
     {...props}
     style={[{ width: 200, height: 20, marginLeft: -9 }, styles.bodyText, props.style]}

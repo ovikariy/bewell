@@ -1,13 +1,9 @@
-import React from 'react';
 import moment from 'moment/min/moment-with-locales';
 import { storeConstants } from './Constants';
-import { translations } from '../modules/translations';
 
-export const LanguageContext = React.createContext(translations.en);
-
-export function configLocale(language) {
-  if (moment.locale() != language)
-    moment.locale(language);  //TODO: set default from defaults
+export function configLocale(locale) {
+  if (locale && moment.locale() != locale)
+    moment.locale(locale);
 }
 
 export const friendlyDate = (date, options) => {
