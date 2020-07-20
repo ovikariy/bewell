@@ -25,9 +25,7 @@ class ItemHistory extends Component {
           result.push(filteredItem);
       });
     });
-    return result.sort(function (x, y) {
-      return new Date(y.date) - new Date(x.date);
-    });
+    return result.sort((a, b) => a.date < b.date);
   }
 
   render() {

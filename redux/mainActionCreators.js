@@ -67,9 +67,7 @@ const loadAsync = async (key) => {
     }
     else {
         const items = await StorageHelpers.getItemsAndDecryptAsync(key);
-        return items.sort(function (x, y) {
-            return new Date(y.date) - new Date(x.date);
-        });
+        return items.sort((a, b) => a.date < b.date);
     }
 }
 

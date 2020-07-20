@@ -1,11 +1,10 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Image, Text, colors } from 'react-native-elements';
+import { Image, Text } from 'react-native-elements';
 import { styles } from '../assets/styles/style';
 import { Widget } from '../components/Widget';
-import { text } from '../modules/Constants';
-import { updateArrayImmutable, updateTimeStringToNow, getNewUuid, dateDiff, LanguageContext } from '../modules/helpers';
+import { updateArrayImmutable, updateTimeStringToNow, getNewUuid, LanguageContext } from '../modules/helpers';
 import { WidgetFactory } from '../modules/WidgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
@@ -54,7 +53,7 @@ class WidgetList extends React.Component {
 
   renderSortedWidgets() {
     /* collect widgets for each itemTypeName into a single array so they could be sorted by date */
-    const sortedData = this.props.dailyData.sort((a, b) => dateDiff(b.date, a.date));
+    const sortedData = this.props.dailyData.sort((a, b) => a.date < b.date);
     const widgets = sortedData.map(record => {
       return this.renderWidget(record, this.props);
     });
