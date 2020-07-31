@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { List } from '../components/MiscComponents';
 import { DefaultSettings } from '../modules/SettingsFactory';
-import { WellKnownStoreKeys, stateConstants } from '../modules/Constants';
+import { stateConstants, storeConstants } from '../modules/Constants';
 import { load, persistRedux, updateRedux } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/AppContext';
@@ -21,12 +21,12 @@ const mapDispatchToProps = dispatch => ({
 class SystemSettingsScreen extends React.Component {
 
   componentDidMount() {
-    this.props.load(WellKnownStoreKeys.SETTINGS);
+    this.props.load(storeConstants.SETTINGS);
   }
 
   onChange(updatedSetting) {
     /* settings are stored unencrypted because need theme, language etc before user logs in */
-    this.props.updateRedux(WellKnownStoreKeys.SETTINGS, [updatedSetting]);
+    this.props.updateRedux(storeConstants.SETTINGS, [updatedSetting]);
     this.persistAfterDelay();
   }
 
@@ -42,7 +42,7 @@ class SystemSettingsScreen extends React.Component {
   }
 
   render() {
-    const settings = this.props[stateConstants.STORE].items ? this.props[stateConstants.STORE].items[WellKnownStoreKeys.SETTINGS] : null;
+    const settings = this.props[stateConstants.STORE].items ? this.props[stateConstants.STORE].items[storeConstants.SETTINGS] : null;
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} >
@@ -63,7 +63,7 @@ class SystemSettings extends React.Component {
   static contextType = AppContext;
 
   onChange(id, newValue) {
-    this.props.onChange({ id, value: newValue });
+    this.props.onChange({ id, date: new Date().toISOString(), value: newValue });
   }
 
   render() {

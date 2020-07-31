@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetList from '../components/WidgetList';
-import { stateConstants } from '../modules/Constants';
+import { stateConstants, storeConstants } from '../modules/Constants';
 import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
@@ -35,8 +35,8 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     this.refreshItems();
 
-    const language = this.context.language;
-    //this.props.navigation.navigate('Settings', { screen: 'Restore' });
+    const language = this.context.language; 
+    //this.props.navigation.navigate('Settings', { screen: 'BackupRestore' });
     //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
   }
 

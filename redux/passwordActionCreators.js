@@ -94,14 +94,14 @@ const setupNewEncryptionAsync = async (newPassword) => {
         throw [Errors.PasswordAlreadySet, ErrorCodes.Security1];
 
     // 1. encrypt any existing data (user may have been using the app but without setting the password) */
-    const existingItems = await StorageHelpers.getItemsAsync(storeConstants.AllStoreKeys);
+    const existingItems = await StorageHelpers.getItemsAsync(storeConstants.AllEncryptedStoreKeys);
     const existingItemsEncrypted = await SecurityHelpers.firstTimeEncryptAllAsync(existingItems, newPassword);
 
     // 2. store everything in Async Storage in one call
     await StorageHelpers.setMultiItemsAsync(existingItemsEncrypted);
 
     // 3. delete non encrypted items from storage
-    await StorageHelpers.finishSetupNewEncryptionAsync(storeConstants.AllStoreKeys);
+    await StorageHelpers.finishSetupNewEncryptionAsync(storeConstants.AllEncryptedStoreKeys);
 }
 
 export const validatePasswordAsync = async (password) => {

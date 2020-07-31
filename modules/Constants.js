@@ -14,11 +14,6 @@ only DataEncryptionStoreKey will have to be re-encrypted in store */
 const keyPrefix = '@Morning:';
 const monthsFromEpochDate = getMonthsFromEpochDate(keyPrefix);
 
-/* WellKnownStoreKeys are for other records to be stored e.g Settings  */
-export const WellKnownStoreKeys = {
-  SETTINGS: keyPrefix + 'SETTINGS'
-}
-
 export const stateConstants = {
   STORE: 'STORE',
   OPERATION: 'OPERATION',
@@ -37,8 +32,9 @@ export const storeConstants = {
   keyPrefix: keyPrefix,
   keyDateFormat: 'MMYYYY',
   monthsFromEpochDate: monthsFromEpochDate,
-  AllStoreKeys: [...monthsFromEpochDate, ...Object.values(WellKnownStoreKeys)],
-  DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY'
+  AllEncryptedStoreKeys: [...monthsFromEpochDate],
+  DataEncryptionStoreKey: keyPrefix + 'DATAENCRYPTIONKEY',
+  SETTINGS: keyPrefix + 'SETTINGS'
 }
 
 export const settingsConstants = {

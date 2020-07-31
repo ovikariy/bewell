@@ -1,4 +1,4 @@
-import { ErrorCodes, Errors, ItemTypes, storeConstants } from './Constants';
+import { ErrorCodes, Errors, storeConstants } from './Constants';
 import * as SecurityHelpers from './SecurityHelpers';
 import * as AsyncStorageService from './AsyncStorageService';
 import { consoleLogWithColor, consoleColors } from './helpers';
@@ -83,6 +83,7 @@ export const mergeByIdAsync = async (itemTypeName, newItems) => {
 export const getAllStorageData = async () => {
     const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys();
     hashedKeys.push(storeConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
+    hashedKeys.push(storeConstants.SETTINGS); /* add SETTINGS separately because it's not hashed */
     return await getItemsAsync(hashedKeys);
 }
 
@@ -144,7 +145,9 @@ export const encryptAsync = async (items) => {
 }
 
 export const isValidStoreKey = (key) => {
-    return (storeConstants.AllStoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0 || storeConstants.AllStoreKeys.indexOf(key) >= 0);
+    if (storeConstants.keyPrefix + key == storeConstants.SETTINGS || key ==storeConstants.SETTINGS)
+        return true;
+    return (storeConstants.AllEncryptedStoreKeys.indexOf(storeConstants.keyPrefix + key) >= 0 || storeConstants.AllEncryptedStoreKeys.indexOf(key) >= 0);
 }
 
 export const getDataEncryptionStoreKey = async () => {

@@ -1,7 +1,7 @@
 import { isEmptyWidgetItem, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
-import { storeConstants, Errors, ErrorCodes, WellKnownStoreKeys } from '../modules/Constants';
+import { storeConstants, Errors, ErrorCodes } from '../modules/Constants';
 import * as ActionTypes from './ActionTypes';
 
 export const load = (key) => (dispatch) => {
@@ -11,7 +11,7 @@ export const load = (key) => (dispatch) => {
         .then((items) => {
             dispatch(replaceRedux([[key, items]]));
             dispatch(GenericActions.operationCleared());
-            if (key === WellKnownStoreKeys.SETTINGS)
+            if (key === storeConstants.SETTINGS)
                 dispatch(settingsChanged(items));
         })
         .catch(error => {
@@ -22,7 +22,7 @@ export const load = (key) => (dispatch) => {
 }
 
 export const loadAppContextFromSettings = () => (dispatch) => {
-    dispatch(load(WellKnownStoreKeys.SETTINGS));
+    dispatch(load(storeConstants.SETTINGS));
 }
 
 const settingsChanged = (settings) => ({
@@ -66,11 +66,11 @@ export const loadAllData = () => (dispatch) => {
 }
 
 const loadAllDataAsync = async () => {
-    return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.AllStoreKeys);
+    return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.AllEncryptedStoreKeys);
 }
 
 const loadAsync = async (key) => {
-    if (key === WellKnownStoreKeys.SETTINGS) { /* settings are stored unencrypted because need theme, language etc before user logs in */
+    if (key === storeConstants.SETTINGS) { /* settings are stored unencrypted because need theme, language etc before user logs in */
         const items = await StorageHelpers.getItemsAsync(key);
         if (!items)
             return null;
@@ -87,7 +87,7 @@ export const updateRedux = (key, newItems) => (dispatch) => {
         type: ActionTypes.UPDATE_ITEM_IN_REDUX_STORE,
         payload: { key: key, items: newItems }
     });
-    if (key === WellKnownStoreKeys.SETTINGS)
+    if (key === storeConstants.SETTINGS)
         dispatch(settingsChanged(newItems));
 }
 
@@ -112,7 +112,7 @@ const persistReduxAsync = async (items, dirtyKeys) => {
             return;
         const nonEmptyItems = items[dirtyKey].filter(item => !isEmptyWidgetItem(item));
         if (nonEmptyItems.length > 0) {
-            if (dirtyKey == WellKnownStoreKeys.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
+            if (dirtyKey == storeConstants.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
                 await StorageHelpers.setItemsAsync(dirtyKey, JSON.stringify(nonEmptyItems));
             else
                 await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);

@@ -87,6 +87,12 @@ export function getThemeStyles(theme) {
       color: colors.foreground + '70',
       fontSize: 18
     },
+    buttonText: {
+      fontFamily: fonts.secondaryCondensed,
+      color: colors.foreground,
+      fontSize: 18,
+      textTransform: 'uppercase'
+    },    
     hugeText: {
       fontFamily: fonts.secondary,
       fontSize: 30,

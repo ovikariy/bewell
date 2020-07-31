@@ -1,10 +1,10 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
-import { ErrorCodes, Errors, storeConstants, } from './Constants';
+import { ErrorCodes, Errors, storeConstants } from './Constants';
 import * as SecureStore from 'expo-secure-store';
 import { isNullOrEmpty } from './helpers';
 
 export const getAllHashedStoreKeys = async () => {
-  return getMultipleHashedKeys(storeConstants.AllStoreKeys);
+  return getMultipleHashedKeys(storeConstants.AllEncryptedStoreKeys);
 }
 
 export const getMultipleHashedKeys = async (keysToHash) => {
@@ -87,9 +87,9 @@ const decryptAllItemsInternal = async (items, getHashAsyncFunction, decryptDataA
 
   /* create a mapping of item type names and their hashes so we know which item is which */
   const itemKeyHashMap = {};
-  for (var i = 0; i < storeConstants.AllStoreKeys.length; i++) {
-    const itemKeyHash = await getHashAsyncFunction(storeConstants.AllStoreKeys[i]);
-    itemKeyHashMap[itemKeyHash] = storeConstants.AllStoreKeys[i];
+  for (var i = 0; i < storeConstants.AllEncryptedStoreKeys.length; i++) {
+    const itemKeyHash = await getHashAsyncFunction(storeConstants.AllEncryptedStoreKeys[i]);
+    itemKeyHashMap[itemKeyHash] = storeConstants.AllEncryptedStoreKeys[i];
   }
 
   const decryptedItems = [];
@@ -101,6 +101,11 @@ const decryptAllItemsInternal = async (items, getHashAsyncFunction, decryptDataA
 
     if (item[0] === storeConstants.DataEncryptionStoreKey)
       continue; /* we don't want to process this */
+
+    if (item[0] === storeConstants.SETTINGS) {
+      decryptedItems.push([item[0], item[1]]); /* SETTINGS are not encrypted */
+      continue; 
+    }
 
     const hash = item[0];
     const value = item[1];

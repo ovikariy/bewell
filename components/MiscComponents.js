@@ -272,7 +272,7 @@ export const ButtonPrimary = (props) => {
     <Button {...props}
       containerStyle={[{ width: 250 }, props.containerStyle]}
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
-      titleStyle={[styles.subTitleText, { opacity: 1 }, props.titleStyle]}
+      titleStyle={[styles.buttonText, props.titleStyle]}
       icon={props.name ? <IconForButton name={props.name} iconStyle={[{ marginRight: 20, color: styles.brightColor.color }, props.iconStyle]} /> : null} />
   )
 };

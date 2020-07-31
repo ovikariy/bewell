@@ -6,7 +6,7 @@ import { loadAuthData } from '../redux/authActionCreators';
 import { loadAppContextFromSettings } from '../redux/mainActionCreators';
 import { configLocale } from '../modules/helpers';
 import { AppContext } from '../modules/AppContext';
-import { stateConstants, WellKnownStoreKeys } from '../modules/Constants';
+import { stateConstants } from '../modules/Constants';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
 
