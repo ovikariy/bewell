@@ -3,7 +3,7 @@ import { settingsConstants } from '../modules/Constants';
 import { translations } from '../modules/translations';
 import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
-import { defaultAppContext } from '../modules/helpers';
+import { defaultAppContext } from '../modules/AppContext';
 
 /*
     errCodes and successCodes are used for looking up translation of messages

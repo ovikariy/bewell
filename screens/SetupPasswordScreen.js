@@ -25,14 +25,12 @@ class SetupPasswordScreen extends Component {
   static contextType = AppContext;
 
   constructor(props) {
-    const language = this.context.language;
-
     super(props);
     this.state = {
       password: null,
       passwordReentered: null,
       showPasswordReentered: false,
-      instructionText: language.passwordMinimum
+      instructionText: ''
     }
   }
 
