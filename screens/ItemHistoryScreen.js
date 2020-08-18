@@ -42,8 +42,8 @@ class ItemHistoryScreen extends Component {
       this.setState({ ...this.state, selectedItem });
   }
 
-  deleteItem(storeKey, itemId) {
-    this.props.remove(storeKey, itemId);
+  deleteItem(storeKey, item) {
+    this.props.remove(storeKey, item.id);
     this.props.persistRedux(this.props[stateConstants.STORE].items, this.props[stateConstants.STORE].dirtyKeys);
     this.setState({ ...this.state, selectedItem: null })
   }
@@ -70,7 +70,7 @@ class ItemHistoryScreen extends Component {
           ></ItemHistory>
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>
-          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
+          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item) }} />
         </FloatingToolbar>
       </ScreenBackground>
     );

@@ -69,7 +69,6 @@ class BackupScreen extends Component {
   }
 
   exportAsync = async (data) => {
-    const language = this.context.language;
 
     /*
       1. After encrypted data has been loaded from the Async Storage 
@@ -79,7 +78,7 @@ class BackupScreen extends Component {
          the sharing process in case it hangs etc)
     */
     try {
-      const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.ExportDirectory);
+      const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ExportDirectory);
       const exportFilename = 'morning-app-export-' + formatDate(new Date(), 'MMMDDYYYY-hhmmss') + '.morning';
       const exportFilepath = exportDirectory + '/' + exportFilename;
 
@@ -90,7 +89,7 @@ class BackupScreen extends Component {
       this.props.finishBackup();
     } catch (error) {
       console.log(error);
-      Toast.showTranslated(error.message ? error.message : error, language);
+      Toast.showTranslated(error.message ? error.message : error, this.context);
     }
   }
 

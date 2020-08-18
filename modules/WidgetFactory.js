@@ -6,6 +6,7 @@ import { SleepComponent } from '../components/SleepComponent';
 import { ItemTypes, text } from './Constants';
 import { formatDate, friendlyTime } from './helpers';
 import { ClearTextArea } from '../components/MiscComponents';
+import { ImagePickerWidget } from '../components/ImagePickerWidget';
 
 export function WidgetFactory(context) {
   const language = context.language;
@@ -114,6 +115,33 @@ export function WidgetFactory(context) {
                 {(item.startDate) ? language.bedTime + formatDate(item.startDate, 'h:mm A') : ''}</Text>
               <Text style={isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
                 {(item.endDate) ? language.wakeTime + formatDate(item.endDate, 'h:mm A') : ''}</Text>
+            </View>
+          </View>
+        );
+      }
+    },
+    [ItemTypes.IMAGE]:
+    {
+      config: {
+        widgetTitle: language.image,
+        historyTitle: language.images,
+        itemTypeName: ItemTypes.IMAGE,
+        isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
+        addIcon: { text: language.image, name: 'picture-o', type: 'font-awesome' },
+        style: {}
+      },
+      renderWidgetItem: (props, config) => {
+        return (
+          <ImagePickerWidget {...props} config={config} readonly={false} />
+        );
+      },
+      renderHistoryItem: (item, isSelectedItem, config) => {
+        return (
+          <View style={styles.row}>
+            <View style={[styles.flex]}>
+              <Text style={[styles.bodyText, { marginBottom: 10 }, isSelectedItem ? styles.highlightColor : null]}>
+                {friendlyTime(item.date)}</Text>
+              <ImagePickerWidget value={item} readonly={true} />
             </View>
           </View>
         );

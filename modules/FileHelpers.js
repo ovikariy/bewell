@@ -1,8 +1,11 @@
 import *  as FileSystem from 'expo-file-system';
 import { Errors } from './Constants';
 
-export const ExportDirectory = FileSystem.cacheDirectory + 'exports';
-export const ImportDirectory = FileSystem.cacheDirectory + 'imports';
+export const FileSystemConstants = {
+  ExportDirectory: FileSystem.cacheDirectory + 'exports',
+  ImportDirectory: FileSystem.cacheDirectory + 'imports',
+  ImagesSubDirectory: FileSystem.documentDirectory + 'images'
+}
 
 export const writeFileAsync = async (filepath, text, options = null) => {
 
@@ -22,6 +25,12 @@ export const deleteFilesAsync = async (directory, filenames) => {
     if (fileInfo.exists === true && fileInfo.isDirectory === false)
       await FileSystem.deleteAsync(fileInfo.uri);
   }
+}
+
+export const deleteFileAsync = async (filepath) => {
+  if (!filepath)
+    return;
+  await FileSystem.deleteAsync(filepath);
 }
 
 export const readDirectoryAsync = async (directory) => {
@@ -47,6 +56,13 @@ export const existsAsync = async (path) => {
   return false;
 }
 
+export const getStringfromFileAsync = async (filePath) => {
+  const fileContent = await FileSystem.readAsStringAsync(filePath);
+  if (!fileContent)
+    return null;
+  return fileContent;
+}
+
 export const getJSONfromFileAsync = async (filePath) => {
   const fileContent = await FileSystem.readAsStringAsync(filePath);
   if (!fileContent)
@@ -61,3 +77,12 @@ export const copyFileAsync = async (from, to) => {
   await FileSystem.copyAsync({ from: from, to: to });
 }
 
+export const deleteImageFromDiskAsync = async (filename) => {
+  const filepath = getFullImagePath(filename);
+  if (await existsAsync(filepath))
+    await deleteFileAsync(filepath);
+}
+
+export function getFullImagePath(imageFileName) {
+  return FileSystemConstants.ImagesSubDirectory + '/' + imageFileName;
+}

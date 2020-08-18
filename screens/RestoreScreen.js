@@ -73,13 +73,11 @@ class RestoreScreen extends Component {
   }
 
   browseForFile() {
-    const language = this.context.language;
-
     this.browseForFileAsync()
       .then(() => { })
       .catch(error => {
         console.log(error);
-        Toast.showTranslated(error.message ? error.message : error, language);
+        Toast.showTranslated(error.message ? error.message : error, this.context);
       });
   }
 
@@ -97,7 +95,7 @@ class RestoreScreen extends Component {
     const language = this.context.language;
 
     try {
-      const importDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.ImportDirectory);
+      const importDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
       const tempFilename = 'morning-app-import-' + formatDate(new Date(), 'YYMMMDD-hhmmss') + '.txt';
       const tempFilepath = importDirectory + '/' + tempFilename;
 
@@ -106,7 +104,7 @@ class RestoreScreen extends Component {
       await FileHelpers.copyFileAsync(importFileUri, tempFilepath);
 
       const data = await FileHelpers.getJSONfromFileAsync(tempFilepath);
-      await FileHelpers.clearDirectoryAsync(FileHelpers.ImportDirectory);
+      await FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
 
       if (!data || data.length <= 0)
         throw Errors.NoRecordsInFile;
@@ -117,7 +115,7 @@ class RestoreScreen extends Component {
     catch (error) {
       console.log(error);
       Toast.showTranslated(error.message ? error.messsage : error, language);
-      FileHelpers.clearDirectoryAsync(FileHelpers.ImportDirectory);
+      FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
     }
   }
 

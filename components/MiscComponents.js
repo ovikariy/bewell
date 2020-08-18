@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker
+  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, Dimensions, Image
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
 import { AppContext } from '../modules/AppContext';
+import { brokenImageURI, Errors } from '../modules/Constants';
 
 export const Spacer = (props) => {
   return <View style={[
@@ -433,4 +434,32 @@ export const StyledPicker = (props) => {
       return <Picker.Item label={item.label} value={item.value} key={item.label} />
     })}
   </Picker>
+}
+
+export const StyledImage = (props) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+  const language = context.language;
+
+  if (!props.imageProps || !props.image || props.image == brokenImageURI) {
+    return <View style={{ width: '100%', borderWidth: 1, alignItems: 'center', borderColor: styles.bodyText.color }}>
+      <ParagraphText style={{ margin: 20 }}>{language[Errors.ImageNotFound]}</ParagraphText>
+    </View>;
+  }
+  const imageProps = props.imageProps;
+  const image = props.image;/* base64 string */
+
+  const windowWidth = Dimensions.get('window').width;
+  const resizeBy = (windowWidth) / imageProps.width;
+
+  const width = resizeBy * imageProps.width;
+  const height = resizeBy * imageProps.height;
+
+  return <Image
+    source={{ uri: 'data:image/png;base64,' + image }}
+    style={{
+      resizeMode: 'contain',
+      height: height,
+      width: width
+    }} />
 }

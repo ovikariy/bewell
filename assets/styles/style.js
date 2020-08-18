@@ -92,7 +92,7 @@ export function getThemeStyles(theme) {
       color: colors.foreground,
       fontSize: 18,
       textTransform: 'uppercase'
-    },    
+    },
     hugeText: {
       fontFamily: fonts.secondary,
       fontSize: 30,
@@ -233,6 +233,14 @@ export function getThemeStyles(theme) {
       marginBottom: 20,
       textAlign: 'center',
       alignSelf: 'center'
+    },
+
+    imageComponentClearButtonContainer: {
+      position: 'absolute',
+      zIndex: 1, 
+      top: -20, 
+      alignSelf: 'flex-end', 
+      backgroundColor: colors.background
     },
 
     /* navigator */

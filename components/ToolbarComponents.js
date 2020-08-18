@@ -95,7 +95,7 @@ export const DeleteButton = (props) => {
 export const DeleteWidgetItemButton = (props) => {
     function onDelete(item) {
         const storeKey = getStorageKeyFromDate(item.date);
-        props.onDelete(storeKey, item.id);
+        props.onDelete(storeKey, item);
     }
     return <DeleteButton item={props.item} onDelete={(item) => { onDelete(item) }} />
 }

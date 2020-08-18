@@ -3,12 +3,13 @@ import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetList from '../components/WidgetList';
-import { stateConstants, storeConstants } from '../modules/Constants';
+import { stateConstants, ItemTypes } from '../modules/Constants';
 import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import { AppContext } from '../modules/AppContext';
+import { deleteImageFromDiskAsync } from '../modules/FileHelpers';
 
 const mapStateToProps = state => {
   return { [stateConstants.STORE]: state[stateConstants.STORE] };
@@ -46,8 +47,10 @@ class HomeScreen extends React.Component {
     this.setState({ ...this.state, selectedItem: null });
   }
 
-  deleteItem(storeKey, itemId) {
-    this.props.remove(storeKey, itemId);
+  deleteItem(storeKey, item) {
+    this.props.remove(storeKey, item.id);
+    if (item.type === ItemTypes.IMAGE)
+      this.afterDeleteCleanupImageFile(item);
     this.persist();
     this.setState({ ...this.state, selectedItem: null });
   }
@@ -73,7 +76,7 @@ class HomeScreen extends React.Component {
           />
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem != null}>
-          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, itemId) => { this.deleteItem(storeKey, itemId) }} />
+          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item) }} />
           <ViewHistoryButton item={this.state.selectedItem} navigation={this.props.navigation} />
         </FloatingToolbar>
       </ScreenBackground>
@@ -88,6 +91,7 @@ class HomeScreen extends React.Component {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
     this.props.updateRedux(selectedMonth, newDailyData);
     this.persistAfterDelay();
+    this.setState({ ...this.state, selectedItem: null });
   }
 
   onSelected(selectedItem) {
@@ -106,9 +110,19 @@ class HomeScreen extends React.Component {
       return;
     this.props.persistRedux(state.items, state.dirtyKeys);
   }
+
+  afterDeleteCleanupImageFile(item) {
+    /* IMAGE widget stores image file in app document directory and needs to be cleaned up after delete */
+   if (!item || !item.imageProps || !item.imageProps.filename)
+     return;
+
+   deleteImageFromDiskAsync(item.imageProps.filename)
+     .then(() => {})
+     .catch((error) => {
+       console.log(error);
+     });
+ }
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
-
-
-
