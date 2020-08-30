@@ -20,6 +20,11 @@
     "@react-navigation/drawer": "^5.0.0",
     "@react-navigation/native": "^5.0.0",
     "@react-navigation/stack": "^5.0.0",
+    "@types/crypto-js": "^3.1.47",
+    "@types/moment": "^2.13.0",
+    "@types/react": "^16.9.46",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-native": "^0.63.8",
     "crypto-js": "^3.3.0",
     "expo": "^36.0.0",
     "expo-asset": "~8.0.0",
@@ -46,10 +51,12 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.10.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@types/react-redux": "^7.1.9",
     "babel-preset-expo": "~8.0.0",
     "jest-expo": "^36.0.0",
     "react-test-renderer": "^16.12.0"
