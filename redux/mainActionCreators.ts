@@ -1,4 +1,4 @@
-import { isEmptyWidgetItem, consoleColors, consoleLogWithColor } from '../modules/helpers';
+import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as GenericActions from './operationActionCreators';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
@@ -11,14 +11,14 @@ export const load = (key: string): AppThunkActionType => (dispatch) => {
     //dispatch(logStorageData());
     loadAsync(key)
         .then((items) => {
-            dispatch(replaceRedux([[key, items]]));
+            dispatch(replaceItemsInRedux([[key, items]]));
             dispatch(GenericActions.operationCleared());
             if (key === storeConstants.SETTINGS)
                 dispatch(settingsChanged(items));
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage12] : error));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage9] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -37,12 +37,12 @@ export const loadAllWidgetData = (): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAllWidgetDataAsync()
         .then((items) => {
-            dispatch(replaceRedux(items));
+            dispatch(replaceItemsInRedux(items));
             dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage13] : error));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage8] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -57,12 +57,12 @@ export const loadAllData = (): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAllDataAsync()
         .then((items) => {
-            dispatch(replaceRedux(items));
+            dispatch(replaceItemsInRedux(items));
             dispatch(GenericActions.operationCleared());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage14] : error));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage11] : error));
             dispatch(GenericActions.operationCleared());
         })
 }
@@ -80,58 +80,68 @@ const loadAsync = async (key: string) => {
     }
     else {
         const items = await StorageHelpers.getItemsAndDecryptAsync(key);
-        return items.sort((a: ItemBase, b: ItemBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0); 
+        return items.sort((a: ItemBase, b: ItemBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     }
 }
 
-export const updateRedux = (key: string, newItems: ItemBase[]): AppThunkActionType => (dispatch) => {
-    dispatch({
-        type: ActionTypes.UPDATE_ITEM_IN_REDUX_STORE,
-        payload: { key: key, items: newItems }
-    });
-    if (key === storeConstants.SETTINGS)
-        dispatch(settingsChanged(newItems as ItemBase[]));
+const persistReduxAsync = async (key: string, items: ItemBase[]) => {
+
+    if (!key) //TODO: better check here
+        return;
+    const nonEmptyItems = items.filter(item => !isEmptyWidgetItem(item));
+    if (nonEmptyItems.length > 0) {
+        if (key == storeConstants.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
+            await StorageHelpers.setItemsAsync(key, JSON.stringify(nonEmptyItems));
+        else
+            await StorageHelpers.setItemsAndEncryptAsync(key, nonEmptyItems);
+    }
 }
 
-export const persistRedux = (items: ItemBaseAssociativeArray, dirtyKeys: { [key: string]: string }): AppThunkActionType => (dispatch) => {
-    persistReduxAsync(items, dirtyKeys)
-        .then(() => {
-            dispatch({ type: ActionTypes.RESET_DIRTY_KEYS_REDUX_STORE });
-        })
+/**
+ * @description Update redux store and persist items to Async Storage 
+ * @param key 
+ * @param allStoreItems
+ * @param updatedItems 
+ */
+export const updateReduxAndPersist = (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, updatedItems: ItemBase[]): AppThunkActionType => (dispatch) => {
+    const mergedItems = mergeArraysImmutable(allStoreItems[key], updatedItems);
+    dispatch(updateReduxAndPersistInternal(key, mergedItems));
+}
+
+/**
+ * 
+ * @param key Store key of the group containing item to be removed e.g. Morning:SETTINGS or Morning:092020
+ * @param allStoreItems All items from redux store i.e. StoreReducerState.items
+ * @param id id of the ItemBase type item to be removed
+ */
+export const removeFromReduxAndPersist = (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, id: string): AppThunkActionType => (dispatch) => {
+    const items = allStoreItems[key];
+    if (!items || !(items.length > 0))
+        return;
+
+    const itemsWithoutRemoved = items.filter(item => item.id !== id);
+    dispatch(updateReduxAndPersistInternal(key, itemsWithoutRemoved));
+}
+
+const updateReduxAndPersistInternal = (key: string, updatedItems: ItemBase[]): AppThunkActionType => (dispatch) => {
+
+    dispatch(replaceItemsInRedux([[key, updatedItems]]));
+
+    if (key === storeConstants.SETTINGS)
+        dispatch(settingsChanged(updatedItems as ItemBase[]));
+
+    persistReduxAsync(key, updatedItems)
+        .then(() => { })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage15] : error));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage2] : error));
             dispatch(GenericActions.operationCleared());
         });
 }
 
-const persistReduxAsync = async (items: ItemBaseAssociativeArray, dirtyKeys: { [key: string]: string }) => {
-    if (!dirtyKeys || !(Object.keys(dirtyKeys).length > 0) || !items)
-        return;
-
-    for (const dirtyKey in dirtyKeys) {
-        if (!items[dirtyKey])
-            return;
-        const nonEmptyItems = items[dirtyKey].filter(item => !isEmptyWidgetItem(item));
-        if (nonEmptyItems.length > 0) {
-            if (dirtyKey == storeConstants.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
-                await StorageHelpers.setItemsAsync(dirtyKey, JSON.stringify(nonEmptyItems));
-            else
-                await StorageHelpers.setItemsAndEncryptAsync(dirtyKey, nonEmptyItems);
-        }
-    };
-}
-
-export const removeFromRedux = (key: string, id: string): AppThunkActionType => (dispatch) => {
-    dispatch({
-        type: ActionTypes.REMOVE_ITEM_FROM_REDUX_STORE,
-        payload: { key, id }
-    });
-}
-
-const replaceRedux = (items: ItemBaseMultiArray) => ({
+const replaceItemsInRedux = (items: ItemBaseMultiArray) => ({
     type: ActionTypes.REPLACE_ITEMS_IN_REDUX_STORE,
-    payload: { items }
+    payload: { items: items }
 })
 
 export const logStorageData = (): AppThunkActionType => (dispatch) => {

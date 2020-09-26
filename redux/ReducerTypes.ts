@@ -36,25 +36,7 @@ export type AuthReducerActions = LOADED_AUTH_DATA;
 
 export interface StoreReducerState {
   items: ItemBaseAssociativeArray;
-  dirtyKeys: { [key: string]: string };
 }
-
-interface UPDATE_ITEM_IN_REDUX_STORE {
-  type: typeof ActionTypes.UPDATE_ITEM_IN_REDUX_STORE;
-  payload: {
-    key: string;
-    items: ItemBase[];
-  }
-}
-
-interface REMOVE_ITEM_FROM_REDUX_STORE {
-  type: typeof ActionTypes.REMOVE_ITEM_FROM_REDUX_STORE;
-  payload: {
-    key: string;
-    id: string;
-  }
-}
-interface RESET_DIRTY_KEYS_REDUX_STORE { type: typeof ActionTypes.RESET_DIRTY_KEYS_REDUX_STORE }
 interface REPLACE_ITEMS_IN_REDUX_STORE {
   type: typeof ActionTypes.REPLACE_ITEMS_IN_REDUX_STORE;
   payload: {
@@ -63,8 +45,7 @@ interface REPLACE_ITEMS_IN_REDUX_STORE {
 }
 interface CLEAR_REDUX_STORE { type: typeof ActionTypes.CLEAR_REDUX_STORE }
 
-export type StoreReducerActions = UPDATE_ITEM_IN_REDUX_STORE | REMOVE_ITEM_FROM_REDUX_STORE
-  | RESET_DIRTY_KEYS_REDUX_STORE | REPLACE_ITEMS_IN_REDUX_STORE | CLEAR_REDUX_STORE;
+export type StoreReducerActions = REPLACE_ITEMS_IN_REDUX_STORE | CLEAR_REDUX_STORE;
 
 
 /* BACKUPRESTORE */

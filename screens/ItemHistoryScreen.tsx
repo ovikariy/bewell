@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { removeFromRedux, persistRedux } from '../redux/mainActionCreators';
+import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
 import { CreateWidgetFactory } from '../modules/WidgetFactory';
-import { stateConstants } from '../modules/Constants';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
@@ -16,8 +15,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  remove: (key: string, id: string) => removeFromRedux(key, id),
-  persistRedux: (items: ItemBaseAssociativeArray, dirtyKeys: { [key: string]: string }) => persistRedux(items, dirtyKeys)
+  removeFromReduxAndPersist: (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, id: string) => removeFromReduxAndPersist(key, allStoreItems, id)
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -58,8 +56,7 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
   }
 
   deleteItem(storeKey: string, item: WidgetBase) {
-    this.props.remove(storeKey, item.id);
-    this.props.persistRedux(this.props.STORE.items, this.props.STORE.dirtyKeys);
+    this.props.removeFromReduxAndPersist(storeKey, this.props.STORE.items, item.id);
     this.setState({ ...this.state, selectedItem: undefined })
   }
 

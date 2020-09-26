@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
 import { connect, ConnectedProps } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetListComponent from '../components/WidgetListComponent';
-import { stateConstants, ItemTypes } from '../modules/Constants';
-import { load, persistRedux, updateRedux, removeFromRedux } from '../redux/mainActionCreators';
+import { ItemTypes } from '../modules/Constants';
+import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
@@ -13,7 +12,6 @@ import { deleteImageFromDiskAsync } from '../modules/FileHelpers';
 import { CreateWidgetFactory, WidgetBase } from '../modules/WidgetFactory';
 import { RootState } from '../redux/configureStore';
 import { ItemBase, ItemBaseAssociativeArray } from '../modules/types';
-import { Text } from 'react-native';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -21,9 +19,8 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   load: (key: string) => load(key),
-  updateRedux: (key: string, items: ItemBase[]) => updateRedux(key, items),
-  remove: (key: string, id: string) => removeFromRedux(key, id),
-  persistRedux: (items: ItemBaseAssociativeArray, dirtyKeys: { [key: string]: string }) => persistRedux(items, dirtyKeys)
+  removeFromReduxAndPersist: (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, id: string) => removeFromReduxAndPersist(key, allStoreItems, id),
+  updateReduxAndPersist: (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, updatedItems: ItemBase[]) => updateReduxAndPersist(key, allStoreItems, updatedItems)
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -65,10 +62,9 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
   }
 
   deleteItem(storeKey: string, item: WidgetBase) {
-    this.props.remove(storeKey, item.id);
+    this.props.removeFromReduxAndPersist(storeKey, this.props.STORE.items, item.id);
     if (item.type === ItemTypes.IMAGE)
       this.afterDeleteCleanupImageFile(item);
-    this.persist();
     this.setState({ ...this.state, selectedItem: undefined });
   }
 
@@ -109,8 +105,7 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
 
   onDataChange(newDailyData: ItemBase[]) {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
-    this.props.updateRedux(selectedMonth, newDailyData);
-    this.persistAfterDelay();
+    this.props.updateReduxAndPersist(selectedMonth, this.props.STORE.items, newDailyData);
     this.setState({ ...this.state, selectedItem: undefined });
   }
 
@@ -118,15 +113,6 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
     selectedItem === this.state.selectedItem ?
       this.setState({ ...this.state, selectedItem: undefined }) :
       this.setState({ ...this.state, selectedItem });
-  }
-
-  persistAfterDelay = debounce(() => this.persist(), 6000, {});
-
-  persist() { 
-    const store = this.props.STORE;
-    if (!store.dirtyKeys || !(Object.keys(store.dirtyKeys).length > 0))
-      return;
-    this.props.persistRedux(store.items, store.dirtyKeys);
   }
 
   afterDeleteCleanupImageFile(item: WidgetBase) {

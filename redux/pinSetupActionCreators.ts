@@ -54,7 +54,7 @@ export const submitPIN = (password: string, pin: string): AppThunkActionType => 
         })
         .catch(error => {
             dispatch({ type: ActionTypes.PIN_SETUP_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security8] : error));
+            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security4] : error));
             dispatch(GenericActions.operationCleared());
         });
 }

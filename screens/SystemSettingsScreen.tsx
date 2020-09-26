@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { debounce } from 'lodash';
 import { connect, ConnectedProps } from 'react-redux';
 import { List } from '../components/MiscComponents';
 import { DefaultSettings } from '../modules/SettingsFactory';
-import { stateConstants, storeConstants } from '../modules/Constants';
-import { load, persistRedux, updateRedux } from '../redux/mainActionCreators';
+import { storeConstants } from '../modules/Constants';
+import { load, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/AppContext';
 import { RootState } from '../redux/configureStore';
@@ -16,8 +15,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   load: (key: string) => load(key),
-  updateRedux: (key: string, items: ItemBase[]) => updateRedux(key, items),
-  persistRedux: (items: ItemBaseAssociativeArray, dirtyKeys: { [key: string]: string }) => persistRedux(items, dirtyKeys)
+  updateReduxAndPersist: (key: string, allStoreItems: ItemBaseAssociativeArray, updatedItems: ItemBase[]) => updateReduxAndPersist(key, allStoreItems, updatedItems)
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -35,19 +33,7 @@ class SystemSettingsScreen extends Component<PropsFromRedux & SystemSettingsScre
 
   onChange(updatedSetting: ItemBase) {
     /* settings are stored unencrypted because need theme, language etc before user logs in */
-    this.props.updateRedux(storeConstants.SETTINGS, [updatedSetting]);
-    this.persistAfterDelay();
-  }
-
-  persistAfterDelay = debounce(() => {
-    this.persist();
-  }, 6000, {});
-
-  persist = () => {
-    const state = this.props.STORE;
-    if (!state.dirtyKeys || !(Object.keys(state.dirtyKeys).length > 0))
-      return;
-    this.props.persistRedux(state.items, state.dirtyKeys);
+    this.props.updateReduxAndPersist(storeConstants.SETTINGS, this.props.STORE.items, [updatedSetting]);
   }
 
   render() {

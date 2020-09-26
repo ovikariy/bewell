@@ -85,14 +85,14 @@ export const firstTimeEncryptAllAsync = async (items: [string, string][], passwo
 
 export const decryptAllItems = async (items: [string, string][]) => {
   if (!DataEncryption.getHashAsync || !DataEncryption.decryptDataAsync)
-    throw [Errors.Unauthorized, ErrorCodes.Decrypt12];
+    throw [Errors.Unauthorized, ErrorCodes.Decrypt10];
 
   return await decryptAllItemsInternal(items, DataEncryption.getHashAsync, DataEncryption.decryptDataAsync);
 }
 
 export const decryptAllItemsFromImport = async (items: [string, string][], getHashAsync: any, decryptDataAsync: any) => {
   if (!getHashAsync || !decryptDataAsync)
-    throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt13];
+    throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt4];
 
   return await decryptAllItemsInternal(items, getHashAsync, decryptDataAsync);
 }
@@ -133,7 +133,7 @@ const decryptAllItemsInternal = async (items: [string, string][], getHashAsyncFu
 
     const valueDecrypted = await decryptDataAsyncFunction(value);
     if (value && !valueDecrypted) {
-      throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt11];
+      throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt9];
     }
 
     decryptedItems.push([key, valueDecrypted]);
@@ -208,7 +208,7 @@ export const reEncryptAsync = async (value: string, oldPassword: string, newPass
   // 2. encrypt with the new password
   const encrypted = await encryptAsync(decrypted, newPassword);
   if (isNullOrEmpty(encrypted))
-    throw [Errors.General, ErrorCodes.Encrypt5];
+    throw [Errors.General, ErrorCodes.Encrypt1];
 
   return encrypted;
 }
@@ -329,14 +329,14 @@ const getHashAsync = async (value: string, key: string) => {
 
 const encryptAsync = async (value: string, key: string) => {
   if (!key)
-    throw [Errors.General, ErrorCodes.Encrypt6];
+    throw [Errors.General, ErrorCodes.Encrypt2];
   if (!value || value === '')
     return value;
   try {
     return AES.encrypt(value, key).toString();
   } catch (error) {
     console.log(error);
-    throw [Errors.General, ErrorCodes.Encrypt7];
+    throw [Errors.General, ErrorCodes.Encrypt3];
   }
 }
 

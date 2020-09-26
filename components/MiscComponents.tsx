@@ -4,7 +4,7 @@ import {
   TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, Dimensions, Image,
   StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps
 } from 'react-native';
-import DateTimePicker, { IOSNativeProps, AndroidNativeProps } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
 import { AppContext, AppContextInterface } from '../modules/AppContext';
