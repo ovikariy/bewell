@@ -51,16 +51,21 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
 
   renderAddNewButtons(widgetFactory: WidgetFactory) {
     const language = this.context.language;
+    let hasNonQuickAccessItems = false; /* isQuickAccess will make this widget's add button always visible on home screen, the rest of items will be shown if button 'more' is pressed  */
     const widgetButtons = Object.values(widgetFactory).map((item) => {
+      if (!item.config.isQuickAccess)
+        hasNonQuickAccessItems = true;
       if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
         return;
       return <ToolbarButton iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
         onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />
     });
-    widgetButtons.push(<ToolbarButton iconType='material'
-      iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
-      title={this.state.showAllAddButtons ? language.less : language.more}
-      onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />)
+    if (hasNonQuickAccessItems) {
+      widgetButtons.push(<ToolbarButton iconType='material'
+        iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
+        title={this.state.showAllAddButtons ? language.less : language.more}
+        onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />)
+    }
     return widgetButtons;
   }
 
