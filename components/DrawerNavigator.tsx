@@ -157,7 +157,6 @@ function SettingsNavigator() {
                 component={PasswordScreen}
                 options={{ title: language.password }}
             />
-            {/*TODO: SetupPINScreen should not be visible if not password has been created yet */}
             <SettingsStack.Screen
                 name='SetupPINScreen'
                 component={SetupPINScreen}
@@ -310,7 +309,7 @@ export function MainDrawerNavigator(props: MainDrawerNavigatorProps) {
     let initialRouteName = "SignIn";
 
     if (props.auth.isInitialized !== true) {
-        drawerContent = getFirstTimeUserScreens(); /* first time user (TODO: or maybe new phone? Think about restore flow maybe) */
+        drawerContent = getFirstTimeUserScreens();
     }
     else if (props.auth.isSignedIn === true) {
         drawerContent = getAuthenticatedUserScreens();

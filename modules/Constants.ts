@@ -39,7 +39,7 @@ export class storeConstants {
 function getMonthsFromEpochDate(keyPrefix: string) {
   /* data in store is partitioned by month so the keys can be potentially from 
   when the app was first used to current year and month  ['012019', '022019', ... ] */
-  const epochYear = 2019; //TODO: override this from settings when the app was first used?
+  const epochYear = 2019;
   const currentYear = new Date().getUTCFullYear();
   const currentMonth = new Date().getUTCMonth() + 1; /* getUTCMonth is zero based */
   const result = [];
@@ -60,35 +60,35 @@ export const settingsConstants = {
   version: 'version'
 }
 
-export const Errors = {
-  General: 'General',
-  InvalidData: 'InvalidData',
-  EmptyData: 'EmptyData',
-  InvalidFormat: 'InvalidFormat',
-  InvalidFile: 'InvalidFile',
-  InvalidFileData: 'InvalidFileData',
-  NoRecordsInFile: 'NoRecordsInFile',
-  InvalidParameter: 'InvalidParameter',
-  InvalidKey: 'InvalidKey',
-  NewPasswordCannotBeBlank: 'NewPasswordCannotBeBlank',
-  InvalidPassword: 'InvalidPassword',
-  InvalidPIN: 'InvalidPIN',
-  InvalidCredentials: 'InvalidCredentials',
-  MissingPassword: 'MissingPassword',
-  InvalidFilePassword: 'InvalidFilePassword',
-  UnableToSave: 'UnableToSave',
-  UnableToDecrypt: 'UnableToDecrypt',
-  UnableToEncrypt: 'UnableToEncrypt',
-  ImportError: 'ImportError',
-  ExportError: 'ExportError',
-  AccessStorage: 'AccessStorage',
-  PasswordAlreadySet: 'PasswordAlreadySet',
-  CannotSetPIN: 'CannotSetPIN',
-  Unauthorized: 'Unauthorized',
-  PasswordSet: 'PasswordSet',
-  PinSet: 'PinSet',
-  CannotDeleteFile: 'CannotDeleteFile',
-  ImageNotFound: 'ImageNotFound'
+export enum Errors {
+  General = 'General',
+  InvalidData = 'InvalidData',
+  EmptyData = 'EmptyData',
+  InvalidFormat = 'InvalidFormat',
+  InvalidFile = 'InvalidFile',
+  InvalidFileData = 'InvalidFileData',
+  NoRecordsInFile = 'NoRecordsInFile',
+  InvalidParameter = 'InvalidParameter',
+  InvalidKey = 'InvalidKey',
+  NewPasswordCannotBeBlank = 'NewPasswordCannotBeBlank',
+  InvalidPassword = 'InvalidPassword',
+  InvalidPIN = 'InvalidPIN',
+  InvalidCredentials = 'InvalidCredentials',
+  MissingPassword = 'MissingPassword',
+  InvalidFilePassword = 'InvalidFilePassword',
+  UnableToSave = 'UnableToSave',
+  UnableToDecrypt = 'UnableToDecrypt',
+  UnableToEncrypt = 'UnableToEncrypt',
+  ImportError = 'ImportError',
+  ExportError = 'ExportError',
+  AccessStorage = 'AccessStorage',
+  PasswordAlreadySet = 'PasswordAlreadySet',
+  CannotSetPIN = 'CannotSetPIN',
+  Unauthorized = 'Unauthorized',
+  PasswordSet = 'PasswordSet',
+  PinSet = 'PinSet',
+  CannotDeleteFile = 'CannotDeleteFile',
+  ImageNotFound = 'ImageNotFound'
 }
 
 export const ErrorCodes = {

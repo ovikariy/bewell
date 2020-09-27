@@ -75,7 +75,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
             {formatDate(daysData[0].date, 'MMMM D')}</Text>
         </View>
         <View style={{ flex: 1 }}>
-          <List extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed; TODO: look for a way to only re-render list item */
+          <List extraData={this.state} /* extraData={this.state} is needed for rerendering the list when item is pressed */
             data={daysData}
             horizontal={this.props.config.isHorizontalHistoryRow ? true : false}
             renderItem={(item: any) => this.renderItem(item.item)}

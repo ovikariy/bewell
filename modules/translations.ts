@@ -5,11 +5,162 @@ e.g. helpers.ts but wanted to keep them next to the translations for consistency
 import 'moment/locale/ru';
 import 'moment/locale/fr';
 
-interface Translation {
-    [key: string] : string  //TODO: list all possible phrases here maybe
+export interface TranslationList {
+    en: TranslationKeys;
+    ru: TranslationKeys;
+    //TODO: add fr
 }
-interface TranslationList {
-    [key: string] : Translation
+
+export interface TranslationKeys {
+    appName: string;
+    note: string;
+    mood: string;
+    sleep: string;
+    image: string;
+    images: string;
+    notes: string;
+    moods: string;
+    sleeps: string;
+    happy: string;
+    soso: string;
+    couldBeBetter: string;
+    restful: string;
+    interrupted: string;
+    poor: string;
+    ok: string;
+    cancel: string;
+    done: string;
+    save: string;
+    dateAndTime: string;
+    pickTime: string;
+    loading: string;
+    today: string;
+    yesterday: string;
+    at: string;
+    more: string;
+    less: string;
+    areYouSureDeleteThisItem: string;
+    deleteThisItem: string;
+    selectItemFirst: string;
+    itemDeleted: string;
+    updatedSuccessfully: string;
+    emptyList: string;
+    password: string;
+    passwordEnter: string;
+    passwordEnterFile: string;
+    passwordPleaseEnter: string;
+    passwordPleaseReEnter: string;
+    passwordChange: string;
+    passwordChoose: string;
+    passwordMinimum: string;
+    passwordConfirm: string;
+    passwordFile: string;
+    passwordChanged: string;
+    passwordConfirmPlaceholder: string;
+    passwordEnterNewPlaceholder: string;
+    passwordReEnterPlaceholder: string;
+    passwordsMatch: string;
+    passwordFieldsRequired: string;
+    passwordInvalid: string;
+    pinConfirm: string;
+    pinEnter: string;
+    pinReEnterPlaceholder: string;
+    pinLock: string;
+    pinLockYourApp: string;
+    pinInstructions: string;
+    pinReEnter: string;
+    pinUseDigits: string;
+    pinMatch: string;
+    pinHasSet: string;
+    pinTip: string;
+    pinInvalid: string;
+    secureData: string;
+    secureDataWith: string;
+    welcome: string;
+    welcomeFriend: string;
+    welcomeFriend2: string;
+    welcomeBack: string;
+    howAreYou: string;
+    tapAddButtons: string;
+    track: string;
+    quickSetup: string;
+    skip: string;
+    doneGoHome: string;
+    signIn: string;
+    signOut: string;
+    signOutClick: string;
+    signOutWillClear: string;
+    goBackNo: string;
+    import: string;
+    importExplanation: string;
+    importExplanationLong: string;
+    importBrowseExplanation: string;
+    importComplete: string;
+    importPress: string;
+    importSelectedFile: string;
+    importBrowse: string;
+    importClear: string;
+    fileEmpty: string;
+    fileNoValidRecords: string;
+    fileInvalidData: string;
+    fileInvalidFormat: string;
+    fileInvalidItemName: string;
+    fileInvalidCopy: string;
+    importExport: string;
+    export: string;
+    exportExplanation: string;
+    exportSubExplanation: string;
+    exportComplete: string;
+    exportNoData: string;
+    history: string;
+    bedTime: string;
+    wakeTime: string;
+    whatsOnYourMind: string;
+    yourWellbeing: string;
+    home: string;
+    settings: string;
+    system: string;
+    systemSubtitle: string;
+    language: string;
+    english: string;
+    russian: string;
+    theme: string;
+    dark: string;
+    light: string;
+    version: string;
+    pickImage: string;
+    change: string;
+    clear: string;
+    cameroRollPermissions: string;
+
+    [Errors.General]: string;
+    [Errors.InvalidData]: string;
+    [Errors.EmptyData]: string;
+    [Errors.InvalidFormat]: string;
+    [Errors.InvalidFile]: string;
+    [Errors.InvalidFileData]: string;
+    [Errors.NoRecordsInFile]: string;
+    [Errors.InvalidParameter]: string;
+    [Errors.InvalidKey]: string;
+    [Errors.NewPasswordCannotBeBlank]: string;
+    [Errors.InvalidPassword]: string;
+    [Errors.InvalidPIN]: string;
+    [Errors.InvalidCredentials]: string;
+    [Errors.MissingPassword]: string;
+    [Errors.InvalidFilePassword]: string;
+    [Errors.UnableToSave]: string;
+    [Errors.UnableToEncrypt]: string;
+    [Errors.UnableToDecrypt]: string;
+    [Errors.ImportError]: string;
+    [Errors.ExportError]: string;
+    [Errors.AccessStorage]: string;
+    [Errors.PasswordAlreadySet]: string;
+    [Errors.CannotSetPIN]: string;
+    [Errors.Unauthorized]: string;
+    [Errors.PasswordSet]: string;
+    [Errors.PinSet]: string;
+    [Errors.CannotDeleteFile]: string;
+    [Errors.ImageNotFound]: string;
 }
 
 export const translations: TranslationList = {
@@ -209,7 +360,6 @@ export const translations: TranslationList = {
         passwordConfirm: 'Пожалуйста, подтвердите ваш пароль',
         passwordFile: 'Упс...ошибка при импорте файла. Может быть, он был создан с другим паролем? Если это так, пожалуйста, введите его ниже или попробуйте другой файл.',
         passwordChanged: 'Ваш пароль был изменен',
-        passwordSaved: 'Пароль успешно введен',
         passwordConfirmPlaceholder: 'Подтвердите теперешний пароль',
         passwordEnterNewPlaceholder: 'Введите новый пароль',
         passwordReEnterPlaceholder: 'Повторите новый пароль',
@@ -219,7 +369,6 @@ export const translations: TranslationList = {
         pinConfirm: 'Пожалуйста, подтвердите свой PIN-код',
         pinEnter: 'Введите PIN-код',
         pinReEnterPlaceholder: 'Повторите PIN-код',
-        pinSet: 'PIN-код установлен успешно',
         pinLock: 'PIN-код',
         pinLockYourApp: 'Защитите ваше проложение с помощью PIN-кода',
         pinInstructions: 'Введите как минимум 4-значный PIN-код ниже',
@@ -285,7 +434,7 @@ export const translations: TranslationList = {
         version: 'Версия Приложения',
         pickImage: 'Выберите Изображение',
         change: 'Поменять',
-        clear: 'Убрать',        
+        clear: 'Убрать',
         cameroRollPermissions: 'Извините, нам нужен доступ к фотогалерее для добавления фотографий',
 
         [Errors.General]: 'Произошла ошибка',

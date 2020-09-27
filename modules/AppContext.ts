@@ -1,12 +1,12 @@
 import React from 'react';
-import { translations } from './translations';
-import { themes } from './themes';
+import { translations, TranslationKeys } from './translations';
+import { ThemePropertyType, themes } from './themes';
 import { getThemeStyles } from '../assets/styles/style';
 
 export interface AppContextInterface {
-  language: any, /* TODO: change from any */ 
-  theme: any, /* TODO: change from any */ 
-  styles: any,/* TODO: change from any */ 
+  language: TranslationKeys,
+  theme: ThemePropertyType,
+  styles: any,
   locale: string 
 }
 

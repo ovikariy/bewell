@@ -34,7 +34,6 @@ export class SleepComponent extends Component<SleepComponentProps> {
       this.props.onChange({ ...this.props.value, startDate: undefined });
       return;
     }
-    //TODO: validate
     /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
     const selectedDate = new Date(this.props.selectedDate);
@@ -55,7 +54,6 @@ export class SleepComponent extends Component<SleepComponentProps> {
       return;
     }
     //TODO: BUG: this logic doesn't work when editing time in the past days. see June 30th entry where both start and end are on the same day but end is earlier than start
-    //TODO: validate
     /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
     const selectedDate = new Date(this.props.selectedDate);

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { storeConstants } from './Constants';
+import { TranslationKeys } from './translations';
 
 export function configLocale(locale: string) {
   /* make sure all needed locales are imported in translations file i.e. import 'moment/locale/ru'; */
@@ -8,14 +9,14 @@ export function configLocale(locale: string) {
   }
 }
 
-export const friendlyDate = (date: any, options: any) => {  //TODO: change from type any
+export const friendlyDate = (date: string | Date, options: { language: TranslationKeys }) => { 
   //TODO: test with timezones
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
 
   const today = moment();
-  const yesterday = addSubtractDays(today, -1);
+  const yesterday = moment(addSubtractDays(today, -1));
 
   if (newDateShortString === today.format(format))
     return options.language.today;
@@ -24,14 +25,14 @@ export const friendlyDate = (date: any, options: any) => {  //TODO: change from 
   return newDate.format('dddd, MMM D');
 }
 
-export const friendlyDay = (date: any, options: any) => { //TODO: change from type any
+export const friendlyDay = (date: string | Date, options: { language: TranslationKeys }) => {
   //TODO: test with timezones
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
 
   const today = moment();
-  const yesterday = addSubtractDays(today, -1);
+  const yesterday = moment(addSubtractDays(today, -1));
 
   if (newDateShortString === today.format(format))
     return options.language.today;
@@ -40,15 +41,15 @@ export const friendlyDay = (date: any, options: any) => { //TODO: change from ty
   return newDate.format('dddd');
 }
 
-export const friendlyTime = (date: any) => { //TODO: change from type any
+export const friendlyTime = (date: string | Date) => {
   return moment(date).format('LT');
 }
 
-export function getStorageKeyFromDate(date: any) {   //TODO: change from type any
+export function getStorageKeyFromDate(date: string | Date) {   
   return storeConstants.keyPrefix + formatDate(date, storeConstants.keyDateFormat);
 }
 
-export function formatDate(date: any, format: any) {   //TODO: change from type any
+export function formatDate(date: string | Date, format: string) { 
   return moment(date).format(format);
 }
 
@@ -94,13 +95,13 @@ export function isEmptyWidgetItem(item: any) {
   return (Object.keys(item).filter(key => emptyItemFields.indexOf(key) < 0).length === 0)
 }
 
-export function addSubtractDays(date: any, numDays: number) {
+export function addSubtractDays(date: string | Date | moment.Moment, numDays: number) {
   if (numDays < 0 || numDays > 0)
     return moment(date).add(numDays, 'days');
   return date;
 }
 
-export function dateDiff(dateA: any, dateB: any) {
+export function dateDiff(dateA: string | Date, dateB: string | Date) {
   return moment(dateB).diff(moment(dateA));
 }
 
