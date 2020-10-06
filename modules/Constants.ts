@@ -24,6 +24,7 @@ export class storeConstants {
   static password = 'password';
   static isInitialized = 'isInitialized';
   static loginAttempts = 'loginAttempts';
+  static maxLoginAttempts = 6;
   /* In storage we use '@Morning:key' pattern for keys in key/value pairs */
   /* DataEncryptionStoreKey is special as it will not be hashed
   and the value will be encrypted with the user's password. When the user changes password 
@@ -88,7 +89,8 @@ export enum Errors {
   PasswordSet = 'PasswordSet',
   PinSet = 'PinSet',
   CannotDeleteFile = 'CannotDeleteFile',
-  ImageNotFound = 'ImageNotFound'
+  ImageNotFound = 'ImageNotFound',
+  MaxLoginAttempts = 'MaxLoginAttempts'
 }
 
 export const ErrorCodes = {
@@ -142,6 +144,7 @@ export const ErrorCodes = {
   Auth9: 'A1009',
   Auth10: 'A10010',
   Auth11: 'A10011',
+  Auth12: 'A10012',
   Security1: 'SE1001',
   Security2: 'SE1002',
   Security3: 'SE1003',

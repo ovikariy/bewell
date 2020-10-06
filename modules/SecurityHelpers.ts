@@ -1,7 +1,7 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
 import { ErrorCodes, Errors, storeConstants } from './Constants';
 import * as SecureStore from 'expo-secure-store';
-import { isNullOrEmpty } from './helpers';
+import { consoleColors, consoleLogWithColor, isNullOrEmpty } from './helpers';
 import { isNumber, toNumber } from 'lodash';
 
 
@@ -250,11 +250,13 @@ export const resetEncryptDecryptDataFunctions = async () => {
 }
 
 export const createEncryptDecryptDataFunctions = async (dataEncryptionKeyEncrypted: string, password: string) => {
-  //TODO: check login attempts and show error if exceeded
 
   const functions = await createCryptoFunctions(dataEncryptionKeyEncrypted, password);
 
-  DataEncryption.canEncryptDecrypt = true;
+  /** if we're here then we passed authentication, clear login attempts flag  */
+  resetInvalidPINAttempts().catch(() => { throw [Errors.General, ErrorCodes.Auth12] });
+
+  DataEncryption.canEncryptDecrypt = functions.canEncryptDecrypt;
   DataEncryption.decryptDataAsync = functions.decryptDataAsync;
   DataEncryption.encryptDataAsync = functions.encryptDataAsync;
   DataEncryption.getHashAsync = functions.getHashAsync;
@@ -271,7 +273,7 @@ export async function createCryptoFunctions(dataEncryptionKeyEncrypted: string, 
   if (!dataEncryptionKeyDecrypted)
     throw [Errors.InvalidPassword, ErrorCodes.Auth2];
 
-  let functions = {} as DataEncryptionInterface;
+  let functions = { canEncryptDecrypt: true } as DataEncryptionInterface;
   functions.decryptDataAsync = async (data: string) => {
     return await decryptAsync(data, dataEncryptionKeyDecrypted);
   };
@@ -297,7 +299,7 @@ export async function validatePIN(pin: string): Promise<void> {
 }
 
 /* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and 
-use it to sign in if the PIN is correct */
+use it to sign in if the PIN is correct; after storeConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
 export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncrypted: string, pin: string) => {
   //TODO: check login attempts and show error if exceeded
   if (!dataEncryptionKeyEncrypted || !pin)
@@ -306,9 +308,36 @@ export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncr
   if (isNullOrEmpty(encryptedPassword))
     throw [Errors.General, ErrorCodes.Auth5];
   const decryptedPassword = await decryptAsync(encryptedPassword + '', pin);
-  if (isNullOrEmpty(decryptedPassword))
+  if (isNullOrEmpty(decryptedPassword)) {
+    await incrementInvalidPINAttempts();
     throw [Errors.InvalidPIN, ErrorCodes.Auth6];
+  }
   await createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted, decryptedPassword);
+}
+
+const incrementInvalidPINAttempts = async() => {
+  /** run this function at other places where PIN re-entry is required */
+  const loginAttempts = await getFromSecureStoreAsync(storeConstants.loginAttempts);
+  const loginAttemptsNumber = parseInt(loginAttempts + '') ?? 0;
+  if (loginAttemptsNumber >= storeConstants.maxLoginAttempts) {
+    //disable ability to login with PIN so user has to enter the password
+    await setToSecureStoreAsync(storeConstants.password, '');
+    throw Errors.MaxLoginAttempts;
+  }
+  if (loginAttemptsNumber >= 0 && loginAttemptsNumber <= storeConstants.maxLoginAttempts) {
+    await setToSecureStoreAsync(storeConstants.loginAttempts, (loginAttemptsNumber + 1).toString());
+    return;
+  }
+  await setToSecureStoreAsync(storeConstants.loginAttempts, (1).toString());
+}
+
+async function resetInvalidPINAttempts() {
+  getFromSecureStoreAsync(storeConstants.loginAttempts)
+    .then((loginAttempts) => {
+      const loginAttemptsNumber = parseInt(loginAttempts + '') ?? 0;
+      if (loginAttemptsNumber != 0)
+        setToSecureStoreAsync(storeConstants.loginAttempts, (0).toString());
+    });
 }
 
 export function isSignedIn(): boolean {

@@ -39,6 +39,7 @@ export const signInPassword = (password: string): AppThunkActionType => (dispatc
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
             dispatch(GenericActions.operationCleared());
+            dispatch(signOut());
         })
 }
 
@@ -52,6 +53,7 @@ export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
             dispatch(GenericActions.operationCleared());
+            dispatch(signOut());
         })
 }
 

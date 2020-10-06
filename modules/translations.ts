@@ -161,6 +161,7 @@ export interface TranslationKeys {
     [Errors.PinSet]: string;
     [Errors.CannotDeleteFile]: string;
     [Errors.ImageNotFound]: string;
+    [Errors.MaxLoginAttempts]: string;
 }
 
 export const translations: TranslationList = {
@@ -313,7 +314,8 @@ export const translations: TranslationList = {
         [Errors.PasswordSet]: 'Password applied successfully',
         [Errors.PinSet]: 'PIN set successfully',
         [Errors.CannotDeleteFile]: 'Unable to delete file',
-        [Errors.ImageNotFound]: 'Ooops, image file not found'
+        [Errors.ImageNotFound]: 'Ooops, image file not found',
+        [Errors.MaxLoginAttempts]: 'Lets try entering a password instead'
     },
     ru: {
         appName: 'Трекер Благосостояния',
@@ -464,6 +466,7 @@ export const translations: TranslationList = {
         [Errors.PasswordSet]: 'Пароль успешно установлен',
         [Errors.PinSet]: 'PIN-код успешно установлен',
         [Errors.CannotDeleteFile]: 'Невозможно удалить файл',
-        [Errors.ImageNotFound]: 'Файл изображения не найден'
+        [Errors.ImageNotFound]: 'Файл изображения не найден',
+        [Errors.MaxLoginAttempts]: 'Попробуйте ввести пароль'
     }
 };
