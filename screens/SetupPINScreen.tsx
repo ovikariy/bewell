@@ -194,14 +194,12 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.pinLockYourApp}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

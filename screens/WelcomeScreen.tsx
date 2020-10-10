@@ -49,7 +49,7 @@ class WelcomeScreen extends Component<PropsFromRedux & WelcomeScreenProps> {
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenImageHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }}   >
@@ -64,8 +64,6 @@ class WelcomeScreen extends Component<PropsFromRedux & WelcomeScreenProps> {
               onPress={() => { this.quickSetup() }}
               iconName='chevron-right' iconRight={true} iconStyle={styles.iconPrimary}
             />
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <React.Fragment />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

@@ -1,4 +1,4 @@
-import { StyleSheet, Platform, Dimensions, ViewStyle } from 'react-native';
+import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 import { themes, ThemePropertyType } from '../../modules/themes';
 
 const fonts = {
@@ -13,7 +13,8 @@ const fonts = {
 const size = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
-  isSmallDevice: Dimensions.get('window').width < 375
+  isSmallDevice: Dimensions.get('window').width < 375,
+  safeAreaAndroidPadding: Platform.OS === "android" ? StatusBar.currentHeight : 0
 }
 
 export function getThemeStyles(theme: ThemePropertyType) {
@@ -167,18 +168,25 @@ export function getThemeStyles(theme: ThemePropertyType) {
 
     screenContainer: {
       flex: 1,
-      backgroundColor: colors.background
+      backgroundColor: colors.background,
+      paddingTop: size.safeAreaAndroidPadding
+    },
+    loadingScreeenOverlay: {
+      position: 'absolute', 
+      zIndex: 1,
+      width: '100%', 
+      height: '100%',
+      marginTop: size.safeAreaAndroidPadding
     },
     screenBodyContainer: {
       /* don't add padding here because will cut off lists on the bottom (e.g. Settings screen) */
       /* add margins equal to the navigator height (e.g. drawer or tab) or bottom toolbar */
-      marginTop: 50,
+      marginTop: 40,
       flex: 1
     },
     selectedDateContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginBottom: 10
     },
     rowContainer: {
       alignItems: 'center',

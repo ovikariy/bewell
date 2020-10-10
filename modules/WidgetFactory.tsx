@@ -80,6 +80,7 @@ export function CreateWidgetFactory(context: AppContextInterface) {
       {
         config: {
           widgetTitle: language.image,
+          hideTitleInHeader: true,
           historyTitle: language.images,
           itemTypeName: ItemTypes.IMAGE,
           isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
@@ -125,6 +126,7 @@ export interface WidgetConfig {
   itemTypeName: string;
   addIcon: WidgetAddIconConfig;
   style?: StyleProp<ViewStyle>;
+  hideTitleInHeader?: boolean;
   isQuickAccess?: boolean; /* means will show in the toolbar without having to press 'more' button */
   isHorizontalHistoryRow?: boolean, /* on the history screen, show all items for the day in one row */
   icons?: CustomIconType[]

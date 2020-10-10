@@ -67,7 +67,7 @@ interface RESTORE_FILE_PASSWORD_VERIFIED { type: typeof ActionTypes.RESTORE_FILE
 interface RESTORE_FILE_PASSWORD_FAILED { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_FAILED }
 interface RESTORE_COMPLETE { type: typeof ActionTypes.RESTORE_COMPLETE }
 interface BACKUP_STARTED { type: typeof ActionTypes.BACKUP_STARTED }
-interface BACKUP_DATA_READY { type: typeof ActionTypes.BACKUP_DATA_READY; payload: { backupData: any /*  //TODO:  */ } }
+interface BACKUP_DATA_READY { type: typeof ActionTypes.BACKUP_DATA_READY; payload: { backupData: [string, string][] } }
 interface BACKUP_DATA_FAILED { type: typeof ActionTypes.BACKUP_DATA_FAILED }
 interface BACKUP_COMPLETE { type: typeof ActionTypes.BACKUP_COMPLETE }
 

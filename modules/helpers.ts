@@ -10,7 +10,6 @@ export function configLocale(locale: string) {
 }
 
 export const friendlyDate = (date: string | Date, options: { language: TranslationKeys }) => { 
-  //TODO: test with timezones
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
@@ -26,7 +25,6 @@ export const friendlyDate = (date: string | Date, options: { language: Translati
 }
 
 export const friendlyDay = (date: string | Date, options: { language: TranslationKeys }) => {
-  //TODO: test with timezones
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);

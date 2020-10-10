@@ -144,6 +144,11 @@ export const encryptAsync = async (value: string) => {
     return await SecurityHelpers.encryptDataAsync(value);
 }
 
+/**
+ * @description Store key starts with "`@Morning:`" prefix followed by either a month/year in MMYYYY format or a wellknown key such as SETTINGS
+ * e.g. "`@Morning:012019`" or "`@Morning:SETTINGS`"
+ * @param key 
+ */
 export const isValidStoreKey = (key: string) => {
     if (storeConstants.keyPrefix + key == storeConstants.SETTINGS || key == storeConstants.SETTINGS)
         return true;

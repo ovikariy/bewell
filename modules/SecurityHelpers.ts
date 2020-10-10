@@ -301,7 +301,6 @@ export async function validatePIN(pin: string): Promise<void> {
 /* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and 
 use it to sign in if the PIN is correct; after storeConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
 export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncrypted: string, pin: string) => {
-  //TODO: check login attempts and show error if exceeded
   if (!dataEncryptionKeyEncrypted || !pin)
     throw [Errors.InvalidParameter, ErrorCodes.Auth4];
   const encryptedPassword = await getFromSecureStoreAsync(storeConstants.password);

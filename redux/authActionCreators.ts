@@ -21,8 +21,6 @@ export const loadAuthData = (): AppThunkActionType => (dispatch) => {
 }
 
 const loadAuthDataAsync = async () => {
-    //await signInPasswordAsync('testpassword'); //TODO: remove after testing
-    //await signInPINAsync('1234'); //TODO: remove after testing 
     const authData = await SecurityHelpers.getLoginInfo();
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     authData.isEncrypted = isNullOrEmpty(dataEncryptionStoreKey) ? false : true;

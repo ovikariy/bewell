@@ -6,9 +6,12 @@ import { storeConstants, Errors, ErrorCodes } from '../modules/Constants';
 import * as ActionTypes from './ActionTypes';
 import { AppThunkActionType } from './configureStore';
 
+/**
+ * @description Load item's data from storage
+ * @param key e.g. "`@Morning:SETTINGS`" or "`@Morning:012019`"
+ */
 export const load = (key: string): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
-    //dispatch(logStorageData());
     loadAsync(key)
         .then((items) => {
             dispatch(replaceItemsInRedux([[key, items]]));
@@ -51,8 +54,10 @@ const loadAllWidgetDataAsync = async (): Promise<ItemBaseMultiArray> => {
     return await StorageHelpers.getMultiItemsAndDecryptAsync(storeConstants.monthsFromEpochDate);
 }
 
-/* load all storage data e.g. all widget data plus settings and anything else;
-useful during the import/restore process  */
+/**
+ * @description Load all storage data e.g. all widget data plus settings and anything else;
+ * useful during the import/restore process
+ */
 export const loadAllData = (): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
     loadAllDataAsync()
@@ -86,7 +91,7 @@ const loadAsync = async (key: string) => {
 
 const persistReduxAsync = async (key: string, items: ItemBase[]) => {
 
-    if (!key) //TODO: better check here
+    if (!key && StorageHelpers.isValidStoreKey(key) === true)
         return;
     const nonEmptyItems = items.filter(item => !isEmptyWidgetItem(item));
     if (nonEmptyItems.length > 0) {
@@ -109,7 +114,6 @@ export const updateReduxAndPersist = (key: string, allStoreItems: Readonly<ItemB
 }
 
 /**
- * 
  * @param key Store key of the group containing item to be removed e.g. Morning:SETTINGS or Morning:092020
  * @param allStoreItems All items from redux store i.e. StoreReducerState.items
  * @param id id of the ItemBase type item to be removed

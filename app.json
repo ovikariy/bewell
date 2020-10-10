@@ -23,10 +23,12 @@
       "**/*"
     ],
     "ios": {
+      "icon": "./assets/images/icon-ios.png",
       "supportsTablet": true,
       "bundleIdentifier": "net.health.tracking.morning"
     },
     "android": {
+      "icon": "./assets/images/icon-android.png",
       "package": "net.health.tracking.morning"
     }
   }

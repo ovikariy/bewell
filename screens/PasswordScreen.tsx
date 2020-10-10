@@ -201,12 +201,10 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
 
   render() {
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 70 }} >
             {this.renderFields()}
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

@@ -418,7 +418,7 @@ export const translations: TranslationList = {
         exportSubExplanation: 'Ваши зашифрованные данные готовы к экспорту',
         exportComplete: 'Экспорт данных завершен',
         exportNoData: 'Что-то не так. Нет данных для экспорта.',
-        history: 'История', //TODO: 
+        history: 'История',
         bedTime: 'Заснул:  ',
         wakeTime: 'Проснулся: ',
         whatsOnYourMind: 'Что у вас на уме?',

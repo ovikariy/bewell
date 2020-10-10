@@ -94,7 +94,7 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenImageHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }} >
@@ -120,8 +120,6 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
                 />
               }
             </View>
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

@@ -26,9 +26,8 @@ class BackupRestoreScreen extends Component<PropsFromRedux & BackupRestoreScreen
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScreenContent isKeyboardAvoidingView={true} style={{ padding: 20 }} >
-          {this.props.OPERATION.isLoading ? <ActivityIndicator /> : <View />}
           <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{language.exportExplanation}</ParagraphText>
           <ButtonPrimary
             containerStyle={{ marginTop: 20 }}

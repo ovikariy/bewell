@@ -69,7 +69,7 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
           <ScreenImageHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 30 }} >
@@ -93,8 +93,6 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
                 onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
               />
             }
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

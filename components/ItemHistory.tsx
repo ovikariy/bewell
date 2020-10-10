@@ -2,7 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
 import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
 import { AppContext } from '../modules/AppContext';
-import { Loading, EmptyList, List } from './MiscComponents';
+import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetBase, WidgetConfig } from '../modules/WidgetFactory';
 import { StoreReducerState } from '../redux/reducerTypes';

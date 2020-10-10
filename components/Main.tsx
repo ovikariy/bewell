@@ -77,7 +77,6 @@ interface MainProps {
 
 class Main extends React.Component<MainProps> {
   static contextType = AppContext;
-  //declare context: React.ContextType<typeof AppContext>;
 
   render() {
     configLocale(this.context.locale);

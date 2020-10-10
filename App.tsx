@@ -43,7 +43,7 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   loadResourcesAsync = async () => {
-    Promise.all([
+    await Promise.all([
       Asset.loadAsync([
         require('./assets/images/logo_small.png'),
         require('./assets/images/splash.png'),
@@ -54,17 +54,7 @@ export default class App extends React.Component<AppProps, AppState> {
       ]),
       Font.loadAsync({
         'open-sans-condensed-light': require('./assets/fonts/OpenSansCondensed-Light.ttf'),
-        'open-sans-condensed-bold': require('./assets/fonts/OpenSansCondensed-Bold.ttf'),
-        'saira-extra-condensed-regular': require('./assets/fonts/SairaExtraCondensed-Regular.ttf'),
-        'saira-extra-condensed-medium': require('./assets/fonts/SairaExtraCondensed-Medium.ttf'),
-        'saira-extra-condensed-bold': require('./assets/fonts/SairaExtraCondensed-Bold.ttf'),
-        'saira-extra-condensed-light': require('./assets/fonts/SairaExtraCondensed-Light.ttf'),
-        'saira-extra-condensed-extra-light': require('./assets/fonts/SairaExtraCondensed-ExtraLight.ttf'),
-        'saira-extra-condensed-semi-bold': require('./assets/fonts/SairaExtraCondensed-SemiBold.ttf'),
-        'saira-extra-condensed-thin': require('./assets/fonts/SairaExtraCondensed-Thin.ttf'),
-        'pt-sans-narrow-regular': require('./assets/fonts/PTSansNarrow-Regular.ttf'),
         'morning-app-icon-font': require('./assets/fonts/icomoon/morning-app-icon-font.ttf')
-        //TODO: revisit fonts and remove unneeded ones
       }),
     ]);
   };

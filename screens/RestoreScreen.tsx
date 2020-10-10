@@ -138,7 +138,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     }
     catch (error) {
       console.log(error);
-      Toast.showTranslated(error.message ? error.messsage : error, language);
+      Toast.showTranslated(error.message ? error.messsage : error, this.context);
       FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
     }
   }
@@ -287,14 +287,12 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.importExplanation}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

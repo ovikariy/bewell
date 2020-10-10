@@ -205,6 +205,13 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
         </TouchableOpacity>
       </View>
       {show && (
+
+        /**  TODO: [BWA-5] style better on iOS
+         *         <View style={{
+                  backgroundColor: styles.screenContainer.backgroundColor,
+                  position: 'absolute', flex: 1, top: 40, width: 1550
+                }}>
+        */
         <DateTimePicker
           mode={props.mode ? props.mode : 'datetime'}
           value={props.value || new Date()}
@@ -340,13 +347,23 @@ export function showMessages(operation: any, context: AppContextInterface) {
   Toast.showTranslated(codes, context);
 }
 
+export const LoadingScreeenOverlay = () => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  return <Loading style={styles.loadingScreeenOverlay}  />
+}
+
 /* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent on the bottom like a Toast */
-export const Loading = () => {
+export const Loading = (props: { style: ViewStyle }) => {
   const context = React.useContext(AppContext);
   const language = context.language;
   const styles = context.styles;
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+    <View style={[{
+      alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
+       flex: 1, 
+    }, props.style]}>
       <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
       <Text style={styles.bodyText}>{language.loading}</Text>
     </View>

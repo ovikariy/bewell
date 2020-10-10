@@ -164,14 +164,12 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
     const language = this.context.language;
     const styles = this.context.styles;
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
-            {this.props.OPERATION.isLoading ?
-              <ActivityIndicator style={{ position: 'absolute' }} /> : <View />}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>

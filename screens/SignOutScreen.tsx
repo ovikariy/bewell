@@ -34,7 +34,7 @@ class SignOutScreen extends Component<PropsFromRedux & SignOutProps> {
     const styles = this.context.styles;
 
     return (
-      <ScreenBackground>
+      <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
           <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.signOutClick}</ParagraphText>
           <HorizontalLine />
@@ -48,8 +48,6 @@ class SignOutScreen extends Component<PropsFromRedux & SignOutProps> {
           <Spacer height={40} />
           <LinkButton title={language.goBackNo} titleStyle={{ opacity: 0.5 }}
             onPress={() => this.props.navigation.dispatch(CommonActions.goBack())} />
-          {this.props.OPERATION.isLoading ?
-            <ActivityIndicator style={{ position: 'absolute', top: 200 }} /> : <View />}
         </ScreenContent>
       </ScreenBackground>
     );
