@@ -1,11 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 import { mergeArraysImmutable, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement } from '../modules/types';
-import { StoreReducerActions, StoreReducerState } from './reducerTypes';
+import { StoreReducerAction, StoreReducerState } from './reducerTypes';
 
 export const STORE = (state: StoreReducerState = {
     items: {}
-}, action: StoreReducerActions) => {
+}, action: StoreReducerAction) => {
     switch (action.type) {
         case ActionTypes.REPLACE_ITEMS_IN_REDUX_STORE: {
 

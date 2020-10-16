@@ -45,7 +45,7 @@ interface REPLACE_ITEMS_IN_REDUX_STORE {
 }
 interface CLEAR_REDUX_STORE { type: typeof ActionTypes.CLEAR_REDUX_STORE }
 
-export type StoreReducerActions = REPLACE_ITEMS_IN_REDUX_STORE | CLEAR_REDUX_STORE;
+export type StoreReducerAction = REPLACE_ITEMS_IN_REDUX_STORE | CLEAR_REDUX_STORE;
 
 
 /* BACKUPRESTORE */
