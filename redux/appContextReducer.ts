@@ -5,7 +5,7 @@ import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
 import { AppContextInterface, defaultAppContext } from '../modules/AppContext';
 import { SettingType } from '../modules/types';
-import { AppContextReducerActions, AppContextReducerState } from './ReducerTypes';
+import { AppContextReducerActions, AppContextReducerState } from './reducerTypes';
 
 /*
     errCodes and successCodes are used for looking up translation of messages

@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import { OperationActions, OperationReducerState } from './ReducerTypes';
+import { OperationActions, OperationReducerState } from './reducerTypes';
 
 /*
     errCodes and successCodes are used for looking up translation of messages

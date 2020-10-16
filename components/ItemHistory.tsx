@@ -5,7 +5,7 @@ import { AppContext } from '../modules/AppContext';
 import { Loading, EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetBase, WidgetConfig } from '../modules/WidgetFactory';
-import { StoreReducerState } from '../redux/ReducerTypes';
+import { StoreReducerState } from '../redux/reducerTypes';
 import { ItemBaseAssociativeArray } from '../modules/types';
 
 interface ItemHistoryProps {

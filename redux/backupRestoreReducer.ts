@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import { BackupRestoreActions, BackupRestoreReducerState } from './ReducerTypes';
+import { BackupRestoreActions, BackupRestoreReducerState } from './reducerTypes';
 
 export const BACKUPRESTORE = (state: BackupRestoreReducerState = {
   isPasswordVerified: false,

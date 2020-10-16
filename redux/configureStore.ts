@@ -10,7 +10,7 @@ import { CHANGEPASSWORD } from './passwordReducer';
 import { APPCONTEXT } from './appContextReducer';
 import { ThunkAction } from 'redux-thunk'
 import { AuthReducerState, BackupRestoreReducerState, OperationReducerState, 
-    PinSetipState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState } from './ReducerTypes';
+    PinSetipState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState } from './reducerTypes';
 
 export interface RootState {
     STORE: StoreReducerState,
@@ -25,7 +25,7 @@ export interface RootState {
 /* AppThunkActionType is used to simplify TypeScript typing in action creators  */
 export type AppThunkActionType<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
 
-export const ConfigureStore = () => {
+export const configureStore = () => {
 
     const store = createStore(
         combineReducers({

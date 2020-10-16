@@ -10,7 +10,7 @@ import { stateConstants } from '../modules/Constants';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
 import { RootState } from '../redux/configureStore';
-import { AuthReducerState, OperationReducerState } from '../redux/ReducerTypes';
+import { AuthReducerState, OperationReducerState } from '../redux/reducerTypes';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,

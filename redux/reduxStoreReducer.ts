@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { mergeArraysImmutable, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement } from '../modules/types';
-import { StoreReducerActions, StoreReducerState } from './ReducerTypes';
+import { StoreReducerActions, StoreReducerState } from './reducerTypes';
 
 export const STORE = (state: StoreReducerState = {
     items: {}

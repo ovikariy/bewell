@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { consoleLogWithColor, consoleColors } from '../modules/helpers';
-import { ChangePasswordActions, ChangePasswordReducerState } from './ReducerTypes';
+import { ChangePasswordActions, ChangePasswordReducerState } from './reducerTypes';
 
 export const CHANGEPASSWORD = (state: ChangePasswordReducerState = {
   isPasswordVerified: false,

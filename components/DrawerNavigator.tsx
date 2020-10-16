@@ -19,7 +19,7 @@ import SignInScreen from '../screens/SignInScreen';
 import SignOutScreen from '../screens/SignOutScreen';
 import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
-import { AuthReducerState } from '../redux/ReducerTypes';
+import { AuthReducerState } from '../redux/reducerTypes';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);

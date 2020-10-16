@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import { AuthReducerActions, AuthReducerState } from './ReducerTypes';
+import { AuthReducerActions, AuthReducerState } from './reducerTypes';
 
 export const AUTH = (state: AuthReducerState = {
   isLoading: true,

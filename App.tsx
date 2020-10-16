@@ -6,9 +6,9 @@ import * as Font from 'expo-font';
 import Main from './components/Main';
 
 import { Provider } from 'react-redux';
-import { ConfigureStore } from './redux/configureStore';
+import { configureStore } from './redux/configureStore';
 
-const { store } = ConfigureStore();
+const { store } = configureStore();
 
 interface AppState {
   isLoading: boolean
