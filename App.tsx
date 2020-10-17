@@ -8,13 +8,13 @@ import Main from './src/components/Main';
 import { Provider } from 'react-redux';
 import { configureStore } from './src/redux/configureStore';
 
-const { store } = configureStore();
+const store = configureStore();
 
 interface AppState {
   isLoading: boolean
 }
 
-interface AppProps {}
+interface AppProps { }
 
 export default class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -22,8 +22,8 @@ export default class App extends React.Component<AppProps, AppState> {
     this.state = {
       isLoading: true
     };
-  } 
-  
+  }
+
   render() {
     if (this.state.isLoading) {
       return <AppLoading
