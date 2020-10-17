@@ -3,10 +3,10 @@ import { Platform, StatusBar, View, Text } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import Main from './components/Main';
+import Main from './src/components/Main';
 
 import { Provider } from 'react-redux';
-import { configureStore } from './redux/configureStore';
+import { configureStore } from './src/redux/configureStore';
 
 const { store } = configureStore();
 
@@ -45,16 +45,16 @@ export default class App extends React.Component<AppProps, AppState> {
   loadResourcesAsync = async () => {
     await Promise.all([
       Asset.loadAsync([
-        require('./assets/images/logo_small.png'),
-        require('./assets/images/splash.png'),
-        require('./assets/images/icon.png'),
-        require('./assets/images/header.jpg'),
-        require('./assets/images/arrow-up.png'),
+        require('./src/assets/images/logo_small.png'),
+        require('./src/assets/images/splash.png'),
+        require('./src/assets/images/icon.png'),
+        require('./src/assets/images/header.jpg'),
+        require('./src/assets/images/arrow-up.png'),
         
       ]),
       Font.loadAsync({
-        'open-sans-condensed-light': require('./assets/fonts/OpenSansCondensed-Light.ttf'),
-        'morning-app-icon-font': require('./assets/fonts/icomoon/morning-app-icon-font.ttf')
+        'open-sans-condensed-light': require('./src/assets/fonts/OpenSansCondensed-Light.ttf'),
+        'morning-app-icon-font': require('./src/assets/fonts/icomoon/morning-app-icon-font.ttf')
       }),
     ]);
   };

@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./src/assets/images/splash.png",
       "resizeMode": "cover"
     },
     "updates": {
@@ -23,12 +23,12 @@
       "**/*"
     ],
     "ios": {
-      "icon": "./assets/images/icon-ios.png",
+      "icon": "./src/assets/images/icon-ios.png",
       "supportsTablet": true,
       "bundleIdentifier": "net.health.tracking.morning"
     },
     "android": {
-      "icon": "./assets/images/icon-android.png",
+      "icon": "./src/assets/images/icon-android.png",
       "package": "net.health.tracking.morning"
     }
   }
