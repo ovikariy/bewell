@@ -14,8 +14,8 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  load: (key: string) => load(key),
-  updateReduxAndPersist: (key: string, allStoreItems: ItemBaseAssociativeArray, updatedItems: ItemBase[]) => updateReduxAndPersist(key, allStoreItems, updatedItems)
+  load,
+  updateReduxAndPersist
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

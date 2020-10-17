@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants } from '../modules/Constants';
 import { signOut } from '../redux/authActionCreators';
-import { ActivityIndicator, ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
-import { View } from 'react-native';
+import { ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CommonActions } from '@react-navigation/native';
 import { AppContext } from '../modules/AppContext';
@@ -14,7 +12,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  signOut: () => signOut()
+  signOut
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

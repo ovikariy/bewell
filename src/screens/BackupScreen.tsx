@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton,
-  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
-} from '../components/MiscComponents';
+import {  ParagraphText, Toast, PasswordInputWithButton,
+          Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
+        } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate } from '../modules/helpers';
@@ -20,9 +19,9 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  startBackup: () => startBackup(),
-  getExportData: (password: string) => getExportData(password),
-  finishBackup: () => finishBackup()
+  startBackup,
+  getExportData,
+  finishBackup
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { initialize } from '../redux/welcomeActionCreators';
-import { ActivityIndicator, ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
+import { ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { AppContext } from '../modules/AppContext';
@@ -13,7 +13,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  initialize: () => initialize()
+  initialize
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

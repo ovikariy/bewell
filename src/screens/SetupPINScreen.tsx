@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants } from '../modules/Constants';
-import {   ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, 
+import { ParagraphText, Toast, PasswordInputWithButton, 
   Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
@@ -18,9 +17,9 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  verifyPassword: (password: string) => verifyPassword(password),
-  submitPIN: (password: string, pin: string) => submitPIN(password, pin),
-  startPINsetup: () => startPINsetup()
+  verifyPassword,
+  submitPIN,
+  startPINsetup
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

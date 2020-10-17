@@ -14,7 +14,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  loadAllWidgetData: () => loadAllWidgetData(),
+  loadAllWidgetData
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

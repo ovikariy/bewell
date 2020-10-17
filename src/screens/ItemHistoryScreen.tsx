@@ -7,7 +7,6 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/AppContext';
 import { WidgetBase } from '../modules/WidgetFactory';
-import { ItemBaseAssociativeArray } from '../modules/types';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({
@@ -15,7 +14,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  removeFromReduxAndPersist: (key: string, allStoreItems: Readonly<ItemBaseAssociativeArray>, id: string) => removeFromReduxAndPersist(key, allStoreItems, id)
+  removeFromReduxAndPersist
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

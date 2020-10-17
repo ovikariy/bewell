@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants, Errors } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
+import { Errors } from '../modules/Constants';
+import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate } from '../modules/helpers';
@@ -18,10 +18,10 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  verifyPasswordForRestore: (password: string) => verifyPasswordForRestore(password),
-  startRestore: () => startRestore(),
-  tryDecryptFileData: (data: [string, string][], password: string) => tryDecryptFileData(data, password),
-  importData: (data: [string, string][], password: string) => importData(data, password)
+  verifyPasswordForRestore,
+  startRestore,
+  tryDecryptFileData,
+  importData
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
-import { PinSetipState, PinSetupActions } from './reducerTypes';
+import { PinSetupState, PinSetupActions } from './reducerTypes';
 
-export const PINSETUP = (state: PinSetipState = {
+export const PINSETUP = (state: PinSetupState = {
   isPasswordVerified: false,
   isPinSetupComplete: false
 }, action: PinSetupActions) => {

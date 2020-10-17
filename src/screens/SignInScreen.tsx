@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { signInPassword, signInPIN } from '../redux/authActionCreators';
-import { stateConstants } from '../modules/Constants';
-import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton } from '../components/MiscComponents';
-import { View, ScrollView } from 'react-native';
+import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, PINInputWithButton } from '../components/MiscComponents';
+import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { AppContext } from '../modules/AppContext';
 import { RootState } from '../redux/configureStore';
@@ -14,8 +13,8 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  signInPassword: (password: string) => signInPassword(password),
-  signInPIN: (pin: string) => signInPIN(pin)
+  signInPassword,
+  signInPIN
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

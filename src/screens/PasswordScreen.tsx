@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants } from '../modules/Constants';
 import { startChangePassword, verifyCredentials, updatePassword } from '../redux/passwordActionCreators';
 import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast, ButtonSecondary } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
@@ -19,9 +18,9 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  startChangePassword: () => startChangePassword(),
-  verifyCredentials: (password?: string, pin?: string) => verifyCredentials(password, pin),
-  updatePassword: (oldPassword: string, newPassword: string, pin?: string) => updatePassword(oldPassword, newPassword, pin)
+  startChangePassword,
+  verifyCredentials,
+  updatePassword
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -10,13 +10,14 @@ import { CHANGEPASSWORD } from './passwordReducer';
 import { APPCONTEXT } from './appContextReducer';
 import { ThunkAction } from 'redux-thunk'
 import { AuthReducerState, BackupRestoreReducerState, OperationReducerState, 
-    PinSetipState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState } from './reducerTypes';
+        PinSetupState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState 
+    } from './reducerTypes';
 
 export interface RootState {
     STORE: StoreReducerState,
     OPERATION: OperationReducerState;
     AUTH: AuthReducerState;
-    PINSETUP: PinSetipState;
+    PINSETUP: PinSetupState;
     BACKUPRESTORE: BackupRestoreReducerState;
     CHANGEPASSWORD: ChangePasswordReducerState;
     APPCONTEXT: AppContextReducerState

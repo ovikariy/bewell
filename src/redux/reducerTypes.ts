@@ -77,7 +77,7 @@ export type BackupRestoreActions = RESTORE_STARTED | RESTORE_FAILED | RESTORE_PA
 
 /* PINSETUP */
 
-export interface PinSetipState {
+export interface PinSetupState {
   isPasswordVerified: boolean;
   isPinSetupComplete: boolean;
 }

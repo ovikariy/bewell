@@ -15,8 +15,8 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = {
-  setupNewEncryption: (password: string) => setupNewEncryption(password),
-  initialize: () => initialize()
+  setupNewEncryption,
+  initialize
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
