@@ -5,11 +5,7 @@ e.g. helpers.ts but wanted to keep them next to the translations for consistency
 import 'moment/locale/ru';
 import 'moment/locale/fr';
 
-export interface TranslationList {
-    en: TranslationKeys;
-    ru: TranslationKeys;
-    //TODO: add fr
-}
+export type TranslationMap = { [language: string]: TranslationKeys };
 
 export interface TranslationKeys {
     appName: string;
@@ -164,7 +160,7 @@ export interface TranslationKeys {
     [Errors.MaxLoginAttempts]: string;
 }
 
-export const translations: TranslationList = {
+export const translations: TranslationMap = {
     en: {
         appName: 'Wellbeing Tracker',
         note: 'Note',
