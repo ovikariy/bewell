@@ -5,22 +5,22 @@ import * as ActionTypes from './ActionTypes';
 
 /* OPERATION */
 
-export interface OperationReducerState {
+export interface OperationState {
   isLoading: boolean,
   errCodes?: string | string[], /* can be one error code string or an array of multiple codes */
   successCodes?: string | string[]  /* can be one success code string or an array of multiple codes */
 }
 
-interface OperationProcessing { type: typeof ActionTypes.OPERATION_PROCESSING }
-interface OperationFailed { type: typeof ActionTypes.OPERATION_FAILED; payload: { errCodes: string | string[] } }
-interface OperationSucceeded { type: typeof ActionTypes.OPERATION_SUCCEEDED; payload: { successCodes: string | string[] } }
-interface OperationCleared { type: typeof ActionTypes.OPERATION_CLEARED }
+interface OperationStart { type: typeof ActionTypes.OPERATION_START }
+interface OperationFail { type: typeof ActionTypes.OPERATION_FAIL; payload: { errCodes: string | string[] } }
+interface OperationSucceed { type: typeof ActionTypes.OPERATION_SUCCEED; payload: { successCodes: string | string[] } }
+interface OperationClear { type: typeof ActionTypes.OPERATION_CLEAR }
 
-export type OperationActions = OperationProcessing | OperationFailed | OperationSucceeded | OperationCleared;
+export type OperationAction = OperationStart | OperationFail | OperationSucceed | OperationClear;
 
 /* AUTH */
 
-export interface AuthReducerState extends LoginInfo {
+export interface AuthState extends LoginInfo {
   isLoading: boolean;
 }
 
@@ -29,12 +29,12 @@ interface LoadedAuthData {
   payload: { authData: LoginInfo }
 }
 
-export type AuthReducerActions = LoadedAuthData;
+export type AuthAction = LoadedAuthData;
 
 
 /* STORE */
 
-export interface StoreReducerState {
+export interface StoreState {
   items: ItemBaseAssociativeArray;
 }
 interface ReplaceItemsInReduxStore {
@@ -43,14 +43,15 @@ interface ReplaceItemsInReduxStore {
     items: ItemBaseMultiArray
   }
 }
+
 interface ClearReduxStore { type: typeof ActionTypes.CLEAR_REDUX_STORE }
 
-export type StoreReducerAction = ReplaceItemsInReduxStore | ClearReduxStore;
+export type StoreAction = ReplaceItemsInReduxStore | ClearReduxStore;
 
 
 /* BACKUPRESTORE */
 
-export interface BackupRestoreReducerState {
+export interface BackupRestoreState {
   isPasswordVerified: boolean;
   isFilePasswordNeeded: boolean;
   isFilePasswordVerified: boolean;
@@ -71,7 +72,7 @@ interface BackupDataReady { type: typeof ActionTypes.BACKUP_DATA_READY; payload:
 interface BackupDataFailed { type: typeof ActionTypes.BACKUP_DATA_FAILED }
 interface BackupComplete { type: typeof ActionTypes.BACKUP_COMPLETE }
 
-export type BackupRestoreActions = RestoreStarted | RestoreFailed | RestorePasswordVerified |
+export type BackupRestoreAction = RestoreStarted | RestoreFailed | RestorePasswordVerified |
   RestorePasswordFailed | RestoreFilePasswordVerified | RestoreFilePasswordFailed |
   RestoreComplete | BackupStarted | BackupDataReady | BackupDataFailed | BackupComplete;
 
@@ -88,13 +89,13 @@ interface PinSetupPasswordVerified { type: typeof ActionTypes.PIN_SETUP_PASSWORD
 interface PinSetupPasswordFailed { type: typeof ActionTypes.PIN_SETUP_PASSWORD_FAILED }
 interface PinSetupComplete { type: typeof ActionTypes.PIN_SETUP_COMPLETE }
 
-export type PinSetupActions = PinSetupStarted | PinSetupFailed | PinSetupPasswordVerified
+export type PinSetupAction = PinSetupStarted | PinSetupFailed | PinSetupPasswordVerified
   | PinSetupPasswordFailed | PinSetupComplete;
 
 
 /* CHANGEPASSWORD */
 
-export interface ChangePasswordReducerState {
+export interface ChangePasswordState {
   isPasswordVerified: boolean;
   isComplete: boolean;
 }
@@ -104,12 +105,12 @@ interface ChangePasswordCredentialsFailed { type: typeof ActionTypes.CHANGEPASSW
 interface ChangePasswordCredentialsVerified { type: typeof ActionTypes.CHANGEPASSWORD_CREDENTIALS_VERIFIED }
 interface ChangePasswordComplete { type: typeof ActionTypes.CHANGEPASSWORD_COMPLETE }
 
-export type ChangePasswordActions = ChangePasswordStarted | ChangePasswordCredentialsFailed
+export type ChangePasswordAction = ChangePasswordStarted | ChangePasswordCredentialsFailed
   | ChangePasswordCredentialsVerified | ChangePasswordComplete;
 
 /* APPCONTEXT */
 
-export interface AppContextReducerState {
+export interface AppContextState {
   context: AppContextInterface
 }
 interface SettingsChanged {
@@ -117,4 +118,4 @@ interface SettingsChanged {
   payload: { settings: SettingType[] }
 }
 
-export type AppContextReducerActions = SettingsChanged;
+export type AppContextAction = SettingsChanged;

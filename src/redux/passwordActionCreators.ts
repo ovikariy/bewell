@@ -1,5 +1,5 @@
 import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
-import * as GenericActions from './operationActionCreators';
+import * as operationActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as ActionTypes from './ActionTypes';
@@ -16,17 +16,17 @@ export const finishChangePassword = (): AppThunkActionType => (dispatch) => {
 };
 
 export const verifyCredentials = (password?: string, pin?: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     verifyCredentialsAsync(password, pin)
         .then(() => {
             dispatch({ type: ActionTypes.CHANGEPASSWORD_CREDENTIALS_VERIFIED });
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.CHANGEPASSWORD_CREDENTIALS_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security5] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Security5] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -41,17 +41,17 @@ const verifyCredentialsAsync = async (password?: string, pin?: string) => {
 
 export const updatePassword = (oldPassword: string, newPassword: string, pin?: string): AppThunkActionType => (dispatch) => {
     if (SecurityHelpers.isSignedIn() !== true) {
-        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        dispatch(operationActions.fail(Errors.Unauthorized));
         return;
     }
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     updatePasswordAsync(oldPassword, newPassword, pin).then(() => {
         dispatch({ type: ActionTypes.CHANGEPASSWORD_COMPLETE });
         dispatch(signInPassword(newPassword));
     })
         .catch(error => {
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security6] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Security6] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -77,15 +77,15 @@ const updatePasswordAsync = async (oldPassword: string, newPassword: string, pin
 };
 
 export const setupNewEncryption = (newPassword: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     setupNewEncryptionAsync(newPassword)
         .then(() => {
-            dispatch(GenericActions.operationSucceeded(Errors.PasswordSet));
+            dispatch(operationActions.complete(Errors.PasswordSet));
             dispatch(loadAuthData());
         })
         .catch(error => {
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security7] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Security7] : error));
+            dispatch(operationActions.clear());
         });
 };
 

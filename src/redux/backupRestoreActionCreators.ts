@@ -1,6 +1,6 @@
 import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
 import { loadAllData } from './mainActionCreators';
-import * as GenericActions from './operationActionCreators';
+import * as operationActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as ActionTypes from './ActionTypes';
@@ -20,36 +20,36 @@ export const finishBackup = (): AppThunkActionType => (dispatch) => {
 };
 
 export const verifyPasswordForRestore = (password: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     validatePasswordAsync(password)
         .then(() => {
             dispatch({ type: ActionTypes.RESTORE_PASSWORD_VERIFIED });
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.RESTORE_PASSWORD_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.InvalidPassword, ErrorCodes.BackupRestore1] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.InvalidPassword, ErrorCodes.BackupRestore1] : error));
+            dispatch(operationActions.clear());
         });
 };
 
 export const tryDecryptFileData = (data: [string, string][], password: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     tryDecryptFileDataAsync(data, password)
         .then((passwordWorks) => {
             if (passwordWorks === true)
                 dispatch({ type: ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED });
             else {
                 dispatch({ type: ActionTypes.RESTORE_FILE_PASSWORD_FAILED });
-                dispatch(GenericActions.operationFailed(Errors.InvalidFilePassword));
+                dispatch(operationActions.fail(Errors.InvalidFilePassword));
             }
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore2] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore2] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -76,7 +76,7 @@ function getDataEncryptionKeyFromFileData(data: [string, string][]) {
 }
 
 export const importData = (data: [string, string][], password: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     importDataAsync(data, password)
         .then(() => {
             dispatch({ type: ActionTypes.RESTORE_COMPLETE });
@@ -84,8 +84,8 @@ export const importData = (data: [string, string][], password: string): AppThunk
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore3] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore3] : error));
+            dispatch(operationActions.clear());
         });
 };
 const importDataAsync = async (data: [string, string][], password: string) => {
@@ -129,17 +129,17 @@ const importDataAsync = async (data: [string, string][], password: string) => {
 };
 
 export const getExportData = (password: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     getExportDataAsync(password)
         .then((data) => {
             dispatch({ type: ActionTypes.BACKUP_DATA_READY, payload: { backupData: data } });
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.BACKUP_DATA_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore4] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore4] : error));
+            dispatch(operationActions.clear());
         });
 };
 

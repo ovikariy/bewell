@@ -1,5 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-import { OperationActions, OperationReducerState } from './reducerTypes';
+import { OperationAction, OperationState } from './reducerTypes';
 
 /*
     errCodes and successCodes are used for looking up translation of messages
@@ -9,22 +9,22 @@ import { OperationActions, OperationReducerState } from './reducerTypes';
     e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
 */
 
-export const OPERATION = (state: OperationReducerState = {
+export const OPERATION = (state: OperationState = {
     isLoading: true,
     errCodes: undefined,
     successCodes: undefined
-}, action: OperationActions) => {
+}, action: OperationAction) => {
     switch (action.type) {
-        case ActionTypes.OPERATION_PROCESSING: {
+        case ActionTypes.OPERATION_START: {
             return { ...state, isLoading: true, errCodes: undefined, successCodes: undefined };
         }
-        case ActionTypes.OPERATION_FAILED: {
+        case ActionTypes.OPERATION_FAIL: {
             return { ...state, isLoading: false, errCodes: action.payload.errCodes, successCodes: undefined };
         }
-        case ActionTypes.OPERATION_SUCCEEDED: {
+        case ActionTypes.OPERATION_SUCCEED: {
             return { ...state, isLoading: false, errCodes: undefined, successCodes: action.payload.successCodes };
         }
-        case ActionTypes.OPERATION_CLEARED:
+        case ActionTypes.OPERATION_CLEAR:
             return { ...state, isLoading: false, errCodes: undefined, successCodes: undefined };
         default:
             return state;

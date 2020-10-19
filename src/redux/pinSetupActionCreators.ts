@@ -1,5 +1,5 @@
 import * as SecurityHelpers from '../modules/SecurityHelpers';
-import * as GenericActions from './operationActionCreators';
+import * as operationActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './ActionTypes';
 import { Errors, ErrorCodes } from '../modules/Constants';
@@ -8,9 +8,9 @@ import { loadAuthData } from './authActionCreators';
 import { AppThunkActionType } from './configureStore';
 
 export const startPINsetup = (): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationCleared());
+    dispatch(operationActions.clear());
     if (SecurityHelpers.isSignedIn() !== true) {
-        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        dispatch(operationActions.fail(Errors.Unauthorized));
         return;
     }
     dispatch({ type: ActionTypes.PIN_SETUP_STARTED });
@@ -18,44 +18,44 @@ export const startPINsetup = (): AppThunkActionType => (dispatch) => {
 
 export const verifyPassword = (password: string): AppThunkActionType => (dispatch) => {
     if (SecurityHelpers.isSignedIn() !== true) {
-        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        dispatch(operationActions.fail(Errors.Unauthorized));
         return;
     }
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     validatePasswordAsync(password)
         .then(() => {
             dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_VERIFIED });
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? Errors.InvalidPassword : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? Errors.InvalidPassword : error));
+            dispatch(operationActions.clear());
         });
 };
 
 export const submitPIN = (password: string, pin: string): AppThunkActionType => (dispatch) => {
     if (SecurityHelpers.isSignedIn() !== true) {
-        dispatch(GenericActions.operationFailed(Errors.Unauthorized));
+        dispatch(operationActions.fail(Errors.Unauthorized));
         return;
     }
     if (isNullOrEmpty(pin)) {
-        dispatch(GenericActions.operationFailed(Errors.InvalidParameter));
+        dispatch(operationActions.fail(Errors.InvalidParameter));
         return;
     }
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     submitPINAsync(password, pin)
         .then(() => {
             dispatch({ type: ActionTypes.PIN_SETUP_COMPLETE });
             dispatch(loadAuthData());
-            dispatch(GenericActions.operationSucceeded(Errors.PinSet));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.complete(Errors.PinSet));
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             dispatch({ type: ActionTypes.PIN_SETUP_FAILED });
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security4] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Security4] : error));
+            dispatch(operationActions.clear());
         });
 };
 

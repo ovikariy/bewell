@@ -1,11 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 import { consoleLogWithColor, consoleColors } from '../modules/helpers';
-import { ChangePasswordActions, ChangePasswordReducerState } from './reducerTypes';
+import { ChangePasswordAction, ChangePasswordState } from './reducerTypes';
 
-export const CHANGEPASSWORD = (state: ChangePasswordReducerState = {
+export const CHANGEPASSWORD = (state: ChangePasswordState = {
   isPasswordVerified: false,
   isComplete: false
-}, action: ChangePasswordActions) => {
+}, action: ChangePasswordAction) => {
   switch (action.type) {
     case ActionTypes.CHANGEPASSWORD_STARTED:
       return {

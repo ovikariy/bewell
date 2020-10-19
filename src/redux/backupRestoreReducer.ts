@@ -1,14 +1,14 @@
 import * as ActionTypes from './ActionTypes';
-import { BackupRestoreActions, BackupRestoreReducerState } from './reducerTypes';
+import { BackupRestoreAction, BackupRestoreState } from './reducerTypes';
 
-export const BACKUPRESTORE = (state: BackupRestoreReducerState = {
+export const BACKUPRESTORE = (state: BackupRestoreState = {
   isPasswordVerified: false,
   isFilePasswordNeeded: false,
   isFilePasswordVerified: false,
   backupData: null,
   backupDataReady: false,
   isComplete: false
-}, action: BackupRestoreActions) => {
+}, action: BackupRestoreAction) => {
   switch (action.type) {
     case ActionTypes.RESTORE_STARTED:
       return {

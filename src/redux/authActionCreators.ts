@@ -1,22 +1,22 @@
 import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
-import * as GenericActions from './operationActionCreators';
+import * as operationActions from './operationActionCreators';
 import * as ActionTypes from './ActionTypes';
 import { isNullOrEmpty } from '../modules/helpers';
 import { Errors, ErrorCodes } from '../modules/Constants';
 import { AppThunkActionType } from './configureStore';
 
 export const loadAuthData = (): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     loadAuthDataAsync()
         .then((authData) => {
             dispatch({ type: ActionTypes.LOADED_AUTH_DATA, payload: { authData } });
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth3] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth3] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -28,29 +28,29 @@ const loadAuthDataAsync = async () => {
 };
 
 export const signInPassword = (password: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     signInPasswordAsync(password)
         .then(() => {
             dispatch(loadAuthData());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
+            dispatch(operationActions.clear());
             dispatch(signOut());
         });
 };
 
 export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     signInPINAsync(pin)
         .then(() => {
             dispatch(loadAuthData());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
+            dispatch(operationActions.clear());
             dispatch(signOut());
         });
 };
@@ -71,7 +71,7 @@ const signInPINAsync = async (pin: string) => {
 };
 
 export const signOut = (): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     SecurityHelpers.signOut()
         .then(() => {
             dispatch({ type: ActionTypes.CLEAR_REDUX_STORE });
@@ -79,8 +79,8 @@ export const signOut = (): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth9] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth9] : error));
+            dispatch(operationActions.clear());
         });
 };
 

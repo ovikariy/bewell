@@ -9,7 +9,7 @@ import { AppContext } from '../modules/AppContext';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
 import { RootState } from '../redux/configureStore';
-import { AuthReducerState, OperationReducerState } from '../redux/reducerTypes';
+import { AuthState, OperationState } from '../redux/reducerTypes';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -70,8 +70,8 @@ export class MainWrapper extends React.Component<PropsFromRedux> {
 export default connector(MainWrapper);
 
 interface MainProps {
-  operation: OperationReducerState,
-  auth: AuthReducerState
+  operation: OperationState,
+  auth: AuthState
 }
 
 class Main extends React.Component<MainProps> {

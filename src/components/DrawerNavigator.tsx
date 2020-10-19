@@ -19,7 +19,7 @@ import SignInScreen from '../screens/SignInScreen';
 import SignOutScreen from '../screens/SignOutScreen';
 import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
-import { AuthReducerState } from '../redux/reducerTypes';
+import { AuthState } from '../redux/reducerTypes';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -300,7 +300,7 @@ function getAuthenticatedUserScreens() {
 }
 
 interface MainDrawerNavigatorProps {
-    auth: AuthReducerState
+    auth: AuthState
 }
 
 const Drawer = createDrawerNavigator();

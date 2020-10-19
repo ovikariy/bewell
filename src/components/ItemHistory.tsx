@@ -5,11 +5,11 @@ import { AppContext } from '../modules/AppContext';
 import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetBase, WidgetConfig } from '../modules/WidgetFactory';
-import { StoreReducerState } from '../redux/reducerTypes';
+import { StoreState } from '../redux/reducerTypes';
 import { ItemBaseAssociativeArray } from '../modules/types';
 
 interface ItemHistoryProps {
-  store: StoreReducerState,
+  store: StoreState,
   itemType: string
   config: WidgetConfig,
   style?: StyleProp<ViewStyle>;

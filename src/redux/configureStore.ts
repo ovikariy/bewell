@@ -8,18 +8,18 @@ import { PINSETUP } from './pinSetupReducer';
 import { BACKUPRESTORE } from './backupRestoreReducer';
 import { CHANGEPASSWORD } from './passwordReducer';
 import { APPCONTEXT } from './appContextReducer';
-import { AuthReducerState, BackupRestoreReducerState, OperationReducerState,
-        PinSetupState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState
+import { AuthState, BackupRestoreState, OperationState,
+        PinSetupState, StoreState, ChangePasswordState, AppContextState
     } from './reducerTypes';
 
 export interface RootState {
-    STORE: StoreReducerState,
-    OPERATION: OperationReducerState;
-    AUTH: AuthReducerState;
+    STORE: StoreState,
+    OPERATION: OperationState;
+    AUTH: AuthState;
     PINSETUP: PinSetupState;
-    BACKUPRESTORE: BackupRestoreReducerState;
-    CHANGEPASSWORD: ChangePasswordReducerState;
-    APPCONTEXT: AppContextReducerState
+    BACKUPRESTORE: BackupRestoreState;
+    CHANGEPASSWORD: ChangePasswordState;
+    APPCONTEXT: AppContextState
  }
 
 /* AppThunkActionType is used to simplify TypeScript typing in action creators  */

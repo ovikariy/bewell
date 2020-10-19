@@ -5,7 +5,7 @@ import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
 import { AppContextInterface, defaultAppContext } from '../modules/AppContext';
 import { SettingType } from '../modules/types';
-import { AppContextReducerActions, AppContextReducerState } from './reducerTypes';
+import { AppContextAction, AppContextState } from './reducerTypes';
 
 /*
     errCodes and successCodes are used for looking up translation of messages
@@ -15,9 +15,9 @@ import { AppContextReducerActions, AppContextReducerState } from './reducerTypes
     e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
 */
 
-export const APPCONTEXT = (state: AppContextReducerState = {
+export const APPCONTEXT = (state: AppContextState = {
     context: defaultAppContext
-}, action: AppContextReducerActions) => {
+}, action: AppContextAction) => {
     switch (action.type) {
         case ActionTypes.SETTINGS_CHANGED: {
             if (!action.payload.settings || !(action.payload.settings.length > 0))

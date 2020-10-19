@@ -1,19 +1,19 @@
 import * as ActionTypes from './ActionTypes';
 
-export const operationProcessing = () => ({
-    type: ActionTypes.OPERATION_PROCESSING
+export const start = () => ({
+    type: ActionTypes.OPERATION_START
 });
 
-export const operationSucceeded = (successCodes: string | string[]) => ({
-    type: ActionTypes.OPERATION_SUCCEEDED,
+export const complete = (successCodes: string | string[]) => ({
+    type: ActionTypes.OPERATION_SUCCEED,
     payload: { successCodes }
 });
 
-export const operationFailed = (errCodes: string | string[]) => ({
-    type: ActionTypes.OPERATION_FAILED,
+export const fail = (errCodes: string | string[]) => ({
+    type: ActionTypes.OPERATION_FAIL,
     payload: { errCodes }
 });
 
-export const operationCleared = () => ({
-    type: ActionTypes.OPERATION_CLEARED
+export const clear = () => ({
+    type: ActionTypes.OPERATION_CLEAR
 });

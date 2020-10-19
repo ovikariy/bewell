@@ -1,6 +1,6 @@
 import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/helpers';
 import * as StorageHelpers from '../modules/StorageHelpers';
-import * as GenericActions from './operationActionCreators';
+import * as operationActions from './operationActionCreators';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
 import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
 import * as ActionTypes from './ActionTypes';
@@ -11,18 +11,18 @@ import { AppThunkActionType } from './configureStore';
  * @param key e.g. "`@Morning:SETTINGS`" or "`@Morning:012019`"
  */
 export const load = (key: string): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     loadAsync(key)
         .then((items) => {
             dispatch(replaceItemsInRedux([[key, items]]));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
             if (key === StoreConstants.SETTINGS)
                 dispatch(settingsChanged(items));
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage9] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage9] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -37,16 +37,16 @@ const settingsChanged = (settings: SettingType[]) => ({
 
 /* load widget data for all months e.g. on historical views or total counts */
 export const loadAllWidgetData = (): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     loadAllWidgetDataAsync()
         .then((items) => {
             dispatch(replaceItemsInRedux(items));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage8] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage8] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -59,16 +59,16 @@ const loadAllWidgetDataAsync = (): Promise<ItemBaseMultiArray> => {
  * useful during the import/restore process
  */
 export const loadAllData = (): AppThunkActionType => (dispatch) => {
-    dispatch(GenericActions.operationProcessing());
+    dispatch(operationActions.start());
     loadAllDataAsync()
         .then((items) => {
             dispatch(replaceItemsInRedux(items));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage11] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage11] : error));
+            dispatch(operationActions.clear());
         });
 };
 
@@ -138,8 +138,8 @@ const updateReduxAndPersistInternal = (key: string, updatedItems: ItemBase[]): A
         .then(() => { })
         .catch(error => {
             console.log(error);
-            dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Storage2] : error));
-            dispatch(GenericActions.operationCleared());
+            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage2] : error));
+            dispatch(operationActions.clear());
         });
 };
 

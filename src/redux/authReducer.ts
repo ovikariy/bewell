@@ -1,14 +1,14 @@
 import * as ActionTypes from './ActionTypes';
-import { AuthReducerActions, AuthReducerState } from './reducerTypes';
+import { AuthAction, AuthState } from './reducerTypes';
 
-export const AUTH = (state: AuthReducerState = {
+export const AUTH = (state: AuthState = {
   isLoading: true,
   isInitialized: false,
   isEncrypted: false,
   isPinLocked: false,
   loginAttempts: 0,
   isSignedIn: false
-}, action: AuthReducerActions) => {
+}, action: AuthAction) => {
   switch (action.type) {
     case ActionTypes.LOADED_AUTH_DATA:
       return {
