@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers, Action } from 'redux';
-import thunk from 'redux-thunk';
+import thunk, { ThunkAction } from 'redux-thunk';
 //import logger from 'redux-logger';
 import { STORE } from './reduxStoreReducer';
 import { OPERATION } from './operationReducer';
@@ -8,9 +8,8 @@ import { PINSETUP } from './pinSetupReducer';
 import { BACKUPRESTORE } from './backupRestoreReducer';
 import { CHANGEPASSWORD } from './passwordReducer';
 import { APPCONTEXT } from './appContextReducer';
-import { ThunkAction } from 'redux-thunk'
-import { AuthReducerState, BackupRestoreReducerState, OperationReducerState, 
-        PinSetupState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState 
+import { AuthReducerState, BackupRestoreReducerState, OperationReducerState,
+        PinSetupState, StoreReducerState, ChangePasswordReducerState, AppContextReducerState
     } from './reducerTypes';
 
 export interface RootState {
@@ -43,4 +42,4 @@ export const configureStore = () => {
     );
 
     return store;
-}
+};

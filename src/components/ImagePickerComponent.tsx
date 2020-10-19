@@ -39,7 +39,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     this.setState({
       ...this.state,
       image: undefined
-    })
+    });
   }
 
   componentDidMount() {
@@ -53,9 +53,9 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     if (!this.props.value || !this.props.value.imageProps)
       return;
     /* when user selects a new image, process it async from disk and update state when ready with new image data */
-    if (!prevProps.value.imageProps || prevProps.value.imageProps.filename !== this.props.value.imageProps.filename) {
+    if (!prevProps.value.imageProps || prevProps.value.imageProps.filename !== this.props.value.imageProps.filename)
       this.getImageFromFile();
-    }
+
   }
 
   render() {
@@ -69,7 +69,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
         /* we have a filename but haven't finished loading it from disk yet */
         return <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 20 }}>
           <ActivityIndicator />
-        </View>
+        </View>;
       }
       else {
         /* it's a blank widget and user hasn't picked an image yet */
@@ -78,7 +78,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
             title={language.pickImage}
             onPress={() => this.pickImage()}
           />
-        </View>
+        </View>;
       }
     }
 
@@ -101,7 +101,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
         console.log(error);
         this.setState({ ...this.state, image: brokenImageURI });
         Toast.showTranslated(error.message ? error.message : error, this.context);
-      })
+      });
   }
 
   getImageFromFileAsync = async () => {
@@ -109,9 +109,9 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       throw Errors.InvalidParameter;
 
     const imageFullPath = FileHelpers.getFullImagePath(this.props.value.imageProps.filename);
-    if (await FileHelpers.existsAsync(imageFullPath) !== true) {
+    if (await FileHelpers.existsAsync(imageFullPath) !== true)
       throw Errors.InvalidFile;
-    }
+
     const fileContent = await FileHelpers.getStringfromFileAsync(imageFullPath);
     if (!fileContent)
       throw Errors.InvalidFormat;
@@ -121,7 +121,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       throw Errors.UnableToDecrypt;
 
     return fileContentDecrypted;
-  }
+  };
 
   pickImage() {
     this.pickImageAsync()
@@ -129,7 +129,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       .catch((error) => {
         console.log(error);
         Toast.showTranslated(error.message ? error.message : error, this.context);
-      })
+      });
   }
 
   pickImageAsync = async () => {
@@ -141,7 +141,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       quality: 0.5
     });
     this.onImagePicked(result);
-  }
+  };
 
   onImagePicked(result: ImagePicker.ImagePickerResult) {
     if (result.cancelled) /* this check is needed inside this funtion otherwise ImageInfo props will not be available if cancelled == false */
@@ -154,17 +154,17 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
           imageProps: {
             imageType: result.type,
             exif: result.exif,
-            filename: filename,
+            filename,
             width: result.width,
             height: result.height
           } as ImageProps
-        })
+        });
         this.reset();
       })
       .catch((error) => {
         console.log(error);
         Toast.showTranslated(error.message ? error.message : error, this.context);
-      })
+      });
 
   }
 
@@ -184,24 +184,24 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     const filepath = FileHelpers.getFullImagePath(filename);
     await FileHelpers.writeFileAsync(filepath, fileContentEncrypted, {});
     return filename;
-  }
+  };
 
   getPermissionAsync = async () => {
     const language = this.context.language;
 
     if (Constants.platform && Constants.platform.ios) {
       const status = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status.granted) {
+      if (status.granted)
         alert(language.cameroRollPermissions);
-      }
+
     }
-  }
+  };
 
   clearImage() {
     if (!this.props.value || !this.props.value.imageProps || !this.props.value.imageProps.filename)
       return;
 
-    if (this.state.image == brokenImageURI) {
+    if (this.state.image === brokenImageURI) {
       this.props.onChange({ ...this.props.value, imageProps: undefined });
       this.reset();
       return;
@@ -215,7 +215,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       .catch((error) => {
         console.log(error);
         Toast.showTranslated(Errors.CannotDeleteFile, this.context);
-      })
+      });
   }
 }
 
@@ -236,4 +236,4 @@ export const ImagePickerHistoryComponent = (props: ImagePickerHistoryComponentPr
       </View>
     </View>
   );
-}
+};

@@ -15,7 +15,7 @@ const size = {
   height: Dimensions.get('window').height,
   isSmallDevice: Dimensions.get('window').width < 375,
   safeAreaAndroidPadding: Platform.OS === "android" ? StatusBar.currentHeight : 0
-}
+};
 
 export function getThemeStyles(theme: ThemePropertyType) {
 
@@ -172,9 +172,9 @@ export function getThemeStyles(theme: ThemePropertyType) {
       paddingTop: size.safeAreaAndroidPadding
     },
     loadingScreeenOverlay: {
-      position: 'absolute', 
+      position: 'absolute',
       zIndex: 1,
-      width: '100%', 
+      width: '100%',
       height: '100%',
       marginTop: size.safeAreaAndroidPadding
     },

@@ -1,5 +1,5 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
-import { ErrorCodes, Errors, storeConstants } from './Constants';
+import { ErrorCodes, Errors, StoreConstants } from './Constants';
 import * as SecureStore from 'expo-secure-store';
 import { consoleColors, consoleLogWithColor, isNullOrEmpty } from './helpers';
 import { isNumber, toNumber } from 'lodash';
@@ -15,14 +15,14 @@ export interface LoginInfo {
 
 interface DataEncryptionInterface {
   canEncryptDecrypt: boolean;
-  encryptDataAsync: { (data: string): Promise<string> } | null;
-  decryptDataAsync: { (data: string): Promise<string> } | null;
-  getHashAsync: { (data: string): Promise<string> } | null;
+  encryptDataAsync: ((data: string) => Promise<string>) | null;
+  decryptDataAsync: ((data: string) => Promise<string>) | null;
+  getHashAsync: ((data: string) => Promise<string>) | null;
 }
 
 export const getAllHashedStoreKeys = async () => {
-  return getMultipleHashedKeys(storeConstants.AllEncryptedStoreKeys);
-}
+  return getMultipleHashedKeys(StoreConstants.AllEncryptedStoreKeys);
+};
 
 export const getMultipleHashedKeys = async (keysToHash: string[]) => {
   if (!keysToHash || keysToHash.length < 0)
@@ -30,12 +30,13 @@ export const getMultipleHashedKeys = async (keysToHash: string[]) => {
   if (!DataEncryption.getHashAsync)
     throw [Errors.Unauthorized, ErrorCodes.MissingKey7];
   const hashedKeys = [];
-  for (var i = 0; i < keysToHash.length; i++) {
-    const keyHash = await DataEncryption.getHashAsync(keysToHash[i]);
+
+  for (const key of keysToHash) {
+    const keyHash = await DataEncryption.getHashAsync(key);
     hashedKeys.push(keyHash);
   }
   return hashedKeys;
-}
+};
 
 export const setupNewPINAsync = async (password: string, pin: string) => {
   if (isSignedIn() !== true)
@@ -44,20 +45,20 @@ export const setupNewPINAsync = async (password: string, pin: string) => {
     throw Errors.MissingPassword;
 
   const encryptedPassword = await encryptAsync(password, pin); //TODO: check strong encryption even if PIN is short
-  await setToSecureStoreAsync(storeConstants.password, encryptedPassword);
-}
+  await setToSecureStoreAsync(StoreConstants.password, encryptedPassword);
+};
 
 export const signOut = async () => {
   await resetEncryptDecryptDataFunctions();
-}
+};
 
 export const initialize = async () => {
-  await setToSecureStoreAsync(storeConstants.isInitialized, 'true');
-}
+  await setToSecureStoreAsync(StoreConstants.isInitialized, 'true');
+};
 
 //TODO: revisit
 export const firstTimeEncryptAllAsync = async (items: [string, string][], password: string) => {
-  /* data will be encrypted with a random Data Encryption Key and that 
+  /* data will be encrypted with a random Data Encryption Key and that
   key is going to be encrypted with user's password and stored in Async Storage;
   if the user changes the password the Data Encryption Key will not change */
   const encryptionKey = await generateRandomKeyAsync();
@@ -65,14 +66,14 @@ export const firstTimeEncryptAllAsync = async (items: [string, string][], passwo
   const resultArray: [string, string][] = [];
 
   // 1. encrypt the encryption key
-  resultArray.push([storeConstants.DataEncryptionStoreKey, encryptionKeyEncrypted]);
+  resultArray.push([StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted]);
 
   // items format is [['k1', 'val1'], ['k2', 'val2']] keys need to be hashed and values encrypted
-  for (var index in items) {
+  for (const index in items) {
     const item = items[index];
     // 2. hash item key with encryption key
     const existingItemTypeHash = await getHashAsync(item[0], encryptionKey);
-    let existingItemValue = item[1];
+    const existingItemValue = item[1];
     if (!existingItemValue)
       continue;
     // 3. encrypt item value with encryption key
@@ -81,45 +82,44 @@ export const firstTimeEncryptAllAsync = async (items: [string, string][], passwo
   }
   createEncryptDecryptDataFunctions(encryptionKeyEncrypted, password);
   return resultArray;
-}
+};
 
 export const decryptAllItems = async (items: [string, string][]) => {
   if (!DataEncryption.getHashAsync || !DataEncryption.decryptDataAsync)
     throw [Errors.Unauthorized, ErrorCodes.Decrypt10];
 
-  return await decryptAllItemsInternal(items, DataEncryption.getHashAsync, DataEncryption.decryptDataAsync);
-}
+  return decryptAllItemsInternal(items, DataEncryption.getHashAsync, DataEncryption.decryptDataAsync);
+};
 
 export const decryptAllItemsFromImport = async (items: [string, string][], getHashAsync: any, decryptDataAsync: any) => {
   if (!getHashAsync || !decryptDataAsync)
     throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt4];
 
-  return await decryptAllItemsInternal(items, getHashAsync, decryptDataAsync);
-}
+  return decryptAllItemsInternal(items, getHashAsync, decryptDataAsync);
+};
 
 const decryptAllItemsInternal = async (items: [string, string][], getHashAsyncFunction: any, decryptDataAsyncFunction: any) => {
-  /*  items are an array of arrays of itemTypeNameHash and itemValue 
+  /*  items are an array of arrays of itemTypeNameHash and itemValue
       e.g. [[ 'itemType1hash', 'item1value' ], [ 'itemType2hash, 'item2value' ]]  */
 
   /* create a mapping of item type names and their hashes so we know which item is which */
-  var itemKeyHashMap: { [hash: string]: string; } = {};
+  const itemKeyHashMap: { [hash: string]: string; } = {};
 
-  for (var i = 0; i < storeConstants.AllEncryptedStoreKeys.length; i++) {
-    const itemKeyHash = await getHashAsyncFunction(storeConstants.AllEncryptedStoreKeys[i]);
-    itemKeyHashMap[itemKeyHash] = storeConstants.AllEncryptedStoreKeys[i];
+  for (const encryptedStoreKey of StoreConstants.AllEncryptedStoreKeys) {
+    const itemKeyHash = await getHashAsyncFunction(encryptedStoreKey);
+    itemKeyHashMap[itemKeyHash] = encryptedStoreKey;
   }
 
   const decryptedItems = [];
-  for (var i = 0; i < items.length; i++) {
-    const item = items[i];
+  for (const item of items) {
 
-    if (!item || item.length != 2)
+    if (!item || item.length !== 2)
       throw Errors.InvalidData;
 
-    if (item[0] === storeConstants.DataEncryptionStoreKey)
+    if (item[0] === StoreConstants.DataEncryptionStoreKey)
       continue; /* we don't want to process this */
 
-    if (item[0] === storeConstants.SETTINGS) {
+    if (item[0] === StoreConstants.SETTINGS) {
       decryptedItems.push([item[0], item[1]]); /* SETTINGS are not encrypted */
       continue;
     }
@@ -132,15 +132,15 @@ const decryptAllItemsInternal = async (items: [string, string][], getHashAsyncFu
       throw [Errors.InvalidKey, ErrorCodes.MissingKey10];
 
     const valueDecrypted = await decryptDataAsyncFunction(value);
-    if (value && !valueDecrypted) {
+    if (value && !valueDecrypted)
       throw [Errors.UnableToDecrypt, ErrorCodes.Decrypt9];
-    }
+
 
     decryptedItems.push([key, valueDecrypted]);
   }
 
   return decryptedItems;
-}
+};
 
 export const getItemKeyHashAsync = async (itemKey: string) => {
 
@@ -151,11 +151,12 @@ export const getItemKeyHashAsync = async (itemKey: string) => {
 
   try {
     return await DataEncryption.getHashAsync(itemKey);
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.General, ErrorCodes.Hash2];
   }
-}
+};
 
 export const decryptDataAsync = async (value: any) => {
   if (!value)
@@ -170,11 +171,12 @@ export const decryptDataAsync = async (value: any) => {
       throw [Errors.General, ErrorCodes.Decrypt2];
     return valueDecrypted;
 
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.General, ErrorCodes.Decrypt3];
   }
-}
+};
 
 export const tryDecryptDataAsync = async (value: any, key: string) => {
   try {
@@ -182,10 +184,11 @@ export const tryDecryptDataAsync = async (value: any, key: string) => {
     if (value && valueDecrypted)
       return true;
     return false;
-  } catch (error) {
+  }
+  catch (error) {
     return false;
   }
-}
+};
 
 export const encryptDataAsync = async (value: string) => {
   if (!DataEncryption.encryptDataAsync)
@@ -193,11 +196,12 @@ export const encryptDataAsync = async (value: string) => {
 
   try {
     return await DataEncryption.encryptDataAsync(value);
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.General, ErrorCodes.Decrypt5];
   }
-}
+};
 
 export const reEncryptAsync = async (value: string, oldPassword: string, newPassword: string) => {
   // 1. decrypt with the old password
@@ -211,10 +215,10 @@ export const reEncryptAsync = async (value: string, oldPassword: string, newPass
     throw [Errors.General, ErrorCodes.Encrypt1];
 
   return encrypted;
-}
+};
 
 export async function getLoginInfo(): Promise<LoginInfo> {
-  const loginAttempts = await getFromSecureStoreAsync(storeConstants.loginAttempts);
+  const loginAttempts = await getFromSecureStoreAsync(StoreConstants.loginAttempts);
   let loginAttemptsNumber = -1;
   if (isNumber(loginAttempts))
     loginAttemptsNumber = toNumber(loginAttempts);
@@ -224,17 +228,18 @@ export async function getLoginInfo(): Promise<LoginInfo> {
 }
 
 async function isInitializedAsync(): Promise<boolean> {
-  const isInitialized = await getFromSecureStoreAsync(storeConstants.isInitialized);
+  const isInitialized = await getFromSecureStoreAsync(StoreConstants.isInitialized);
   return (isInitialized === 'true');
 }
 
 async function isPinLockedAsync(): Promise<boolean> {
   try {
-    const passwordInStore = await getFromSecureStoreAsync(storeConstants.password);
+    const passwordInStore = await getFromSecureStoreAsync(StoreConstants.password);
     if (passwordInStore && (passwordInStore + '').trim().length > 0)
       return true;
     return false;
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.AccessStorage, ErrorCodes.Storage7];
   }
@@ -247,22 +252,22 @@ export const resetEncryptDecryptDataFunctions = async () => {
   DataEncryption.decryptDataAsync = null;
   DataEncryption.encryptDataAsync = null;
   DataEncryption.getHashAsync = null;
-}
+};
 
 export const createEncryptDecryptDataFunctions = async (dataEncryptionKeyEncrypted: string, password: string) => {
 
   const functions = await createCryptoFunctions(dataEncryptionKeyEncrypted, password);
 
   /** if we're here then we passed authentication, clear login attempts flag  */
-  resetInvalidPINAttempts().catch(() => { throw [Errors.General, ErrorCodes.Auth12] });
+  resetInvalidPINAttempts().catch(() => { throw [Errors.General, ErrorCodes.Auth12]; });
 
   DataEncryption.canEncryptDecrypt = functions.canEncryptDecrypt;
   DataEncryption.decryptDataAsync = functions.decryptDataAsync;
   DataEncryption.encryptDataAsync = functions.encryptDataAsync;
   DataEncryption.getHashAsync = functions.getHashAsync;
-}
+};
 /**
- * @description createCryptoFunctions that takes password entered by the user during the logon process or import, 
+ * @description createCryptoFunctions that takes password entered by the user during the logon process or import,
  * decrypts the dataEncryptionKey and creates the functions that handle crypto without
  * re-retrieving the data encryption key or the need to pass it around
  */
@@ -273,15 +278,15 @@ export async function createCryptoFunctions(dataEncryptionKeyEncrypted: string, 
   if (!dataEncryptionKeyDecrypted)
     throw [Errors.InvalidPassword, ErrorCodes.Auth2];
 
-  let functions = { canEncryptDecrypt: true } as DataEncryptionInterface;
-  functions.decryptDataAsync = async (data: string) => {
-    return await decryptAsync(data, dataEncryptionKeyDecrypted);
+  const functions = { canEncryptDecrypt: true } as DataEncryptionInterface;
+  functions.decryptDataAsync = (data: string) => {
+    return decryptAsync(data, dataEncryptionKeyDecrypted);
   };
-  functions.encryptDataAsync = async (data: string) => {
-    return await encryptAsync(data, dataEncryptionKeyDecrypted);
+  functions.encryptDataAsync = (data: string) => {
+    return encryptAsync(data, dataEncryptionKeyDecrypted);
   };
-  functions.getHashAsync = async (data: string) => {
-    return await getHashAsync(data, dataEncryptionKeyDecrypted);
+  functions.getHashAsync = (data: string) => {
+    return getHashAsync(data, dataEncryptionKeyDecrypted);
   };
   return functions;
 }
@@ -290,7 +295,7 @@ export async function createCryptoFunctions(dataEncryptionKeyEncrypted: string, 
 export async function validatePIN(pin: string): Promise<void> {
   if (!pin)
     throw Errors.InvalidPIN;
-  const encryptedPassword = await getFromSecureStoreAsync(storeConstants.password);
+  const encryptedPassword = await getFromSecureStoreAsync(StoreConstants.password);
   if (isNullOrEmpty(encryptedPassword))
     throw Errors.InvalidPIN;
   const decryptedPassword = await decryptAsync(encryptedPassword + '', pin);
@@ -298,12 +303,12 @@ export async function validatePIN(pin: string): Promise<void> {
     throw Errors.InvalidPIN;
 }
 
-/* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and 
-use it to sign in if the PIN is correct; after storeConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
+/* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and
+use it to sign in if the PIN is correct; after StoreConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
 export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncrypted: string, pin: string) => {
   if (!dataEncryptionKeyEncrypted || !pin)
     throw [Errors.InvalidParameter, ErrorCodes.Auth4];
-  const encryptedPassword = await getFromSecureStoreAsync(storeConstants.password);
+  const encryptedPassword = await getFromSecureStoreAsync(StoreConstants.password);
   if (isNullOrEmpty(encryptedPassword))
     throw [Errors.General, ErrorCodes.Auth5];
   const decryptedPassword = await decryptAsync(encryptedPassword + '', pin);
@@ -312,30 +317,30 @@ export const createEncryptDecryptDataFunctionsPIN = async (dataEncryptionKeyEncr
     throw [Errors.InvalidPIN, ErrorCodes.Auth6];
   }
   await createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted, decryptedPassword);
-}
+};
 
-const incrementInvalidPINAttempts = async() => {
+const incrementInvalidPINAttempts = async () => {
   /** run this function at other places where PIN re-entry is required */
-  const loginAttempts = await getFromSecureStoreAsync(storeConstants.loginAttempts);
+  const loginAttempts = await getFromSecureStoreAsync(StoreConstants.loginAttempts);
   const loginAttemptsNumber = parseInt(loginAttempts + '') ?? 0;
-  if (loginAttemptsNumber >= storeConstants.maxLoginAttempts) {
+  if (loginAttemptsNumber >= StoreConstants.maxLoginAttempts) {
     //disable ability to login with PIN so user has to enter the password
-    await setToSecureStoreAsync(storeConstants.password, '');
+    await setToSecureStoreAsync(StoreConstants.password, '');
     throw Errors.MaxLoginAttempts;
   }
-  if (loginAttemptsNumber >= 0 && loginAttemptsNumber <= storeConstants.maxLoginAttempts) {
-    await setToSecureStoreAsync(storeConstants.loginAttempts, (loginAttemptsNumber + 1).toString());
+  if (loginAttemptsNumber >= 0 && loginAttemptsNumber <= StoreConstants.maxLoginAttempts) {
+    await setToSecureStoreAsync(StoreConstants.loginAttempts, (loginAttemptsNumber + 1).toString());
     return;
   }
-  await setToSecureStoreAsync(storeConstants.loginAttempts, (1).toString());
-}
+  await setToSecureStoreAsync(StoreConstants.loginAttempts, (1).toString());
+};
 
 async function resetInvalidPINAttempts() {
-  getFromSecureStoreAsync(storeConstants.loginAttempts)
+  getFromSecureStoreAsync(StoreConstants.loginAttempts)
     .then((loginAttempts) => {
       const loginAttemptsNumber = parseInt(loginAttempts + '') ?? 0;
-      if (loginAttemptsNumber != 0)
-        setToSecureStoreAsync(storeConstants.loginAttempts, (0).toString());
+      if (loginAttemptsNumber !== 0)
+        setToSecureStoreAsync(StoreConstants.loginAttempts, (0).toString());
     });
 }
 
@@ -345,7 +350,7 @@ export function isSignedIn(): boolean {
 
 const generateRandomKeyAsync = async () => {
   return lib.WordArray.random(16).toString(); /* convert to string, important for decryption, otherwise the encodings will be different Utf8 vs Hex after re-encryption */
-}
+};
 
 const getHashAsync = async (value: string, key: string) => {
   if (!key)
@@ -353,7 +358,7 @@ const getHashAsync = async (value: string, key: string) => {
 
   const hash = HmacSHA256(value, key);
   return enc.Base64.stringify(hash);
-}
+};
 
 const encryptAsync = async (value: string, key: string) => {
   if (!key)
@@ -362,11 +367,12 @@ const encryptAsync = async (value: string, key: string) => {
     return value;
   try {
     return AES.encrypt(value, key).toString();
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.General, ErrorCodes.Encrypt3];
   }
-}
+};
 
 const decryptAsync = async (value: string, key: string) => {
   if (!key)
@@ -379,16 +385,17 @@ const decryptAsync = async (value: string, key: string) => {
     const decrypted = bytes.toString(enc.Utf8);
     return decrypted;
 
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     throw [Errors.InvalidData, ErrorCodes.Decrypt8];
   }
-}
+};
 
-const getFromSecureStoreAsync = async (key: string) => {
-  return await SecureStore.getItemAsync(key, {});
-}
+const getFromSecureStoreAsync = (key: string) => {
+  return SecureStore.getItemAsync(key, {});
+};
 
-const setToSecureStoreAsync = async (key: string, value: string) => {
-  return await SecureStore.setItemAsync(key, value, {});
-}
+const setToSecureStoreAsync = (key: string, value: string) => {
+  return SecureStore.setItemAsync(key, value, {});
+};

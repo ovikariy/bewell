@@ -30,7 +30,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
     super(props);
     this.state = {
       showAllAddButtons: false
-    }
+    };
   }
 
   onChange(newWidgetDailyData: WidgetBase) {
@@ -58,13 +58,13 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
       if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
         return;
       return <ToolbarButton iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
-        onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />
+        onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />;
     });
     if (hasNonQuickAccessItems) {
       widgetButtons.push(<ToolbarButton iconType='material'
         iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
         title={this.state.showAllAddButtons ? language.less : language.more}
-        onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />)
+        onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />);
     }
     return widgetButtons;
   }
@@ -91,7 +91,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
       value={record}
       onChange={(newWidgetDailyData) => this.onChange(newWidgetDailyData)}
       onSelected={() => this.props.onSelected(record)}
-    />
+    />;
   }
 
   renderWelcomeMessage() {

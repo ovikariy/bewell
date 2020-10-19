@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ParagraphText, Toast, PasswordInputWithButton, 
+import { ParagraphText, Toast, PasswordInputWithButton,
   Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
@@ -14,7 +14,7 @@ import { RootState } from '../redux/configureStore';
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
   PINSETUP: state.PINSETUP
-})
+});
 
 const mapDispatchToProps = {
   verifyPassword,
@@ -23,7 +23,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SetupPINScreenState {
   password?: string,
@@ -47,7 +47,7 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
       PIN: undefined,
       PINreentered: undefined,
       showPINReentered: false
-    }
+    };
   }
 
   componentDidMount() {
@@ -119,7 +119,7 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
         title={language.done}
-        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
+        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
     </View>;
   }
@@ -136,7 +136,7 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
         containerStyle={styles.bottomPositioned}
         placeholder={language.password}
         onPress={() => this.verifyPassword()}
-        onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
       />
     </View>;
   }
@@ -154,7 +154,7 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
         containerStyle={styles.bottomPositioned}
         placeholder={language.pinEnter}
         onPress={() => this.showPINfieldReenter()}
-        onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, PIN: value }); }}
       />
     </View>;
   }
@@ -170,21 +170,21 @@ class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, Set
         containerStyle={styles.bottomPositioned}
         placeholder={language.pinReEnterPlaceholder}
         onPress={() => this.submitPIN()}
-        onChangeText={(value) => { this.setState({ ...this.state, PINreentered: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, PINreentered: value }); }}
       />
     </View>;
   }
 
   renderFields() {
-    if (this.props.PINSETUP.isPinSetupComplete === true) {
+    if (this.props.PINSETUP.isPinSetupComplete === true)
       return this.renderPINSetupComplete();
-    }
-    if (this.props.PINSETUP.isPasswordVerified !== true) {
+
+    if (this.props.PINSETUP.isPasswordVerified !== true)
       return this.renderPasswordField();
-    }
-    if (this.state.showPINReentered === true) {
+
+    if (this.state.showPINReentered === true)
       return this.renderPINReenter();
-    }
+
     return this.renderPINField();
   }
 

@@ -9,6 +9,7 @@ import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, Divid
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
 import { AppContext, AppContextInterface } from '../modules/AppContext';
 import { brokenImageURI, Errors } from '../modules/Constants';
+import { getTranslationMessage } from '../modules/translations';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[
@@ -36,22 +37,14 @@ export const Toast = {
     */
     const language = context.language;
     if (typeof codes === 'string') {
-      if (language[codes])
-        this.show(language[codes]);
-      else
-        this.show(codes);
+      const message = getTranslationMessage(context.language, codes);
+      this.show(message);
       return;
     }
 
     if (Array.isArray(codes)) {
-      const translated = [];
-      for (var code in codes) {
-        if (language[codes[code]])
-          translated.push(language[codes[code]]);
-        else
-          translated.push(codes[code]);
-      }
-      this.show(translated.join(' '));
+      const messages = codes.map(code => getTranslationMessage(context.language, code));
+      this.show(messages.join(' '));
       return;
     }
   }
@@ -72,7 +65,7 @@ export const ClearTextArea = (props: InputProps) => {
       inputContainerStyle={styles.clearTextAreaContainer}
       {...props}
     />
-  )
+  );
 };
 
 //route.params?.someParam ?? 'defaultValue';
@@ -92,7 +85,7 @@ export const PasswordInput = (props: InputProps) => {
     autoCompleteType='off'
     autoCorrect={false}
     secureTextEntry={true}
-  />
+  />;
 };
 
 interface PasswordInputWithButtonProps extends InputProps {
@@ -117,7 +110,7 @@ export const PasswordInputWithButton = (props: PasswordInputWithButtonProps) => 
       if (props.onPress)
         props.onPress();
     }}
-  />
+  />;
 };
 
 interface PINInputWithButtonProps extends TextInputProps {
@@ -147,14 +140,14 @@ export const PINInputWithButton = (props: PINInputWithButtonProps) => {
       autoCorrect={false}
       secureTextEntry={true}
       keyboardType='numeric'
-      onChangeText={(value) => { onChangeText(value) }}
+      onChangeText={(value) => { onChangeText(value); }}
       onSubmitEditing={() => {
         if (props.onPress)
           props.onPress();
       }}
     />
     <RoundButton containerStyle={{ marginLeft: 30 }} name="keyboard-arrow-right" onPress={props.onPress} />
-  </View>
+  </View>;
 };
 
 export const RoundButton = (props: IconProps) => {
@@ -164,8 +157,8 @@ export const RoundButton = (props: IconProps) => {
     onPress={props.onPress}
     iconStyle={{ ...styles.roundedButton, ...props.iconStyle }}
     containerStyle={[styles.roundedButtonContainer, props.containerStyle]}
-  />
-}
+  />;
+};
 
 
 
@@ -220,8 +213,8 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
         />
       )}
     </View>
-  )
-}
+  );
+};
 
 export const TimePicker = (props: StyledDatePickerProps & { value?: Date }) => {
   const context = React.useContext(AppContext);
@@ -236,14 +229,14 @@ export const TimePicker = (props: StyledDatePickerProps & { value?: Date }) => {
         placeholder={props.placeholder || language.pickTime}
       />
     </View>
-  )
+  );
 };
 
 export const IconForButton = (props: IconProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
-  return <Icon iconStyle={{ ...styles.iconPrimarySmall, ...props.iconStyle }} {...props} />
-}
+  return <Icon iconStyle={{ ...styles.iconPrimarySmall, ...props.iconStyle }} {...props} />;
+};
 
 export const DatePickerWithArrows = (props: StyledDatePickerProps) => {
   const context = React.useContext(AppContext);
@@ -261,7 +254,7 @@ export const DatePickerWithArrows = (props: StyledDatePickerProps) => {
 
   return (
     <View style={styles.selectedDateContainer}>
-      <Button onPress={() => { changeDays(-1) }}
+      <Button onPress={() => { changeDays(-1); }}
         type='clear'
         icon={<IconForButton name='chevron-left' iconStyle={styles.iconSecondary} />}
       />
@@ -271,7 +264,7 @@ export const DatePickerWithArrows = (props: StyledDatePickerProps) => {
         style={{ width: 160 }}
         onChange={onChange}
       />
-      <Button onPress={() => { changeDays(1) }}
+      <Button onPress={() => { changeDays(1); }}
         type='clear'
         icon={<IconForButton name='chevron-right' iconStyle={styles.iconSecondary} />}
       />
@@ -294,7 +287,7 @@ export const ButtonSecondary = (props: ButtonPropsInterface) => {
       buttonStyle={[styles.buttonSecondary, props.buttonStyle]}
       titleStyle={[styles.brightColor, { opacity: 1 }, props.titleStyle]}
     />
-  )
+  );
 };
 
 export const ButtonPrimary = (props: ButtonPropsInterface) => {
@@ -307,7 +300,7 @@ export const ButtonPrimary = (props: ButtonPropsInterface) => {
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
       titleStyle={[styles.buttonText, props.titleStyle]}
       icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: 20, color: styles.brightColor.color }, ...props.iconStyle }} /> : <React.Fragment />} />
-  )
+  );
 };
 
 export const IconButton = (props: ButtonPropsInterface) => {
@@ -319,7 +312,7 @@ export const IconButton = (props: ButtonPropsInterface) => {
       {props.iconName ? <IconForButton name={props.iconName} type={props.iconType} iconStyle={props.iconStyle ? props.iconStyle : styles.iconPrimary} /> : <View></View>}
       {props.title ? <Text style={[props.titleStyle || styles.toolbarButtonText]}>{props.title}</Text> : <View></View>}
     </TouchableOpacity>
-  )
+  );
 };
 
 export const LinkButton = (props: ButtonPropsInterface) => {
@@ -328,7 +321,7 @@ export const LinkButton = (props: ButtonPropsInterface) => {
 
   return (
     <Button {...props} titleStyle={[styles.subTitleText, props.titleStyle]} type="clear" />
-  )
+  );
 };
 
 export function showMessages(operation: any, context: AppContextInterface) {
@@ -351,8 +344,8 @@ export const LoadingScreeenOverlay = () => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
-  return <Loading style={styles.loadingScreeenOverlay}  />
-}
+  return <Loading style={styles.loadingScreeenOverlay} />;
+};
 
 /* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent on the bottom like a Toast */
 export const Loading = (props: { style: ViewStyle }) => {
@@ -362,7 +355,7 @@ export const Loading = (props: { style: ViewStyle }) => {
   return (
     <View style={[{
       alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
-       flex: 1, 
+      flex: 1,
     }, props.style]}>
       <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
       <Text style={styles.bodyText}>{language.loading}</Text>
@@ -378,8 +371,8 @@ export const EmptyList = () => {
     <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
       <Text style={styles.subTitleText}>{language.emptyList}</Text>
     </View>
-  )
-}
+  );
+};
 
 interface ListWithRefreshProps {
   data?: any,
@@ -391,11 +384,11 @@ interface ListWithRefreshProps {
 interface ListWithRefreshState { refreshing: boolean }
 
 export class ListWithRefresh extends React.Component<ListWithRefreshProps, ListWithRefreshState> {
-  /* ScrollView or FlatList with pulldown refresh. 
-  Cannot be functional component because for WidgetList we use a ref to scroll to top and will get this warning 
+  /* ScrollView or FlatList with pulldown refresh.
+  Cannot be functional component because for WidgetList we use a ref to scroll to top and will get this warning
   "Function components cannot be given refs. Attempts to access this ref will fail. */
 
-  scrollView: any
+  scrollView: any;
 
   constructor(props: ListWithRefreshProps) {
     super(props);
@@ -456,7 +449,7 @@ export const List = (props: any) => {
       renderItem={({ item }) => props.renderItem ? props.renderItem({ item }) : renderListItem({ item })}
     />
   );
-}
+};
 
 export const ActivityIndicator = (props: ActivityIndicatorProps) => {
   const context = React.useContext(AppContext);
@@ -464,15 +457,15 @@ export const ActivityIndicator = (props: ActivityIndicatorProps) => {
 
   return <NativeActivityIndicator {...props} size={props.size ?? 'large'}
     style={[{ alignSelf: 'center', borderRadius: 50, padding: 2, opacity: 0.8, backgroundColor: styles.brightColor.color }, props.style]}
-  />
+  />;
 };
 
 export const HorizontalLine = (props: DividerProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
-  return <Divider style={[styles.highlightBackground, { marginVertical: 15, width: 50, height: 2 }, props.style]} />
-}
+  return <Divider style={[styles.highlightBackground, { marginVertical: 15, width: 50, height: 2 }, props.style]} />;
+};
 
 export interface StyledPickerItemType { label: string, value: string }
 
@@ -486,10 +479,10 @@ export const StyledPicker = (props: PickerProps & { items: StyledPickerItemType[
     style={[{ width: 200, height: 20, marginLeft: -9 }, styles.bodyText, props.style]}
   >
     {props.items.map((item: { label: string, value: string }) => {
-      return <Picker.Item label={item.label} value={item.value} key={item.label} />
+      return <Picker.Item label={item.label} value={item.value} key={item.label} />;
     })}
-  </Picker>
-}
+  </Picker>;
+};
 
 export interface ImageProps {
   imageType?: 'image' | 'video';
@@ -511,7 +504,7 @@ export const StyledImage = (props: StyledImageProps) => {
   const styles = context.styles;
   const language = context.language;
 
-  if (!props.imageProps || !props.image || props.image == brokenImageURI) {
+  if (!props.imageProps || !props.image || props.image === brokenImageURI) {
     return <View style={{ width: '100%', borderWidth: 1, alignItems: 'center', borderColor: styles.bodyText.color }}>
       <ParagraphText style={{ margin: 20 }}>{language[Errors.ImageNotFound]}</ParagraphText>
     </View>;
@@ -529,7 +522,7 @@ export const StyledImage = (props: StyledImageProps) => {
     source={{ uri: 'data:image/png;base64,' + image }}
     style={{
       resizeMode: 'contain',
-      height: height,
-      width: width
-    }} />
-}
+      height,
+      width
+    }} />;
+};

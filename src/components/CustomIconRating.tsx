@@ -12,14 +12,14 @@ export const CustomIconRating = (props: { children: ReactNode }) => {
     <View style={styles.ratingButtonGroupContainer}>
       {props.children}
     </View>
-  )
-}
+  );
+};
 
 export interface CustomIconType {
-  name: string, 
-  icon: string, 
-  iconStyle?: ViewStyle, 
-  backgroundStyle?: ViewStyle 
+  name: string,
+  icon: string,
+  iconStyle?: ViewStyle,
+  backgroundStyle?: ViewStyle
 }
 
 interface CustomIconRatingItemType {
@@ -50,5 +50,5 @@ export const CustomIconRatingItem = (props: CustomIconRatingItemType) => {
       </View>
       <Text style={[styles.bodyText, styles.centered, props.textColor ? { color: props.textColor } : '']}>{props.value.name}</Text>
     </View>
-  )
-}
+  );
+};

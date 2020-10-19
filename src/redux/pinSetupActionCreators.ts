@@ -14,7 +14,7 @@ export const startPINsetup = (): AppThunkActionType => (dispatch) => {
         return;
     }
     dispatch({ type: ActionTypes.PIN_SETUP_STARTED });
-}
+};
 
 export const verifyPassword = (password: string): AppThunkActionType => (dispatch) => {
     if (SecurityHelpers.isSignedIn() !== true) {
@@ -32,8 +32,8 @@ export const verifyPassword = (password: string): AppThunkActionType => (dispatc
             dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
             dispatch(GenericActions.operationFailed(error.message ? Errors.InvalidPassword : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 export const submitPIN = (password: string, pin: string): AppThunkActionType => (dispatch) => {
     if (SecurityHelpers.isSignedIn() !== true) {
@@ -57,13 +57,13 @@ export const submitPIN = (password: string, pin: string): AppThunkActionType => 
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security4] : error));
             dispatch(GenericActions.operationCleared());
         });
-}
+};
 
 const submitPINAsync = async (password: string, pin: string) => {
     /* verify password one more time */
     await validatePasswordAsync(password);
     await SecurityHelpers.setupNewPINAsync(password, pin);
-}
+};
 
 
 

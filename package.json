@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "eject": "expo eject",
     "test": "node_modules/.bin/jest",
-    "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand"
+    "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand",
+    "lint": "npx eslint \"src/**/*.ts*\"" 
   },
   "jest": {
     "preset": "jest-expo"
@@ -57,7 +58,10 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@types/react-redux": "^7.1.9",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
     "babel-preset-expo": "~8.0.0",
+    "eslint": "^7.11.0",
     "jest-expo": "^36.0.0",
     "react-test-renderer": "^16.12.0"
   },

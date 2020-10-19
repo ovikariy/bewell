@@ -7,6 +7,11 @@ import 'moment/locale/fr';
 
 export type TranslationMap = { [language: string]: TranslationKeys };
 
+export function getTranslationMessage(translation: TranslationKeys, messageId: string): string {
+    const message = (translation as any)[messageId];
+    return message ?? messageId;
+}
+
 export interface TranslationKeys {
     appName: string;
     note: string;

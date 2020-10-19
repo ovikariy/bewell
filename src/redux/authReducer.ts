@@ -23,4 +23,4 @@ export const AUTH = (state: AuthReducerState = {
     default:
       return state;
   }
-}
+};

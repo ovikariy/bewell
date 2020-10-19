@@ -11,7 +11,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const connector = connect(mapStateToProps, {});
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BackupRestoreScreenProps {
   navigation: any;
@@ -20,7 +20,7 @@ interface BackupRestoreScreenProps {
 class BackupRestoreScreen extends Component<PropsFromRedux & BackupRestoreScreenProps> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
-  
+
   render() {
     const language = this.context.language;
     const styles = this.context.styles;
@@ -32,14 +32,14 @@ class BackupRestoreScreen extends Component<PropsFromRedux & BackupRestoreScreen
           <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
             title={language.export}
-            onPress={() => { this.props.navigation.navigate('Backup') }}
+            onPress={() => { this.props.navigation.navigate('Backup'); }}
             iconName='arrow-downward'
           />
           <ParagraphText style={[styles.bodyTextLarge, { marginTop: 30 }]}>{language.importExplanationLong}</ParagraphText>
           <ButtonPrimary
             containerStyle={{ marginTop: 20 }}
             title={language.import}
-            onPress={() => { this.props.navigation.navigate('Restore') }}
+            onPress={() => { this.props.navigation.navigate('Restore'); }}
             iconName='arrow-upward'
           />
         </ScreenContent>

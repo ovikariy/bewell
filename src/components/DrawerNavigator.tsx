@@ -26,15 +26,15 @@ const MenuHeaderButton = (props: { navigation: any }) => {
     const styles = context.styles;
 
     return <Icon name='menu' size={30} containerStyle={{ margin: 16 }}
-        color={styles.bodyText.color} onPress={() => props.navigation.toggleDrawer()} />
-}
+        color={styles.bodyText.color} onPress={() => props.navigation.toggleDrawer()} />;
+};
 
 const LogoImage = () => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    return <Image source={require('../assets/images/logo_small.png')} tintColor={styles.toolbarContainer.backgroundColor} style={[styles.logoImageSmall, { marginRight: 10 }]} />
-}
+    return <Image source={require('../assets/images/logo_small.png')} tintColor={styles.toolbarContainer.backgroundColor} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
+};
 
 const ScreenNavOptions = (styles: any): StackNavigationOptions => {
     return {
@@ -43,8 +43,8 @@ const ScreenNavOptions = (styles: any): StackNavigationOptions => {
         headerTitleAlign: 'center',
         headerTransparent: true,
         headerTintColor: styles.heading.color
-    }
-}
+    };
+};
 
 const WelcomeStack = createStackNavigator();
 function WelcomeNavigator() {
@@ -199,7 +199,7 @@ function SignOutNavigator() {
                 })}
             />
         </SignOutStack.Navigator>
-    )
+    );
 }
 
 function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOptions>) {
@@ -233,7 +233,7 @@ function getSigninScreens() {
                 })}
             />
         </React.Fragment>
-    )
+    );
 }
 
 function getFirstTimeUserScreens() {
@@ -241,7 +241,7 @@ function getFirstTimeUserScreens() {
         <React.Fragment>
             <Drawer.Screen name="Welcome" component={WelcomeNavigator} />
         </React.Fragment>
-    )
+    );
 }
 
 function getAuthenticatedUserScreens() {
@@ -296,7 +296,7 @@ function getAuthenticatedUserScreens() {
                 }}
             />
         </React.Fragment>
-    )
+    );
 }
 
 interface MainDrawerNavigatorProps {
@@ -306,17 +306,17 @@ interface MainDrawerNavigatorProps {
 const Drawer = createDrawerNavigator();
 export function MainDrawerNavigator(props: MainDrawerNavigatorProps) {
     let drawerContent;
-    let initialRouteName = "SignIn";
+    const initialRouteName = "SignIn";
 
-    if (props.auth.isInitialized !== true) {
+    if (props.auth.isInitialized !== true)
         drawerContent = getFirstTimeUserScreens();
-    }
-    else if (props.auth.isSignedIn === true) {
+
+    else if (props.auth.isSignedIn === true)
         drawerContent = getAuthenticatedUserScreens();
-    }
-    else {
+
+    else
         drawerContent = getSigninScreens();
-    }
+
 
     return (
         <Drawer.Navigator initialRouteName={initialRouteName} drawerContent={(config) =>

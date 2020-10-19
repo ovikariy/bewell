@@ -1,15 +1,15 @@
 import moment from 'moment';
-import { storeConstants } from './Constants';
+import { StoreConstants } from './Constants';
 import { TranslationKeys } from './translations';
 
 export function configLocale(locale: string) {
   /* make sure all needed locales are imported in translations file i.e. import 'moment/locale/ru'; */
-  if (locale && moment.locale() != locale) {
+  if (locale && moment.locale() !== locale)
     moment.locale(locale);
-  }
+
 }
 
-export const friendlyDate = (date: string | Date, options: { language: TranslationKeys }) => { 
+export const friendlyDate = (date: string | Date, options: { language: TranslationKeys }) => {
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
@@ -22,7 +22,7 @@ export const friendlyDate = (date: string | Date, options: { language: Translati
   if (newDateShortString === yesterday.format(format))
     return options.language.yesterday;
   return newDate.format('dddd, MMM D');
-}
+};
 
 export const friendlyDay = (date: string | Date, options: { language: TranslationKeys }) => {
   const format = 'YYYYMMDD';
@@ -37,17 +37,17 @@ export const friendlyDay = (date: string | Date, options: { language: Translatio
   if (newDateShortString === yesterday.format(format))
     return options.language.yesterday;
   return newDate.format('dddd');
-}
+};
 
 export const friendlyTime = (date: string | Date) => {
   return moment(date).format('LT');
+};
+
+export function getStorageKeyFromDate(date: string | Date) {
+  return StoreConstants.keyPrefix + formatDate(date, StoreConstants.keyDateFormat);
 }
 
-export function getStorageKeyFromDate(date: string | Date) {   
-  return storeConstants.keyPrefix + formatDate(date, storeConstants.keyDateFormat);
-}
-
-export function formatDate(date: string | Date, format: string) { 
+export function formatDate(date: string | Date, format: string) {
   return moment(date).format(format);
 }
 
@@ -69,15 +69,16 @@ export function isDate(value: any) {
 
 export function isValidDate(value: any) {
   try {
-    var date = moment(new Date(value));
+    const date = moment(new Date(value));
     return date.isValid();
-  } catch (error) {
+  }
+  catch (error) {
     return false;
   }
 }
 
 export function isNullOrEmpty(value: any) {
-  if (!value || value == undefined || value == null || (value + '').trim() == '')
+  if (!value || value === undefined || value === null || (value + '').trim() === '')
     return true;
   return false;
 }
@@ -90,7 +91,7 @@ export function isEmptyWidgetItem(item: any) {
   /* if an item only has an id property we don't want to save it because it is an empty item
   added by the plus button but not updated by the user */
   const emptyItemFields = ['id', 'date', 'type'];
-  return (Object.keys(item).filter(key => emptyItemFields.indexOf(key) < 0).length === 0)
+  return (Object.keys(item).filter(key => emptyItemFields.indexOf(key) < 0).length === 0);
 }
 
 export function addSubtractDays(date: string | Date | moment.Moment, numDays: number) {
@@ -131,7 +132,7 @@ export function mergeArraysImmutable(array1: any[], array2: any[]) {
 
 export function getHashtagsFromText(text: string) {
   /* .match(/#([^ |#]*)/gm) will match all strings surrounded by # and space (or another #) allowing special characters in the string
- 
+
    this input:
       #tag1 #tag-2 #tag3#tag4 #tag!@$5
 
@@ -144,6 +145,7 @@ export function getHashtagsFromText(text: string) {
 
 export function wait(timeout: number) {
   return new Promise(resolve => {
+    // eslint-disable-next-line no-restricted-globals
     setTimeout(resolve, timeout);
   });
 }
@@ -152,7 +154,7 @@ export function getNewUuid() {
   //TODO: use a library mentioned in this answer for better reliability
   //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
@@ -163,11 +165,11 @@ export function groupBy(list: any[], keyGetter: any, appendToMap?: Map<any, any>
   list.forEach((item) => {
     const key = keyGetter(item);
     const collection = map.get(key);
-    if (!collection) {
+    if (!collection)
       map.set(key, [item]);
-    } else {
+    else
       collection.push(item);
-    }
+
   });
   return map;
 }
@@ -178,7 +180,7 @@ export const consoleColors = {
   cyan: '\x1b[36m',
   red: '\x1b[31m',
   reset: '\x1b[0m'
-}
+};
 
 export function consoleLogWithColor(color: string, message: string) {
   /* changes the color of console log statements and needs to be reset after

@@ -12,7 +12,7 @@ import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
-})
+});
 
 const mapDispatchToProps = {
   setupNewEncryption,
@@ -20,7 +20,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SetupPasswordScreenState {
   password?: string,
@@ -41,7 +41,7 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
       passwordReentered: undefined,
       showPasswordReentered: false,
       instructionText: ''
-    }
+    };
   }
 
   reset() {
@@ -103,20 +103,20 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
             <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
             <Spacer height={40} />
             <View style={[styles.bottomPositioned]} >
-              {this.state.showPasswordReentered == false ?
+              {this.state.showPasswordReentered === false ?
                 <PasswordInputWithButton
                   containerStyle={{ minWidth: 300 }}
                   placeholder={language.passwordEnterNewPlaceholder}
                   onPress={() => this.showPasswordReenter()}
                   value={this.state.password}
-                  onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+                  onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
                 /> :
                 <PasswordInputWithButton
                   containerStyle={{ minWidth: 300 }}
                   placeholder={language.passwordReEnterPlaceholder}
                   onPress={() => this.submitPassword()}
                   value={this.state.passwordReentered}
-                  onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }) }}
+                  onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }); }}
                 />
               }
             </View>

@@ -15,7 +15,7 @@ import { ItemBase, ItemBaseAssociativeArray } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
-})
+});
 
 const mapDispatchToProps = {
   load,
@@ -24,7 +24,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface HomeScreenState {
   selectedDate: Date,
@@ -44,7 +44,7 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
     this.state = {
       selectedDate: new Date(),
       selectedItem: undefined
-    }
+    };
   }
 
   componentDidMount() {
@@ -74,7 +74,7 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
     let data: WidgetBase[] = [];
     if (this.props.STORE && this.props.STORE.items)
-      data = (this.props.STORE.items[selectedMonth] as WidgetBase[] || []).filter((item) => new Date(item.date).toLocaleDateString() == selectedDateString);
+      data = (this.props.STORE.items[selectedMonth] as WidgetBase[] || []).filter((item) => new Date(item.date).toLocaleDateString() === selectedDateString);
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} >
@@ -84,13 +84,13 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
             selectedDate={this.state.selectedDate}
             selectedItem={this.state.selectedItem}
             widgetFactory={widgetFactory}
-            onChange={(newDailyData) => { this.onDataChange(newDailyData) }}
-            onSelected={(selectedItem) => { this.onSelected(selectedItem) }}
+            onChange={(newDailyData) => { this.onDataChange(newDailyData); }}
+            onSelected={(selectedItem) => { this.onSelected(selectedItem); }}
             onPulldownRefresh={() => this.refreshItems()}
           />
         </ScreenContent>
-        <FloatingToolbar isVisible={this.state.selectedItem != null}>
-          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item) }} />
+        <FloatingToolbar isVisible={this.state.selectedItem !== undefined}>
+          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item); }} />
           <ViewHistoryButton item={this.state.selectedItem} itemConfig={this.state.selectedItem ? widgetFactory[this.state.selectedItem.type].config : undefined} navigation={this.props.navigation} />
         </FloatingToolbar>
       </ScreenBackground>

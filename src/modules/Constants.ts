@@ -1,12 +1,12 @@
 /* ItemTypes correspond to data keys in storage and will be hashed with DATA ENCRYPTION KEY
-and their values will be encrypted with the DATA ENCRYPTION KEY; 
+and their values will be encrypted with the DATA ENCRYPTION KEY;
 These are only for widgets and not to be used for other storage items */
 export const ItemTypes = {
   MOOD: 'MOOD',
   NOTE: 'NOTE',
   SLEEP: 'SLEEP',
   IMAGE: 'IMAGE'
-}
+};
 
 export const brokenImageURI = 'broken'; /* this is just so that we can show something to user to indicate the image will not get loaded */
 
@@ -18,36 +18,36 @@ export const stateConstants = {
   BACKUPRESTORE: 'BACKUPRESTORE',
   CHANGEPASSWORD: 'CHANGEPASSWORD',
   APPCONTEXT: 'APPCONTEXT'
-}
+};
 
-export class storeConstants {
+export class StoreConstants {
   static password = 'password';
   static isInitialized = 'isInitialized';
   static loginAttempts = 'loginAttempts';
   static maxLoginAttempts = 6;
   /* In storage we use '@Morning:key' pattern for keys in key/value pairs */
   /* DataEncryptionStoreKey is special as it will not be hashed
-  and the value will be encrypted with the user's password. When the user changes password 
+  and the value will be encrypted with the user's password. When the user changes password
   only DataEncryptionStoreKey will have to be re-encrypted in store */
   static keyPrefix = '@Morning:';
   static keyDateFormat = 'MMYYYY';
-  static monthsFromEpochDate = getMonthsFromEpochDate(storeConstants.keyPrefix);
-  static AllEncryptedStoreKeys = [...storeConstants.monthsFromEpochDate];
-  static DataEncryptionStoreKey = storeConstants.keyPrefix + 'DATAENCRYPTIONKEY';
-  static SETTINGS = storeConstants.keyPrefix + 'SETTINGS';
+  static monthsFromEpochDate = getMonthsFromEpochDate(StoreConstants.keyPrefix);
+  static AllEncryptedStoreKeys = [...StoreConstants.monthsFromEpochDate];
+  static DataEncryptionStoreKey = StoreConstants.keyPrefix + 'DATAENCRYPTIONKEY';
+  static SETTINGS = StoreConstants.keyPrefix + 'SETTINGS';
 }
 
 function getMonthsFromEpochDate(keyPrefix: string) {
-  /* data in store is partitioned by month so the keys can be potentially from 
+  /* data in store is partitioned by month so the keys can be potentially from
   when the app was first used to current year and month  ['012019', '022019', ... ] */
   const epochYear = 2019;
   const currentYear = new Date().getUTCFullYear();
   const currentMonth = new Date().getUTCMonth() + 1; /* getUTCMonth is zero based */
   const result = [];
 
-  for (var year = epochYear; year <= currentYear; year++) {
-    for (var month = 1; month <= 12; month++) {
-      if (year == currentYear && month > currentMonth)
+  for (let year = epochYear; year <= currentYear; year++) {
+    for (let month = 1; month <= 12; month++) {
+      if (year === currentYear && month > currentMonth)
         break;
       result.push(keyPrefix + (month < 10 ? '0' : '') + month + '' + year); // 'MMYYYY' format
     };
@@ -59,7 +59,7 @@ export const settingsConstants = {
   language: 'language',
   theme: 'theme',
   version: 'version'
-}
+};
 
 export enum Errors {
   General = 'General',
@@ -159,4 +159,4 @@ export const ErrorCodes = {
   BackupRestore2: 'BR1002',
   BackupRestore3: 'BR1003',
   BackupRestore4: 'BR1004',
-}
+};

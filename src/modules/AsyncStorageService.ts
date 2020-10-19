@@ -1,24 +1,24 @@
 import { AsyncStorage } from "react-native";
 
-export const getItem = async (key: string) => {
-    return await AsyncStorage.getItem(key);
-}
+export const getItem = (key: string) => {
+    return AsyncStorage.getItem(key);
+};
 
-export const multiGet = async (keys: string[]) => {
-    return await AsyncStorage.multiGet(keys);
-}
+export const multiGet = (keys: string[]) => {
+    return AsyncStorage.multiGet(keys);
+};
 
-export const multiSet = async (items: string[][]) => {
-    await AsyncStorage.multiSet(items);
-}
+export const multiSet = (items: string[][]) => {
+    return AsyncStorage.multiSet(items);
+};
 
-export const multiRemove = async (keys: string[]) => {
-    await AsyncStorage.multiRemove(keys);
-}
+export const multiRemove = (keys: string[]) => {
+    return AsyncStorage.multiRemove(keys);
+};
 
-export const getAllKeys = async () => {
-    return await AsyncStorage.getAllKeys();
-}
+export const getAllKeys = () => {
+    return AsyncStorage.getAllKeys();
+};
 
 
 

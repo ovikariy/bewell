@@ -11,24 +11,26 @@ export const Toolbar = (props: PropsWithChildren<ViewProps>) => {
 
     return (
         <View style={[styles.toolbarContainer, styles.centered, props.style]}>{props.children}</View>
-    )
-}
+    );
+};
 
 export const FloatingToolbar = (props: PropsWithChildren<ViewProps> & { isVisible?: boolean }) => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    if (props.isVisible)
-        return (
+    if (props.isVisible) {
+return (
             <Toolbar style={[styles.floatingContainer, props.style]}>
                 {props.children}
             </Toolbar>
-        )
-    else
-        return (
-            <Toolbar style={[styles.floatingContainer]} />
-        )
+        );
 }
+    else {
+return (
+            <Toolbar style={[styles.floatingContainer]} />
+        );
+}
+};
 
 export const ToolbarButton = (props: ButtonPropsInterface) => {
     const context = React.useContext(AppContext);
@@ -38,8 +40,8 @@ export const ToolbarButton = (props: ButtonPropsInterface) => {
         containerStyle={styles.toolbarButtonContainer}
         iconStyle={props.iconStyle || { ...styles.iconPrimary, ...{ color: styles.brightColor.color } }}
         titleStyle={props.titleStyle || { ...styles.toolbarButtonText, ...{ color: styles.brightColor.color } }}
-        {...props} />
-}
+        {...props} />;
+};
 
 export const ViewHistoryButton = (props: { item?: WidgetBase, itemConfig?: WidgetConfig, navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -50,11 +52,11 @@ export const ViewHistoryButton = (props: { item?: WidgetBase, itemConfig?: Widge
             return;
         }
         const historyTitle = props.itemConfig.historyTitle ? props.itemConfig.historyTitle : props.itemConfig.widgetTitle;
-        props.navigation.navigate('ItemHistory', { 'itemType': props.item.type, 'title': historyTitle });
+        props.navigation.navigate('ItemHistory', { itemType: props.item.type, title: historyTitle });
     }
 
-    return <ToolbarButton iconName='history' onPress={() => { onPress() }} />
-}
+    return <ToolbarButton iconName='history' onPress={() => { onPress(); }} />;
+};
 
 export const DeleteButton = (props: { item?: any, onDelete: (item: any) => void }) => {
     const context = React.useContext(AppContext);
@@ -86,13 +88,13 @@ export const DeleteButton = (props: { item?: any, onDelete: (item: any) => void 
         props.onDelete(item);
     }
 
-    return <ToolbarButton iconName='trash-o' onPress={() => { onPress() }} />
-}
+    return <ToolbarButton iconName='trash-o' onPress={() => { onPress(); }} />;
+};
 
 export const DeleteWidgetItemButton = (props: { item?: any, onDelete: (storeKey: string, item: any) => void }) => {
     function onDelete(item: any) {
         const storeKey = getStorageKeyFromDate(item.date);
         props.onDelete(storeKey, item);
     }
-    return <DeleteButton item={props.item} onDelete={(item) => { onDelete(item) }} />
-}
+    return <DeleteButton item={props.item} onDelete={(item) => { onDelete(item); }} />;
+};

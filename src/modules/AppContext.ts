@@ -7,14 +7,14 @@ export interface AppContextInterface {
   language: TranslationKeys,
   theme: ThemePropertyType,
   styles: any,
-  locale: string 
+  locale: string
 }
 
-export const defaultAppContext = { 
-  language: translations.en, 
-  theme: themes.dark, 
+export const defaultAppContext = {
+  language: translations.en,
+  theme: themes.dark,
   styles: getThemeStyles(themes.dark),
-  locale: 'en' 
+  locale: 'en'
 } as AppContextInterface;
 
 export const AppContext = React.createContext(defaultAppContext);

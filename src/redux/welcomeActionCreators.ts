@@ -15,8 +15,8 @@ export const initialize = (): AppThunkActionType => (dispatch) => {
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Security4] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 
 

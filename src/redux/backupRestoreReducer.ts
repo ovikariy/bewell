@@ -5,7 +5,7 @@ export const BACKUPRESTORE = (state: BackupRestoreReducerState = {
   isPasswordVerified: false,
   isFilePasswordNeeded: false,
   isFilePasswordVerified: false,
-  backupData: null, 
+  backupData: null,
   backupDataReady: false,
   isComplete: false
 }, action: BackupRestoreActions) => {
@@ -82,4 +82,4 @@ export const BACKUPRESTORE = (state: BackupRestoreReducerState = {
     default:
       return state;
   }
-}
+};

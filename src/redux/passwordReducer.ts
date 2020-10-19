@@ -31,4 +31,4 @@ export const CHANGEPASSWORD = (state: ChangePasswordReducerState = {
     default:
       return state;
   }
-}
+};

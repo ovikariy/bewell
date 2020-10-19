@@ -22,7 +22,7 @@ export interface SleepComponentProps extends WidgetComponentPropsBase {
 export class SleepComponent extends Component<SleepComponentProps> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
-  
+
   onPress(rating: number) {
     if (!Number.isInteger(rating))
       return; //nothing to do since rating wasn't selected
@@ -34,7 +34,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
       this.props.onChange({ ...this.props.value, startDate: undefined });
       return;
     }
-    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
+    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
     const selectedDate = new Date(this.props.selectedDate);
     const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
@@ -54,7 +54,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
       return;
     }
     //TODO: BUG: this logic doesn't work when editing time in the past days. see June 30th entry where both start and end are on the same day but end is earlier than start
-    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be 
+    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be
     for today or yesterday. If selected time is greater than now, must mean it is yesterday */
     const selectedDate = new Date(this.props.selectedDate);
     const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
@@ -73,7 +73,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
           <CustomIconRatingItem key={index} id={index} value={item}
             selected={this.props.value && this.props.value.rating === index}
             onPress={(id) => this.onPress(id)} />
-        )
+        );
       });
 
     const startTime = (this.props.value && this.props.value.startDate) ? new Date(this.props.value.startDate) : undefined;
@@ -97,14 +97,14 @@ export class SleepComponent extends Component<SleepComponentProps> {
             value={startTime}
             style={{ flex: 0.8 }}
             placeholder={language.bedTime}
-            onChange={(event: any, startDate?: Date) => { this.onStartDateChange(event, startDate) }}
+            onChange={(event: any, startDate?: Date) => { this.onStartDateChange(event, startDate); }}
           />
           <IconForButton name='wb-sunny' />
           <TimePicker
             value={endTime}
             style={{ flex: 0.8 }}
             placeholder={language.wakeTime}
-            onChange={(event: any, endDate?: Date) => { this.onEndDateChange(event, endDate) }}
+            onChange={(event: any, endDate?: Date) => { this.onEndDateChange(event, endDate); }}
           />
         </View>
       </View>
@@ -143,4 +143,4 @@ export const SleepHistoryComponent = (props: SleepHistoryComponentProps) => {
       </View>
     </View>
   );
-}
+};

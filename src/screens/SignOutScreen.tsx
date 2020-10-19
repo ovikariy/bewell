@@ -9,14 +9,14 @@ import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
-})
+});
 
 const mapDispatchToProps = {
   signOut
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SignOutProps {
   navigation: any;
@@ -26,7 +26,7 @@ class SignOutScreen extends Component<PropsFromRedux & SignOutProps> {
 
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
-  
+
   render() {
     const language = this.context.language;
     const styles = this.context.styles;

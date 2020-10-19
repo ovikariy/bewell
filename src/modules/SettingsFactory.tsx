@@ -46,7 +46,7 @@ export function DefaultSettings(context: AppContextInterface): SettingsFactoryIt
                             items={languageItems}
                             onValueChange={(newValue, itemIndex) => onChange(newValue)}
                         />
-                    </View>
+                    </View>;
                 },
             },
             {
@@ -61,7 +61,7 @@ export function DefaultSettings(context: AppContextInterface): SettingsFactoryIt
                             items={themeItems}
                             onValueChange={(newValue, itemIndex) => onChange(newValue)}
                         />
-                    </View>
+                    </View>;
                 },
             },
             {
@@ -70,5 +70,5 @@ export function DefaultSettings(context: AppContextInterface): SettingsFactoryIt
                 subTitle: Constants.manifest.version,
                 iconName: 'info-circle'
             }
-        ])
+        ]);
 }

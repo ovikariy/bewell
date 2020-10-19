@@ -10,14 +10,14 @@ import { RootState } from '../redux/configureStore';
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
   OPERATION: state.OPERATION
-})
+});
 
 const mapDispatchToProps = {
   initialize
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface WelcomeScreenProps {
   navigation: any;
@@ -30,8 +30,8 @@ class WelcomeScreen extends Component<PropsFromRedux & WelcomeScreenProps> {
 
   componentDidMount() {
     if (this.props.AUTH.isInitialized !== true && this.props.AUTH.isEncrypted === true) {
-      /* we can get here if isInitialized flag in the keychain was cleared somehow 
-      but user data is present and encrypted in AsyncStorage, we should set isInitialized 
+      /* we can get here if isInitialized flag in the keychain was cleared somehow
+      but user data is present and encrypted in AsyncStorage, we should set isInitialized
       and the user should be redirected to login  */
       this.props.initialize();
     }
@@ -61,7 +61,7 @@ class WelcomeScreen extends Component<PropsFromRedux & WelcomeScreenProps> {
               containerStyle={styles.bottomPositioned}
               buttonStyle={{ paddingHorizontal: 50 }}
               title={language.quickSetup}
-              onPress={() => { this.quickSetup() }}
+              onPress={() => { this.quickSetup(); }}
               iconName='chevron-right' iconRight={true} iconStyle={styles.iconPrimary}
             />
           </ScreenContent>

@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
-import { CreateWidgetFactory } from '../modules/WidgetFactory';
+import { CreateWidgetFactory, WidgetBase } from '../modules/WidgetFactory';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/AppContext';
-import { WidgetBase } from '../modules/WidgetFactory';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
-})
+});
 
 const mapDispatchToProps = {
   removeFromReduxAndPersist
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface ItemHistoryScreenState {
   selectedItem?: WidgetBase
@@ -35,7 +34,7 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
   static navigationOptions = ({ route, navigation }: any) => {
     return ({
       title: route.params.title
-    })
+    });
   };
 
   itemType: string;
@@ -45,7 +44,7 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
     this.itemType = props.route.params.itemType;
     this.state = {
       selectedItem: undefined
-    }
+    };
   }
 
   onSelected(selectedItem: WidgetBase) {
@@ -56,7 +55,7 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
 
   deleteItem(storeKey: string, item: WidgetBase) {
     this.props.removeFromReduxAndPersist(storeKey, this.props.STORE.items, item.id);
-    this.setState({ ...this.state, selectedItem: undefined })
+    this.setState({ ...this.state, selectedItem: undefined });
   }
 
   render() {
@@ -67,8 +66,8 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
     const renderHistoryItemFunction = widgetFactory[itemType].renderHistoryItem;
     if (renderHistoryItemFunction) {
       renderHistoryItem = function (item: WidgetBase, isSelectedItem: boolean) {
-        return renderHistoryItemFunction(item, isSelectedItem, widgetFactory[itemType].config)
-      }
+        return renderHistoryItemFunction(item, isSelectedItem, widgetFactory[itemType].config);
+      };
     }
 
     const styles = this.context.styles;
@@ -79,13 +78,13 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
             store={this.props.STORE}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
-            onSelected={(item) => { this.onSelected(item) }}
+            onSelected={(item) => { this.onSelected(item); }}
             renderItem={renderHistoryItem} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
             config={widgetFactory[this.itemType].config}
           ></ItemHistory>
         </ScreenContent>
-        <FloatingToolbar isVisible={this.state.selectedItem != null}>
-          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item) }} />
+        <FloatingToolbar isVisible={this.state.selectedItem !== undefined}>
+          <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item); }} />
         </FloatingToolbar>
       </ScreenBackground>
     );

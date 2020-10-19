@@ -13,7 +13,7 @@ export const STORE = (state: StoreReducerState = {
                 return state;
 
             /*  payload.items comes in as an array, we need to convert it to associative array
-            
+
                 from  [["@Morning:SETTINGS",[{"id":"language","date":"2020-09-03T08:43:22.617Z","value":"en"},{"id":"theme","date":"2020-09-15T07:05:39.937Z","value":"light"}]]]
                 to     {"@Morning:SETTINGS":[{"id":"language","date":"2020-09-03T08:43:22.617Z","value":"en"},{"id":"theme","date":"2020-09-15T07:05:39.937Z","value":"light"}]}
             */
@@ -21,9 +21,9 @@ export const STORE = (state: StoreReducerState = {
             const newState = { ...state };
             const keyValuesAssociativeArray: ItemBaseAssociativeArray = {};
             action.payload.items.forEach(item => {
-                if (item && item.length == 2) {
+                if (item && item.length === 2)
                     keyValuesAssociativeArray[item[0]] = item[1];
-                }
+
             });
 
             if (Object.keys(keyValuesAssociativeArray).length > 0)
@@ -37,4 +37,4 @@ export const STORE = (state: StoreReducerState = {
         default:
             return state;
     }
-}
+};

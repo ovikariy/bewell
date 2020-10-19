@@ -21,7 +21,7 @@ const WidgetHeaderComponent = (props: PropsWithChildren<WidgetHeaderComponentPro
         <ParagraphText style={[styles.widgetSubTitle]}>{props.subTitle}</ParagraphText> : <View />}
       {props.children}
     </View>
-  )
+  );
 };
 
 export const WidgetComponent = (props: WidgetComponentPropsBase & WidgetFactoryType) => {
@@ -37,5 +37,5 @@ export const WidgetComponent = (props: WidgetComponentPropsBase & WidgetFactoryT
         {props.renderWidgetItem(props, props.config)}
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};

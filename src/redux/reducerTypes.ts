@@ -11,12 +11,12 @@ export interface OperationReducerState {
   successCodes?: string | string[]  /* can be one success code string or an array of multiple codes */
 }
 
-interface OPERATION_PROCESSING { type: typeof ActionTypes.OPERATION_PROCESSING }
-interface OPERATION_FAILED { type: typeof ActionTypes.OPERATION_FAILED; payload: { errCodes: string | string[] } }
-interface OPERATION_SUCCEEDED { type: typeof ActionTypes.OPERATION_SUCCEEDED; payload: { successCodes: string | string[] } }
-interface OPERATION_CLEARED { type: typeof ActionTypes.OPERATION_CLEARED }
+interface OperationProcessing { type: typeof ActionTypes.OPERATION_PROCESSING }
+interface OperationFailed { type: typeof ActionTypes.OPERATION_FAILED; payload: { errCodes: string | string[] } }
+interface OperationSucceeded { type: typeof ActionTypes.OPERATION_SUCCEEDED; payload: { successCodes: string | string[] } }
+interface OperationCleared { type: typeof ActionTypes.OPERATION_CLEARED }
 
-export type OperationActions = OPERATION_PROCESSING | OPERATION_FAILED | OPERATION_SUCCEEDED | OPERATION_CLEARED;
+export type OperationActions = OperationProcessing | OperationFailed | OperationSucceeded | OperationCleared;
 
 /* AUTH */
 
@@ -24,12 +24,12 @@ export interface AuthReducerState extends LoginInfo {
   isLoading: boolean;
 }
 
-interface LOADED_AUTH_DATA {
+interface LoadedAuthData {
   type: typeof ActionTypes.LOADED_AUTH_DATA
   payload: { authData: LoginInfo }
 }
 
-export type AuthReducerActions = LOADED_AUTH_DATA;
+export type AuthReducerActions = LoadedAuthData;
 
 
 /* STORE */
@@ -37,15 +37,15 @@ export type AuthReducerActions = LOADED_AUTH_DATA;
 export interface StoreReducerState {
   items: ItemBaseAssociativeArray;
 }
-interface REPLACE_ITEMS_IN_REDUX_STORE {
+interface ReplaceItemsInReduxStore {
   type: typeof ActionTypes.REPLACE_ITEMS_IN_REDUX_STORE;
   payload: {
     items: ItemBaseMultiArray
   }
 }
-interface CLEAR_REDUX_STORE { type: typeof ActionTypes.CLEAR_REDUX_STORE }
+interface ClearReduxStore { type: typeof ActionTypes.CLEAR_REDUX_STORE }
 
-export type StoreReducerAction = REPLACE_ITEMS_IN_REDUX_STORE | CLEAR_REDUX_STORE;
+export type StoreReducerAction = ReplaceItemsInReduxStore | ClearReduxStore;
 
 
 /* BACKUPRESTORE */
@@ -59,21 +59,21 @@ export interface BackupRestoreReducerState {
   isComplete: boolean;
 }
 
-interface RESTORE_STARTED { type: typeof ActionTypes.RESTORE_STARTED }
-interface RESTORE_FAILED { type: typeof ActionTypes.RESTORE_FAILED }
-interface RESTORE_PASSWORD_VERIFIED { type: typeof ActionTypes.RESTORE_PASSWORD_VERIFIED }
-interface RESTORE_PASSWORD_FAILED { type: typeof ActionTypes.RESTORE_PASSWORD_FAILED }
-interface RESTORE_FILE_PASSWORD_VERIFIED { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED }
-interface RESTORE_FILE_PASSWORD_FAILED { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_FAILED }
-interface RESTORE_COMPLETE { type: typeof ActionTypes.RESTORE_COMPLETE }
-interface BACKUP_STARTED { type: typeof ActionTypes.BACKUP_STARTED }
-interface BACKUP_DATA_READY { type: typeof ActionTypes.BACKUP_DATA_READY; payload: { backupData: [string, string][] } }
-interface BACKUP_DATA_FAILED { type: typeof ActionTypes.BACKUP_DATA_FAILED }
-interface BACKUP_COMPLETE { type: typeof ActionTypes.BACKUP_COMPLETE }
+interface RestoreStarted { type: typeof ActionTypes.RESTORE_STARTED }
+interface RestoreFailed { type: typeof ActionTypes.RESTORE_FAILED }
+interface RestorePasswordVerified { type: typeof ActionTypes.RESTORE_PASSWORD_VERIFIED }
+interface RestorePasswordFailed { type: typeof ActionTypes.RESTORE_PASSWORD_FAILED }
+interface RestoreFilePasswordVerified { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED }
+interface RestoreFilePasswordFailed { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_FAILED }
+interface RestoreComplete { type: typeof ActionTypes.RESTORE_COMPLETE }
+interface BackupStarted { type: typeof ActionTypes.BACKUP_STARTED }
+interface BackupDataReady { type: typeof ActionTypes.BACKUP_DATA_READY; payload: { backupData: [string, string][] } }
+interface BackupDataFailed { type: typeof ActionTypes.BACKUP_DATA_FAILED }
+interface BackupComplete { type: typeof ActionTypes.BACKUP_COMPLETE }
 
-export type BackupRestoreActions = RESTORE_STARTED | RESTORE_FAILED | RESTORE_PASSWORD_VERIFIED |
-  RESTORE_PASSWORD_FAILED | RESTORE_FILE_PASSWORD_VERIFIED | RESTORE_FILE_PASSWORD_FAILED |
-  RESTORE_COMPLETE | BACKUP_STARTED | BACKUP_DATA_READY | BACKUP_DATA_FAILED | BACKUP_COMPLETE;
+export type BackupRestoreActions = RestoreStarted | RestoreFailed | RestorePasswordVerified |
+  RestorePasswordFailed | RestoreFilePasswordVerified | RestoreFilePasswordFailed |
+  RestoreComplete | BackupStarted | BackupDataReady | BackupDataFailed | BackupComplete;
 
 /* PINSETUP */
 
@@ -82,14 +82,14 @@ export interface PinSetupState {
   isPinSetupComplete: boolean;
 }
 
-interface PIN_SETUP_STARTED { type: typeof ActionTypes.PIN_SETUP_STARTED }
-interface PIN_SETUP_FAILED { type: typeof ActionTypes.PIN_SETUP_FAILED }
-interface PIN_SETUP_PASSWORD_VERIFIED { type: typeof ActionTypes.PIN_SETUP_PASSWORD_VERIFIED }
-interface PIN_SETUP_PASSWORD_FAILED { type: typeof ActionTypes.PIN_SETUP_PASSWORD_FAILED }
-interface PIN_SETUP_COMPLETE { type: typeof ActionTypes.PIN_SETUP_COMPLETE }
+interface PinSetupStarted { type: typeof ActionTypes.PIN_SETUP_STARTED }
+interface PinSetupFailed { type: typeof ActionTypes.PIN_SETUP_FAILED }
+interface PinSetupPasswordVerified { type: typeof ActionTypes.PIN_SETUP_PASSWORD_VERIFIED }
+interface PinSetupPasswordFailed { type: typeof ActionTypes.PIN_SETUP_PASSWORD_FAILED }
+interface PinSetupComplete { type: typeof ActionTypes.PIN_SETUP_COMPLETE }
 
-export type PinSetupActions = PIN_SETUP_STARTED | PIN_SETUP_FAILED | PIN_SETUP_PASSWORD_VERIFIED
-  | PIN_SETUP_PASSWORD_FAILED | PIN_SETUP_COMPLETE;
+export type PinSetupActions = PinSetupStarted | PinSetupFailed | PinSetupPasswordVerified
+  | PinSetupPasswordFailed | PinSetupComplete;
 
 
 /* CHANGEPASSWORD */
@@ -99,22 +99,22 @@ export interface ChangePasswordReducerState {
   isComplete: boolean;
 }
 
-interface CHANGEPASSWORD_STARTED { type: typeof ActionTypes.CHANGEPASSWORD_STARTED }
-interface CHANGEPASSWORD_CREDENTIALS_FAILED { type: typeof ActionTypes.CHANGEPASSWORD_CREDENTIALS_FAILED }
-interface CHANGEPASSWORD_CREDENTIALS_VERIFIED { type: typeof ActionTypes.CHANGEPASSWORD_CREDENTIALS_VERIFIED }
-interface CHANGEPASSWORD_COMPLETE { type: typeof ActionTypes.CHANGEPASSWORD_COMPLETE }
+interface ChangePasswordStarted { type: typeof ActionTypes.CHANGEPASSWORD_STARTED }
+interface ChangePasswordCredentialsFailed { type: typeof ActionTypes.CHANGEPASSWORD_CREDENTIALS_FAILED }
+interface ChangePasswordCredentialsVerified { type: typeof ActionTypes.CHANGEPASSWORD_CREDENTIALS_VERIFIED }
+interface ChangePasswordComplete { type: typeof ActionTypes.CHANGEPASSWORD_COMPLETE }
 
-export type ChangePasswordActions = CHANGEPASSWORD_STARTED | CHANGEPASSWORD_CREDENTIALS_FAILED
-  | CHANGEPASSWORD_CREDENTIALS_VERIFIED | CHANGEPASSWORD_COMPLETE;
+export type ChangePasswordActions = ChangePasswordStarted | ChangePasswordCredentialsFailed
+  | ChangePasswordCredentialsVerified | ChangePasswordComplete;
 
 /* APPCONTEXT */
 
 export interface AppContextReducerState {
   context: AppContextInterface
 }
-interface SETTINGS_CHANGED {
+interface SettingsChanged {
   type: typeof ActionTypes.SETTINGS_CHANGED
   payload: { settings: SettingType[] }
 }
 
-export type AppContextReducerActions = SETTINGS_CHANGED;
+export type AppContextReducerActions = SettingsChanged;

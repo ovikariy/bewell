@@ -25,8 +25,8 @@ export const OPERATION = (state: OperationReducerState = {
             return { ...state, isLoading: false, errCodes: undefined, successCodes: action.payload.successCodes };
         }
         case ActionTypes.OPERATION_CLEARED:
-            return { ...state, isLoading: false, errCodes: undefined, successCodes: undefined }
+            return { ...state, isLoading: false, errCodes: undefined, successCodes: undefined };
         default:
             return state;
     }
-}
+};

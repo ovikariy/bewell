@@ -13,11 +13,11 @@ export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNo
   return (
     <SafeAreaView style={styles.screenContainer}>
       {props.isLoading ?
-        <LoadingScreeenOverlay /> : <View />} 
+        <LoadingScreeenOverlay /> : <View />}
       {props.children}
     </SafeAreaView>
-  )
-}
+  );
+};
 
 /* Commnly used large header with image background, app name and logo */
 export const ScreenImageHeader = (props: ViewProps) => {
@@ -33,8 +33,8 @@ export const ScreenImageHeader = (props: ViewProps) => {
         <ParagraphText style={[styles.heading, styles.brightColor, styles.appName]}>{language.appName}</ParagraphText>
       </View>
     </ImageBackground>
-  )
-}
+  );
+};
 
 interface ScreenContentProps extends ViewProps {
   children: ReactNode
@@ -48,15 +48,15 @@ export const ScreenContent = (props: ScreenContentProps) => {
   /* don't use ScrollView as wrapper here, only where actually a list is needed */
   if (props.isKeyboardAvoidingView) {
     return (<KeyboardAvoidingView {...props} style={[styles.screenBodyContainer, props.style]} enabled
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={40} >
       {props.children}
     </KeyboardAvoidingView>
-    )
+    );
   }
 
   return (<View {...props} style={[styles.screenBodyContainer, props.style]} >
     {props.children}
   </View>
-  )
-}
+  );
+};

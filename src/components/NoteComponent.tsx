@@ -21,9 +21,9 @@ export const NoteComponent = (props: NoteComponentProps) => {
     numberOfLines={1}
     placeholder={language.whatsOnYourMind}
     value={props.value ? props.value.note : undefined}
-    onChangeText={(note) => { props.onChange({ ...props.value, note }) }}
-  />
-}
+    onChangeText={(note) => { props.onChange({ ...props.value, note }); }}
+  />;
+};
 
 interface NoteHistoryComponentProps {
   item: NoteComponentWidgetType;
@@ -40,5 +40,5 @@ export const NoteHistoryComponent = (props: NoteHistoryComponentProps) => {
       <Text style={props.isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
         {props.item.note + 'hello'}</Text>
     </View>
-  </View>)
-}
+  </View>);
+};

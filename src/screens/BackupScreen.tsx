@@ -16,7 +16,7 @@ import { RootState } from '../redux/configureStore';
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
   BACKUPRESTORE: state.BACKUPRESTORE
-})
+});
 
 const mapDispatchToProps = {
   startBackup,
@@ -25,7 +25,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BackupScreenState {
   password?: string;
@@ -43,9 +43,9 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
     super(props);
     this.state = {
       password: undefined
-    }
+    };
   }
-  
+
   componentDidMount() {
     this.props.startBackup();
   }
@@ -82,10 +82,10 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
   exportAsync = async (data: [string, string][]) => {
 
     /*
-      1. After encrypted data has been loaded from the Async Storage 
+      1. After encrypted data has been loaded from the Async Storage
       2. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
       3. Share the file e.g. to Google Drive
-      4. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete 
+      4. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete
          the sharing process in case it hangs etc)
     */
     try {
@@ -98,11 +98,12 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
       shareAsync(exportFilepath);
       FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
       this.props.finishBackup();
-    } catch (error) {
+    }
+ catch (error) {
       console.log(error);
       Toast.showTranslated(error.message ? error.message : error, this.context);
     }
-  }
+  };
 
   renderPasswordField() {
     const language = this.context.language;
@@ -115,7 +116,7 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
         containerStyle={styles.bottomPositioned}
         placeholder={language.passwordEnter}
         onPress={() => this.getExportData()}
-        onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
       />
     </View>;
   }
@@ -130,7 +131,7 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
         containerStyle={[styles.bottomPositioned, { width: 280 }]}
         buttonStyle={styles.buttonSecondary}
         title={language.export}
-        onPress={() => { this.export() }}
+        onPress={() => { this.export(); }}
       />
     </View>;
   }
@@ -144,18 +145,18 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
         title={language.done}
-        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
+        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
     </View>;
   }
 
   renderFields() {
-    if (this.props.BACKUPRESTORE.isComplete === true) {
+    if (this.props.BACKUPRESTORE.isComplete === true)
       return this.renderExportComplete();
-    }
-    if (this.props.BACKUPRESTORE.backupDataReady !== true) {
+
+    if (this.props.BACKUPRESTORE.backupDataReady !== true)
       return this.renderPasswordField();
-    }
+
     return this.renderExportButton();
   }
 

@@ -1,4 +1,4 @@
-import { storeConstants, Errors, ErrorCodes } from '../modules/Constants';
+import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
 import { loadAllData } from './mainActionCreators';
 import * as GenericActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
@@ -9,15 +9,15 @@ import { AppThunkActionType } from './configureStore';
 
 export const startRestore = (): AppThunkActionType => (dispatch) => {
     dispatch({ type: ActionTypes.RESTORE_STARTED });
-}
+};
 
 export const startBackup = (): AppThunkActionType => (dispatch) => {
     dispatch({ type: ActionTypes.BACKUP_STARTED });
-}
+};
 
 export const finishBackup = (): AppThunkActionType => (dispatch) => {
     dispatch({ type: ActionTypes.BACKUP_COMPLETE });
-}
+};
 
 export const verifyPasswordForRestore = (password: string): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -31,8 +31,8 @@ export const verifyPasswordForRestore = (password: string): AppThunkActionType =
             dispatch({ type: ActionTypes.RESTORE_PASSWORD_FAILED });
             dispatch(GenericActions.operationFailed(error.message ? [Errors.InvalidPassword, ErrorCodes.BackupRestore1] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 export const tryDecryptFileData = (data: [string, string][], password: string): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -50,8 +50,8 @@ export const tryDecryptFileData = (data: [string, string][], password: string): 
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore2] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 export const tryDecryptFileDataAsync = async (data: [string, string][], password: string) => {
     if (!data || !(data.length > 0) || !password)
@@ -59,7 +59,7 @@ export const tryDecryptFileDataAsync = async (data: [string, string][], password
     const dataEncryptionKey = getDataEncryptionKeyFromFileData(data);
     const passwordWorks = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionKey, password);
     return passwordWorks ? true : false;
-}
+};
 
 function getDataEncryptionKeyFromFileData(data: [string, string][]) {
     // Data encryption key is encrypted with a password and stored alongside the data
@@ -68,7 +68,7 @@ function getDataEncryptionKeyFromFileData(data: [string, string][]) {
     //   ["J8PUrI3a39kNZrcqbV7BeMKzs0Hc8uYYlMXzHjZW6ko=", null],
     //   ["Wf4rh34+qer48MSihQbrsCADTNfn31tavmFhnxX+S/o=", "U2FsdGVkX184dB4pXueAFrxIz9ZwhN1MTnSOdVu/jMC0DoUXGMOJls2ZptvvjkoVlrMmBuwipR3NV4ChVgfetfMAFRZYkQTXizbYMrlyk1/lyn8G+rcBlUe1gh2gqScp"],
     // ];
-    const dataEncryptionKeyValuePair = data.find(item => item.length == 2 && item[0] == storeConstants.DataEncryptionStoreKey);
+    const dataEncryptionKeyValuePair = data.find(item => item.length === 2 && item[0] === StoreConstants.DataEncryptionStoreKey);
     const dataEncryptionKey = dataEncryptionKeyValuePair ? dataEncryptionKeyValuePair[1] : null;
     if (!dataEncryptionKey)
         throw Errors.InvalidFileData;
@@ -86,8 +86,8 @@ export const importData = (data: [string, string][], password: string): AppThunk
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore3] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 const importDataAsync = async (data: [string, string][], password: string) => {
     // data = [
     //   ["@Morning:DATAENCRYPTIONKEY", "U2FsdSLkX19umzDCod0cZ8u26/kfkYpizswaFdzVWDNf02FAl7Hxq2RRM64xRk4LKDeB2+PxYLy/INk0wod+7w=="]
@@ -100,15 +100,15 @@ const importDataAsync = async (data: [string, string][], password: string) => {
 
     const items = await SecurityHelpers.decryptAllItemsFromImport(data, cryptoFunctions.getHashAsync, cryptoFunctions.decryptDataAsync);
 
-    if (!items || items.length <= 0) {
+    if (!items || items.length <= 0)
         throw [Errors.NoRecordsInFile, ErrorCodes.Import1];
-    }
 
-    for (var itemType in items) {
-        if (!items[itemType] || items[itemType].length != 2)
+
+    for (const itemType in items) {
+        if (!items[itemType] || items[itemType].length !== 2)
             throw Errors.InvalidFormat;
 
-        const itemTypeName = (items[itemType][0] + '').replace(storeConstants.keyPrefix, '');
+        const itemTypeName = (items[itemType][0] + '').replace(StoreConstants.keyPrefix, '');
         const itemTypeRecords = items[itemType][1] ? JSON.parse(items[itemType][1]) : [];
 
         if (!StorageHelpers.isValidStoreKey(itemTypeName))
@@ -126,7 +126,7 @@ const importDataAsync = async (data: [string, string][], password: string) => {
         /* persist records by item type */
         await StorageHelpers.mergeByIdAsync(itemTypeName, itemTypeRecords);
     }
-}
+};
 
 export const getExportData = (password: string): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -140,10 +140,10 @@ export const getExportData = (password: string): AppThunkActionType => (dispatch
             dispatch({ type: ActionTypes.BACKUP_DATA_FAILED });
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.BackupRestore4] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 const getExportDataAsync = async (password: string) => {
     await validatePasswordAsync(password);
-    return await StorageHelpers.getAllStorageData();
-}
+    return StorageHelpers.getAllStorageData();
+};

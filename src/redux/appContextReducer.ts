@@ -23,8 +23,8 @@ export const APPCONTEXT = (state: AppContextReducerState = {
             if (!action.payload.settings || !(action.payload.settings.length > 0))
                 return state;
 
-            const language = action.payload.settings.find((setting) => setting.id == settingsConstants.language);
-            const theme = action.payload.settings.find((setting) => setting.id == settingsConstants.theme);
+            const language = action.payload.settings.find((setting) => setting.id === settingsConstants.language);
+            const theme = action.payload.settings.find((setting) => setting.id === settingsConstants.theme);
 
             if (!language && !theme)
                 return state;
@@ -44,4 +44,4 @@ export const APPCONTEXT = (state: AppContextReducerState = {
         default:
             return state;
     }
-}
+};

@@ -22,15 +22,15 @@ class ItemHistory extends Component<ItemHistoryProps> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  filterByItemType(items: ItemBaseAssociativeArray , itemType: string) { 
-    const result = [] as WidgetBase[]; 
+  filterByItemType(items: ItemBaseAssociativeArray , itemType: string) {
+    const result = [] as WidgetBase[];
 
     if (!items)
       return result;
     Object.keys(items).forEach((key: string) => {
       if (!items[key])
         return;
-      const filtered = (items[key] as WidgetBase[]).filter((item: WidgetBase) => item.type == itemType);
+      const filtered = (items[key] as WidgetBase[]).filter((item: WidgetBase) => item.type === itemType);
       filtered.forEach((filteredItem: WidgetBase) => {
         if (!isEmptyWidgetItem(filteredItem))
           result.push(filteredItem);
@@ -43,9 +43,9 @@ class ItemHistory extends Component<ItemHistoryProps> {
     const language = this.context.language;
 
     const items = this.filterByItemType(this.props.store.items, this.props.itemType);
-    if (!items || items.length <= 0) {
-      return <EmptyList />
-    }
+    if (!items || items.length <= 0)
+      return <EmptyList />;
+
 
     const groupedByDayMap = groupBy(items, (item: WidgetBase) => friendlyDate(item.date, { language }), undefined);
     const groupedByDayArray = [] as WidgetBase[]; //TODO: this is a waste of resources to copy a map into an array because map cannot be passed as data to FlatList
@@ -59,7 +59,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
           keyExtractor={(item: WidgetBase[]) => item[0].date + ''} /* keyExtractor expects a string */
         />
       </View>
-    )
+    );
   }
 
   renderGroupedByDay(daysData: WidgetBase[]) {
@@ -83,7 +83,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
           />
         </View>
       </View>
-    )
+    );
   }
 
   renderItem(item: WidgetBase) {
@@ -93,20 +93,20 @@ class ItemHistory extends Component<ItemHistoryProps> {
     /* all history screens have common functionality like selecting the row and deleteing the row but
     also can have custom fields to show for items so we allow each screen to customize item display */
     let customItemDisplay: ReactNode;
-    if (this.props.renderItem) {
+    if (this.props.renderItem)
       customItemDisplay = this.props.renderItem(item, isSelectedItem);
-    }
+
     else {
       customItemDisplay = <View style={styles.row}>
         <View style={[styles.flex]}>
           <Text style={isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
             {friendlyTime(item.date)}</Text>
         </View>
-      </View>
+      </View>;
     };
 
     return (
-      <TouchableOpacity activeOpacity={0.7} style={{ marginHorizontal: 5 }} onPress={() => { this.props.onSelected(item) }} key={item.id + ''}>
+      <TouchableOpacity activeOpacity={0.7} style={{ marginHorizontal: 5 }} onPress={() => { this.props.onSelected(item); }} key={item.id + ''}>
         <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
           {customItemDisplay}
         </View>

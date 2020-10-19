@@ -17,8 +17,8 @@ export const loadAuthData = (): AppThunkActionType => (dispatch) => {
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth3] : error));
             dispatch(GenericActions.operationCleared());
-        })
-}
+        });
+};
 
 const loadAuthDataAsync = async () => {
     const authData = await SecurityHelpers.getLoginInfo();
@@ -38,8 +38,8 @@ export const signInPassword = (password: string): AppThunkActionType => (dispatc
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
             dispatch(GenericActions.operationCleared());
             dispatch(signOut());
-        })
-}
+        });
+};
 
 export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -52,8 +52,8 @@ export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
             dispatch(GenericActions.operationCleared());
             dispatch(signOut());
-        })
-}
+        });
+};
 
 
 const signInPasswordAsync = async (password: string) => {
@@ -61,14 +61,14 @@ const signInPasswordAsync = async (password: string) => {
     if (!dataEncryptionStoreKey)
         throw [Errors.InvalidParameter, ErrorCodes.Auth10];
     await SecurityHelpers.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
-}
+};
 
 const signInPINAsync = async (pin: string) => {
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     if (!dataEncryptionStoreKey)
         throw [Errors.InvalidParameter, ErrorCodes.Auth11];
     await SecurityHelpers.createEncryptDecryptDataFunctionsPIN(dataEncryptionStoreKey, pin);
-}
+};
 
 export const signOut = (): AppThunkActionType => (dispatch) => {
     dispatch(GenericActions.operationProcessing());
@@ -81,7 +81,7 @@ export const signOut = (): AppThunkActionType => (dispatch) => {
             console.log(error);
             dispatch(GenericActions.operationFailed(error.message ? [Errors.General, ErrorCodes.Auth9] : error));
             dispatch(GenericActions.operationCleared());
-        })
+        });
 };
 
 

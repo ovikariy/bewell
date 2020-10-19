@@ -10,7 +10,7 @@ import { RootState } from '../redux/configureStore';
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
   OPERATION: state.OPERATION
-})
+});
 
 const mapDispatchToProps = {
   signInPassword,
@@ -18,7 +18,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SignInScreenState {
   password?: string,
@@ -38,7 +38,7 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
     this.state = {
       password: undefined,
       PIN: undefined
-    }
+    };
   }
 
   submitPassword() {
@@ -81,7 +81,7 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
                 placeholder={language.pinEnter}
                 onPress={() => this.submitPIN()}
                 value={this.state.PIN}
-                onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
+                onChangeText={(value) => { this.setState({ ...this.state, PIN: value }); }}
               />
               :
               <PasswordInputWithButton
@@ -89,7 +89,7 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
                 placeholder={language.passwordEnter}
                 onPress={() => this.submitPassword()}
                 value={this.state.password}
-                onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+                onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
               />
             }
           </ScreenContent>

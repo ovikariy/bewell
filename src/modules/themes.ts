@@ -14,7 +14,7 @@ export interface ThemePropertyType {
     colors: ThemePropertyStyleType
 }
 export interface ThemeType {
-    [key: string] : ThemePropertyType
+    [key: string]: ThemePropertyType
 }
 
 export const themes: ThemeType = {
@@ -24,13 +24,13 @@ export const themes: ThemeType = {
             foreground: '#FFFFFF', /* snow white */
             foreground2: '#FFFFFF', /* snow white, always light e.g. for toolbar with color background */
             foreground3: '#1B1C20', /* onyx black, always dark e.g. for password field with white background */
-            
+
             colorful1: '#87BCBF', /* sage light aqua */
             colorful2: '#D97D54', /* rust burnt orange */
 
             background: '#324755', /* drab dark grey */
-            background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */  
-            background3: '#6E8CA0', /* slate medium grey, widget selected etc */  
+            background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */
+            background3: '#6E8CA0', /* slate medium grey, widget selected etc */
 
             transparent: 'transparent'
         }
@@ -45,11 +45,11 @@ export const themes: ThemeType = {
             colorful1: '#25949A', /* sage dark aqua */
             colorful2: '#D97D54', /* rust burnt orange */
 
-            background: '#FFFFFF', /* snow white */   
-            background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */  
-            background3: '#125973', /* light orange, widget selected etc */   
+            background: '#FFFFFF', /* snow white */
+            background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */
+            background3: '#125973', /* light orange, widget selected etc */
 
             transparent: 'transparent'
         }
     }
-}
+};

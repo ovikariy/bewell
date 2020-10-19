@@ -12,7 +12,7 @@ import { ItemBase } from './types';
 export function CreateWidgetFactory(context: AppContextInterface) {
   const language = context.language;
   const styles = context.styles;
-  
+
   const widgetFactory: WidgetFactory = {
     [ItemTypes.NOTE]:
       {
@@ -28,7 +28,7 @@ export function CreateWidgetFactory(context: AppContextInterface) {
           return <NoteComponent  {...props} config={config} />;
         },
         renderHistoryItem: (item: NoteComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
-          return <NoteHistoryComponent item={item} isSelectedItem={isSelectedItem} />
+          return <NoteHistoryComponent item={item} isSelectedItem={isSelectedItem} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.MOOD]:
@@ -51,7 +51,7 @@ export function CreateWidgetFactory(context: AppContextInterface) {
           return <MoodComponent  {...props} config={config} />;
         },
         renderHistoryItem: (item: MoodComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
-          return <MoodHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />
+          return <MoodHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.SLEEP]:
@@ -73,7 +73,7 @@ export function CreateWidgetFactory(context: AppContextInterface) {
           return <SleepComponent {...props} config={config} />;
         },
         renderHistoryItem: (item: SleepComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
-          return <SleepHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />
+          return <SleepHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.IMAGE]:
@@ -91,7 +91,7 @@ export function CreateWidgetFactory(context: AppContextInterface) {
           return <ImagePickerComponent  {...props} config={config} readonly={false} />;
         },
         renderHistoryItem: (item: ImagePickerWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
-          return <ImagePickerHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />
+          return <ImagePickerHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         }
       } as WidgetFactoryType
   };

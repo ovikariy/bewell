@@ -15,7 +15,7 @@ import { RootState } from '../redux/configureStore';
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
   BACKUPRESTORE: state.BACKUPRESTORE
-})
+});
 
 const mapDispatchToProps = {
   verifyPasswordForRestore,
@@ -25,7 +25,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface RestoreScreenState {
   password?: string,
@@ -50,7 +50,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
       filePassword: undefined,
       data: undefined,
       importFilename: undefined//'test.txt'
-    }
+    };
   }
 
   componentDidMount() {
@@ -108,7 +108,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     this.setState({ ...this.state, importFilename: docPickerResult.name });
 
     await this.tryGetDataFromFileAsync(docPickerResult.uri);
-  }
+  };
 
   tryGetDataFromFileAsync = async (importFileUri: string) => {
     const language = this.context.language;
@@ -134,14 +134,14 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
       }
 
       this.props.tryDecryptFileData(data, this.state.password);
-      this.setState({ ...this.state, data: data });
+      this.setState({ ...this.state, data });
     }
     catch (error) {
       console.log(error);
       Toast.showTranslated(error.message ? error.messsage : error, this.context);
       FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
     }
-  }
+  };
 
   clearSelectedFile() {
     this.setState({ ...this.state, importFilename: undefined });
@@ -154,7 +154,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     throw Errors.NoRecordsInFile;
 
     const password = this.state.filePassword ? this.state.filePassword : this.state.password;
-    
+
     if (!password || isNullOrEmpty(password)) {
       Toast.show(language.passwordPleaseEnter);
       return;
@@ -175,7 +175,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
         containerStyle={styles.bottomPositioned}
         placeholder={language.passwordEnter}
         onPress={() => this.verifyPassword()}
-        onChangeText={(value) => { this.setState({ ...this.state, password: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
       />
     </View>;
   }
@@ -197,7 +197,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
         <PasswordInputWithButton value={this.state.filePassword}
           placeholder={language.passwordEnterFile}
           onPress={() => this.verifyFilePassword()}
-          onChangeText={(value) => { this.setState({ ...this.state, filePassword: value }) }}
+          onChangeText={(value) => { this.setState({ ...this.state, filePassword: value }); }}
         />
       </View>
     </View>;
@@ -261,24 +261,24 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
         title={language.done}
-        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()) }}
+        onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
     </View>;
   }
 
   renderFields() {
-    if (this.props.BACKUPRESTORE.isComplete === true) {
+    if (this.props.BACKUPRESTORE.isComplete === true)
       return this.renderImportComplete();
-    }
-    if (this.props.BACKUPRESTORE.isPasswordVerified !== true) {
+
+    if (this.props.BACKUPRESTORE.isPasswordVerified !== true)
       return this.renderPasswordField();
-    }
-    if (!this.state.importFilename) {
+
+    if (!this.state.importFilename)
       return this.renderBrowseForFile();
-    }
-    if (this.props.BACKUPRESTORE.isFilePasswordVerified !== true) {
+
+    if (this.props.BACKUPRESTORE.isFilePasswordVerified !== true)
       return this.renderFilePasswordFields();
-    }
+
     return this.renderSelectedFile();
   }
 

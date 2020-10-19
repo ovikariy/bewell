@@ -26,14 +26,14 @@ export const MoodComponent = (props: MoodComponentProps) => {
           if (props.onChange)
             props.onChange({ ...props.value, rating });
         }} />
-    )
+    );
   });
   return (
     <Animatable.View animation="fadeIn" duration={500}>
       <CustomIconRating>{ratings}</CustomIconRating>
     </Animatable.View>
   );
-}
+};
 
 interface MoodHistoryComponentProps {
   item: MoodComponentWidgetType;
@@ -48,7 +48,7 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
   /* custom render item to show mood icon in the row */
   const moodRatingIcons = props.config.icons;
   if (!moodRatingIcons || props.item.rating === undefined)
-    return <View />
+    return <View />;
   const ratingIcon = moodRatingIcons[props.item.rating];
   return (
     <View style={{ margin: 7 }}>
@@ -57,4 +57,4 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
       <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null} />
     </View>
   );
-}
+};

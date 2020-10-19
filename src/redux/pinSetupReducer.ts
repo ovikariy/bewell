@@ -37,4 +37,4 @@ export const PINSETUP = (state: PinSetupState = {
     default:
       return state;
   }
-}
+};

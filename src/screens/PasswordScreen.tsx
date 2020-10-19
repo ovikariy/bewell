@@ -15,7 +15,7 @@ const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
   OPERATION: state.OPERATION,
   CHANGEPASSWORD: state.CHANGEPASSWORD
-})
+});
 
 const mapDispatchToProps = {
   startChangePassword,
@@ -24,7 +24,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface PasswordScreenState {
   oldPassword?: string,
@@ -49,7 +49,7 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
       newPassword: undefined,
       newPasswordReentered: undefined,
       PIN: undefined
-    }
+    };
   }
 
   componentDidMount() {
@@ -83,7 +83,7 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
       newPasswordReentered: undefined,
       PIN: undefined
     });
-    this.props.navigation.dispatch(StackActions.popToTop())
+    this.props.navigation.dispatch(StackActions.popToTop());
   }
 
   save() {
@@ -110,7 +110,7 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
       <ButtonPrimary
         containerStyle={[styles.bottomPositioned, { width: 180 }]}
         title={language.done}
-        onPress={() => { this.done() }}
+        onPress={() => { this.done(); }}
       />
     </View>;
   }
@@ -129,9 +129,9 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
           placeholder={language.pinEnter}
           onPress={() => this.verifyPin()}
           value={this.state.PIN}
-          onChangeText={(value) => { this.setState({ ...this.state, PIN: value }) }}
-        /> 
-      </View>
+          onChangeText={(value) => { this.setState({ ...this.state, PIN: value }); }}
+        />
+      </View>;
     }
     else {
       return <View style={styles.flex}>
@@ -142,9 +142,9 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
           placeholder={language.passwordEnter}
           onPress={() => this.verifyPassword()}
           value={this.state.oldPassword}
-          onChangeText={(value) => { this.setState({ ...this.state, oldPassword: value }) }}
+          onChangeText={(value) => { this.setState({ ...this.state, oldPassword: value }); }}
         />
-      </View>
+      </View>;
     }
   }
 
@@ -152,7 +152,7 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
     const language = this.context.language;
     const styles = this.context.styles;
 
-    /* if the user uses PIN lock then we ask for both PIN and password; 
+    /* if the user uses PIN lock then we ask for both PIN and password;
     password for security reasons and PIN for encrypting new password */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChoose}</ParagraphText>
@@ -164,37 +164,37 @@ class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, Pas
           inputStyle={styles.bodyTextLarge}
           placeholder={language.passwordConfirmPlaceholder}
           value={this.state.oldPassword}
-          onChangeText={(value) => { this.setState({ ...this.state, oldPassword: value }) }}
+          onChangeText={(value) => { this.setState({ ...this.state, oldPassword: value }); }}
         /> : <React.Fragment />}
       <PasswordInput
         inputStyle={styles.bodyTextLarge}
         placeholder={language.passwordEnterNewPlaceholder}
         value={this.state.newPassword}
-        onChangeText={(value) => { this.setState({ ...this.state, newPassword: value }) }}
+        onChangeText={(value) => { this.setState({ ...this.state, newPassword: value }); }}
       />
       <PasswordInput
         inputStyle={styles.bodyTextLarge}
         placeholder={language.passwordReEnterPlaceholder}
         value={this.state.newPasswordReentered}
-        onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }) }}
-        onSubmitEditing={() => { this.save() }}
+        onChangeText={(value) => { this.setState({ ...this.state, newPasswordReentered: value }); }}
+        onSubmitEditing={() => { this.save(); }}
       />
-      <ButtonSecondary 
+      <ButtonSecondary
         containerStyle={[{ marginTop: 60, width: 200, alignSelf: 'center' }]}
         title={language.save}
-        onPress={() => { this.save() }}
+        onPress={() => { this.save(); }}
         iconName='check'
       />
     </View>;
   }
 
   renderFields() {
-    if (this.props.CHANGEPASSWORD.isComplete === true) {
+    if (this.props.CHANGEPASSWORD.isComplete === true)
       return this.renderPasswordChangeComplete();
-    }
-    if (this.props.CHANGEPASSWORD.isPasswordVerified !== true) {
+
+    if (this.props.CHANGEPASSWORD.isPasswordVerified !== true)
       return this.renderCredentialsReprompt();
-    }
+
     return this.renderPasswordFields();
   }
 

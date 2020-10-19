@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { List } from '../components/MiscComponents';
 import { DefaultSettings } from '../modules/SettingsFactory';
-import { storeConstants } from '../modules/Constants';
+import { StoreConstants } from '../modules/Constants';
 import { load, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/AppContext';
@@ -11,7 +11,7 @@ import { ItemBase, ItemBaseAssociativeArray, SettingType } from '../modules/type
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
-})
+});
 
 const mapDispatchToProps = {
   load,
@@ -19,7 +19,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface SystemSettingsScreenProps {
   navigation: any;
@@ -28,16 +28,16 @@ interface SystemSettingsScreenProps {
 class SystemSettingsScreen extends Component<PropsFromRedux & SystemSettingsScreenProps> {
 
   componentDidMount() {
-    this.props.load(storeConstants.SETTINGS);
+    this.props.load(StoreConstants.SETTINGS);
   }
 
   onChange(updatedSetting: ItemBase) {
     /* settings are stored unencrypted because need theme, language etc before user logs in */
-    this.props.updateReduxAndPersist(storeConstants.SETTINGS, this.props.STORE.items, [updatedSetting]);
+    this.props.updateReduxAndPersist(StoreConstants.SETTINGS, this.props.STORE.items, [updatedSetting]);
   }
 
   render() {
-    const settings = this.props.STORE.items ? this.props.STORE.items[storeConstants.SETTINGS] : undefined;
+    const settings = this.props.STORE.items ? this.props.STORE.items[StoreConstants.SETTINGS] : undefined;
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} >
@@ -48,7 +48,7 @@ class SystemSettingsScreen extends Component<PropsFromRedux & SystemSettingsScre
           />
         </ScreenContent>
       </ScreenBackground>
-    )
+    );
   }
 }
 
@@ -84,9 +84,9 @@ class SystemSettingsComponent extends Component<SystemSettingsComponentProps> {
         subTitle: defaultSetting.subTitle,
         iconName: defaultSetting.iconName,
         itemContent: defaultSetting.itemContent ?
-          defaultSetting.itemContent(value, (newValue) => { this.onChange(defaultSetting.id, newValue) })
+          defaultSetting.itemContent(value, (newValue) => { this.onChange(defaultSetting.id, newValue); })
           : null
-      }
+      };
     });
 
     return (

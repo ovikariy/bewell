@@ -20,7 +20,7 @@ export default class SettingsScreen extends Component<SettingsScreenProps> {
           <SettingsComponent navigation={this.props.navigation} />
         </ScreenContent>
       </ScreenBackground>
-    )
+    );
   }
 }
 
@@ -38,26 +38,26 @@ class SettingsComponent extends Component<SettingsComponentProps> {
         id: 'lock',
         title: language.password,
         iconName: 'lock',
-        onPress: () => { this.props.navigation.navigate('Password') }
+        onPress: () => { this.props.navigation.navigate('Password'); }
       },
       {
         id: 'SetupPINScreen',
         title: language.pinLock,
         iconName: 'lock',
-        onPress: () => { this.props.navigation.navigate('SetupPINScreen') }
+        onPress: () => { this.props.navigation.navigate('SetupPINScreen'); }
       },
       {
         id: 'BackupRestore',
         title: language.importExport,
         iconName: 'retweet',
-        onPress: () => { this.props.navigation.navigate('BackupRestore') }
+        onPress: () => { this.props.navigation.navigate('BackupRestore'); }
       },
       {
         id: 'System',
         title: language.system,
         subTitle: language.systemSubtitle,
         iconName: 'info',
-        onPress: () => { this.props.navigation.navigate('SystemSettings') }
+        onPress: () => { this.props.navigation.navigate('SystemSettings'); }
       }
     ];
 
