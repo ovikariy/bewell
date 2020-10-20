@@ -3,17 +3,8 @@ import { settingsConstants } from '../modules/Constants';
 import { translations } from '../modules/translations';
 import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
-import { AppContextInterface, defaultAppContext } from '../modules/AppContext';
-import { SettingType } from '../modules/types';
+import { defaultAppContext } from '../modules/AppContext';
 import { AppContextAction, AppContextState } from './reducerTypes';
-
-/*
-    errCodes and successCodes are used for looking up translation of messages
-    the codes without a matching translation will be shown as is
-    errCodes and successCodes can be an array or a string if just one code
-    e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
-    e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
-*/
 
 export const APPCONTEXT = (state: AppContextState = {
     context: defaultAppContext

@@ -1,31 +1,23 @@
 import * as ActionTypes from './ActionTypes';
 import { OperationAction, OperationState } from './reducerTypes';
 
-/*
-    errCodes and successCodes are used for looking up translation of messages
-    the codes without a matching translation will be shown as is
-    errCodes and successCodes can be an array or a string if just one code
-    e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
-    e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
-*/
-
 export const OPERATION = (state: OperationState = {
     isLoading: true,
-    errCodes: undefined,
-    successCodes: undefined
+    error: undefined,
+    successMessage: undefined
 }, action: OperationAction) => {
     switch (action.type) {
         case ActionTypes.OPERATION_START: {
-            return { ...state, isLoading: true, errCodes: undefined, successCodes: undefined };
+            return { ...state, isLoading: true, error: undefined, successMessage: undefined };
         }
         case ActionTypes.OPERATION_FAIL: {
-            return { ...state, isLoading: false, errCodes: action.payload.errCodes, successCodes: undefined };
+            return { ...state, isLoading: false, error: action.payload.error, successMessage: undefined };
         }
         case ActionTypes.OPERATION_SUCCEED: {
-            return { ...state, isLoading: false, errCodes: undefined, successCodes: action.payload.successCodes };
+            return { ...state, isLoading: false, error: undefined, successMessage: action.payload.successMessage };
         }
         case ActionTypes.OPERATION_CLEAR:
-            return { ...state, isLoading: false, errCodes: undefined, successCodes: undefined };
+            return { ...state, isLoading: false, error: undefined, successMessage: undefined };
         default:
             return state;
     }

@@ -1,4 +1,5 @@
 import { AppContextInterface } from '../modules/AppContext';
+import { AppError } from '../modules/AppError';
 import { LoginInfo } from '../modules/SecurityHelpers';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
 import * as ActionTypes from './ActionTypes';
@@ -7,13 +8,13 @@ import * as ActionTypes from './ActionTypes';
 
 export interface OperationState {
   isLoading: boolean,
-  errCodes?: string | string[], /* can be one error code string or an array of multiple codes */
-  successCodes?: string | string[]  /* can be one success code string or an array of multiple codes */
+  error?: AppError,
+  successMessage?: string
 }
 
 interface OperationStart { type: typeof ActionTypes.OPERATION_START }
-interface OperationFail { type: typeof ActionTypes.OPERATION_FAIL; payload: { errCodes: string | string[] } }
-interface OperationSucceed { type: typeof ActionTypes.OPERATION_SUCCEED; payload: { successCodes: string | string[] } }
+interface OperationFail { type: typeof ActionTypes.OPERATION_FAIL; payload: { error: AppError } }
+interface OperationSucceed { type: typeof ActionTypes.OPERATION_SUCCEED; payload: { successMessage: string } }
 interface OperationClear { type: typeof ActionTypes.OPERATION_CLEAR }
 
 export type OperationAction = OperationStart | OperationFail | OperationSucceed | OperationClear;

@@ -7,9 +7,10 @@ import * as Permissions from 'expo-permissions';
 import { AppContext } from '../modules/AppContext';
 import * as FileHelpers from '../modules/FileHelpers';
 import { friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/helpers';
-import { Errors, brokenImageURI } from '../modules/Constants';
+import { ErrorMessage, brokenImageURI } from '../modules/Constants';
 import { encryptDataAsync, decryptDataAsync } from '../modules/SecurityHelpers';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/WidgetFactory';
+import { AppError } from '../modules/AppError';
 
 
 export interface ImagePickerWidgetType extends WidgetBase {
@@ -100,25 +101,27 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       .catch((error) => {
         console.log(error);
         this.setState({ ...this.state, image: brokenImageURI });
-        Toast.showTranslated(error.message ? error.message : error, this.context);
+        (error instanceof AppError !== true) ?
+          Toast.showTranslated(error.message, this.context) :
+          Toast.showError(error, this.context);
       });
   }
 
   getImageFromFileAsync = async () => {
     if (!this.props.value.imageProps)
-      throw Errors.InvalidParameter;
+      throw new AppError(ErrorMessage.InvalidParameter);
 
     const imageFullPath = FileHelpers.getFullImagePath(this.props.value.imageProps.filename);
     if (await FileHelpers.existsAsync(imageFullPath) !== true)
-      throw Errors.InvalidFile;
+      throw new AppError(ErrorMessage.InvalidFile);
 
     const fileContent = await FileHelpers.getStringfromFileAsync(imageFullPath);
     if (!fileContent)
-      throw Errors.InvalidFormat;
+      throw new AppError(ErrorMessage.InvalidFormat);
 
     const fileContentDecrypted = await decryptDataAsync(fileContent);
     if (!fileContentDecrypted)
-      throw Errors.UnableToDecrypt;
+      throw new AppError(ErrorMessage.UnableToDecrypt);
 
     return fileContentDecrypted;
   };
@@ -128,7 +131,9 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       .then(() => { })
       .catch((error) => {
         console.log(error);
-        Toast.showTranslated(error.message ? error.message : error, this.context);
+        (error instanceof AppError !== true) ?
+          Toast.showTranslated(error.message, this.context) :
+          Toast.showError(error, this.context);
       });
   }
 
@@ -163,7 +168,9 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       })
       .catch((error) => {
         console.log(error);
-        Toast.showTranslated(error.message ? error.message : error, this.context);
+        (error instanceof AppError !== true) ?
+          Toast.showTranslated(error.message, this.context) :
+          Toast.showError(error, this.context);
       });
 
   }
@@ -172,11 +179,11 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     //get image base64 string, encrypt, store in document directory so can be zipped up during export
     //get the URI to the file and store as property of widget record by calling onChange from props
     if (!fileContent || isNullOrEmpty(fileContent))
-      throw Errors.InvalidFormat;
+      throw new AppError(ErrorMessage.InvalidFormat);
 
     const fileContentEncrypted = await encryptDataAsync(fileContent);
     if (!fileContentEncrypted)
-      throw Errors.UnableToEncrypt;
+      throw new AppError(ErrorMessage.UnableToEncrypt);
 
     await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ImagesSubDirectory);
 
@@ -214,7 +221,9 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
       })
       .catch((error) => {
         console.log(error);
-        Toast.showTranslated(Errors.CannotDeleteFile, this.context);
+        (error instanceof AppError !== true) ?
+          Toast.showTranslated(error.message, this.context) :
+          Toast.showError(error, this.context);
       });
   }
 }

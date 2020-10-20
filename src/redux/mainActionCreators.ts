@@ -2,9 +2,10 @@ import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmut
 import * as StorageHelpers from '../modules/StorageHelpers';
 import * as operationActions from './operationActionCreators';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
-import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
+import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/Constants';
 import * as ActionTypes from './ActionTypes';
 import { AppThunkActionType } from './configureStore';
+import { AppError } from '../modules/AppError';
 
 /**
  * @description Load item's data from storage
@@ -21,7 +22,7 @@ export const load = (key: string): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage9] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage9) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -45,7 +46,7 @@ export const loadAllWidgetData = (): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage8] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage8) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -67,7 +68,7 @@ export const loadAllData = (): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage11] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage11) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -138,7 +139,7 @@ const updateReduxAndPersistInternal = (key: string, updatedItems: ItemBase[]): A
         .then(() => { })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Storage2] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage2) : error));
             dispatch(operationActions.clear());
         });
 };

@@ -1,4 +1,4 @@
-import { Errors } from "./Constants";
+import { ErrorMessage } from "./Constants";
 
 /* import matching Date and Time locales here for moment JS. Could import them where moment JS is used
 e.g. helpers.ts but wanted to keep them next to the translations for consistency */
@@ -134,35 +134,35 @@ export interface TranslationKeys {
     clear: string;
     cameroRollPermissions: string;
 
-    [Errors.General]: string;
-    [Errors.InvalidData]: string;
-    [Errors.EmptyData]: string;
-    [Errors.InvalidFormat]: string;
-    [Errors.InvalidFile]: string;
-    [Errors.InvalidFileData]: string;
-    [Errors.NoRecordsInFile]: string;
-    [Errors.InvalidParameter]: string;
-    [Errors.InvalidKey]: string;
-    [Errors.NewPasswordCannotBeBlank]: string;
-    [Errors.InvalidPassword]: string;
-    [Errors.InvalidPIN]: string;
-    [Errors.InvalidCredentials]: string;
-    [Errors.MissingPassword]: string;
-    [Errors.InvalidFilePassword]: string;
-    [Errors.UnableToSave]: string;
-    [Errors.UnableToEncrypt]: string;
-    [Errors.UnableToDecrypt]: string;
-    [Errors.ImportError]: string;
-    [Errors.ExportError]: string;
-    [Errors.AccessStorage]: string;
-    [Errors.PasswordAlreadySet]: string;
-    [Errors.CannotSetPIN]: string;
-    [Errors.Unauthorized]: string;
-    [Errors.PasswordSet]: string;
-    [Errors.PinSet]: string;
-    [Errors.CannotDeleteFile]: string;
-    [Errors.ImageNotFound]: string;
-    [Errors.MaxLoginAttempts]: string;
+    [ErrorMessage.General]: string;
+    [ErrorMessage.InvalidData]: string;
+    [ErrorMessage.EmptyData]: string;
+    [ErrorMessage.InvalidFormat]: string;
+    [ErrorMessage.InvalidFile]: string;
+    [ErrorMessage.InvalidFileData]: string;
+    [ErrorMessage.NoRecordsInFile]: string;
+    [ErrorMessage.InvalidParameter]: string;
+    [ErrorMessage.InvalidKey]: string;
+    [ErrorMessage.NewPasswordCannotBeBlank]: string;
+    [ErrorMessage.InvalidPassword]: string;
+    [ErrorMessage.InvalidPIN]: string;
+    [ErrorMessage.InvalidCredentials]: string;
+    [ErrorMessage.MissingPassword]: string;
+    [ErrorMessage.InvalidFilePassword]: string;
+    [ErrorMessage.UnableToSave]: string;
+    [ErrorMessage.UnableToEncrypt]: string;
+    [ErrorMessage.UnableToDecrypt]: string;
+    [ErrorMessage.ImportError]: string;
+    [ErrorMessage.ExportError]: string;
+    [ErrorMessage.AccessStorage]: string;
+    [ErrorMessage.PasswordAlreadySet]: string;
+    [ErrorMessage.CannotSetPIN]: string;
+    [ErrorMessage.Unauthorized]: string;
+    [ErrorMessage.PasswordSet]: string;
+    [ErrorMessage.PinSet]: string;
+    [ErrorMessage.CannotDeleteFile]: string;
+    [ErrorMessage.ImageNotFound]: string;
+    [ErrorMessage.MaxLoginAttempts]: string;
 }
 
 export const translations: TranslationMap = {
@@ -288,35 +288,35 @@ export const translations: TranslationMap = {
         clear: 'Clear',
         cameroRollPermissions: 'Sorry, we need camera roll permissions to make this work!',
 
-        [Errors.General]: 'An error has occurred',
-        [Errors.InvalidData]: 'Invalid data',
-        [Errors.EmptyData]: 'Looks like no records have been found',
-        [Errors.InvalidFormat]: 'Invalid format',
-        [Errors.InvalidFile]: 'Invalid file',
-        [Errors.InvalidFileData]: 'Invalid data, please try another file',
-        [Errors.NoRecordsInFile]: 'Looks like there are no records in file',
-        [Errors.InvalidParameter]: 'Invalid parameter',
-        [Errors.InvalidKey]: 'Invalid key',
-        [Errors.NewPasswordCannotBeBlank]: 'New password cannot be blank',
-        [Errors.InvalidPassword]: 'Invalid password, please try again',
-        [Errors.InvalidPIN]: 'Invalid PIN, please try again',
-        [Errors.InvalidCredentials]: 'Invalid credentials, please try again',
-        [Errors.MissingPassword]: 'Missing password or PIN, please try again',
-        [Errors.InvalidFilePassword]: 'Invalid password for this file, please try again',
-        [Errors.UnableToSave]: 'Unable to save',
-        [Errors.UnableToEncrypt]: 'Unable to encrypt',
-        [Errors.UnableToDecrypt]: 'Unable to decrypt',
-        [Errors.ImportError]: 'Import error',
-        [Errors.ExportError]: 'Export error',
-        [Errors.AccessStorage]: ' Unable to access storage',
-        [Errors.PasswordAlreadySet]: 'Password has already been set, try logging in instead',
-        [Errors.CannotSetPIN]: 'Cannot setup new PIN',
-        [Errors.Unauthorized]: 'Unauthorized',
-        [Errors.PasswordSet]: 'Password applied successfully',
-        [Errors.PinSet]: 'PIN set successfully',
-        [Errors.CannotDeleteFile]: 'Unable to delete file',
-        [Errors.ImageNotFound]: 'Ooops, image file not found',
-        [Errors.MaxLoginAttempts]: 'Lets try entering a password instead'
+        [ErrorMessage.General]: 'An error has occurred',
+        [ErrorMessage.InvalidData]: 'Invalid data',
+        [ErrorMessage.EmptyData]: 'Looks like no records have been found',
+        [ErrorMessage.InvalidFormat]: 'Invalid format',
+        [ErrorMessage.InvalidFile]: 'Invalid file',
+        [ErrorMessage.InvalidFileData]: 'Invalid data, please try another file',
+        [ErrorMessage.NoRecordsInFile]: 'Looks like there are no records in file',
+        [ErrorMessage.InvalidParameter]: 'Invalid parameter',
+        [ErrorMessage.InvalidKey]: 'Invalid key',
+        [ErrorMessage.NewPasswordCannotBeBlank]: 'New password cannot be blank',
+        [ErrorMessage.InvalidPassword]: 'Invalid password, please try again',
+        [ErrorMessage.InvalidPIN]: 'Invalid PIN, please try again',
+        [ErrorMessage.InvalidCredentials]: 'Invalid credentials, please try again',
+        [ErrorMessage.MissingPassword]: 'Missing password or PIN, please try again',
+        [ErrorMessage.InvalidFilePassword]: 'Invalid password for this file, please try again',
+        [ErrorMessage.UnableToSave]: 'Unable to save',
+        [ErrorMessage.UnableToEncrypt]: 'Unable to encrypt',
+        [ErrorMessage.UnableToDecrypt]: 'Unable to decrypt',
+        [ErrorMessage.ImportError]: 'Import error',
+        [ErrorMessage.ExportError]: 'Export error',
+        [ErrorMessage.AccessStorage]: ' Unable to access storage',
+        [ErrorMessage.PasswordAlreadySet]: 'Password has already been set, try logging in instead',
+        [ErrorMessage.CannotSetPIN]: 'Cannot setup new PIN',
+        [ErrorMessage.Unauthorized]: 'Unauthorized',
+        [ErrorMessage.PasswordSet]: 'Password applied successfully',
+        [ErrorMessage.PinSet]: 'PIN set successfully',
+        [ErrorMessage.CannotDeleteFile]: 'Unable to delete file',
+        [ErrorMessage.ImageNotFound]: 'Ooops, image file not found',
+        [ErrorMessage.MaxLoginAttempts]: 'Lets try entering a password instead'
     },
     ru: {
         appName: 'Трекер Благосостояния',
@@ -440,34 +440,34 @@ export const translations: TranslationMap = {
         clear: 'Убрать',
         cameroRollPermissions: 'Извините, нам нужен доступ к фотогалерее для добавления фотографий',
 
-        [Errors.General]: 'Произошла ошибка',
-        [Errors.InvalidData]: 'Неверные данные',
-        [Errors.EmptyData]: 'Похоже, записи не найдены',
-        [Errors.InvalidFormat]: 'Неверный формат',
-        [Errors.InvalidFile]: 'Неверный файл',
-        [Errors.InvalidFileData]: 'Неверные данные, попробуйте другой файл',
-        [Errors.NoRecordsInFile]: 'Похоже, в файле нет записей',
-        [Errors.InvalidParameter]: 'Неверный параметр',
-        [Errors.InvalidKey]: 'Неверный ключ',
-        [Errors.NewPasswordCannotBeBlank]: 'Новый пароль не может быть пустым',
-        [Errors.InvalidPassword]: 'Неверный пароль, попробуйте ещё раз',
-        [Errors.InvalidPIN]: 'Неверный PIN-код, попробуйте ещё раз',
-        [Errors.InvalidCredentials]: 'Неверные учетные данные, попробуйте ещё раз',
-        [Errors.MissingPassword]: 'Отсутствует пароль или PIN-код, попробуйте ещё раз',
-        [Errors.InvalidFilePassword]: 'Неверный пароль для этого файла, попробуйте ещё раз',
-        [Errors.UnableToSave]: 'Ошибка при сохранении',
-        [Errors.UnableToEncrypt]: 'Ошибка при зашифровке',
-        [Errors.UnableToDecrypt]: 'Ошибка при расшифровке',
-        [Errors.ImportError]: 'Ошибка при импорте данных',
-        [Errors.ExportError]: 'Ошибка при экспорте данных',
-        [Errors.AccessStorage]: 'Невозможно получить доступ к хранилищу',
-        [Errors.PasswordAlreadySet]: 'Пароль уже был установлен, попробуйте войти в систему',
-        [Errors.CannotSetPIN]: 'Невозможно установить новый PIN-код',
-        [Errors.Unauthorized]: 'Неразрешенный доступ',
-        [Errors.PasswordSet]: 'Пароль успешно установлен',
-        [Errors.PinSet]: 'PIN-код успешно установлен',
-        [Errors.CannotDeleteFile]: 'Невозможно удалить файл',
-        [Errors.ImageNotFound]: 'Файл изображения не найден',
-        [Errors.MaxLoginAttempts]: 'Попробуйте ввести пароль'
+        [ErrorMessage.General]: 'Произошла ошибка',
+        [ErrorMessage.InvalidData]: 'Неверные данные',
+        [ErrorMessage.EmptyData]: 'Похоже, записи не найдены',
+        [ErrorMessage.InvalidFormat]: 'Неверный формат',
+        [ErrorMessage.InvalidFile]: 'Неверный файл',
+        [ErrorMessage.InvalidFileData]: 'Неверные данные, попробуйте другой файл',
+        [ErrorMessage.NoRecordsInFile]: 'Похоже, в файле нет записей',
+        [ErrorMessage.InvalidParameter]: 'Неверный параметр',
+        [ErrorMessage.InvalidKey]: 'Неверный ключ',
+        [ErrorMessage.NewPasswordCannotBeBlank]: 'Новый пароль не может быть пустым',
+        [ErrorMessage.InvalidPassword]: 'Неверный пароль, попробуйте ещё раз',
+        [ErrorMessage.InvalidPIN]: 'Неверный PIN-код, попробуйте ещё раз',
+        [ErrorMessage.InvalidCredentials]: 'Неверные учетные данные, попробуйте ещё раз',
+        [ErrorMessage.MissingPassword]: 'Отсутствует пароль или PIN-код, попробуйте ещё раз',
+        [ErrorMessage.InvalidFilePassword]: 'Неверный пароль для этого файла, попробуйте ещё раз',
+        [ErrorMessage.UnableToSave]: 'Ошибка при сохранении',
+        [ErrorMessage.UnableToEncrypt]: 'Ошибка при зашифровке',
+        [ErrorMessage.UnableToDecrypt]: 'Ошибка при расшифровке',
+        [ErrorMessage.ImportError]: 'Ошибка при импорте данных',
+        [ErrorMessage.ExportError]: 'Ошибка при экспорте данных',
+        [ErrorMessage.AccessStorage]: 'Невозможно получить доступ к хранилищу',
+        [ErrorMessage.PasswordAlreadySet]: 'Пароль уже был установлен, попробуйте войти в систему',
+        [ErrorMessage.CannotSetPIN]: 'Невозможно установить новый PIN-код',
+        [ErrorMessage.Unauthorized]: 'Неразрешенный доступ',
+        [ErrorMessage.PasswordSet]: 'Пароль успешно установлен',
+        [ErrorMessage.PinSet]: 'PIN-код успешно установлен',
+        [ErrorMessage.CannotDeleteFile]: 'Невозможно удалить файл',
+        [ErrorMessage.ImageNotFound]: 'Файл изображения не найден',
+        [ErrorMessage.MaxLoginAttempts]: 'Попробуйте ввести пароль'
     }
 };

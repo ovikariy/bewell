@@ -1,5 +1,6 @@
 import *  as FileSystem from 'expo-file-system';
-import { Errors } from './Constants';
+import { AppError } from './AppError';
+import { ErrorMessage } from './Constants';
 
 export const FileSystemConstants = {
   ExportDirectory: FileSystem.cacheDirectory + 'exports',
@@ -73,7 +74,7 @@ export const getJSONfromFileAsync = async (filePath: string) => {
 export const copyFileAsync = async (from: string, to: string) => {
   const fromPathInfo = await FileSystem.getInfoAsync(from);
   if (!fromPathInfo.exists || fromPathInfo.size <= 0)
-    throw Errors.InvalidFile;
+    throw new AppError(ErrorMessage.InvalidFile);
   await FileSystem.copyAsync({ from, to });
 };
 

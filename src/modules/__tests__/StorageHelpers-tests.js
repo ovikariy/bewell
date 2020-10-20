@@ -6,7 +6,8 @@ jest.mock('../AsyncStorageService', () => mockAsyncStorageService());
 
 /* import the code that uses the mocks after calling jest.mock */
 import * as StorageHelpers from '../StorageHelpers';
-import { ItemTypes } from '../../modules/Constants';
+import { ErrorMessage, ItemTypes } from '../../modules/Constants';
+import { AppError } from '../AppError';
 
 it('getItemsAsync tests', async () => {
   expect.assertions(3);
@@ -25,9 +26,9 @@ it('getMultiItemsAsync tests', async () => {
   await expect(StorageHelpers.getItemsAsync('notanarray')).rejects.toThrow();
   await expect(StorageHelpers.getItemsAsync()).rejects.toThrow();
 
-  StorageHelpers.getItemsAsync(['key5', 'key6']).then(data => expect(data).toEqual([['key5', null], ['key6', null]]))
-  StorageHelpers.getItemsAsync(['key1']).then(data => expect(data).toEqual([['key1', 'value1']]))
-  StorageHelpers.getItemsAsync(['key1', 'key2']).then(data => expect(data).toEqual([['key1', 'value1'], ['key2', null]]))
+  StorageHelpers.getItemsAsync(['key5', 'key6']).then(data => expect(data).toEqual([['key5', null], ['key6', null]]));
+  StorageHelpers.getItemsAsync(['key1']).then(data => expect(data).toEqual([['key1', 'value1']]));
+  StorageHelpers.getItemsAsync(['key1', 'key2']).then(data => expect(data).toEqual([['key1', 'value1'], ['key2', null]]));
 
   await StorageHelpers.logStorageDataAsync();
 });
@@ -67,14 +68,14 @@ it('setMultiItemsAsync tests', async () => {
 
 export const mergeByIdAsync = async (itemTypeName, newItems) => {
   if (!newItems || newItems.length <= 0)
-    throw [Errors.UnableToSave, ErrorCodes.Storage5];
+    throw new AppError(ErrorMessage.UnableToSave, ErrorCode.Storage5);
 
   const oldItems = await getItemsAndDecryptAsync(itemTypeName);
 
   /* if item has ID then overwrite, otherwise add */
   (newItems).forEach(newItem => {
     if (!newItem.id)
-      throw [Errors.UnableToSave, ErrorCodes.Storage6];
+      throw new AppError(ErrorMessage.UnableToSave, ErrorCode.Storage6);
     const oldItemIndex = oldItems.findIndex(oldItem => oldItem.id === newItem.id);
     if (oldItemIndex > -1)
       oldItems[oldItemIndex] = newItem;
@@ -83,7 +84,7 @@ export const mergeByIdAsync = async (itemTypeName, newItems) => {
   });
 
   await setItemsAndEncryptAsync(itemTypeName, oldItems);
-}
+};
 
 it('mergeByIdAsync tests', async () => {
   expect.assertions(8);
@@ -92,12 +93,11 @@ it('mergeByIdAsync tests', async () => {
   await expect(StorageHelpers.mergeByIdAsync('invalidTypeName', [{ id: 'id1', value: 'value1' }])).rejects.toThrow();
   await expect(StorageHelpers.mergeByIdAsync({ typenameasobject: 'shouldthrow' })).rejects.toThrow();
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ objectWithoutId: 'shouldThrow' }])).rejects.toThrow();
-  
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ id: 'id1', value: 'value1' }])).resolves.toBeUndefined();
   StorageHelpers.getItemsAndDecryptAsync(ItemTypes.MOOD).then(data => expect(data).toEqual([{ id: 'id1', value: 'value1' }]));
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ id: 'id1', value: 'value2' }])).resolves.toBeUndefined();
   StorageHelpers.getItemsAndDecryptAsync(ItemTypes.MOOD).then(data => expect(data).toEqual([{ id: 'id1', value: 'value2' }]));
-  
+
   await StorageHelpers.logStorageDataAsync();
 });
 
@@ -108,23 +108,23 @@ it('mergeByIdAsync tests', async () => {
   await expect(StorageHelpers.mergeByIdAsync('invalidTypeName', [{ id: 'id1', value: 'value1' }])).rejects.toThrow();
   await expect(StorageHelpers.mergeByIdAsync({ typenameasobject: 'shouldthrow' })).rejects.toThrow();
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ objectWithoutId: 'shouldThrow' }])).rejects.toThrow();
-  
+
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ id: 'id1', value: 'value1' }])).resolves.toBeUndefined();
   StorageHelpers.getItemsAndDecryptAsync(ItemTypes.MOOD).then(data => expect(data).toEqual([{ id: 'id1', value: 'value1' }]));
   await expect(StorageHelpers.mergeByIdAsync(ItemTypes.MOOD, [{ id: 'id1', value: 'value2' }])).resolves.toBeUndefined();
   StorageHelpers.getItemsAndDecryptAsync(ItemTypes.MOOD).then(data => expect(data).toEqual([{ id: 'id1', value: 'value2' }]));
-  
+
   await StorageHelpers.logStorageDataAsync();
 });
 
 export const removeByIdAsync = async (itemTypeName, id) => {
   if (!itemTypeName)
-      throw [Errors.General, ErrorCodes.MissingItemType1];
+      throw new AppError(ErrorMessage.General, ErrorCode.MissingItemType1);
 
   const oldItems = await getItemsAndDecryptAsync(itemTypeName);
   const itemsWithoutDeleted = oldItems.filter(item => item.id !== id);
 
   await setItemsAndEncryptAsync(itemTypeName, itemsWithoutDeleted);
-}
+};
 
 

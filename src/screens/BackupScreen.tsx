@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {  ParagraphText, Toast, PasswordInputWithButton,
-          Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
-        } from '../components/MiscComponents';
+import {
+  ParagraphText, Toast, PasswordInputWithButton,
+  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
+} from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate } from '../modules/helpers';
@@ -12,6 +13,7 @@ import { StackActions } from '@react-navigation/native';
 import { shareAsync } from 'expo-sharing';
 import { AppContext } from '../modules/AppContext';
 import { RootState } from '../redux/configureStore';
+import { AppError } from '../modules/AppError';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -99,9 +101,11 @@ class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupS
       FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
       this.props.finishBackup();
     }
- catch (error) {
+    catch (error) {
       console.log(error);
-      Toast.showTranslated(error.message ? error.message : error, this.context);
+      (error instanceof AppError !== true) ?
+        Toast.showTranslated(error.message, this.context) :
+        Toast.showError(error, this.context);
     }
   };
 

@@ -1,17 +1,18 @@
+import { AppError } from '../modules/AppError';
 import * as ActionTypes from './ActionTypes';
 
 export const start = () => ({
     type: ActionTypes.OPERATION_START
 });
 
-export const complete = (successCodes: string | string[]) => ({
+export const complete = (successMessage: string) => ({
     type: ActionTypes.OPERATION_SUCCEED,
-    payload: { successCodes }
+    payload: { successMessage }
 });
 
-export const fail = (errCodes: string | string[]) => ({
+export const fail = (error: AppError) => ({
     type: ActionTypes.OPERATION_FAIL,
-    payload: { errCodes }
+    payload: { error }
 });
 
 export const clear = () => ({

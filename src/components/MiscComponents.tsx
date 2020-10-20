@@ -5,11 +5,12 @@ import {
   StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps } from 'react-native-elements';
+import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
 import { AppContext, AppContextInterface } from '../modules/AppContext';
-import { brokenImageURI, Errors } from '../modules/Constants';
+import { brokenImageURI, ErrorMessage } from '../modules/Constants';
 import { getTranslationMessage } from '../modules/translations';
+import { AppError } from '../modules/AppError';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[
@@ -28,25 +29,15 @@ export const Toast = {
   show(message: string, duration?: number) {
     Platform.OS === 'ios' ? alert(message) : ToastAndroid.show(message, duration || ToastAndroid.LONG);
   },
-  showTranslated(codes: string | string[], context: AppContextInterface) {
-    /*
-      codes param can be a string or an array and is used for looking up translation of messages
-      the codes without a matching translation will be shown as is
-      e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
-      e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
-    */
-    const language = context.language;
-    if (typeof codes === 'string') {
-      const message = getTranslationMessage(context.language, codes);
-      this.show(message);
-      return;
-    }
-
-    if (Array.isArray(codes)) {
-      const messages = codes.map(code => getTranslationMessage(context.language, code));
-      this.show(messages.join(' '));
-      return;
-    }
+  showError(error: AppError, context: AppContextInterface) {
+    let translated = getTranslationMessage(context.language, error.message);
+    if (error.code)
+      translated += ' ' + error.code;
+    this.show(translated);
+  },
+  showTranslated(message: string, context: AppContextInterface) {
+    const translated = getTranslationMessage(context.language, message);
+    this.show(translated);
   }
 };
 
@@ -325,19 +316,13 @@ export const LinkButton = (props: ButtonPropsInterface) => {
 };
 
 export function showMessages(operation: any, context: AppContextInterface) {
-  /*
-      errCodes and successCodes are used for looking up translation of messages
-      the codes without a matching translation will be shown as is
-      errCodes and successCodes can be an array or a string if just one code
-      e.g. ['InvalidCredentials', 'A1001']  will be shown as 'Invalid credentials, please try again A1001'
-      e.g. ['InvalidCredentials'] or just a string 'InvalidCredentials' will be shown as 'Invalid credentials, please try again '
-  */
-
-  if (!operation.errCodes && !operation.successCodes)
+  if (!operation.error && !operation.successMessage)
     return;
 
-  const codes = operation.errCodes ? operation.errCodes : operation.successCodes;
-  Toast.showTranslated(codes, context);
+  if (operation.error)
+    Toast.showError(operation.error, context);
+  else
+    Toast.showTranslated(operation.successMessage, context);
 }
 
 export const LoadingScreeenOverlay = () => {
@@ -506,7 +491,7 @@ export const StyledImage = (props: StyledImageProps) => {
 
   if (!props.imageProps || !props.image || props.image === brokenImageURI) {
     return <View style={{ width: '100%', borderWidth: 1, alignItems: 'center', borderColor: styles.bodyText.color }}>
-      <ParagraphText style={{ margin: 20 }}>{language[Errors.ImageNotFound]}</ParagraphText>
+      <ParagraphText style={{ margin: 20 }}>{language[ErrorMessage.ImageNotFound]}</ParagraphText>
     </View>;
   }
   const imageProps = props.imageProps;

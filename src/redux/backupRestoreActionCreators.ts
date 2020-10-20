@@ -1,4 +1,4 @@
-import { StoreConstants, Errors, ErrorCodes } from '../modules/Constants';
+import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/Constants';
 import { loadAllData } from './mainActionCreators';
 import * as operationActions from './operationActionCreators';
 import * as StorageHelpers from '../modules/StorageHelpers';
@@ -6,6 +6,7 @@ import * as SecurityHelpers from '../modules/SecurityHelpers';
 import * as ActionTypes from './ActionTypes';
 import { validatePasswordAsync } from './passwordActionCreators';
 import { AppThunkActionType } from './configureStore';
+import { AppError } from '../modules/AppError';
 
 export const startRestore = (): AppThunkActionType => (dispatch) => {
     dispatch({ type: ActionTypes.RESTORE_STARTED });
@@ -29,7 +30,7 @@ export const verifyPasswordForRestore = (password: string): AppThunkActionType =
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.RESTORE_PASSWORD_FAILED });
-            dispatch(operationActions.fail(error.message ? [Errors.InvalidPassword, ErrorCodes.BackupRestore1] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.InvalidPassword, ErrorCode.BackupRestore1) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -42,20 +43,20 @@ export const tryDecryptFileData = (data: [string, string][], password: string): 
                 dispatch({ type: ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED });
             else {
                 dispatch({ type: ActionTypes.RESTORE_FILE_PASSWORD_FAILED });
-                dispatch(operationActions.fail(Errors.InvalidFilePassword));
+                dispatch(operationActions.fail(new AppError(ErrorMessage.InvalidFilePassword)));
             }
             dispatch(operationActions.clear());
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore2] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore2) : error));
             dispatch(operationActions.clear());
         });
 };
 
 export const tryDecryptFileDataAsync = async (data: [string, string][], password: string) => {
     if (!data || !(data.length > 0) || !password)
-        throw Errors.InvalidParameter;
+        throw new AppError(ErrorMessage.InvalidParameter);
     const dataEncryptionKey = getDataEncryptionKeyFromFileData(data);
     const passwordWorks = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionKey, password);
     return passwordWorks ? true : false;
@@ -71,7 +72,7 @@ function getDataEncryptionKeyFromFileData(data: [string, string][]) {
     const dataEncryptionKeyValuePair = data.find(item => item.length === 2 && item[0] === StoreConstants.DataEncryptionStoreKey);
     const dataEncryptionKey = dataEncryptionKeyValuePair ? dataEncryptionKeyValuePair[1] : null;
     if (!dataEncryptionKey)
-        throw Errors.InvalidFileData;
+        throw new AppError(ErrorMessage.InvalidFileData);
     return dataEncryptionKey;
 }
 
@@ -84,7 +85,7 @@ export const importData = (data: [string, string][], password: string): AppThunk
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore3] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore3) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -101,18 +102,18 @@ const importDataAsync = async (data: [string, string][], password: string) => {
     const items = await SecurityHelpers.decryptAllItemsFromImport(data, cryptoFunctions.getHashAsync, cryptoFunctions.decryptDataAsync);
 
     if (!items || items.length <= 0)
-        throw [Errors.NoRecordsInFile, ErrorCodes.Import1];
+        throw new AppError(ErrorMessage.NoRecordsInFile, ErrorCode.Import1);
 
 
     for (const itemType in items) {
         if (!items[itemType] || items[itemType].length !== 2)
-            throw Errors.InvalidFormat;
+            throw new AppError(ErrorMessage.InvalidFormat);
 
         const itemTypeName = (items[itemType][0] + '').replace(StoreConstants.keyPrefix, '');
         const itemTypeRecords = items[itemType][1] ? JSON.parse(items[itemType][1]) : [];
 
         if (!StorageHelpers.isValidStoreKey(itemTypeName))
-            throw [Errors.InvalidFileData, ErrorCodes.Import2];
+            throw new AppError(ErrorMessage.InvalidFileData, ErrorCode.Import2);
 
         if (!itemTypeRecords || itemTypeRecords.length <= 0)
             continue;
@@ -120,7 +121,7 @@ const importDataAsync = async (data: [string, string][], password: string) => {
         /* one more check, the records must have ids and dates at the minimum */
         itemTypeRecords.forEach((record: any) => {
             if (!record.id || !record.date)
-                throw [Errors.InvalidFileData, ErrorCodes.Import3];
+                throw new AppError(ErrorMessage.InvalidFileData, ErrorCode.Import3);
         });
 
         /* persist records by item type */
@@ -138,7 +139,7 @@ export const getExportData = (password: string): AppThunkActionType => (dispatch
         .catch(error => {
             console.log(error);
             dispatch({ type: ActionTypes.BACKUP_DATA_FAILED });
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.BackupRestore4] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore4) : error));
             dispatch(operationActions.clear());
         });
 };

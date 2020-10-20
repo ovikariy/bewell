@@ -131,4 +131,5 @@ class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenS
   }
 }
 
+//TODO: [BWA-12] replace connect with connector in connected components with export default
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

@@ -3,8 +3,9 @@ import * as StorageHelpers from '../modules/StorageHelpers';
 import * as operationActions from './operationActionCreators';
 import * as ActionTypes from './ActionTypes';
 import { isNullOrEmpty } from '../modules/helpers';
-import { Errors, ErrorCodes } from '../modules/Constants';
+import { ErrorMessage, ErrorCode } from '../modules/Constants';
 import { AppThunkActionType } from './configureStore';
+import { AppError } from '../modules/AppError';
 
 export const loadAuthData = (): AppThunkActionType => (dispatch) => {
     dispatch(operationActions.start());
@@ -15,7 +16,7 @@ export const loadAuthData = (): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth3] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth3) : error));
             dispatch(operationActions.clear());
         });
 };
@@ -35,7 +36,7 @@ export const signInPassword = (password: string): AppThunkActionType => (dispatc
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth7] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth7) : error));
             dispatch(operationActions.clear());
             dispatch(signOut());
         });
@@ -49,7 +50,7 @@ export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth8] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth8) : error));
             dispatch(operationActions.clear());
             dispatch(signOut());
         });
@@ -59,14 +60,14 @@ export const signInPIN = (pin: string): AppThunkActionType => (dispatch) => {
 const signInPasswordAsync = async (password: string) => {
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     if (!dataEncryptionStoreKey)
-        throw [Errors.InvalidParameter, ErrorCodes.Auth10];
+        throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth10);
     await SecurityHelpers.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
 };
 
 const signInPINAsync = async (pin: string) => {
     const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKey();
     if (!dataEncryptionStoreKey)
-        throw [Errors.InvalidParameter, ErrorCodes.Auth11];
+        throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth11);
     await SecurityHelpers.createEncryptDecryptDataFunctionsPIN(dataEncryptionStoreKey, pin);
 };
 
@@ -79,7 +80,7 @@ export const signOut = (): AppThunkActionType => (dispatch) => {
         })
         .catch(error => {
             console.log(error);
-            dispatch(operationActions.fail(error.message ? [Errors.General, ErrorCodes.Auth9] : error));
+            dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth9) : error));
             dispatch(operationActions.clear());
         });
 };

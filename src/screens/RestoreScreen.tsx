@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Errors } from '../modules/Constants';
+import { ErrorMessage } from '../modules/Constants';
 import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
@@ -11,6 +11,7 @@ import { getDocumentAsync } from 'expo-document-picker';
 import { StackActions } from '@react-navigation/native';
 import { AppContext } from '../modules/AppContext';
 import { RootState } from '../redux/configureStore';
+import { AppError } from '../modules/AppError';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -86,7 +87,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     }
 
     if (!this.state.data || this.state.data.length <= 0)
-      throw Errors.NoRecordsInFile;
+      throw new AppError(ErrorMessage.NoRecordsInFile);
 
     this.props.tryDecryptFileData(this.state.data, this.state.filePassword);
   }
@@ -96,7 +97,9 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
       .then(() => { })
       .catch(error => {
         console.log(error);
-        Toast.showTranslated(error.message ? error.message : error, this.context);
+        (error instanceof AppError !== true) ?
+          Toast.showTranslated(error.message, this.context) :
+          Toast.showError(error, this.context);
       });
   }
 
@@ -126,7 +129,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
       await FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
 
       if (!data || data.length <= 0)
-        throw Errors.NoRecordsInFile;
+        throw new AppError(ErrorMessage.NoRecordsInFile);
 
       if (!this.state.password || isNullOrEmpty(this.state.password)) {
         Toast.show(language.passwordPleaseEnter);
@@ -138,7 +141,9 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     }
     catch (error) {
       console.log(error);
-      Toast.showTranslated(error.message ? error.messsage : error, this.context);
+      (error instanceof AppError !== true) ?
+        Toast.showTranslated(error.message, this.context) :
+        Toast.showError(error, this.context);
       FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
     }
   };
@@ -151,7 +156,7 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
     const language = this.context.language;
 
     if (!this.state.data || this.state.data.length <= 0)
-    throw Errors.NoRecordsInFile;
+      throw new AppError(ErrorMessage.NoRecordsInFile);
 
     const password = this.state.filePassword ? this.state.filePassword : this.state.password;
 
