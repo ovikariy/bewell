@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { View, Text } from 'react-native';
 import { StyledPicker, StyledPickerItemType } from '../components/MiscComponents';
 import { settingsConstants } from './constants';
-import { AppContextInterface } from './appContext';
+import { AppContextState } from '../redux/reducerTypes';
 
 interface SettingsFactoryItemType {
     id: string,
@@ -18,7 +18,7 @@ interface SettingsFactoryItemType {
     ) => ReactNode;
 }
 
-export function DefaultSettings(context: AppContextInterface): SettingsFactoryItemType[] {
+export function DefaultSettings(context: AppContextState): SettingsFactoryItemType[] {
     const language = context.language;
     const styles = context.styles;
 

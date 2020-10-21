@@ -7,10 +7,11 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
-import { AppContext, AppContextInterface } from '../modules/appContext';
+import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
 import { AppError } from '../modules/appError';
+import { AppContextState } from '../redux/reducerTypes';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[
@@ -29,13 +30,13 @@ export const Toast = {
   show(message: string, duration?: number) {
     Platform.OS === 'ios' ? alert(message) : ToastAndroid.show(message, duration || ToastAndroid.LONG);
   },
-  showError(error: AppError, context: AppContextInterface) {
+  showError(error: AppError, context: AppContextState) {
     let translated = getTranslationMessage(context.language, error.message);
     if (error.code)
       translated += ' ' + error.code;
     this.show(translated);
   },
-  showTranslated(message: string, context: AppContextInterface) {
+  showTranslated(message: string, context: AppContextState) {
     const translated = getTranslationMessage(context.language, message);
     this.show(translated);
   }
@@ -315,7 +316,7 @@ export const LinkButton = (props: ButtonPropsInterface) => {
   );
 };
 
-export function showMessages(operation: any, context: AppContextInterface) {
+export function showMessages(operation: any, context: AppContextState) {
   if (!operation.error && !operation.successMessage)
     return;
 

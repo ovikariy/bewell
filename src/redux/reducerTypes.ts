@@ -1,6 +1,7 @@
-import { AppContextInterface } from '../modules/appContext';
 import { AppError } from '../modules/appError';
 import { LoginInfo } from '../modules/securityHelpers';
+import { ThemePropertyType } from '../modules/themes';
+import { TranslationKeys } from '../modules/translations';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
 import * as ActionTypes from './actionTypes';
 
@@ -112,8 +113,12 @@ export type ChangePasswordAction = ChangePasswordStarted | ChangePasswordCredent
 /* APPCONTEXT */
 
 export interface AppContextState {
-  context: AppContextInterface
+  language: TranslationKeys,
+  theme: ThemePropertyType,
+  styles: any,
+  locale: string
 }
+
 interface SettingsChanged {
   type: typeof ActionTypes.SETTINGS_CHANGED
   payload: { settings: SettingType[] }

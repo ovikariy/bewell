@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { ItemTypes } from './constants';
-import { AppContextInterface } from './appContext';
+import { AppContextState } from './appContext';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
 import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent } from '../components/SleepComponent';
@@ -9,7 +9,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
 import { ItemBase } from './types';
 
-export function CreateWidgetFactory(context: AppContextInterface) {
+export function CreateWidgetFactory(context: AppContextState) {
   const language = context.language;
   const styles = context.styles;
 

@@ -6,9 +6,7 @@ import { getThemeStyles } from '../assets/styles/style';
 import { defaultAppContext } from '../modules/appContext';
 import { AppContextAction, AppContextState } from './reducerTypes';
 
-export const APPCONTEXT = (state: AppContextState = {
-    context: defaultAppContext
-}, action: AppContextAction) => {
+export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: AppContextAction) => {
     switch (action.type) {
         case ActionTypes.SETTINGS_CHANGED: {
             if (!action.payload.settings || !(action.payload.settings.length > 0))
@@ -20,7 +18,7 @@ export const APPCONTEXT = (state: AppContextState = {
             if (!language && !theme)
                 return state;
 
-            const context = { ...state.context };
+            const context = { ...state };
             if (language && language.value) {
                 context.language = translations[language.value];
                 context.locale = language.value;
@@ -30,7 +28,7 @@ export const APPCONTEXT = (state: AppContextState = {
                 context.styles = getThemeStyles(context.theme);
             }
 
-            return { ...state, context };
+            return context;
         }
         default:
             return state;

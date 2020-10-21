@@ -36,12 +36,12 @@ export class MainWrapper extends React.Component<PropsFromRedux> {
   }
 
   render() {
-    if (this.props.AUTH.isLoading || !this.props.APPCONTEXT.context)
+    if (this.props.AUTH.isLoading || !this.props.APPCONTEXT)
       return this.renderSecondarySplash();
 
 
     return (
-      <AppContext.Provider value={this.props.APPCONTEXT.context}>
+      <AppContext.Provider value={this.props.APPCONTEXT}>
         <Main auth={this.props.AUTH} operation={this.props.OPERATION}  />
       </AppContext.Provider>
     );
