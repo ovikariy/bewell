@@ -1,12 +1,12 @@
-import * as SecurityHelpers from '../modules/SecurityHelpers';
+import * as SecurityHelpers from '../modules/securityHelpers';
 import * as operationActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
-import * as ActionTypes from './ActionTypes';
-import { ErrorMessage, ErrorCode } from '../modules/Constants';
+import * as ActionTypes from './actionTypes';
+import { ErrorMessage, ErrorCode } from '../modules/constants';
 import { isNullOrEmpty } from '../modules/helpers';
 import { loadAuthData } from './authActionCreators';
 import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 export const startPINsetup = (): AppThunkActionType => (dispatch) => {
     dispatch(operationActions.clear());

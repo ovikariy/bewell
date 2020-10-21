@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ErrorMessage } from '../modules/Constants';
+import { ErrorMessage } from '../modules/constants';
 import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate } from '../modules/helpers';
 import { startRestore, verifyPasswordForRestore, tryDecryptFileData, importData } from '../redux/backupRestoreActionCreators';
-import * as FileHelpers from '../modules/FileHelpers';
+import * as FileHelpers from '../modules/fileHelpers';
 import { getDocumentAsync } from 'expo-document-picker';
 import { StackActions } from '@react-navigation/native';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,

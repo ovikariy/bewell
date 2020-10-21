@@ -4,8 +4,8 @@ import * as Animatable from 'react-native-animatable';
 import { Image, Text } from 'react-native-elements';
 import { WidgetComponent } from './WidgetComponent';
 import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
-import { WidgetBase, WidgetFactory } from '../modules/WidgetFactory';
+import { AppContext } from '../modules/appContext';
+import { WidgetBase, WidgetFactory } from '../modules/widgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
 

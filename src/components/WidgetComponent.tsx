@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { WidgetComponentPropsBase, WidgetFactoryType } from '../modules/WidgetFactory';
+import { WidgetComponentPropsBase, WidgetFactoryType } from '../modules/widgetFactory';
 import { ParagraphText } from './MiscComponents';
 import { friendlyTime } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 
 interface WidgetHeaderComponentProps {
   title?: string;

@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem, DrawerContentComponentProps, DrawerContentOptions } from '@react-navigation/drawer';
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
 import { IconForButton } from './MiscComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import HomeScreen from '../screens/HomeScreen';
 import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';

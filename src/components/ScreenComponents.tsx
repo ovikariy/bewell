@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { ImageBackground, View, KeyboardAvoidingView, Platform, Image, ViewProps, StatusBar } from 'react-native';
 import { Spacer, ParagraphText, LoadingScreeenOverlay } from './MiscComponents';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 
 /* Wrapper for a screen component; simplifies setting styles e.g. background image on various screens */
 export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNode }) => {

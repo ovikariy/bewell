@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { ParagraphText, ActivityIndicator, ButtonPrimary } from '../components/MiscComponents';
 import { View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

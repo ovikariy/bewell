@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { List } from '../components/MiscComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 
 interface SettingsScreenProps {
   navigation: any

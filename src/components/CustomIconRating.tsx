@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import MorningAppIconFont from './CustomIconFont';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 
 export const CustomIconRating = (props: { children: ReactNode }) => {
   const context = React.useContext(AppContext);

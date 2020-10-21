@@ -1,11 +1,11 @@
-import * as SecurityHelpers from '../modules/SecurityHelpers';
-import * as StorageHelpers from '../modules/StorageHelpers';
+import * as SecurityHelpers from '../modules/securityHelpers';
+import * as StorageHelpers from '../modules/storageHelpers';
 import * as operationActions from './operationActionCreators';
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { isNullOrEmpty } from '../modules/helpers';
-import { ErrorMessage, ErrorCode } from '../modules/Constants';
+import { ErrorMessage, ErrorCode } from '../modules/constants';
 import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 export const loadAuthData = (): AppThunkActionType => (dispatch) => {
     dispatch(operationActions.start());

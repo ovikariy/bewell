@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import { ItemTypes } from './Constants';
-import { AppContextInterface } from './AppContext';
+import { ItemTypes } from './constants';
+import { AppContextInterface } from './appContext';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
 import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent } from '../components/SleepComponent';

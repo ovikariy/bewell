@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { OperationAction, OperationState } from './reducerTypes';
 
 export const OPERATION = (state: OperationState = {

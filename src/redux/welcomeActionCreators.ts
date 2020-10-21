@@ -1,9 +1,9 @@
-import * as SecurityHelpers from '../modules/SecurityHelpers';
+import * as SecurityHelpers from '../modules/securityHelpers';
 import * as operationActions from './operationActionCreators';
 import { loadAuthData } from './authActionCreators';
-import { ErrorMessage, ErrorCode } from '../modules/Constants';
+import { ErrorMessage, ErrorCode } from '../modules/constants';
 import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 export const initialize = (): AppThunkActionType => (dispatch) => {
     /* this should be called once on intitial app launch */

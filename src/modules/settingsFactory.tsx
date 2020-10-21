@@ -3,8 +3,8 @@ import React, { ReactNode } from 'react';
 import Constants from 'expo-constants';
 import { View, Text } from 'react-native';
 import { StyledPicker, StyledPickerItemType } from '../components/MiscComponents';
-import { settingsConstants } from './Constants';
-import { AppContextInterface } from './AppContext';
+import { settingsConstants } from './constants';
+import { AppContextInterface } from './appContext';
 
 interface SettingsFactoryItemType {
     id: string,

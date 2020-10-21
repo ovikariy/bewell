@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { PinSetupState, PinSetupAction } from './reducerTypes';
 
 export const PINSETUP = (state: PinSetupState = {

@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { AuthAction, AuthState } from './reducerTypes';
 
 export const AUTH = (state: AuthState = {

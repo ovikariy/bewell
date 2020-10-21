@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { loadAuthData } from '../redux/authActionCreators';
 import { loadAppContextFromSettings } from '../redux/mainActionCreators';
 import { configLocale } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
 import { RootState } from '../redux/configureStore';

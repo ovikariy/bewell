@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
-import { CreateWidgetFactory, WidgetBase } from '../modules/WidgetFactory';
+import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

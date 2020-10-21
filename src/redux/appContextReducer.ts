@@ -1,9 +1,9 @@
-import * as ActionTypes from './ActionTypes';
-import { settingsConstants } from '../modules/Constants';
+import * as ActionTypes from './actionTypes';
+import { settingsConstants } from '../modules/constants';
 import { translations } from '../modules/translations';
 import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
-import { defaultAppContext } from '../modules/AppContext';
+import { defaultAppContext } from '../modules/appContext';
 import { AppContextAction, AppContextState } from './reducerTypes';
 
 export const APPCONTEXT = (state: AppContextState = {

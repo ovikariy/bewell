@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { BackupRestoreAction, BackupRestoreState } from './reducerTypes';
 
 export const BACKUPRESTORE = (state: BackupRestoreState = {

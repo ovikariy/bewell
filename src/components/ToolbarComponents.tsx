@@ -2,8 +2,8 @@ import React, { PropsWithChildren, ReactNode } from 'react';
 import { Alert, View, ViewProps } from 'react-native';
 import { IconButton, ButtonPropsInterface } from './MiscComponents';
 import { getStorageKeyFromDate } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
-import { WidgetBase, WidgetConfig } from '../modules/WidgetFactory';
+import { AppContext } from '../modules/appContext';
+import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
 
 export const Toolbar = (props: PropsWithChildren<ViewProps>) => {
     const context = React.useContext(AppContext);

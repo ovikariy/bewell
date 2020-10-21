@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { mergeArraysImmutable, consoleColors, consoleLogWithColor } from '../modules/helpers';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement } from '../modules/types';
 import { StoreAction, StoreState } from './reducerTypes';

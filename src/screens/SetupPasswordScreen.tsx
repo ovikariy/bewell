@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { setupNewEncryption } from '../redux/passwordActionCreators';
 import { initialize } from '../redux/welcomeActionCreators';
-import { stateConstants } from '../modules/Constants';
+import { stateConstants } from '../modules/constants';
 import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { isNullOrEmpty } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

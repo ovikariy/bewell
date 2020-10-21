@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { List } from '../components/MiscComponents';
-import { DefaultSettings } from '../modules/SettingsFactory';
-import { StoreConstants } from '../modules/Constants';
+import { DefaultSettings } from '../modules/settingsFactory';
+import { StoreConstants } from '../modules/constants';
 import { load, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 import { ItemBase, ItemBaseAssociativeArray, SettingType } from '../modules/types';
 

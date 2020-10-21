@@ -1,9 +1,9 @@
-import { ErrorCode, ErrorMessage, StoreConstants } from './Constants';
-import * as SecurityHelpers from './SecurityHelpers';
-import * as AsyncStorageService from './AsyncStorageService';
+import { ErrorCode, ErrorMessage, StoreConstants } from './constants';
+import * as SecurityHelpers from './securityHelpers';
+import * as AsyncStorageService from './asyncStorageService';
 import { consoleLogWithColor, consoleColors } from './helpers';
 import { ItemBase, ItemBaseMultiArray } from './types';
-import { AppError } from './AppError';
+import { AppError } from './appError';
 
 export const getItemAsync = async (key: string) => {
     if (!key)

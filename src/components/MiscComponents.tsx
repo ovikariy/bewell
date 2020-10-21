@@ -7,10 +7,10 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
-import { AppContext, AppContextInterface } from '../modules/AppContext';
-import { brokenImageURI, ErrorMessage } from '../modules/Constants';
+import { AppContext, AppContextInterface } from '../modules/appContext';
+import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[

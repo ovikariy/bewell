@@ -1,13 +1,13 @@
 import 'react-native';
-import mockAsyncStorageService from '../__mocks__/AsyncStorageService';
+import mockAsyncStorageService from '../__mocks__/asyncStorageService';
 
 /* module factory function passed to jest.mock(path, moduleFactory) can be a HOF that returns a function. This will allow calling new on the mock https://jestjs.io/docs/en/es6-class-mocks */
-jest.mock('../AsyncStorageService', () => mockAsyncStorageService());
+jest.mock('../asyncStorageService', () => mockAsyncStorageService());
 
 /* import the code that uses the mocks after calling jest.mock */
-import * as StorageHelpers from '../StorageHelpers';
-import { ErrorMessage, ItemTypes } from '../../modules/Constants';
-import { AppError } from '../AppError';
+import * as StorageHelpers from '../storageHelpers';
+import { ErrorMessage, ItemTypes } from '../../modules/constants';
+import { AppError } from '../appError';
 
 it('getItemsAsync tests', async () => {
   expect.assertions(3);

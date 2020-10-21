@@ -4,13 +4,13 @@ import { Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import { AppContext } from '../modules/AppContext';
-import * as FileHelpers from '../modules/FileHelpers';
+import { AppContext } from '../modules/appContext';
+import * as FileHelpers from '../modules/fileHelpers';
 import { friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/helpers';
-import { ErrorMessage, brokenImageURI } from '../modules/Constants';
-import { encryptDataAsync, decryptDataAsync } from '../modules/SecurityHelpers';
-import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/WidgetFactory';
-import { AppError } from '../modules/AppError';
+import { ErrorMessage, brokenImageURI } from '../modules/constants';
+import { encryptDataAsync, decryptDataAsync } from '../modules/securityHelpers';
+import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
+import { AppError } from '../modules/appError';
 
 
 export interface ImagePickerWidgetType extends WidgetBase {

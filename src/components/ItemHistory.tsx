@@ -1,10 +1,10 @@
 import React, { Component, ReactNode } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
 import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { WidgetBase, WidgetConfig } from '../modules/WidgetFactory';
+import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
 import { StoreState } from '../redux/reducerTypes';
 import { ItemBaseAssociativeArray } from '../modules/types';
 

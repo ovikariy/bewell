@@ -1,4 +1,4 @@
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 import { consoleLogWithColor, consoleColors } from '../modules/helpers';
 import { ChangePasswordAction, ChangePasswordState } from './reducerTypes';
 

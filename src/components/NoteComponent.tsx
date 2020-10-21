@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ClearTextArea, IconForButton, TimePicker } from './MiscComponents';
-import { AppContext } from '../modules/AppContext';
-import { WidgetBase, WidgetComponentPropsBase } from '../modules/WidgetFactory';
+import { AppContext } from '../modules/appContext';
+import { WidgetBase, WidgetComponentPropsBase } from '../modules/widgetFactory';
 import { Text, View } from 'react-native';
 import { friendlyTime } from '../modules/helpers';
 

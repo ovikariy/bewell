@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetListComponent from '../components/WidgetListComponent';
-import { ItemTypes } from '../modules/Constants';
+import { ItemTypes } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
-import { deleteImageFromDiskAsync } from '../modules/FileHelpers';
-import { CreateWidgetFactory, WidgetBase } from '../modules/WidgetFactory';
+import { AppContext } from '../modules/appContext';
+import { deleteImageFromDiskAsync } from '../modules/fileHelpers';
+import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { RootState } from '../redux/configureStore';
 import { ItemBase, ItemBaseAssociativeArray } from '../modules/types';
 

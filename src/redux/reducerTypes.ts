@@ -1,8 +1,8 @@
-import { AppContextInterface } from '../modules/AppContext';
-import { AppError } from '../modules/AppError';
-import { LoginInfo } from '../modules/SecurityHelpers';
+import { AppContextInterface } from '../modules/appContext';
+import { AppError } from '../modules/appError';
+import { LoginInfo } from '../modules/securityHelpers';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
-import * as ActionTypes from './ActionTypes';
+import * as ActionTypes from './actionTypes';
 
 /* OPERATION */
 

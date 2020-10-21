@@ -1,7 +1,7 @@
 import { enc } from 'crypto-js';
-import { StoreConstants } from '../modules/Constants';
-import * as SecurityHelpers from '../modules/SecurityHelpers';
-import * as StorageHelpers from '../modules/StorageHelpers';
+import { StoreConstants } from '../modules/constants';
+import * as SecurityHelpers from '../modules/securityHelpers';
+import * as StorageHelpers from '../modules/storageHelpers';
 import * as SecureStore from 'expo-secure-store';
 
 /* changes the color of console log statements and needs to be reset after

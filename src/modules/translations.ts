@@ -1,4 +1,4 @@
-import { ErrorMessage } from "./Constants";
+import { ErrorMessage } from "./constants";
 
 /* import matching Date and Time locales here for moment JS. Could import them where moment JS is used
 e.g. helpers.ts but wanted to keep them next to the translations for consistency */

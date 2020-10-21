@@ -4,7 +4,7 @@ import { initialize } from '../redux/welcomeActionCreators';
 import { ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../components/MiscComponents';
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

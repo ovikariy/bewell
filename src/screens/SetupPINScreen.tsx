@@ -6,7 +6,7 @@ import { ParagraphText, Toast, PasswordInputWithButton,
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty } from '../modules/helpers';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { StackActions } from '@react-navigation/native';
 import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
 import { RootState } from '../redux/configureStore';

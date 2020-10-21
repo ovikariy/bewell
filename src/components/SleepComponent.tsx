@@ -4,8 +4,8 @@ import { View, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
 import { IconForButton, TimePicker } from './MiscComponents';
-import { AppContext } from '../modules/AppContext';
-import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/WidgetFactory';
+import { AppContext } from '../modules/appContext';
+import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { formatDate } from '../modules/helpers';
 
 export interface SleepComponentWidgetType extends WidgetBase {

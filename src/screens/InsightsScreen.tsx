@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants, StoreConstants } from '../modules/Constants';
+import { stateConstants, StoreConstants } from '../modules/constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { CreateWidgetFactory, WidgetBase } from '../modules/WidgetFactory';
+import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { ListWithRefresh } from '../components/MiscComponents';
 import { groupBy } from '../modules/helpers';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

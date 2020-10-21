@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { StoreConstants } from './Constants';
+import { StoreConstants } from './constants';
 import { TranslationKeys } from './translations';
 
 export function configLocale(locale: string) {

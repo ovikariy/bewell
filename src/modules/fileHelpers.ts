@@ -1,6 +1,6 @@
 import *  as FileSystem from 'expo-file-system';
-import { AppError } from './AppError';
-import { ErrorMessage } from './Constants';
+import { AppError } from './appError';
+import { ErrorMessage } from './constants';
 
 export const FileSystemConstants = {
   ExportDirectory: FileSystem.cacheDirectory + 'exports',

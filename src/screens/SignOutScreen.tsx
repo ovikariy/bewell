@@ -4,7 +4,7 @@ import { signOut } from '../redux/authActionCreators';
 import { ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from '../components/MiscComponents';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CommonActions } from '@react-navigation/native';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 
 const mapStateToProps = (state: RootState) => ({

@@ -8,12 +8,12 @@ import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { isNullOrEmpty, formatDate } from '../modules/helpers';
 import { startBackup, getExportData, finishBackup } from '../redux/backupRestoreActionCreators';
-import * as FileHelpers from '../modules/FileHelpers';
+import * as FileHelpers from '../modules/fileHelpers';
 import { StackActions } from '@react-navigation/native';
 import { shareAsync } from 'expo-sharing';
-import { AppContext } from '../modules/AppContext';
+import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,

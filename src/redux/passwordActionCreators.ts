@@ -1,12 +1,12 @@
-import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/Constants';
+import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/constants';
 import * as operationActions from './operationActionCreators';
-import * as StorageHelpers from '../modules/StorageHelpers';
-import * as SecurityHelpers from '../modules/SecurityHelpers';
-import * as ActionTypes from './ActionTypes';
+import * as StorageHelpers from '../modules/storageHelpers';
+import * as SecurityHelpers from '../modules/securityHelpers';
+import * as ActionTypes from './actionTypes';
 import { isNullOrEmpty } from '../modules/helpers';
 import { signInPassword, loadAuthData } from './authActionCreators';
 import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 export const startChangePassword = (): AppThunkActionType => (dispatch) => {
     dispatch({ type: ActionTypes.CHANGEPASSWORD_STARTED });

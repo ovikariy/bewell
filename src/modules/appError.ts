@@ -1,4 +1,4 @@
-import { ErrorCode, ErrorMessage } from "./Constants";
+import { ErrorCode, ErrorMessage } from "./constants";
 
 export class AppError extends Error {
     readonly code?: string;

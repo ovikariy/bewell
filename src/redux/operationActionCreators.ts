@@ -1,5 +1,5 @@
-import { AppError } from '../modules/AppError';
-import * as ActionTypes from './ActionTypes';
+import { AppError } from '../modules/appError';
+import * as ActionTypes from './actionTypes';
 
 export const start = () => ({
     type: ActionTypes.OPERATION_START

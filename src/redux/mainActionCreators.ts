@@ -1,11 +1,11 @@
 import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/helpers';
-import * as StorageHelpers from '../modules/StorageHelpers';
+import * as StorageHelpers from '../modules/storageHelpers';
 import * as operationActions from './operationActionCreators';
 import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
-import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/Constants';
-import * as ActionTypes from './ActionTypes';
+import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/constants';
+import * as ActionTypes from './actionTypes';
 import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/AppError';
+import { AppError } from '../modules/appError';
 
 /**
  * @description Load item's data from storage
