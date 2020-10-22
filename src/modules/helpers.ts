@@ -9,7 +9,7 @@ export function configLocale(locale: string) {
 
 }
 
-export const friendlyDate = (date: string | Date, options: { language: TranslationKeys }) => {
+export function friendlyDate(date: string | Date, options: { language: TranslationKeys; }) {
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
@@ -22,9 +22,9 @@ export const friendlyDate = (date: string | Date, options: { language: Translati
   if (newDateShortString === yesterday.format(format))
     return options.language.yesterday;
   return newDate.format('dddd, MMM D');
-};
+}
 
-export const friendlyDay = (date: string | Date, options: { language: TranslationKeys }) => {
+export function friendlyDay(date: string | Date, options: { language: TranslationKeys; }) {
   const format = 'YYYYMMDD';
   const newDate = moment(date);
   const newDateShortString = newDate.format(format);
@@ -37,11 +37,11 @@ export const friendlyDay = (date: string | Date, options: { language: Translatio
   if (newDateShortString === yesterday.format(format))
     return options.language.yesterday;
   return newDate.format('dddd');
-};
+}
 
-export const friendlyTime = (date: string | Date) => {
+export function friendlyTime(date: string | Date) {
   return moment(date).format('LT');
-};
+}
 
 export function getStorageKeyFromDate(date: string | Date) {
   return StoreConstants.keyPrefix + formatDate(date, StoreConstants.keyDateFormat);

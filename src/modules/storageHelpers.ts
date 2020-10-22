@@ -5,7 +5,7 @@ import { consoleLogWithColor, consoleColors } from './helpers';
 import { ItemBase, ItemBaseMultiArray } from './types';
 import { AppError } from './appError';
 
-export const getItemAsync = async (key: string) => {
+export async function getItemAsync(key: string) {
     if (!key)
         throw new AppError(ErrorMessage.General, ErrorCode.MissingKey1);
     try {
@@ -15,9 +15,9 @@ export const getItemAsync = async (key: string) => {
         console.log(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage1);
     }
-};
+}
 
-export const getItemsAsync = async (keys: string[]) => {
+export async function getItemsAsync(keys: string[]) {
     if (keys.length <= 0)
         throw new AppError(ErrorMessage.General, ErrorCode.MissingKey2);
     try {
@@ -27,15 +27,15 @@ export const getItemsAsync = async (keys: string[]) => {
         console.log(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage1);
     }
-};
+}
 
-export const setItemsAsync = async (key: string, value: string) => {
+export async function setItemsAsync(key: string, value: string) {
     if (!key)
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.MissingKey3);
     await setMultiItemsAsync([[key, value]]);
-};
+}
 
-export const setMultiItemsAsync = async (items: [string, string][]) => {
+export async function setMultiItemsAsync(items: [string, string][]) {
     /* multiSet([['k1', 'val1'], ['k2', 'val2']]) */
     if (!items || !Array.isArray(items) || items.length <= 0)
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.MissingKey4);
@@ -51,9 +51,9 @@ export const setMultiItemsAsync = async (items: [string, string][]) => {
         console.log(error);
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.Storage3);
     }
-};
+}
 
-export const finishSetupNewEncryptionAsync = async (keys: string[]) => {
+export async function finishSetupNewEncryptionAsync(keys: string[]) {
     /* this is a one time run function that removes all unencrypted storage
     key/values (e.g. NOTES, MOODS) after they were copied into the newly encrypted key/values */
     if (!keys || !Array.isArray(keys) || keys.length <= 0)
@@ -65,9 +65,9 @@ export const finishSetupNewEncryptionAsync = async (keys: string[]) => {
         console.log(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage4);
     }
-};
+}
 
-export const mergeByIdAsync = async (itemTypeName: string, newItems: ItemBase[]) => {
+export async function mergeByIdAsync(itemTypeName: string, newItems: ItemBase[]) {
     if (!newItems || !Array.isArray(newItems) || newItems.length <= 0)
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.Storage5);
 
@@ -80,26 +80,27 @@ export const mergeByIdAsync = async (itemTypeName: string, newItems: ItemBase[])
         const oldItemIndex = oldItems.findIndex((oldItem: any) => oldItem.id === newItem.id);
         if (oldItemIndex > -1)
             oldItems[oldItemIndex] = newItem;
+
         else
             oldItems.push(newItem);
     });
 
     await setItemsAndEncryptAsync(itemTypeName, oldItems);
     return oldItems;
-};
+}
 
-export const getAllStorageData = async () => {
-    const hashedKeys = await SecurityHelpers.getAllHashedStoreKeys();
+export async function getAllStorageDataAsync() {
+    const hashedKeys = await SecurityHelpers.getAllHashedStoreKeysAsync();
     hashedKeys.push(StoreConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
     hashedKeys.push(StoreConstants.SETTINGS); /* add SETTINGS separately because it's not hashed */
     return getItemsAsync(hashedKeys);
-};
+}
 
-export const getMultiItemsAndDecryptAsync = async (keys: string[]): Promise<ItemBaseMultiArray> => {
-    const hashedKeys = await SecurityHelpers.getMultipleHashedKeys(keys);
+export async function getMultiItemsAndDecryptAsync(keys: string[]): Promise<ItemBaseMultiArray> {
+    const hashedKeys = await SecurityHelpers.getMultipleHashedKeysAsync(keys);
     const items = await getItemsAsync(hashedKeys);
 
-    const decryptedItems = await SecurityHelpers.decryptAllItems(items);
+    const decryptedItems = await SecurityHelpers.decryptAllItemsAsync(items);
     if (!decryptedItems || decryptedItems.length < 0)
         return [];
 
@@ -111,58 +112,58 @@ export const getMultiItemsAndDecryptAsync = async (keys: string[]): Promise<Item
     });
 
     return decryptedItems as ItemBaseMultiArray;
-};
+}
 
-export const logStorageDataAsync = async () => {
+export async function logStorageDataAsync() {
     const items = await AsyncStorageService.multiGet(await AsyncStorageService.getAllKeys());
     consoleLogWithColor(consoleColors.green, '\r\nAll AsyncStorage Items:\r\n' + JSON.stringify(items));
-};
+}
 
-export const getItemsAndDecryptAsync = async (key: string) => {
+export async function getItemsAndDecryptAsync(key: string) {
     if (!isValidStoreKey(key))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey9);
     const storeKey = await getStoreKeyHashAsync(key);
     const items = await getItemAsync(storeKey);
-    const decryptedItems = await SecurityHelpers.decryptDataAsync(items);
+    const decryptedItems = SecurityHelpers.decryptData(items);
 
     return decryptedItems ? JSON.parse(decryptedItems) : [];
-};
+}
 
-export const setItemsAndEncryptAsync = async (key: string, items: any) => {
+export async function setItemsAndEncryptAsync(key: string, items: any) {
     if (!isValidStoreKey(key))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey8);
-    const encrypted = await encryptAsync(JSON.stringify(items));
+    const encrypted = encrypt(JSON.stringify(items));
     const storeKey = await getStoreKeyHashAsync(key);
     await setItemsAsync(storeKey, encrypted);
-};
+}
 
-export const getStoreKeyHashAsync = async (key: string) => {
+export async function getStoreKeyHashAsync(key: string) {
     if (!isValidStoreKey(key))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey11);
     const storeKey = key.indexOf(StoreConstants.keyPrefix) < 0 ? StoreConstants.keyPrefix + key : key;
     /* the itemTypeName in storage is hashed with dataEncryptionKey */
-    const itemTypeNameHash = await SecurityHelpers.getItemKeyHashAsync(storeKey);
+    const itemTypeNameHash = SecurityHelpers.getItemKeyHash(storeKey);
     return itemTypeNameHash;
-};
+}
 
-export const encryptAsync = (value: string) => {
-    return SecurityHelpers.encryptDataAsync(value);
-};
+export function encrypt(value: string) {
+    return SecurityHelpers.encryptData(value);
+}
 
 /**
  * @description Store key starts with "`@Morning:`" prefix followed by either a month/year in MMYYYY format or a wellknown key such as SETTINGS
  * e.g. "`@Morning:012019`" or "`@Morning:SETTINGS`"
  * @param key
  */
-export const isValidStoreKey = (key: string) => {
+export function isValidStoreKey(key: string) {
     if (StoreConstants.keyPrefix + key === StoreConstants.SETTINGS || key === StoreConstants.SETTINGS)
         return true;
     return (StoreConstants.AllEncryptedStoreKeys.indexOf(StoreConstants.keyPrefix + key) >= 0 || StoreConstants.AllEncryptedStoreKeys.indexOf(key) >= 0);
-};
+}
 
-export const getDataEncryptionStoreKey = async (): Promise<string | null> => {
+export async function getDataEncryptionStoreKeyAsync(): Promise<string | null> {
     const dataEncryptionStoreKey = await getItemAsync(StoreConstants.DataEncryptionStoreKey);
     if (dataEncryptionStoreKey)
         return dataEncryptionStoreKey as string;
     return null;
-};
+}

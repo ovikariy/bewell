@@ -99,4 +99,4 @@ class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInS
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInScreen);
+export default connector(SignInScreen);

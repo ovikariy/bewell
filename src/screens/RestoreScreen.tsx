@@ -305,4 +305,4 @@ class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, Resto
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RestoreScreen);
+export default connector(RestoreScreen);

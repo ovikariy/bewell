@@ -52,6 +52,6 @@ class SignOutScreen extends Component<PropsFromRedux & SignOutProps> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignOutScreen);
+export default connector(SignOutScreen);
 
 

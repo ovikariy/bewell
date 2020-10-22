@@ -8,7 +8,7 @@ export const FileSystemConstants = {
   ImagesSubDirectory: FileSystem.documentDirectory + 'images'
 };
 
-export const writeFileAsync = async (filepath: string, text: string, options: FileSystem.WritingOptions) => {
+export async function writeFileAsync(filepath: string, text: string, options: FileSystem.WritingOptions) {
 
   /* TODO: FileSystem.getFreeDiskStorageAsync() and show error if no space avail
     FileSystem.getFreeDiskStorageAsync().then(freeDiskStorage => {
@@ -16,9 +16,9 @@ export const writeFileAsync = async (filepath: string, text: string, options: Fi
       iOS: 17179869184
     });  */
   await FileSystem.writeAsStringAsync(filepath, text, options ? options : {});
-};
+}
 
-export const deleteFilesAsync = async (directory: string, filenames: string[]) => {
+export async function deleteFilesAsync(directory: string, filenames: string[]) {
   if (!directory || !filenames)
     return;
   for (const filename of filenames) {
@@ -26,63 +26,63 @@ export const deleteFilesAsync = async (directory: string, filenames: string[]) =
     if (fileInfo.exists === true && fileInfo.isDirectory === false)
       await FileSystem.deleteAsync(fileInfo.uri);
   }
-};
+}
 
-export const deleteFileAsync = async (filepath: string) => {
+export async function deleteFileAsync(filepath: string) {
   if (!filepath)
     return;
   await FileSystem.deleteAsync(filepath);
-};
+}
 
-export const readDirectoryAsync =  (directory: string) => {
-  return  FileSystem.readDirectoryAsync(directory);
-};
+export async function readDirectoryAsync(directory: string) {
+  return FileSystem.readDirectoryAsync(directory);
+}
 
-export const clearDirectoryAsync = async (directory: string) => {
+export async function clearDirectoryAsync(directory: string) {
   const filesToDelete = await FileSystem.readDirectoryAsync(directory);
   return deleteFilesAsync(directory, filesToDelete);
-};
+}
 
-export const getOrCreateDirectoryAsync = async (path: string) => {
+export async function getOrCreateDirectoryAsync(path: string) {
   const pathExists = await existsAsync(path);
   if (pathExists !== true)
     await FileSystem.makeDirectoryAsync(path, { intermediates: true });
   return path;
-};
+}
 
-export const existsAsync = async (path: string) => {
+export async function existsAsync(path: string) {
   const pathInfo = await FileSystem.getInfoAsync(path);
   if (pathInfo && pathInfo.exists === true)
     return true;
   return false;
-};
+}
 
-export const getStringfromFileAsync = async (filePath: string) => {
+export async function getStringfromFileAsync(filePath: string) {
   const fileContent = await FileSystem.readAsStringAsync(filePath);
   if (!fileContent)
     return null;
   return fileContent;
-};
+}
 
-export const getJSONfromFileAsync = async (filePath: string) => {
+export async function getJSONfromFileAsync(filePath: string) {
   const fileContent = await FileSystem.readAsStringAsync(filePath);
   if (!fileContent)
     return null;
   return JSON.parse(fileContent);
-};
+}
 
-export const copyFileAsync = async (from: string, to: string) => {
+export async function copyFileAsync(from: string, to: string) {
   const fromPathInfo = await FileSystem.getInfoAsync(from);
   if (!fromPathInfo.exists || fromPathInfo.size <= 0)
     throw new AppError(ErrorMessage.InvalidFile);
   await FileSystem.copyAsync({ from, to });
-};
+}
 
-export const deleteImageFromDiskAsync = async (filename: string) => {
+export async function deleteImageFromDiskAsync(filename: string) {
   const filepath = getFullImagePath(filename);
   if (await existsAsync(filepath))
     await deleteFileAsync(filepath);
-};
+}
 
 export function getFullImagePath(imageFileName: string) {
   return FileSystemConstants.ImagesSubDirectory + '/' + imageFileName;
