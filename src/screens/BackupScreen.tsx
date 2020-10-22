@@ -14,6 +14,7 @@ import { shareAsync } from 'expo-sharing';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 import { AppError } from '../modules/appError';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -33,15 +34,15 @@ interface BackupScreenState {
   password?: string;
 }
 
-interface BackupScreenProps {
-  navigation: any;
+interface BackupScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Backup'>
 }
 
-class BackupScreen extends Component<PropsFromRedux & BackupScreenProps, BackupScreenState> {
+class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & BackupScreenProps) {
+  constructor(props: BackupScreenProps) {
     super(props);
     this.state = {
       password: undefined

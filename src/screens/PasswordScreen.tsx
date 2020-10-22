@@ -9,6 +9,7 @@ import { StackActions } from '@react-navigation/native';
 import { isNullOrEmpty } from '../modules/helpers';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE,
@@ -33,15 +34,15 @@ interface PasswordScreenState {
   PIN?: string
 }
 
-interface PasswordScreenProps {
-  navigation: any;
+interface PasswordScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Password'>
 }
 
-class PasswordScreen extends Component<PropsFromRedux & PasswordScreenProps, PasswordScreenState> {
+class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & PasswordScreenProps) {
+  constructor(props: PasswordScreenProps) {
     super(props);
 
     this.state = {

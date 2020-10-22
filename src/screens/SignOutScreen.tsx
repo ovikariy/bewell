@@ -6,6 +6,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import { CommonActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
@@ -18,11 +19,11 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface SignOutProps {
-  navigation: any;
+interface SignOutProps extends PropsFromRedux{
+  navigation: AppNavigationProp<'SignOut'>
 }
 
-class SignOutScreen extends Component<PropsFromRedux & SignOutProps> {
+class SignOutScreen extends Component<SignOutProps> {
 
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;

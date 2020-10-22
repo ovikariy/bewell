@@ -8,6 +8,7 @@ import { groupBy } from '../modules/helpers';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -21,11 +22,11 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 
-interface InsightsScreenProps {
-  navigation: any;
+interface InsightsScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Insights'>
 }
 
-class InsightsScreen extends Component<PropsFromRedux & InsightsScreenProps> {
+class InsightsScreen extends Component<InsightsScreenProps> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 

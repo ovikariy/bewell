@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ParagraphText, Toast, PasswordInputWithButton,
+import {
+  ParagraphText, Toast, PasswordInputWithButton,
   Spacer, HorizontalLine, PINInputWithButton, ButtonPrimary
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
@@ -10,6 +11,7 @@ import { AppContext } from '../modules/appContext';
 import { StackActions } from '@react-navigation/native';
 import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -32,15 +34,15 @@ interface SetupPINScreenState {
   showPINReentered: boolean
 }
 
-interface SetupPINScreenProps {
-  navigation: any;
+interface SetupPINScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'SetupPIN'>
 }
 
-class SetupPINScreen extends Component<PropsFromRedux & SetupPINScreenProps, SetupPINScreenState> {
+class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & SetupPINScreenProps) {
+  constructor(props: SetupPINScreenProps) {
     super(props);
     this.state = {
       password: undefined,

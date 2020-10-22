@@ -7,7 +7,7 @@ import { load, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
-import { ItemBase, ItemBaseAssociativeArray, SettingType } from '../modules/types';
+import { ItemBase, ItemBaseAssociativeArray, AppNavigationProp, SettingType } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -21,11 +21,11 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface SystemSettingsScreenProps {
-  navigation: any;
+interface SystemSettingsScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'SystemSettings'>
 }
 
-class SystemSettingsScreen extends Component<PropsFromRedux & SystemSettingsScreenProps> {
+class SystemSettingsScreen extends Component<SystemSettingsScreenProps> {
 
   componentDidMount() {
     this.props.load(StoreConstants.SETTINGS);
@@ -55,7 +55,7 @@ class SystemSettingsScreen extends Component<PropsFromRedux & SystemSettingsScre
 export default connector(SystemSettingsScreen);
 
 interface SystemSettingsComponentProps {
-  navigation: any;
+  navigation: AppNavigationProp<'SystemSettings'>
   settings?: SettingType[];
   onChange: (newValue: SettingType) => void;
 }

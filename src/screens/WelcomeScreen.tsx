@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -19,11 +20,11 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface WelcomeScreenProps {
-  navigation: any;
+interface WelcomeScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Welcome'>
 }
 
-class WelcomeScreen extends Component<PropsFromRedux & WelcomeScreenProps> {
+class WelcomeScreen extends Component<WelcomeScreenProps> {
 
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;

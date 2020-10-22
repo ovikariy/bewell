@@ -11,7 +11,7 @@ import { AppContext } from '../modules/appContext';
 import { deleteImageFromDiskAsync } from '../modules/fileHelpers';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { RootState } from '../redux/configureStore';
-import { ItemBase, ItemBaseAssociativeArray } from '../modules/types';
+import { ItemBase, ItemBaseAssociativeArray, AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -31,15 +31,15 @@ interface HomeScreenState {
   selectedItem?: WidgetBase
 }
 
-interface HomeScreenProps {
-  navigation: any;
+interface HomeScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Home'>
 }
 
-class HomeScreen extends Component<PropsFromRedux & HomeScreenProps, HomeScreenState>  {
+class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & HomeScreenProps) {
+  constructor(props: HomeScreenProps) {
     super(props);
     this.state = {
       selectedDate: new Date(),

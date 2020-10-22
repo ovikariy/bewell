@@ -12,6 +12,7 @@ import { StackActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
 import { AppError } from '../modules/appError';
+import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -35,16 +36,16 @@ interface RestoreScreenState {
   importFilename?: string//'test.txt'
 }
 
-interface RestoreScreenProps {
-  navigation: any;
+interface RestoreScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'Restore'>
 }
 
-class RestoreScreen extends Component<PropsFromRedux & RestoreScreenProps, RestoreScreenState> {
+class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & RestoreScreenProps) {
+  constructor(props: RestoreScreenProps) {
     super(props);
     this.state = {
       password: undefined,

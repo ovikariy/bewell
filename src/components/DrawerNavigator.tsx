@@ -79,7 +79,6 @@ function WelcomeNavigator() {
 
 const HomeStack = createStackNavigator();
 function HomeNavigator() {
-
     const context = React.useContext(AppContext);
     const language = context.language;
     const styles = context.styles;
@@ -98,7 +97,8 @@ function HomeNavigator() {
             <HomeStack.Screen
                 name='ItemHistory'
                 component={ItemHistoryScreen}
-                options={ItemHistoryScreen.navigationOptions} /* dynamic nav options in the component */
+                options={ItemHistoryScreen.getNavigationOptions}
+            /* dynamic nav options in the component */
             />
         </HomeStack.Navigator>
     );
@@ -124,7 +124,7 @@ function InsightsNavigator() {
             <InsightsStack.Screen
                 name='ItemHistory'
                 component={ItemHistoryScreen}
-                options={ItemHistoryScreen.navigationOptions} /* dynamic nav options in the component */
+                options={ItemHistoryScreen.getNavigationOptions} /* dynamic nav options in the component */
             />
         </InsightsStack.Navigator>
     );
@@ -266,33 +266,33 @@ function getAuthenticatedUserScreens() {
                 options={{
                     drawerLabel: language.history,
                     drawerIcon: ({ focused }) => <IconForButton name='history' type='font-awesome'
-                    iconStyle={{
-                        ...styles.iconPrimarySmall,
-                        ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
-                    }}
-                />
+                        iconStyle={{
+                            ...styles.iconPrimarySmall,
+                            ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
+                        }}
+                    />
                 }}
             />
             <Drawer.Screen name="Settings" component={SettingsNavigator}
                 options={{
                     drawerLabel: language.settings,
                     drawerIcon: ({ focused }) => <IconForButton name='sliders' type='font-awesome'
-                    iconStyle={{
-                        ...styles.iconPrimarySmall,
-                        ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
-                    }}
-                />
+                        iconStyle={{
+                            ...styles.iconPrimarySmall,
+                            ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
+                        }}
+                    />
                 }}
             />
             <Drawer.Screen name="SignOut" component={SignOutNavigator}
                 options={{
                     drawerLabel: language.signOut,
                     drawerIcon: ({ focused }) => <IconForButton name='sign-out' type='font-awesome'
-                    iconStyle={{
-                        ...styles.iconPrimarySmall,
-                        ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
-                    }}
-                />
+                        iconStyle={{
+                            ...styles.iconPrimarySmall,
+                            ...{ color: (focused ? styles.brightColor.color : styles.bodyText.color) }
+                        }}
+                    />
                 }}
             />
         </React.Fragment>

@@ -7,6 +7,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/configureStore';
+import { AppNavigationProp, AppRouteProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -23,15 +24,16 @@ interface ItemHistoryScreenState {
   selectedItem?: WidgetBase
 }
 
-interface ItemHistoryScreenProps {
-  navigation: any;
+interface ItemHistoryScreenProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'ItemHistory'>
+  route: AppRouteProp<'ItemHistory'>
 }
 
-class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProps, ItemHistoryScreenState> {
+class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScreenState> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  static navigationOptions = ({ route, navigation }: any) => {
+  static getNavigationOptions = ({ route, navigation }: any) => {
     return ({
       title: route.params.title
     });
@@ -39,7 +41,7 @@ class ItemHistoryScreen extends Component<PropsFromRedux & ItemHistoryScreenProp
 
   itemType: string;
 
-  constructor(props: PropsFromRedux & ItemHistoryScreenProps) {
+  constructor(props: ItemHistoryScreenProps) {
     super(props);
     this.itemType = props.route.params.itemType;
     this.state = {

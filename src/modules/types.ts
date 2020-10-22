@@ -1,3 +1,5 @@
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export interface ItemBase {
     id: string;
@@ -31,3 +33,30 @@ export type ItemBaseMultiArray = ItemBaseMultiArrayElement[];
 export interface SettingType extends ItemBase {
     value?: string
 }
+
+/**
+ * Stack navigation parameter list
+ */
+export type RootStackParamList = {
+    Backup: undefined
+    BackupRestore: undefined
+    Home: undefined
+    Insights: undefined
+    ItemHistory: { itemType: string, title: string }
+    Password: undefined
+    Profile: { userId: string }
+    Restore: undefined
+    Settings: undefined
+    SetupPassword: undefined
+    SetupPIN: undefined
+    SignIn: undefined
+    SignOut: undefined
+    SystemSettings: undefined
+    Welcome: undefined
+};
+
+/**
+ * Base type for a Screen 'navigation' property
+ */
+export type AppNavigationProp<RouteName extends keyof RootStackParamList> = StackNavigationProp<RootStackParamList, RouteName>;
+export type AppRouteProp<RouteName extends keyof RootStackParamList> = RouteProp<RootStackParamList, RouteName>;

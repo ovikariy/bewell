@@ -25,15 +25,15 @@ interface SignInScreenState {
   PIN?: string
 }
 
-interface SignInScreenProps {
+interface SignInScreenProps extends PropsFromRedux {
 }
 
-class SignInScreen extends Component<PropsFromRedux & SignInScreenProps, SignInScreenState> {
+class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
 
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
 
-  constructor(props: PropsFromRedux & SignInScreenProps) {
+  constructor(props: SignInScreenProps) {
     super(props);
     this.state = {
       password: undefined,

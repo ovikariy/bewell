@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { List } from '../components/MiscComponents';
 import { AppContext } from '../modules/appContext';
+import { AppNavigationProp } from '../modules/types';
 
 interface SettingsScreenProps {
-  navigation: any
+  navigation: AppNavigationProp<'Settings'>
 }
 
 export default class SettingsScreen extends Component<SettingsScreenProps> {
@@ -25,8 +26,9 @@ export default class SettingsScreen extends Component<SettingsScreenProps> {
 }
 
 interface SettingsComponentProps {
-  navigation: any
+  navigation: AppNavigationProp<'Settings'>
 }
+
 class SettingsComponent extends Component<SettingsComponentProps> {
   static contextType = AppContext;
   declare context: React.ContextType<typeof AppContext>;
@@ -44,7 +46,7 @@ class SettingsComponent extends Component<SettingsComponentProps> {
         id: 'SetupPINScreen',
         title: language.pinLock,
         iconName: 'lock',
-        onPress: () => { this.props.navigation.navigate('SetupPINScreen'); }
+        onPress: () => { this.props.navigation.navigate('SetupPIN'); }
       },
       {
         id: 'BackupRestore',
