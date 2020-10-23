@@ -167,24 +167,20 @@ export async function getDataEncryptionStoreKeyAsync(): Promise<string | null> {
     return null;
 }
 
-namespace AsyncStorageService {
-    export function getItem(key: string) {
+const AsyncStorageService = {
+    getItem(key: string) {
         return AsyncStorage.getItem(key);
-    }
-
-    export function multiGet(keys: string[]) {
+    },
+    multiGet(keys: string[]) {
         return AsyncStorage.multiGet(keys);
-    }
-
-    export function multiSet(items: string[][]) {
+    },
+    multiSet(items: string[][]) {
         return AsyncStorage.multiSet(items);
-    }
-
-    export function multiRemove(keys: string[]) {
+    },
+    multiRemove(keys: string[]) {
         return AsyncStorage.multiRemove(keys);
-    }
-
-    export function getAllKeys() {
+    },
+    getAllKeys() {
         return AsyncStorage.getAllKeys();
     }
-}
+};
