@@ -6,9 +6,7 @@ import * as Font from 'expo-font';
 import Main from './src/components/Main';
 
 import { Provider } from 'react-redux';
-import { configureStore } from './src/redux/configureStore';
-
-const store = configureStore();
+import { store } from './src/redux/store';
 
 interface AppState {
   isLoading: boolean
@@ -30,7 +28,7 @@ export default class App extends React.Component<AppProps, AppState> {
         startAsync={this.loadResourcesAsync}
         onError={this.handleLoadingError}
         onFinish={this.handleFinishLoading}
-      />
+      />;
     }
     return (
       <Provider store={store}>
@@ -39,7 +37,7 @@ export default class App extends React.Component<AppProps, AppState> {
           <Main />
         </View>
       </Provider>
-    )
+    );
   }
 
   loadResourcesAsync = async () => {
@@ -50,7 +48,6 @@ export default class App extends React.Component<AppProps, AppState> {
         require('./src/assets/images/icon.png'),
         require('./src/assets/images/header.jpg'),
         require('./src/assets/images/arrow-up.png'),
-        
       ]),
       Font.loadAsync({
         'open-sans-condensed-light': require('./src/assets/fonts/OpenSansCondensed-Light.ttf'),

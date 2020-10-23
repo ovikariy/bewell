@@ -6,7 +6,7 @@ import { CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
 import { IconForButton, TimePicker } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
-import { formatDate } from '../modules/helpers';
+import { formatDate } from '../modules/utils';
 
 export interface SleepComponentWidgetType extends WidgetBase {
   rating?: number;

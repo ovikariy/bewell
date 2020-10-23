@@ -1,10 +1,9 @@
 import { AES, HmacSHA256, enc, lib } from 'crypto-js';
 import { ErrorCode, ErrorMessage, StoreConstants } from './constants';
 import * as SecureStore from 'expo-secure-store';
-import { consoleColors, consoleLogWithColor, isNullOrEmpty } from './helpers';
+import { consoleColors, consoleLogWithColor, isNullOrEmpty } from './utils';
 import { isNumber, toNumber } from 'lodash';
-import { AppError } from './appError';
-
+import { AppError } from './types';
 
 export interface LoginInfo {
   loginAttempts: number;

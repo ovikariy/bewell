@@ -6,7 +6,7 @@ import ItemHistory from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AppNavigationProp, AppRouteProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

@@ -5,7 +5,7 @@ import { ParagraphText, HorizontalLine, Spacer, LinkButton, ButtonPrimary } from
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CommonActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

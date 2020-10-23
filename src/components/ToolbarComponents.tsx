@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from 'react';
 import { Alert, View, ViewProps } from 'react-native';
 import { IconButton, ButtonPropsInterface } from './MiscComponents';
-import { getStorageKeyFromDate } from '../modules/helpers';
+import { getStorageKeyFromDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
 

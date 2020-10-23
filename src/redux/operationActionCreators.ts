@@ -1,4 +1,4 @@
-import { AppError } from '../modules/appError';
+import { AppError } from '../modules/types';
 import * as ActionTypes from './actionTypes';
 
 export function start() {

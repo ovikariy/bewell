@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
-import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/helpers';
+import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';

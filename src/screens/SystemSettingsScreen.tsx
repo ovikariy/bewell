@@ -6,7 +6,7 @@ import { StoreConstants } from '../modules/constants';
 import { load, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { ItemBase, ItemBaseAssociativeArray, AppNavigationProp, SettingType } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

@@ -7,7 +7,7 @@ jest.mock('../asyncStorageService', () => mockAsyncStorageService());
 /* import the code that uses the mocks after calling jest.mock */
 import * as StorageHelpers from '../storageHelpers';
 import { ErrorMessage, ItemTypes } from '../../modules/constants';
-import { AppError } from '../appError';
+import { AppError } from '../types';
 
 it('getItemsAsync tests', async () => {
   expect.assertions(3);

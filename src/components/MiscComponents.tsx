@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer } from 'react-native-elements';
-import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/helpers';
+import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
-import { AppError } from '../modules/appError';
+import { AppError } from '../modules/types';
 import { AppContextState } from '../redux/reducerTypes';
 
 export const Spacer = (props: { width?: number, height?: number }) => {

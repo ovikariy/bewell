@@ -5,7 +5,7 @@ import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, 
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,

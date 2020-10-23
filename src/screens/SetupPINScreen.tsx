@@ -6,11 +6,11 @@ import {
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { StackActions } from '@react-navigation/native';
 import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

@@ -25,7 +25,7 @@ export interface RootState {
 /* AppThunkActionType is used to simplify TypeScript typing in action creators  */
 export type AppThunkActionType<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
 
-export function configureStore() {
+ function configureStore() {
 
     const store = createStore(
         combineReducers({
@@ -43,3 +43,5 @@ export function configureStore() {
 
     return store;
 }
+
+export const store = configureStore();

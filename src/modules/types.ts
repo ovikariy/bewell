@@ -1,6 +1,15 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+export class AppError extends Error {
+    readonly code?: string;
+
+    constructor(message: string, code?: string) {
+        super(message);
+        this.code = code;
+    }
+}
+
 export interface ItemBase {
     id: string;
     date: string;

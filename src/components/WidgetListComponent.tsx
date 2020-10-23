@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Image, Text } from 'react-native-elements';
 import { WidgetComponent } from './WidgetComponent';
-import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/helpers';
+import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetFactory } from '../modules/widgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';

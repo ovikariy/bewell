@@ -6,11 +6,11 @@ import { ItemTypes } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/helpers';
+import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
-import { deleteImageFromDiskAsync } from '../modules/fileHelpers';
+import { deleteImageFromDiskAsync } from '../modules/io';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { ItemBase, ItemBaseAssociativeArray, AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

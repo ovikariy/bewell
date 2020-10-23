@@ -1,5 +1,5 @@
 import *  as FileSystem from 'expo-file-system';
-import { AppError } from './appError';
+import { AppError } from './types';
 import { ErrorMessage } from './constants';
 
 export const FileSystemConstants = {

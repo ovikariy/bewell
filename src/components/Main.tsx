@@ -4,11 +4,11 @@ import { MainDrawerNavigator } from './DrawerNavigator';
 import { connect, ConnectedProps } from 'react-redux';
 import { loadAuthData } from '../redux/authActionCreators';
 import { loadAppContextFromSettings } from '../redux/mainActionCreators';
-import { configLocale } from '../modules/helpers';
+import { configLocale } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { View, ImageBackground, Text } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AuthState, OperationState } from '../redux/reducerTypes';
 
 const mapStateToProps = (state: RootState) => ({

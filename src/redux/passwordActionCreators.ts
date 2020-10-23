@@ -1,12 +1,12 @@
 import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/constants';
 import * as operationActions from './operationActionCreators';
-import * as StorageHelpers from '../modules/storageHelpers';
-import * as SecurityHelpers from '../modules/securityHelpers';
+import * as storage from '../modules/storage';
+import * as securityService from '../modules/securityService';
 import * as ActionTypes from './actionTypes';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/utils';
 import { signInPassword, loadAuthData } from './authActionCreators';
-import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/appError';
+import { AppThunkActionType } from './store';
+import { AppError } from '../modules/types';
 
 export function startChangePassword(): AppThunkActionType {
     return (dispatch) => {
@@ -43,12 +43,12 @@ async function verifyCredentialsAsync(password?: string, pin?: string) {
     if (password)
         await validatePasswordAsync(password);
     if (pin)
-        await SecurityHelpers.validatePINAsync(pin);
+        await securityService.validatePINAsync(pin);
 }
 
 export function updatePassword(oldPassword: string, newPassword: string, pin?: string): AppThunkActionType {
     return (dispatch) => {
-        if (SecurityHelpers.isSignedIn() !== true) {
+        if (securityService.isSignedIn() !== true) {
             dispatch(operationActions.fail(new AppError(ErrorMessage.Unauthorized)));
             return;
         }
@@ -68,21 +68,21 @@ async function updatePasswordAsync(oldPassword: string, newPassword: string, pin
     /* 1. verify credentials */
     await verifyCredentialsAsync(oldPassword, pin);
 
-    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
     if (!dataEncryptionStoreKey || isNullOrEmpty(dataEncryptionStoreKey))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.Security2);
 
     /* 2. re-encrypt Data Encryption Key with the new password */
-    const encryptionKeyEncrypted = await SecurityHelpers.reEncryptAsync(dataEncryptionStoreKey, oldPassword, newPassword);
+    const encryptionKeyEncrypted = await securityService.reEncryptAsync(dataEncryptionStoreKey, oldPassword, newPassword);
     if (isNullOrEmpty(encryptionKeyEncrypted))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.Security3);
 
     /* 3. persist Data Encryption Key */
-    await StorageHelpers.setItemsAsync(StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
+    await storage.setItemsAsync(StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
 
     /* 4. encrypt new password with old PIN and persist that to keychain */
     if (pin && isNullOrEmpty(pin) === false)
-        await SecurityHelpers.setupNewPINAsync(newPassword, pin);
+        await securityService.setupNewPINAsync(newPassword, pin);
 }
 
 export function setupNewEncryption(newPassword: string): AppThunkActionType {
@@ -101,26 +101,26 @@ export function setupNewEncryption(newPassword: string): AppThunkActionType {
 }
 
 async function setupNewEncryptionAsync(newPassword: string) {
-    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
     if (!isNullOrEmpty(dataEncryptionStoreKey)) /* cannot create new encryption, data is already encrypted */
         throw new AppError(ErrorMessage.PasswordAlreadySet, ErrorCode.Security1);
 
     // 1. encrypt any existing data (user may have been using the app but without setting the password) */
-    const existingItems = await StorageHelpers.getItemsAsync(StoreConstants.AllEncryptedStoreKeys);
-    const existingItemsEncrypted = await SecurityHelpers.firstTimeEncryptAllAsync(existingItems, newPassword);
+    const existingItems = await storage.getItemsAsync(StoreConstants.AllEncryptedStoreKeys);
+    const existingItemsEncrypted = await securityService.firstTimeEncryptAllAsync(existingItems, newPassword);
 
     // 2. store everything in Async Storage in one call
-    await StorageHelpers.setMultiItemsAsync(existingItemsEncrypted);
+    await storage.setMultiItemsAsync(existingItemsEncrypted);
 
     // 3. delete non encrypted items from storage
-    await StorageHelpers.finishSetupNewEncryptionAsync(StoreConstants.AllEncryptedStoreKeys);
+    await storage.finishSetupNewEncryptionAsync(StoreConstants.AllEncryptedStoreKeys);
 }
 
 export async function validatePasswordAsync(password: string) {
     /* get data encryption key which has been encypted with user's password and
     try to decrypt, if successful then the password is correct */
-    const dataEncryptionStoreKeyEncrypted = await StorageHelpers.getDataEncryptionStoreKeyAsync();
-    const validPassword = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionStoreKeyEncrypted, password);
+    const dataEncryptionStoreKeyEncrypted = await storage.getDataEncryptionStoreKeyAsync();
+    const validPassword = await securityService.tryDecryptDataAsync(dataEncryptionStoreKeyEncrypted, password);
     if (validPassword !== true)
         throw new AppError(ErrorMessage.InvalidPassword);
 }

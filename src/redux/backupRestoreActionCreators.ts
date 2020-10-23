@@ -1,12 +1,12 @@
 import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/constants';
 import { loadAllData } from './mainActionCreators';
 import * as operationActions from './operationActionCreators';
-import * as StorageHelpers from '../modules/storageHelpers';
-import * as SecurityHelpers from '../modules/securityHelpers';
+import * as storage from '../modules/storage';
+import * as securityService from '../modules/securityService';
 import * as ActionTypes from './actionTypes';
 import { validatePasswordAsync } from './passwordActionCreators';
-import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/appError';
+import { AppThunkActionType } from './store';
+import { AppError } from '../modules/types';
 
 export function startRestore(): AppThunkActionType {
     return (dispatch) => {
@@ -68,7 +68,7 @@ export async function tryDecryptFileDataAsync(data: [string, string][], password
     if (!data || !(data.length > 0) || !password)
         throw new AppError(ErrorMessage.InvalidParameter);
     const dataEncryptionKey = getDataEncryptionKeyFromFileData(data);
-    const passwordWorks = await SecurityHelpers.tryDecryptDataAsync(dataEncryptionKey, password);
+    const passwordWorks = await securityService.tryDecryptDataAsync(dataEncryptionKey, password);
     return passwordWorks ? true : false;
 }
 
@@ -109,9 +109,9 @@ async function importDataAsync(data: [string, string][], password: string) {
     //   ["Wf4rh34+qer48MSihQbrsCADTNfn31tavmFhnxX+S/o=", "U2FsdGVkX184dB4pXueAFrxIz9ZwhN1MTnSOdVu/jMC0DoUXGMOJls2ZptvvjkoVlrMmBuwipR3NV4ChVgfetfMAFRZYkQTXizbYMrlyk1/lyn8G+rcBlUe1gh2gqScp"],
     // ];
     const dataEncryptionKeyEncrypted = getDataEncryptionKeyFromFileData(data);
-    const cryptoFunctions = SecurityHelpers.createCryptoFunctions(dataEncryptionKeyEncrypted, password);
+    const cryptoFunctions = securityService.createCryptoFunctions(dataEncryptionKeyEncrypted, password);
 
-    const items = await SecurityHelpers.decryptAllItemsFromImportAsync(data, cryptoFunctions.getHash, cryptoFunctions.decryptData);
+    const items = await securityService.decryptAllItemsFromImportAsync(data, cryptoFunctions.getHash, cryptoFunctions.decryptData);
 
     if (!items || items.length <= 0)
         throw new AppError(ErrorMessage.NoRecordsInFile, ErrorCode.Import1);
@@ -124,7 +124,7 @@ async function importDataAsync(data: [string, string][], password: string) {
         const itemTypeName = (items[itemType][0] + '').replace(StoreConstants.keyPrefix, '');
         const itemTypeRecords = items[itemType][1] ? JSON.parse(items[itemType][1]) : [];
 
-        if (!StorageHelpers.isValidStoreKey(itemTypeName))
+        if (!storage.isValidStoreKey(itemTypeName))
             throw new AppError(ErrorMessage.InvalidFileData, ErrorCode.Import2);
 
         if (!itemTypeRecords || itemTypeRecords.length <= 0)
@@ -137,7 +137,7 @@ async function importDataAsync(data: [string, string][], password: string) {
         });
 
         /* persist records by item type */
-        await StorageHelpers.mergeByIdAsync(itemTypeName, itemTypeRecords);
+        await storage.mergeByIdAsync(itemTypeName, itemTypeRecords);
     }
 }
 
@@ -160,5 +160,5 @@ export function getExportData(password: string): AppThunkActionType {
 
 async function getExportDataAsync(password: string) {
     await validatePasswordAsync(password);
-    return StorageHelpers.getAllStorageDataAsync();
+    return storage.getAllStorageDataAsync();
 }

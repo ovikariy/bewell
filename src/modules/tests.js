@@ -1,6 +1,6 @@
 import { enc } from 'crypto-js';
 import { StoreConstants } from '../modules/constants';
-import * as SecurityHelpers from '../modules/securityHelpers';
+import * as securityService from '../modules/securityHelpers';
 import * as StorageHelpers from '../modules/storageHelpers';
 import * as SecureStore from 'expo-secure-store';
 
@@ -29,20 +29,20 @@ const testEncoding = async () => {
     /* this test does not change storage values */
     console.log('************ Starting testEncoding ***********\r\n');
 
-    const randomKey = await SecurityHelpers.generateEncryptionKeyAsync();
+    const randomKey = await securityService.generateEncryptionKeyAsync();
     console.log('\r\n randomKey\r\n' + randomKey);
 
-    const randomKeyEncrypted = await SecurityHelpers.encryptAsync(randomKey, 'password1');
+    const randomKeyEncrypted = await securityService.encryptAsync(randomKey, 'password1');
     console.log('\r\n randomKeyEncrypted\r\n' + randomKeyEncrypted);
-    const randomKeyDecrypted = await SecurityHelpers.decryptAsync(randomKeyEncrypted, 'password1');
+    const randomKeyDecrypted = await securityService.decryptAsync(randomKeyEncrypted, 'password1');
     console.log('\r\n randomKeyDecrypted\r\n' + randomKeyDecrypted);
 
-    const randomKeyEncrypted2 = await SecurityHelpers.encryptAsync(randomKeyDecrypted, 'password2');
-    const randomKeyDecrypted2 = await SecurityHelpers.decryptAsync(randomKeyEncrypted2, 'password2');
+    const randomKeyEncrypted2 = await securityService.encryptAsync(randomKeyDecrypted, 'password2');
+    const randomKeyDecrypted2 = await securityService.decryptAsync(randomKeyEncrypted2, 'password2');
     console.log('\r\n randomKeyDecrypted2\r\n' + randomKeyDecrypted2);
 
-    const randomKeyEncrypted3 = await SecurityHelpers.encryptAsync(randomKeyDecrypted2, 'password3');
-    const randomKeyDecrypted3 = await SecurityHelpers.decryptAsync(randomKeyEncrypted3, 'password3');
+    const randomKeyEncrypted3 = await securityService.encryptAsync(randomKeyDecrypted2, 'password3');
+    const randomKeyDecrypted3 = await securityService.decryptAsync(randomKeyEncrypted3, 'password3');
     console.log('\r\n randomKeyDecrypted3\r\n' + randomKeyDecrypted3);
 
     if (randomKey === randomKeyDecrypted && randomKeyDecrypted === randomKeyDecrypted2
@@ -58,10 +58,10 @@ const testEncryption = async () => {
 
     const testData = await configTestData();
 
-    const encryptedItems = await SecurityHelpers.encryptForStorageAsync(testData.items, testData.dataEncryptionKey);
+    const encryptedItems = await securityService.encryptForStorageAsync(testData.items, testData.dataEncryptionKey);
     console.log('\r\nencryptedItems\r\n' + encryptedItems);
 
-    const decryptedItems = await SecurityHelpers.decryptFromStorageAsync(encryptedItems, testData.dataEncryptionKey);
+    const decryptedItems = await securityService.decryptFromStorageAsync(encryptedItems, testData.dataEncryptionKey);
     console.log('\r\ndecryptedItems\r\n' + decryptedItems);
 
     if (testData.items == decryptedItems)
@@ -79,20 +79,20 @@ const testChangePassword = async () => {
     const oldPassword = testData.passwordInStore;
     const newPassword = 'newPassword123';
 
-    const encryptedItems = await SecurityHelpers.encryptForStorageAsync(testData.items, testData.dataEncryptionKey);
+    const encryptedItems = await securityService.encryptForStorageAsync(testData.items, testData.dataEncryptionKey);
     console.log('\r\nencryptedItems\r\n' + encryptedItems);
 
     /* change password, should still be able to decrypt */
-    await SecurityHelpers.setPasswordAsync(oldPassword, newPassword);
+    await securityService.setPasswordAsync(oldPassword, newPassword);
 
     /* reload data after password change */
     testData.passwordInStore = await SecureStore.getItemAsync(StoreConstants.password, {});
-    testData.dataEncryptionKey = await SecurityHelpers.reEncryptDataEncryptionKeyAsync(testData.dataEncryptionKey, oldPassword, newPassword);
+    testData.dataEncryptionKey = await securityService.reEncryptDataEncryptionKeyAsync(testData.dataEncryptionKey, oldPassword, newPassword);
 
     console.log('\r\ndataEncryptionKey\r\n' + testData.dataEncryptionKey);
 
     try {
-        const decryptedItems = await SecurityHelpers.decryptFromStorageAsync(encryptedItems, testData.dataEncryptionKey);
+        const decryptedItems = await securityService.decryptFromStorageAsync(encryptedItems, testData.dataEncryptionKey);
         console.log('\r\ndecryptedItems\r\n' + decryptedItems);
 
         if (testData.items == decryptedItems)

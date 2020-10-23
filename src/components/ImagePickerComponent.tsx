@@ -5,12 +5,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { AppContext } from '../modules/appContext';
-import * as FileHelpers from '../modules/fileHelpers';
-import { friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/helpers';
+import * as FileHelpers from '../modules/io';
+import { friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/utils';
 import { ErrorMessage, brokenImageURI } from '../modules/constants';
-import { encryptData, decryptData } from '../modules/securityHelpers';
+import { encryptData, decryptData } from '../modules/securityService';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
-import { AppError } from '../modules/appError';
+import { AppError } from '../modules/types';
 
 
 export interface ImagePickerWidgetType extends WidgetBase {

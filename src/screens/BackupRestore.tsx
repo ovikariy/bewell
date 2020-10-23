@@ -4,7 +4,7 @@ import { ParagraphText, ActivityIndicator, ButtonPrimary } from '../components/M
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
 import { AppNavigationProp } from '../modules/types';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION

@@ -3,7 +3,7 @@ import { ClearTextArea, IconForButton, TimePicker } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase } from '../modules/widgetFactory';
 import { Text, View } from 'react-native';
-import { friendlyTime } from '../modules/helpers';
+import { friendlyTime } from '../modules/utils';
 
 export interface NoteComponentWidgetType extends WidgetBase {
   note?: string

@@ -5,7 +5,7 @@ import { ParagraphText, Spacer, HorizontalLine, ButtonPrimary } from '../compone
 import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

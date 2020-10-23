@@ -1,11 +1,11 @@
-import * as SecurityHelpers from '../modules/securityHelpers';
-import * as StorageHelpers from '../modules/storageHelpers';
+import * as securityService from '../modules/securityService';
+import * as storage from '../modules/storage';
 import * as operationActions from './operationActionCreators';
 import * as ActionTypes from './actionTypes';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/utils';
 import { ErrorMessage, ErrorCode } from '../modules/constants';
-import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/appError';
+import { AppThunkActionType } from './store';
+import { AppError } from '../modules/types';
 
 export function loadAuthData(): AppThunkActionType {
     return (dispatch) => {
@@ -24,8 +24,8 @@ export function loadAuthData(): AppThunkActionType {
 }
 
 async function loadAuthDataAsync() {
-    const authData = await SecurityHelpers.getLoginInfoAsync();
-    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKeyAsync();
+    const authData = await securityService.getLoginInfoAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
     authData.isEncrypted = isNullOrEmpty(dataEncryptionStoreKey) ? false : true;
     return authData;
 }
@@ -64,24 +64,24 @@ export function signInPIN(pin: string): AppThunkActionType {
 
 
 async function signInPasswordAsync(password: string) {
-    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
     if (!dataEncryptionStoreKey)
         throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth10);
-    SecurityHelpers.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
+    securityService.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
 }
 
 async function signInPINAsync(pin: string) {
-    const dataEncryptionStoreKey = await StorageHelpers.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
     if (!dataEncryptionStoreKey)
         throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth11);
-    await SecurityHelpers.createEncryptDecryptDataFunctionsPINAsync(dataEncryptionStoreKey, pin);
+    await securityService.createEncryptDecryptDataFunctionsPINAsync(dataEncryptionStoreKey, pin);
 }
 
 export function signOut(): AppThunkActionType {
     return (dispatch) => {
         dispatch(operationActions.start());
         try {
-            SecurityHelpers.signOut();
+            securityService.signOut();
             dispatch({ type: ActionTypes.CLEAR_REDUX_STORE });
             dispatch(loadAuthData());
         }

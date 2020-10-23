@@ -1,8 +1,7 @@
-import { AppError } from '../modules/appError';
-import { LoginInfo } from '../modules/securityHelpers';
+import { LoginInfo } from '../modules/securityService';
 import { ThemePropertyType } from '../modules/themes';
 import { TranslationKeys } from '../modules/translations';
-import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
+import { AppError, ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
 import * as ActionTypes from './actionTypes';
 
 /* OPERATION */

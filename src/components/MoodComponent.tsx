@@ -2,7 +2,7 @@ import React from 'react';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { Text, View } from 'react-native';
-import { friendlyTime } from '../modules/helpers';
+import { friendlyTime } from '../modules/utils';
 import { CustomIconType, CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
 import * as Animatable from 'react-native-animatable';
 

@@ -6,9 +6,9 @@ import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StackActions } from '@react-navigation/native';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
+import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({

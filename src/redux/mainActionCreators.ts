@@ -1,11 +1,10 @@
-import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/helpers';
-import * as StorageHelpers from '../modules/storageHelpers';
+import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/utils';
+import * as storage from '../modules/storage';
 import * as operationActions from './operationActionCreators';
-import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
+import { AppError, ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
 import { StoreConstants, ErrorMessage, ErrorCode } from '../modules/constants';
 import * as ActionTypes from './actionTypes';
-import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/appError';
+import { AppThunkActionType } from './store';
 
 /**
  * @description Load item's data from storage
@@ -58,7 +57,7 @@ export function loadAllWidgetData(): AppThunkActionType {
 }
 
 async function loadAllWidgetDataAsync() {
-    return StorageHelpers.getMultiItemsAndDecryptAsync(StoreConstants.monthsFromEpochDate);
+    return storage.getMultiItemsAndDecryptAsync(StoreConstants.monthsFromEpochDate);
 }
 
 /**
@@ -82,33 +81,33 @@ export function loadAllData(): AppThunkActionType {
 }
 
 async function loadAllDataAsync() {
-    return StorageHelpers.getMultiItemsAndDecryptAsync(StoreConstants.AllEncryptedStoreKeys);
+    return storage.getMultiItemsAndDecryptAsync(StoreConstants.AllEncryptedStoreKeys);
 }
 
 async function loadAsync(key: string) {
     if (key === StoreConstants.SETTINGS) { /* settings are stored unencrypted because need theme, language etc before user logs in */
-        const items = await StorageHelpers.getItemAsync(key);
+        const items = await storage.getItemAsync(key);
         if (!items)
             return null;
         return JSON.parse(items as string);
     }
     else {
-        const items = await StorageHelpers.getItemsAndDecryptAsync(key);
+        const items = await storage.getItemsAndDecryptAsync(key);
         return items.sort((a: ItemBase, b: ItemBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     }
 }
 
 async function persistReduxAsync(key: string, items: ItemBase[]) {
 
-    if (!key && StorageHelpers.isValidStoreKey(key) === true)
+    if (!key && storage.isValidStoreKey(key) === true)
         return;
     const nonEmptyItems = items.filter(item => !isEmptyWidgetItem(item));
     if (nonEmptyItems.length > 0) {
         if (key === StoreConstants.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
-            await StorageHelpers.setItemsAsync(key, JSON.stringify(nonEmptyItems));
+            await storage.setItemsAsync(key, JSON.stringify(nonEmptyItems));
 
         else
-            await StorageHelpers.setItemsAndEncryptAsync(key, nonEmptyItems);
+            await storage.setItemsAndEncryptAsync(key, nonEmptyItems);
     }
 }
 
@@ -168,7 +167,7 @@ function replaceItemsInRedux(items: ItemBaseMultiArray) {
 
 export function logStorageData(): AppThunkActionType {
     return (dispatch) => {
-        StorageHelpers.logStorageDataAsync().then();
+        storage.logStorageDataAsync().then();
     };
 }
 

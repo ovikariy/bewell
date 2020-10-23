@@ -1,9 +1,8 @@
 import { ErrorCode, ErrorMessage, StoreConstants } from './constants';
-import * as SecurityHelpers from './securityHelpers';
-import * as AsyncStorageService from './asyncStorageService';
-import { consoleLogWithColor, consoleColors } from './helpers';
-import { ItemBase, ItemBaseMultiArray } from './types';
-import { AppError } from './appError';
+import * as securityService from './securityService';
+import { consoleLogWithColor, consoleColors } from './utils';
+import { AppError, ItemBase, ItemBaseMultiArray } from './types';
+import { AsyncStorage } from 'react-native';
 
 export async function getItemAsync(key: string) {
     if (!key)
@@ -90,17 +89,17 @@ export async function mergeByIdAsync(itemTypeName: string, newItems: ItemBase[])
 }
 
 export async function getAllStorageDataAsync() {
-    const hashedKeys = await SecurityHelpers.getAllHashedStoreKeysAsync();
+    const hashedKeys = await securityService.getAllHashedStoreKeysAsync();
     hashedKeys.push(StoreConstants.DataEncryptionStoreKey); /* add DataEncryptionStoreKey separately because it's not hashed */
     hashedKeys.push(StoreConstants.SETTINGS); /* add SETTINGS separately because it's not hashed */
     return getItemsAsync(hashedKeys);
 }
 
 export async function getMultiItemsAndDecryptAsync(keys: string[]): Promise<ItemBaseMultiArray> {
-    const hashedKeys = await SecurityHelpers.getMultipleHashedKeysAsync(keys);
+    const hashedKeys = await securityService.getMultipleHashedKeysAsync(keys);
     const items = await getItemsAsync(hashedKeys);
 
-    const decryptedItems = await SecurityHelpers.decryptAllItemsAsync(items);
+    const decryptedItems = await securityService.decryptAllItemsAsync(items);
     if (!decryptedItems || decryptedItems.length < 0)
         return [];
 
@@ -124,7 +123,7 @@ export async function getItemsAndDecryptAsync(key: string) {
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey9);
     const storeKey = await getStoreKeyHashAsync(key);
     const items = await getItemAsync(storeKey);
-    const decryptedItems = SecurityHelpers.decryptData(items);
+    const decryptedItems = securityService.decryptData(items);
 
     return decryptedItems ? JSON.parse(decryptedItems) : [];
 }
@@ -142,12 +141,12 @@ export async function getStoreKeyHashAsync(key: string) {
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey11);
     const storeKey = key.indexOf(StoreConstants.keyPrefix) < 0 ? StoreConstants.keyPrefix + key : key;
     /* the itemTypeName in storage is hashed with dataEncryptionKey */
-    const itemTypeNameHash = SecurityHelpers.getItemKeyHash(storeKey);
+    const itemTypeNameHash = securityService.getItemKeyHash(storeKey);
     return itemTypeNameHash;
 }
 
 export function encrypt(value: string) {
-    return SecurityHelpers.encryptData(value);
+    return securityService.encryptData(value);
 }
 
 /**
@@ -166,4 +165,26 @@ export async function getDataEncryptionStoreKeyAsync(): Promise<string | null> {
     if (dataEncryptionStoreKey)
         return dataEncryptionStoreKey as string;
     return null;
+}
+
+namespace AsyncStorageService {
+    export function getItem(key: string) {
+        return AsyncStorage.getItem(key);
+    }
+
+    export function multiGet(keys: string[]) {
+        return AsyncStorage.multiGet(keys);
+    }
+
+    export function multiSet(items: string[][]) {
+        return AsyncStorage.multiSet(items);
+    }
+
+    export function multiRemove(keys: string[]) {
+        return AsyncStorage.multiRemove(keys);
+    }
+
+    export function getAllKeys() {
+        return AsyncStorage.getAllKeys();
+    }
 }

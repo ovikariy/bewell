@@ -1,17 +1,17 @@
-import * as SecurityHelpers from '../modules/securityHelpers';
+import * as securityService from '../modules/securityService';
 import * as operationActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './actionTypes';
 import { ErrorMessage, ErrorCode } from '../modules/constants';
-import { isNullOrEmpty } from '../modules/helpers';
+import { isNullOrEmpty } from '../modules/utils';
 import { loadAuthData } from './authActionCreators';
-import { AppThunkActionType } from './configureStore';
-import { AppError } from '../modules/appError';
+import { AppThunkActionType } from './store';
+import { AppError } from '../modules/types';
 
 export function startPINsetup(): AppThunkActionType {
     return (dispatch) => {
         dispatch(operationActions.clear());
-        if (SecurityHelpers.isSignedIn() !== true) {
+        if (securityService.isSignedIn() !== true) {
             dispatch(operationActions.fail(new AppError(ErrorMessage.Unauthorized)));
             return;
         }
@@ -21,7 +21,7 @@ export function startPINsetup(): AppThunkActionType {
 
 export function verifyPassword(password: string): AppThunkActionType {
     return (dispatch) => {
-        if (SecurityHelpers.isSignedIn() !== true) {
+        if (securityService.isSignedIn() !== true) {
             dispatch(operationActions.fail(new AppError(ErrorMessage.Unauthorized)));
             return;
         }
@@ -42,7 +42,7 @@ export function verifyPassword(password: string): AppThunkActionType {
 
 export function submitPIN(password: string, pin: string): AppThunkActionType {
     return (dispatch) => {
-        if (SecurityHelpers.isSignedIn() !== true) {
+        if (securityService.isSignedIn() !== true) {
             dispatch(operationActions.fail(new AppError(ErrorMessage.Unauthorized)));
             return;
         }
@@ -69,7 +69,7 @@ export function submitPIN(password: string, pin: string): AppThunkActionType {
 async function submitPINAsync(password: string, pin: string) {
     /* verify password one more time */
     await validatePasswordAsync(password);
-    await SecurityHelpers.setupNewPINAsync(password, pin);
+    await securityService.setupNewPINAsync(password, pin);
 }
 
 

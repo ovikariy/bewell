@@ -4,15 +4,14 @@ import { ErrorMessage } from '../modules/constants';
 import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty, formatDate } from '../modules/helpers';
+import { isNullOrEmpty, formatDate } from '../modules/utils';
 import { startRestore, verifyPasswordForRestore, tryDecryptFileData, importData } from '../redux/backupRestoreActionCreators';
-import * as FileHelpers from '../modules/fileHelpers';
+import * as FileHelpers from '../modules/io';
 import { getDocumentAsync } from 'expo-document-picker';
 import { StackActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
-import { RootState } from '../redux/configureStore';
-import { AppError } from '../modules/appError';
-import { AppNavigationProp } from '../modules/types';
+import { RootState } from '../redux/store';
+import { AppError, AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
