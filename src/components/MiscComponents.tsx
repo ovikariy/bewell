@@ -2,16 +2,17 @@ import React, { useState, ReactNode, PropsWithChildren } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
   TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, Dimensions, Image,
-  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps
+  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps, Modal
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer } from 'react-native-elements';
+import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer, colors } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
 import { AppError } from '../modules/types';
 import { AppContextState } from '../redux/reducerTypes';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[
@@ -170,14 +171,11 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
   /* DateTimePicker shows by default when rendered so need to hide and only show e.g. on button press */
   const [show, setShow] = useState(false);
 
-  const showDatepicker = () => {
-    setShow(true);
-  };
-
-  const onChange = (event: any, newDate: any) => {
+  function onChange(event: any, newDate: any) {
     setShow(false);
-    if (props.onChange) props.onChange(event, newDate);
-  };
+    if (props.onChange)
+      props.onChange(event, newDate);
+  }
 
   const format = props.format ? props.format : 'ddd, MMM D Y';
   const displayText = props.value ? formatDate(props.value, format) : (props.placeholder ? props.placeholder : language.dateAndTime);
@@ -185,26 +183,69 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
   return (
     <View style={{ justifyContent: 'center' }}>
       <View>
-        <TouchableOpacity onPress={showDatepicker}>
+        <TouchableOpacity onPress={() => setShow(true)}>
           <Text style={[styles.bodyText, { marginHorizontal: 10 }]}>{displayText}</Text>
         </TouchableOpacity>
       </View>
-      {show && (
-
-        /**  TODO: [BWA-5] style better on iOS
-         *         <View style={{
-                  backgroundColor: styles.screenContainer.backgroundColor,
-                  position: 'absolute', flex: 1, top: 40, width: 1550
-                }}>
-        */
-        <DateTimePicker
-          mode={props.mode ? props.mode : 'datetime'}
-          value={props.value || new Date()}
-          onChange={onChange}
-          style={props.style ? props.style : {}}
-        />
-      )}
+      { show && getPlatformSpecificPicker()}
     </View>
+  );
+
+  function getPlatformSpecificPicker() {
+    if (Platform.OS === 'ios') {
+      return <DateTimePickerIOS
+        {...props}
+        show={show}
+        onChange={onChange}
+        onCancel={() => setShow(false)}
+      />;
+    }
+    else {
+      return <DateTimePicker
+        mode={props.mode ? props.mode : 'date'}
+        value={props.value || new Date()}
+        onChange={onChange}
+        style={props.style ? props.style : {}}
+      />;
+    }
+  }
+};
+
+const DateTimePickerIOS = (props: StyledDatePickerProps & { show?: boolean, onCancel: () => void; }) => {
+  const { language, styles } = React.useContext(AppContext);
+  const [value, setValue] = useState(props.value);
+
+  function onOkPress() {
+    if (props.onChange) props.onChange(null, value);
+  };
+
+  function onCancelPress() {
+    setValue(props.value);
+    props.onCancel();
+  };
+
+  return (
+    <Modal animationType='fade' transparent={true} visible={props.show}>
+      <View style={styles.modalWrapper}>
+        <View style={[styles.modal, styles.brightBackground, { paddingBottom: 20 }]}>
+          <DateTimePicker
+            mode={props.mode ? props.mode : 'date'}
+            value={value || new Date()}
+            onChange={(event: any, newDate: any) => setValue(newDate)}
+            style={[{ width: 255 }]}
+          />
+          {/* centered and stretched button row */}
+          <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+              <LinkButton title={language.cancel} titleStyle={[styles.buttonText, styles.dimColor]}
+                onPress={onCancelPress} />
+              <LinkButton title={language.ok} titleStyle={[styles.buttonText, styles.dimColor]}
+                onPress={onOkPress} />
+            </View>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
 

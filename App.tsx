@@ -43,6 +43,7 @@ export default class App extends React.Component<AppProps, AppState> {
   loadResourcesAsync = async () => {
     await Promise.all([
       Asset.loadAsync([
+        require('./src/assets/images/logo_small_color.png'),
         require('./src/assets/images/logo_small.png'),
         require('./src/assets/images/splash.png'),
         require('./src/assets/images/icon.png'),

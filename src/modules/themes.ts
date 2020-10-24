@@ -23,7 +23,7 @@ export const themes: ThemeType = {
             /* don't use short notation for colors because may need to append opacity e.g. tintColor + '70' */
             foreground: '#FFFFFF', /* snow white */
             foreground2: '#FFFFFF', /* snow white, always light e.g. for toolbar with color background */
-            foreground3: '#1B1C20', /* onyx black, always dark e.g. for password field with white background */
+            foreground3: '#125973', /* onyx black, always dark e.g. for password field with white background */
 
             colorful1: '#87BCBF', /* sage light aqua */
             colorful2: '#D97D54', /* rust burnt orange */

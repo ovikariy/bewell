@@ -25,7 +25,7 @@ const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    return <Icon name='menu' size={30} containerStyle={{ margin: 16 }}
+    return <Icon name='menu' size={30} containerStyle={{ marginLeft: 16 }}
         color={styles.bodyText.color} onPress={() => props.navigation.toggleDrawer()} />;
 };
 
@@ -33,7 +33,7 @@ const LogoImage = () => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    return <Image source={require('../assets/images/logo_small.png')} tintColor={styles.toolbarContainer.backgroundColor} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
+    return <Image source={require('../assets/images/logo_small_color.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
 };
 
 const ScreenNavOptions = (styles: any): StackNavigationOptions => {

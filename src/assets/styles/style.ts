@@ -326,6 +326,9 @@ export function getThemeStyles(theme: ThemePropertyType) {
     brightBackground: {
       backgroundColor: colors.foreground2, /* light color e.g. white */
     },
+    dimColor: {
+      color: colors.foreground3  /* dark color e.g. black */
+    },
     highlightColor: {
       color: colors.background,
     },
@@ -394,6 +397,27 @@ export function getThemeStyles(theme: ThemePropertyType) {
     listItemLeftIcon: {
       marginLeft: 5,
       width: 50
+    },
+
+    /* modal */
+    modalWrapper: {
+      flex: 1,
+      backgroundColor: colors.background + '90',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    modal: {
+      margin: 10,
+      padding: 25,
+      alignItems: "center",
+      shadowColor: colors.foreground3,
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5
     }
   });
 }
