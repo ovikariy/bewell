@@ -7,7 +7,7 @@
     "eject": "expo eject",
     "test": "node_modules/.bin/jest",
     "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand",
-    "lint": "npx eslint \"src/**/*.ts*\"" 
+    "lint": "npx eslint \"src/**/*.ts*\""
   },
   "jest": {
     "preset": "jest-expo"
@@ -57,7 +57,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@types/jest": "^26.0.15",
     "@types/react-redux": "^7.1.9",
+    "@types/react-test-renderer": "^16.9.3",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
     "babel-preset-expo": "~8.0.0",
