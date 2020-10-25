@@ -8,7 +8,7 @@ export async function getItemAsync(key: string) {
     if (!key)
         throw new AppError(ErrorMessage.General, ErrorCode.MissingKey1);
     try {
-        return await AsyncStorageService.getItem(key);
+        return await asyncStorageService.getItem(key);
     }
     catch (error) {
         console.log(error);
@@ -20,7 +20,7 @@ export async function getItemsAsync(keys: string[]) {
     if (keys.length <= 0)
         throw new AppError(ErrorMessage.General, ErrorCode.MissingKey2);
     try {
-        return await AsyncStorageService.multiGet(keys);
+        return await asyncStorageService.multiGet(keys);
     }
     catch (error) {
         console.log(error);
@@ -28,7 +28,8 @@ export async function getItemsAsync(keys: string[]) {
     }
 }
 
-export async function setItemsAsync(key: string, value: string) {
+// TODO: rename to setItem
+export async function setItemAsync(key: string, value: string) {
     if (!key)
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.MissingKey3);
     await setMultiItemsAsync([[key, value]]);
@@ -42,9 +43,11 @@ export async function setMultiItemsAsync(items: [string, string][]) {
     items.forEach(item => {
         if (item.length < 2)
             throw new AppError(ErrorMessage.InvalidData, ErrorCode.Storage10);
+        if (typeof (item[0]) !== 'string')
+            throw new AppError(ErrorMessage.InvalidKey, ErrorCode.Storage12);
     });
     try {
-        await AsyncStorageService.multiSet(items);
+        await asyncStorageService.multiSet(items);
     }
     catch (error) {
         console.log(error);
@@ -58,7 +61,7 @@ export async function finishSetupNewEncryptionAsync(keys: string[]) {
     if (!keys || !Array.isArray(keys) || keys.length <= 0)
         throw new AppError(ErrorMessage.General, ErrorCode.MissingKey5);
     try {
-        await AsyncStorageService.multiRemove(keys);
+        await asyncStorageService.multiRemove(keys);
     }
     catch (error) {
         console.log(error);
@@ -114,7 +117,7 @@ export async function getMultiItemsAndDecryptAsync(keys: string[]): Promise<Item
 }
 
 export async function logStorageDataAsync() {
-    const items = await AsyncStorageService.multiGet(await AsyncStorageService.getAllKeys());
+    const items = await asyncStorageService.multiGet(await asyncStorageService.getAllKeys());
     consoleLogWithColor(consoleColors.green, '\r\nAll AsyncStorage Items:\r\n' + JSON.stringify(items));
 }
 
@@ -133,7 +136,7 @@ export async function setItemsAndEncryptAsync(key: string, items: any) {
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey8);
     const encrypted = encrypt(JSON.stringify(items));
     const storeKey = await getStoreKeyHashAsync(key);
-    await setItemsAsync(storeKey, encrypted);
+    await setItemAsync(storeKey, encrypted);
 }
 
 export async function getStoreKeyHashAsync(key: string) {
@@ -167,7 +170,7 @@ export async function getDataEncryptionStoreKeyAsync(): Promise<string | null> {
     return null;
 }
 
-const AsyncStorageService = {
+export const asyncStorageService = {
     getItem(key: string) {
         return AsyncStorage.getItem(key);
     },

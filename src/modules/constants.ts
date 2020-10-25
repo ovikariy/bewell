@@ -133,6 +133,7 @@ export enum ErrorCode {
   Storage9 = 'S109',
   Storage10 = 'S1010',
   Storage11 = 'S1011',
+  Storage12 = 'S1012',
   Auth1 = 'A1001',
   Auth2 = 'A1002',
   Auth3 = 'A1003',

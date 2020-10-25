@@ -104,7 +104,7 @@ async function persistReduxAsync(key: string, items: ItemBase[]) {
     const nonEmptyItems = items.filter(item => !isEmptyWidgetItem(item));
     if (nonEmptyItems.length > 0) {
         if (key === StoreConstants.SETTINGS) /* settings are stored unencrypted because need theme, language etc before user logs in */
-            await storage.setItemsAsync(key, JSON.stringify(nonEmptyItems));
+            await storage.setItemAsync(key, JSON.stringify(nonEmptyItems));
 
         else
             await storage.setItemsAndEncryptAsync(key, nonEmptyItems);

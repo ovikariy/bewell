@@ -78,7 +78,7 @@ async function updatePasswordAsync(oldPassword: string, newPassword: string, pin
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.Security3);
 
     /* 3. persist Data Encryption Key */
-    await storage.setItemsAsync(StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
+    await storage.setItemAsync(StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
 
     /* 4. encrypt new password with old PIN and persist that to keychain */
     if (pin && isNullOrEmpty(pin) === false)
