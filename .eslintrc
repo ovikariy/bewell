@@ -91,7 +91,7 @@
         "curly": ["error", "multi-or-nest"],
         "dot-notation": "error",
         "eqeqeq": "error",
-        "linebreak-style": ["error", "windows"],
+        //"linebreak-style": ["error", "windows"],
         "new-parens": "error",
         "no-caller": "error",
         "no-duplicate-case": "error",
