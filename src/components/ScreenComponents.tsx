@@ -11,11 +11,11 @@ export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNo
   const styles = appContext.styles;
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
+    <View style={styles.screenContainer}>
       {props.isLoading ?
         <LoadingScreeenOverlay /> : <View />}
       {props.children}
-    </SafeAreaView>
+    </View>
   );
 };
 

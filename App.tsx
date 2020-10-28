@@ -32,10 +32,10 @@ export default class App extends React.Component<AppProps, AppState> {
     }
     return (
       <Provider store={store}>
-        <View style={{ flex: 1 }}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <Main />
-        </View>
+        {/** don't add any <Views> or other wrappers here since the
+         * top component has to be SafeAreaView to work well on iOS
+         * which is used in Main */}
+        <Main />
       </Provider>
     );
   }

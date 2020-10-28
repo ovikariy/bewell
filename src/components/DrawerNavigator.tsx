@@ -41,6 +41,7 @@ const ScreenNavOptions = (styles: any): StackNavigationOptions => {
         headerStyle: { borderWidth: 0 },
         headerTitleStyle: styles.heading,
         headerTitleAlign: 'center',
+        headerStatusBarHeight: 0, /** this is handled in Main by SafeAreaView, no need for extra padding */
         headerTransparent: true,
         headerTintColor: styles.heading.color
     };
@@ -209,7 +210,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOpt
 
     return (
         <DrawerContentScrollView style={styles.drawerBackground} {...props}>
-            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20 }]}>
+            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20, marginTop: 0 }]}>
                 <LogoImage />
                 <Text style={styles.heading}>{language.appName}</Text>
             </View>

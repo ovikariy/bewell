@@ -7,6 +7,7 @@ interface ThemePropertyStyleType {
     background: string;
     background2: string;
     background3: string;
+    statusBarText: string;
     transparent: string;
 }
 
@@ -32,6 +33,7 @@ export const themes: ThemeType = {
             background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */
             background3: '#6E8CA0', /* slate medium grey, widget selected etc */
 
+            statusBarText: 'light',
             transparent: 'transparent'
         }
     },
@@ -49,6 +51,7 @@ export const themes: ThemeType = {
             background2: '#6E8CA0', /* slate medium grey, floating toolbar etc */
             background3: '#125973', /* light orange, widget selected etc */
 
+            statusBarText: 'dark',
             transparent: 'transparent'
         }
     }

@@ -6,10 +6,11 @@ import { loadAuthData } from '../redux/authActionCreators';
 import { loadAppContextFromSettings } from '../redux/mainActionCreators';
 import { configLocale } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
-import { View, ImageBackground, Text } from 'react-native';
+import { View, ImageBackground, Text, Platform, StatusBar } from 'react-native';
 import { ActivityIndicator, showMessages } from './MiscComponents';
 import { RootState } from '../redux/store';
 import { AuthState, OperationState } from '../redux/reducerTypes';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -42,7 +43,10 @@ export class MainWrapper extends React.Component<PropsFromRedux> {
 
     return (
       <AppContext.Provider value={this.props.APPCONTEXT}>
-        <Main auth={this.props.AUTH} operation={this.props.OPERATION}  />
+        {/** don't add any <Views> or other wrappers here since the
+         * top component has to be SafeAreaView to work well on iOS
+         * which is used in Main */}
+        <Main auth={this.props.AUTH} operation={this.props.OPERATION} />
       </AppContext.Provider>
     );
   }
@@ -76,14 +80,23 @@ interface MainProps {
 
 class Main extends React.Component<MainProps> {
   static contextType = AppContext;
+  declare context: React.ContextType<typeof AppContext>;
 
   render() {
     configLocale(this.context.locale);
     showMessages(this.props.operation, this.context);  /* global error and success message handler */
 
+    const styles = this.context.styles;
+    const statusBarStyle = this.context.theme.colors.statusBarText === 'light' ? 'light-content' : 'dark-content';
+
     return (
       <NavigationContainer>
-        <MainDrawerNavigator auth={this.props.auth} />
+        <SafeAreaProvider>
+          <SafeAreaView style={[styles.safeAreaView]}>
+            {Platform.OS === 'ios' && <StatusBar barStyle={statusBarStyle} />}
+            <MainDrawerNavigator auth={this.props.auth} />
+          </SafeAreaView>
+        </SafeAreaProvider>
       </NavigationContainer>
     );
   }

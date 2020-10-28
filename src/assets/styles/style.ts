@@ -166,10 +166,13 @@ export function getThemeStyles(theme: ThemePropertyType) {
 
     /* containers */
 
+    safeAreaView: {
+      flex: 1,
+      backgroundColor: colors.background /* color behind the device status bar */
+    },
     screenContainer: {
       flex: 1,
-      backgroundColor: colors.background,
-      paddingTop: size.safeAreaAndroidPadding
+      backgroundColor: colors.background
     },
     loadingScreeenOverlay: {
       position: 'absolute',
