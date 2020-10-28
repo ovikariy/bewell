@@ -159,7 +159,7 @@ function SettingsNavigator() {
                 options={{ title: language.password }}
             />
             <SettingsStack.Screen
-                name='SetupPINScreen'
+                name='SetupPIN'
                 component={SetupPINScreen}
                 options={{ title: language.pinLock }}
             />

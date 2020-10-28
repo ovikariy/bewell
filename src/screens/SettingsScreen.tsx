@@ -43,7 +43,7 @@ class SettingsComponent extends Component<SettingsComponentProps> {
         onPress: () => { this.props.navigation.navigate('Password'); }
       },
       {
-        id: 'SetupPINScreen',
+        id: 'SetupPIN',
         title: language.pinLock,
         iconName: 'lock',
         onPress: () => { this.props.navigation.navigate('SetupPIN'); }
