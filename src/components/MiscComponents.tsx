@@ -50,6 +50,7 @@ export const ClearTextArea = (props: InputProps) => {
   return (
     <Input
       multiline={true}
+      scrollEnabled={false} /* this is needed for iOS with multiline input and KeyboardAvoidingView */
       numberOfLines={3}
       textAlignVertical='top'
       autoFocus={props.value ? false : true}

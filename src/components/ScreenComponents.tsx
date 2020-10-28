@@ -11,11 +11,13 @@ export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNo
   const styles = appContext.styles;
 
   return (
-    <View style={styles.screenContainer}>
+    <KeyboardAvoidingView {...props} style={[styles.screenContainer]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={40} >
       {props.isLoading ?
         <LoadingScreeenOverlay /> : <View />}
       {props.children}
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -42,18 +44,7 @@ interface ScreenContentProps extends ViewProps {
 }
 /* Wrapper for a screen content; simplifies setting keyboard avoid view on various screens */
 export const ScreenContent = (props: ScreenContentProps) => {
-  const appContext = React.useContext(AppContext);
-  const styles = appContext.styles;
-
-  /* don't use ScrollView as wrapper here, only where actually a list is needed */
-  if (props.isKeyboardAvoidingView) {
-    return (<KeyboardAvoidingView {...props} style={[styles.screenBodyContainer, props.style]} enabled
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={40} >
-      {props.children}
-    </KeyboardAvoidingView>
-    );
-  }
+  const { styles } = React.useContext(AppContext);
 
   return (<View {...props} style={[styles.screenBodyContainer, props.style]} >
     {props.children}
