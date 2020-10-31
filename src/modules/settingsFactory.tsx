@@ -12,9 +12,12 @@ interface SettingsFactoryItemType {
     subTitle?: string,
     value?: string
     iconName?: string,
+    readOnly?: boolean,
     itemContent?: (
         value: string | undefined,
-        onChange: (newValue: string) => void
+        onChange: (newValue: string) => void,
+        onCancelChange?: () => void,
+        show?: boolean /** if item's row was pressed, to make pressable area wider */
     ) => ReactNode;
 }
 
@@ -39,11 +42,14 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                 title: language.language,
                 value: 'en',
                 iconName: settingsConstants.language,
-                itemContent: (value, onChange) => {
+                itemContent: (value, onChange, onCancelChange, show) => {
                     return <View>
                         <Text style={[styles.heading2]}>{language.language}</Text>
                         <StyledPicker selectedValue={value}
+                            show={show}
+                            title={language.language}
                             items={languageItems}
+                            onCancelChange={onCancelChange}
                             onValueChange={(newValue, itemIndex) => onChange(newValue)}
                         />
                     </View>;
@@ -54,11 +60,14 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                 title: language.theme,
                 value: 'dark',
                 iconName: 'paint-brush',
-                itemContent: (value, onChange) => {
+                itemContent: (value, onChange, onCancelChange, show) => {
                     return <View>
                         <Text style={[styles.heading2]}>{language.theme}</Text>
                         <StyledPicker selectedValue={value}
+                            show={show}
+                            title={language.theme}
                             items={themeItems}
+                            onCancelChange={onCancelChange}
                             onValueChange={(newValue, itemIndex) => onChange(newValue)}
                         />
                     </View>;
@@ -68,7 +77,8 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                 id: settingsConstants.version,
                 title: language.version,
                 subTitle: Constants.manifest.version,
-                iconName: 'info-circle'
+                iconName: 'info-circle',
+                readOnly: true
             }
         ]);
 }

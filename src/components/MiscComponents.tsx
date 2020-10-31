@@ -1,7 +1,7 @@
-import React, { useState, ReactNode, PropsWithChildren } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, Dimensions, Image,
+  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, ActionSheetIOS, Dimensions, Image,
   StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps, Modal
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -333,7 +333,7 @@ export const ButtonPrimary = (props: ButtonPropsInterface) => {
       containerStyle={[{ width: 250 }, props.containerStyle]}
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
       titleStyle={[styles.buttonText, props.titleStyle]}
-      icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: 20, color: styles.brightColor.color }, ...props.iconStyle }} /> : <React.Fragment />} />
+      icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: 20, color: styles.buttonText.color }, ...props.iconStyle }} /> : <React.Fragment />} />
   );
 };
 
@@ -385,7 +385,7 @@ export const Loading = (props: { style: ViewStyle }) => {
       alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
       flex: 1,
     }, props.style]}>
-      <ActivityIndicator style={{ paddingTop: 20, paddingBottom: 20 }} size='large' />
+      <ActivityIndicator style={{ padding: 0, marginBottom: 10 }} size='large' />
       <Text style={styles.bodyText}>{language.loading}</Text>
     </View>
   );
@@ -496,20 +496,81 @@ export const HorizontalLine = (props: DividerProps) => {
 };
 
 export interface StyledPickerItemType { label: string, value: string }
+interface StyledPickerProps extends PickerProps {
+  title: string, /** shows on iOS */
+  show?: boolean,
+  onCancelChange?: () => void,
+  items: StyledPickerItemType[]
+}
 
-export const StyledPicker = (props: PickerProps & { items: StyledPickerItemType[] }) => {
-  const context = React.useContext(AppContext);
-  const styles = context.styles;
+export const StyledPicker = (props: StyledPickerProps) => {
+  return Platform.OS === 'ios' ? <StyledPickeriOS {...props} /> : <StyledPickerAndroid {...props} />;
+};
 
-  return <Picker
-    {...props}
+/**
+ * @description StyledPickerAndroid is a bit hakish component that renders an invisble Picker
+ * over the whole list row except the left icon so when the user taps anywhere the modal picker will pop up
+ * instead of the default dropdown where arrow color could not be changed
+ */
+const StyledPickerAndroid = (props: StyledPickerProps) => {
+  const { styles, language } = React.useContext(AppContext);
 
-    style={[{ width: 200, height: 20, marginLeft: -9 }, styles.bodyText, props.style]}
-  >
-    {props.items.map((item: { label: string, value: string }) => {
-      return <Picker.Item label={item.label} value={item.value} key={item.label} />;
-    })}
-  </Picker>;
+  if (!props.items)
+    return <View />;
+
+  const options = props.items.map((item) => <Picker.Item label={item.label} value={item.value} key={item.label} />);
+  const selectedItem = props.items.find((item) => item.value === props.selectedValue);
+
+  return <View style={[styles.flex]}>
+    <Picker  {...props}
+      mode='dialog'
+      prompt={props.title}
+      style={[styles.bodyText, {
+        position: 'absolute', /* display on top of parent list row */
+        width: 800, /* large enough to extend the full length of row so can click anywhere except left icon */
+        height: styles.listItemContainer.height - 20,
+        backgroundColor: 'transparent', /* we don't want to see the picker but have it there for capturing onPress */
+        color: 'transparent', /* we don't want to see the picker but have it there for capturing onPress */
+        marginTop: -20 /* counteract row margins and padding */
+      }, props.style]}>
+      {options}
+    </Picker>
+    <Text style={[styles.bodyText]}>{selectedItem && selectedItem.label}</Text>
+  </View>;
+};
+
+
+const StyledPickeriOS = (props: StyledPickerProps) => {
+  const { styles, language } = React.useContext(AppContext);
+
+  if (!props.items)
+    return <View />;
+
+  const options = props.items.map((item) => item.label);
+  options.push(language.cancel); /* append cancel button last */
+
+  const selectedItem = props.items.find((item) => item.value === props.selectedValue);
+
+  return (
+    <View>
+      <Text style={styles.bodyText}>{selectedItem && selectedItem.label}</Text>
+      {(props.show) && ActionSheetIOS.showActionSheetWithOptions(
+        {
+          title: props.title,
+          cancelButtonIndex: options.length - 1,
+          options
+        },
+        (index) => {
+          if (index === options.length - 1 && props.onCancelChange) { /* cancel button pressed */
+            props.onCancelChange();
+            return;
+          }
+          if (props.onValueChange)
+            props.onValueChange(props.items[index].value, index); //TODO: check item value exists
+        }
+      )}
+    </View>
+  );
 };
 
 export interface ImageProps {

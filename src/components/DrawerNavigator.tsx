@@ -210,9 +210,9 @@ function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOpt
 
     return (
         <DrawerContentScrollView style={styles.drawerBackground} {...props}>
-            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20, marginTop: 0 }]}>
+            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20, marginTop: 0, justifyContent: 'flex-start' }]}>
                 <LogoImage />
-                <Text style={styles.heading}>{language.appName}</Text>
+                <Text style={[styles.heading, { fontSize: 20 }]}>{language.appName}</Text>
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}

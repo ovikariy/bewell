@@ -38,7 +38,7 @@ export const NoteHistoryComponent = (props: NoteHistoryComponentProps) => {
       <Text style={props.isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
         {friendlyTime(props.item.date)}</Text>
       <Text style={props.isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
-        {props.item.note + 'hello'}</Text>
+        {props.item.note}</Text>
     </View>
   </View>);
 };

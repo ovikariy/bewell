@@ -102,24 +102,22 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
             <Spacer height={40} />
-            <View style={[styles.bottomPositioned]} >
-              {this.state.showPasswordReentered === false ?
-                <PasswordInputWithButton
-                  containerStyle={{ minWidth: 300 }}
-                  placeholder={language.passwordEnterNewPlaceholder}
-                  onPress={() => this.showPasswordReenter()}
-                  value={this.state.password}
-                  onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
-                /> :
-                <PasswordInputWithButton
-                  containerStyle={{ minWidth: 300 }}
-                  placeholder={language.passwordReEnterPlaceholder}
-                  onPress={() => this.submitPassword()}
-                  value={this.state.passwordReentered}
-                  onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }); }}
-                />
-              }
-            </View>
+            {this.state.showPasswordReentered === false ?
+              <PasswordInputWithButton
+                containerStyle={[styles.bottomPositioned]}
+                placeholder={language.passwordEnterNewPlaceholder}
+                onPress={() => this.showPasswordReenter()}
+                value={this.state.password}
+                onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
+              /> :
+              <PasswordInputWithButton
+                containerStyle={[styles.bottomPositioned]}
+                placeholder={language.passwordReEnterPlaceholder}
+                onPress={() => this.submitPassword()}
+                value={this.state.passwordReentered}
+                onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }); }}
+              />
+            }
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>
