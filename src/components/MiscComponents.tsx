@@ -1,9 +1,10 @@
 import React, { useState, PropsWithChildren } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
-  TouchableOpacity, FlatList, RefreshControl, TextInput, Picker, ActionSheetIOS, Dimensions, Image,
-  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, PickerProps, Modal
+  TouchableOpacity, FlatList, RefreshControl, TextInput, Dimensions, Image,
+  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, Modal
 } from 'react-native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer, colors } from 'react-native-elements';
 import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/utils';
@@ -12,7 +13,6 @@ import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
 import { AppError } from '../modules/types';
 import { AppContextState } from '../redux/reducerTypes';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
   return <View style={[
@@ -496,56 +496,22 @@ export const HorizontalLine = (props: DividerProps) => {
 };
 
 export interface StyledPickerItemType { label: string, value: string }
-interface StyledPickerProps extends PickerProps {
-  title: string, /** shows on iOS */
+interface StyledPickerProps {
+  title: string,
   show?: boolean,
+  selectedValue?: string,
   onCancelChange?: () => void,
+  onValueChange?: (itemValue: React.ReactText, itemIndex: number) => void
   items: StyledPickerItemType[]
 }
 
 export const StyledPicker = (props: StyledPickerProps) => {
-  return Platform.OS === 'ios' ? <StyledPickeriOS {...props} /> : <StyledPickerAndroid {...props} />;
-};
-
-/**
- * @description StyledPickerAndroid is a bit hakish component that renders an invisble Picker
- * over the whole list row except the left icon so when the user taps anywhere the modal picker will pop up
- * instead of the default dropdown where arrow color could not be changed
- */
-const StyledPickerAndroid = (props: StyledPickerProps) => {
   const { styles, language } = React.useContext(AppContext);
 
   if (!props.items)
     return <View />;
 
-  const options = props.items.map((item) => <Picker.Item label={item.label} value={item.value} key={item.label} />);
-  const selectedItem = props.items.find((item) => item.value === props.selectedValue);
-
-  return <View style={[styles.flex]}>
-    <Picker  {...props}
-      mode='dialog'
-      prompt={props.title}
-      style={[styles.bodyText, {
-        position: 'absolute', /* display on top of parent list row */
-        width: 800, /* large enough to extend the full length of row so can click anywhere except left icon */
-        height: styles.listItemContainer.height - 20,
-        backgroundColor: 'transparent', /* we don't want to see the picker but have it there for capturing onPress */
-        color: 'transparent', /* we don't want to see the picker but have it there for capturing onPress */
-        marginTop: -20 /* counteract row margins and padding */
-      }, props.style]}>
-      {options}
-    </Picker>
-    <Text style={[styles.bodyText]}>{selectedItem && selectedItem.label}</Text>
-  </View>;
-};
-
-
-const StyledPickeriOS = (props: StyledPickerProps) => {
-  const { styles, language } = React.useContext(AppContext);
-
-  if (!props.items)
-    return <View />;
-
+  const { showActionSheetWithOptions } = useActionSheet();
   const options = props.items.map((item) => item.label);
   options.push(language.cancel); /* append cancel button last */
 
@@ -554,7 +520,7 @@ const StyledPickeriOS = (props: StyledPickerProps) => {
   return (
     <View>
       <Text style={styles.bodyText}>{selectedItem && selectedItem.label}</Text>
-      {(props.show) && ActionSheetIOS.showActionSheetWithOptions(
+      {props.show && showActionSheetWithOptions(
         {
           title: props.title,
           cancelButtonIndex: options.length - 1,

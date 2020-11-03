@@ -11,6 +11,7 @@ import { ActivityIndicator, showMessages } from './MiscComponents';
 import { RootState } from '../redux/store';
 import { AuthState, OperationState } from '../redux/reducerTypes';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -80,7 +81,7 @@ interface MainProps {
 
 class Main extends React.Component<MainProps> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   render() {
     configLocale(this.context.locale);
@@ -89,15 +90,18 @@ class Main extends React.Component<MainProps> {
     const styles = this.context.styles;
     const statusBarStyle = this.context.theme.colors.statusBarText === 'light' ? 'light-content' : 'dark-content';
 
+    /** ActionSheetProvider is used to showActionSheetWithOptions e.g. on SystemSettings dropdowns */
     return (
-      <NavigationContainer>
-        <SafeAreaProvider>
-          <SafeAreaView style={[styles.safeAreaView]}>
-            {Platform.OS === 'ios' && <StatusBar barStyle={statusBarStyle} />}
-            <MainDrawerNavigator auth={this.props.auth} />
-          </SafeAreaView>
-        </SafeAreaProvider>
-      </NavigationContainer>
+      <ActionSheetProvider>
+        <NavigationContainer>
+          <SafeAreaProvider>
+            <SafeAreaView style={[styles.safeAreaView]}>
+              <StatusBar barStyle={statusBarStyle} backgroundColor={styles.safeAreaView.backgroundColor} />
+              <MainDrawerNavigator auth={this.props.auth} />
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </NavigationContainer>
+      </ActionSheetProvider>
     );
   }
 }

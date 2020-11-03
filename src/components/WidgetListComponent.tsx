@@ -24,7 +24,7 @@ interface WidgetListComponentState {
 }
 class WidgetListComponent extends React.Component<WidgetListComponentProps, WidgetListComponentState>  {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: WidgetListComponentProps) {
     super(props);

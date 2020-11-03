@@ -40,7 +40,7 @@ interface PasswordScreenProps extends PropsFromRedux {
 
 class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: PasswordScreenProps) {
     super(props);

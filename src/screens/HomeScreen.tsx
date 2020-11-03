@@ -37,7 +37,7 @@ interface HomeScreenProps extends PropsFromRedux {
 
 class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: HomeScreenProps) {
     super(props);

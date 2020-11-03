@@ -27,7 +27,7 @@ export interface ImagePickerComponentProps extends WidgetComponentPropsBase {
 interface ImagePickerWidgetState { image?: string }
 export class ImagePickerComponent extends React.Component<ImagePickerComponentProps, ImagePickerWidgetState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: ImagePickerComponentProps) {
     super(props);

@@ -39,7 +39,7 @@ interface BackupScreenProps extends PropsFromRedux {
 
 class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: BackupScreenProps) {
     super(props);

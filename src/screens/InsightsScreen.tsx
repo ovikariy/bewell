@@ -28,7 +28,7 @@ interface InsightsScreenProps extends PropsFromRedux {
 
 class InsightsScreen extends Component<InsightsScreenProps> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   componentDidMount() {
     this.refreshItems();

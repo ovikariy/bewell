@@ -32,7 +32,7 @@ interface SetupPasswordScreenState {
 /* this screen is shown on app launch if the user has not setup security yet */
 class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: PropsFromRedux) {
     super(props);

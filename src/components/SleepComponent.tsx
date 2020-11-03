@@ -21,7 +21,7 @@ export interface SleepComponentProps extends WidgetComponentPropsBase {
 
 export class SleepComponent extends Component<SleepComponentProps> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   onPress(rating: number) {
     if (!Number.isInteger(rating))

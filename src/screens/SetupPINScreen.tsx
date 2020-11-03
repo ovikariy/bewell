@@ -40,7 +40,7 @@ interface SetupPINScreenProps extends PropsFromRedux {
 
 class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: SetupPINScreenProps) {
     super(props);

@@ -31,7 +31,7 @@ interface SignInScreenProps extends PropsFromRedux {
 class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
 
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: SignInScreenProps) {
     super(props);

@@ -42,7 +42,7 @@ interface RestoreScreenProps extends PropsFromRedux {
 class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   constructor(props: RestoreScreenProps) {
     super(props);

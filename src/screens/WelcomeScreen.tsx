@@ -27,7 +27,7 @@ interface WelcomeScreenProps extends PropsFromRedux {
 class WelcomeScreen extends Component<WelcomeScreenProps> {
 
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   componentDidMount() {
     if (this.props.AUTH.isInitialized !== true && this.props.AUTH.isEncrypted === true) {

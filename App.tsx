@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform, StatusBar, View, Text } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';

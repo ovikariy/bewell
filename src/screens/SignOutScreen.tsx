@@ -26,7 +26,7 @@ interface SignOutProps extends PropsFromRedux{
 class SignOutScreen extends Component<SignOutProps> {
 
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   render() {
     const language = this.context.language;

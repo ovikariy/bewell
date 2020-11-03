@@ -31,7 +31,7 @@ interface SettingsComponentProps {
 
 class SettingsComponent extends Component<SettingsComponentProps> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   render() {
     const language = this.context.language;

@@ -31,7 +31,7 @@ interface ItemHistoryScreenProps extends PropsFromRedux {
 
 class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScreenState> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   static getNavigationOptions = ({ route, navigation }: any) => {
     return ({

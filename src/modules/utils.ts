@@ -1,4 +1,6 @@
 import moment from 'moment';
+import 'react-native-get-random-values'; /** polyfills for uuid */
+import { v4 as uuidv4 } from 'uuid';
 import { StoreConstants } from './constants';
 import { TranslationKeys } from './translations';
 
@@ -151,12 +153,7 @@ export function wait(timeout: number) {
 }
 
 export function getNewUuid() {
-  //TODO: use a library mentioned in this answer for better reliability
-  //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  return uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 }
 
 export function groupBy(list: any[], keyGetter: any, appendToMap?: Map<any, any>) {

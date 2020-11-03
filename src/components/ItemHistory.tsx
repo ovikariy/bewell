@@ -20,7 +20,7 @@ interface ItemHistoryProps {
 
 class ItemHistory extends Component<ItemHistoryProps> {
   static contextType = AppContext;
-  declare context: React.ContextType<typeof AppContext>;
+  context!: React.ContextType<typeof AppContext>;
 
   filterByItemType(items: ItemBaseAssociativeArray , itemType: string) {
     const result = [] as WidgetBase[];
