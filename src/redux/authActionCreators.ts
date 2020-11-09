@@ -2,7 +2,7 @@ import * as securityService from '../modules/securityService';
 import * as storage from '../modules/storage';
 import * as operationActions from './operationActionCreators';
 import * as ActionTypes from './actionTypes';
-import { isNullOrEmpty } from '../modules/utils';
+import { consoleLogWithColor, isNullOrEmpty } from '../modules/utils';
 import { ErrorMessage, ErrorCode } from '../modules/constants';
 import { AppThunkActionType } from './store';
 import { AppError } from '../modules/types';
@@ -16,7 +16,7 @@ export function loadAuthData(): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth3) : error));
                 dispatch(operationActions.clear());
             });
@@ -38,7 +38,7 @@ export function signInPassword(password: string): AppThunkActionType {
                 dispatch(loadAuthData());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth7) : error));
                 dispatch(operationActions.clear());
                 dispatch(signOut());
@@ -54,7 +54,7 @@ export function signInPIN(pin: string): AppThunkActionType {
                 dispatch(loadAuthData());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth8) : error));
                 dispatch(operationActions.clear());
                 dispatch(signOut());
@@ -86,7 +86,7 @@ export function signOut(): AppThunkActionType {
             dispatch(loadAuthData());
         }
         catch (error) {
-            console.log(error);
+            consoleLogWithColor(error);
             dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth9) : error));
             dispatch(operationActions.clear());
         }

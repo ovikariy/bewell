@@ -6,7 +6,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { AppContext } from '../modules/appContext';
 import * as FileHelpers from '../modules/io';
-import { friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/utils';
+import { consoleLogWithColor, friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/utils';
 import { ErrorMessage, brokenImageURI } from '../modules/constants';
 import { encryptData, decryptData } from '../modules/securityService';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
@@ -99,7 +99,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
         this.setState({ ...this.state, image });
       })
       .catch((error) => {
-        console.log(error);
+        consoleLogWithColor(error);
         this.setState({ ...this.state, image: brokenImageURI });
         (error instanceof AppError !== true) ?
           Toast.showTranslated(error.message, this.context) :
@@ -130,7 +130,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     this.pickImageAsync()
       .then(() => { })
       .catch((error) => {
-        console.log(error);
+        consoleLogWithColor(error);
         (error instanceof AppError !== true) ?
           Toast.showTranslated(error.message, this.context) :
           Toast.showError(error, this.context);
@@ -167,7 +167,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
         this.reset();
       })
       .catch((error) => {
-        console.log(error);
+        consoleLogWithColor(error);
         (error instanceof AppError !== true) ?
           Toast.showTranslated(error.message, this.context) :
           Toast.showError(error, this.context);
@@ -220,7 +220,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
         this.reset();
       })
       .catch((error) => {
-        console.log(error);
+        consoleLogWithColor(error);
         (error instanceof AppError !== true) ?
           Toast.showTranslated(error.message, this.context) :
           Toast.showError(error, this.context);

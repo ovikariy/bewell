@@ -179,10 +179,9 @@ export const consoleColors = {
   reset: '\x1b[0m'
 };
 
-export function consoleLogWithColor(color: string, message: string) {
+export function consoleLogWithColor(message: string, color?: string) {
   /* changes the color of console log statements and needs to be reset after
     console.log('\x1b[32m', 'this text is green', '\x1b[0m'); */
-
-
-  console.log(color ? color : consoleColors.green, message, consoleColors.reset);
+  if (__DEV__)
+    console.log(color ? color : consoleColors.green, message, consoleColors.reset);
 }

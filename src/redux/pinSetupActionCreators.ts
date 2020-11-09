@@ -3,7 +3,7 @@ import * as operationActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './actionTypes';
 import { ErrorMessage, ErrorCode } from '../modules/constants';
-import { isNullOrEmpty } from '../modules/utils';
+import { consoleLogWithColor, isNullOrEmpty } from '../modules/utils';
 import { loadAuthData } from './authActionCreators';
 import { AppThunkActionType } from './store';
 import { AppError } from '../modules/types';
@@ -32,7 +32,7 @@ export function verifyPassword(password: string): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch({ type: ActionTypes.PIN_SETUP_PASSWORD_FAILED });
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.InvalidPassword) : error));
                 dispatch(operationActions.clear());

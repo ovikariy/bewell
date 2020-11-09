@@ -1,4 +1,4 @@
-import { isEmptyWidgetItem, consoleColors, consoleLogWithColor, mergeArraysImmutable } from '../modules/utils';
+import { isEmptyWidgetItem, consoleLogWithColor, mergeArraysImmutable } from '../modules/utils';
 import * as storage from '../modules/storage';
 import * as operationActions from './operationActionCreators';
 import { AppError, ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement, SettingType } from '../modules/types';
@@ -21,7 +21,7 @@ export function load(key: string): AppThunkActionType {
                     dispatch(settingsChanged(items));
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage9) : error));
                 dispatch(operationActions.clear());
             });
@@ -49,7 +49,7 @@ export function loadAllWidgetData(): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage8) : error));
                 dispatch(operationActions.clear());
             });
@@ -73,7 +73,7 @@ export function loadAllData(): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage11) : error));
                 dispatch(operationActions.clear());
             });
@@ -151,7 +151,7 @@ function updateReduxAndPersistInternal(key: string, updatedItems: ItemBase[]): A
         persistReduxAsync(key, updatedItems)
             .then(() => { })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Storage2) : error));
                 dispatch(operationActions.clear());
             });

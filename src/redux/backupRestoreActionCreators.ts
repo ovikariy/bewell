@@ -7,6 +7,7 @@ import * as ActionTypes from './actionTypes';
 import { validatePasswordAsync } from './passwordActionCreators';
 import { AppThunkActionType } from './store';
 import { AppError } from '../modules/types';
+import { consoleLogWithColor } from '../modules/utils';
 
 export function startRestore(): AppThunkActionType {
     return (dispatch) => {
@@ -35,7 +36,7 @@ export function verifyPasswordForRestore(password: string): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch({ type: ActionTypes.RESTORE_PASSWORD_FAILED });
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.InvalidPassword, ErrorCode.BackupRestore1) : error));
                 dispatch(operationActions.clear());
@@ -57,7 +58,7 @@ export function tryDecryptFileData(data: [string, string][], password: string): 
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore2) : error));
                 dispatch(operationActions.clear());
             });
@@ -95,7 +96,7 @@ export function importData(data: [string, string][], password: string): AppThunk
                 dispatch(loadAllData());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore3) : error));
                 dispatch(operationActions.clear());
             });
@@ -150,7 +151,7 @@ export function getExportData(password: string): AppThunkActionType {
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch({ type: ActionTypes.BACKUP_DATA_FAILED });
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.BackupRestore4) : error));
                 dispatch(operationActions.clear());

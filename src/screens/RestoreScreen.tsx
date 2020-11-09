@@ -4,7 +4,7 @@ import { ErrorMessage } from '../modules/constants';
 import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty, formatDate } from '../modules/utils';
+import { isNullOrEmpty, formatDate, consoleLogWithColor } from '../modules/utils';
 import { startRestore, verifyPasswordForRestore, tryDecryptFileData, importData } from '../redux/backupRestoreActionCreators';
 import * as FileHelpers from '../modules/io';
 import { getDocumentAsync } from 'expo-document-picker';
@@ -96,7 +96,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     this.browseForFileAsync()
       .then(() => { })
       .catch(error => {
-        console.log(error);
+        consoleLogWithColor(error);
         (error instanceof AppError !== true) ?
           Toast.showTranslated(error.message, this.context) :
           Toast.showError(error, this.context);
@@ -140,7 +140,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       this.setState({ ...this.state, data });
     }
     catch (error) {
-      console.log(error);
+      consoleLogWithColor(error);
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :
         Toast.showError(error, this.context);

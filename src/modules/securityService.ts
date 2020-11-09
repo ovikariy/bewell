@@ -152,7 +152,7 @@ export function getItemKeyHash(itemKey: string) {
     return DataEncryption.getHash(itemKey);
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.General, ErrorCode.Hash2);
   }
 }
@@ -172,7 +172,7 @@ export function decryptData(value: any) {
 
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.General, ErrorCode.Decrypt3);
   }
 }
@@ -197,7 +197,7 @@ export function encryptData(value: string) {
     return DataEncryption.encryptData(value);
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.General, ErrorCode.Decrypt5);
   }
 }
@@ -239,7 +239,7 @@ async function isPinLockedAsync(): Promise<boolean> {
     return false;
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.AccessStorage, ErrorCode.Storage7);
   }
 }
@@ -368,7 +368,7 @@ function encrypt(value: string, key: string) {
     return AES.encrypt(value, key).toString();
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.General, ErrorCode.Encrypt3);
   }
 }
@@ -386,7 +386,7 @@ function decrypt(value: string, key: string) {
 
   }
   catch (error) {
-    console.log(error);
+    consoleLogWithColor(error);
     throw new AppError(ErrorMessage.InvalidData, ErrorCode.Decrypt8);
   }
 }

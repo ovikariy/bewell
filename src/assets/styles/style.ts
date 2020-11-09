@@ -17,6 +17,10 @@ const size = {
   safeAreaAndroidPadding: Platform.OS === "android" ? StatusBar.currentHeight : 0
 };
 
+export const platform = {
+  OS: Platform.OS
+};
+
 export function getThemeStyles(theme: ThemePropertyType) {
 
   const colors = theme.colors ? theme.colors : themes.dark.colors;
@@ -341,6 +345,10 @@ export function getThemeStyles(theme: ThemePropertyType) {
 
     /* drawer */
 
+    drawerHeaderContainer: {
+      marginBottom: 20,
+      justifyContent: 'flex-start'
+    },
     drawerBackground: {
       backgroundColor: colors.background
     },

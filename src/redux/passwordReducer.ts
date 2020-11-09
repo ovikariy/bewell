@@ -1,5 +1,4 @@
 import * as ActionTypes from './actionTypes';
-import { consoleLogWithColor, consoleColors } from '../modules/utils';
 import { ChangePasswordAction, ChangePasswordState } from './reducerTypes';
 
 export const CHANGEPASSWORD = (state: ChangePasswordState = {

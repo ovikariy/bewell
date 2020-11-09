@@ -1,6 +1,5 @@
 import * as ActionTypes from './actionTypes';
-import { mergeArraysImmutable, consoleColors, consoleLogWithColor } from '../modules/utils';
-import { ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, ItemBaseMultiArrayElement } from '../modules/types';
+import { ItemBaseAssociativeArray } from '../modules/types';
 import { StoreAction, StoreState } from './reducerTypes';
 
 export const STORE = (state: StoreState = {

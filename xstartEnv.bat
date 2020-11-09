@@ -1,5 +1,5 @@
 cd C:\Users\Olena\AppData\Local\Android\Sdk\emulator
-start cmd /k "emulator.exe -avd Pixel_2_API_28"
+start cmd /k "emulator.exe -avd Pixel_XL_API_30"
 
 timeout /t 10
 

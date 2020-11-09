@@ -11,7 +11,7 @@ export async function getItemAsync(key: string) {
         return await asyncStorageService.getItem(key);
     }
     catch (error) {
-        console.log(error);
+        consoleLogWithColor(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage1);
     }
 }
@@ -23,7 +23,7 @@ export async function getItemsAsync(keys: string[]) {
         return await asyncStorageService.multiGet(keys);
     }
     catch (error) {
-        console.log(error);
+        consoleLogWithColor(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage1);
     }
 }
@@ -50,7 +50,7 @@ export async function setMultiItemsAsync(items: [string, string][]) {
         await asyncStorageService.multiSet(items);
     }
     catch (error) {
-        console.log(error);
+        consoleLogWithColor(error);
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.Storage3);
     }
 }
@@ -64,7 +64,7 @@ export async function finishSetupNewEncryptionAsync(keys: string[]) {
         await asyncStorageService.multiRemove(keys);
     }
     catch (error) {
-        console.log(error);
+        consoleLogWithColor(error);
         throw new AppError(ErrorMessage.General, ErrorCode.Storage4);
     }
 }
@@ -118,7 +118,7 @@ export async function getMultiItemsAndDecryptAsync(keys: string[]): Promise<Item
 
 export async function logStorageDataAsync() {
     const items = await asyncStorageService.multiGet(await asyncStorageService.getAllKeys());
-    consoleLogWithColor(consoleColors.green, '\r\nAll AsyncStorage Items:\r\n' + JSON.stringify(items));
+    consoleLogWithColor('\r\nAll AsyncStorage Items:\r\n' + JSON.stringify(items), consoleColors.green);
 }
 
 export async function getItemsAndDecryptAsync(key: string) {

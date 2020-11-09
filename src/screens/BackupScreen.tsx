@@ -6,7 +6,7 @@ import {
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty, formatDate } from '../modules/utils';
+import { isNullOrEmpty, formatDate, consoleLogWithColor } from '../modules/utils';
 import { startBackup, getExportData, finishBackup } from '../redux/backupRestoreActionCreators';
 import * as FileHelpers from '../modules/io';
 import { StackActions } from '@react-navigation/native';
@@ -102,7 +102,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
       this.props.finishBackup();
     }
     catch (error) {
-      console.log(error);
+      consoleLogWithColor(error);
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :
         Toast.showError(error, this.context);

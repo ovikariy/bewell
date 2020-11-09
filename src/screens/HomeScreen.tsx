@@ -6,12 +6,12 @@ import { ItemTypes } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { DatePickerWithArrows } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getStorageKeyFromDate, consoleColors, consoleLogWithColor } from '../modules/utils';
+import { getStorageKeyFromDate, consoleLogWithColor } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { deleteImageFromDiskAsync } from '../modules/io';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { RootState } from '../redux/store';
-import { ItemBase, ItemBaseAssociativeArray, AppNavigationProp } from '../modules/types';
+import { ItemBase, AppNavigationProp } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -126,7 +126,7 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
     deleteImageFromDiskAsync(imageProps.filename)
       .then(() => { })
       .catch((error) => {
-        console.log(error);
+        consoleLogWithColor(error);
       });
   }
 }

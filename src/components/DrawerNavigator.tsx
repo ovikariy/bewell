@@ -20,6 +20,7 @@ import SignOutScreen from '../screens/SignOutScreen';
 import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
 import { AuthState } from '../redux/reducerTypes';
+import { platform } from '../assets/styles/style';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -210,7 +211,10 @@ function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOpt
 
     return (
         <DrawerContentScrollView style={styles.drawerBackground} {...props}>
-            <View style={[styles.flex, styles.rowContainer, { marginBottom: 20, marginTop: 0, justifyContent: 'flex-start' }]}>
+            <View style={[
+                styles.flex, styles.rowContainer, styles.drawerHeaderContainer,
+                platform.OS === 'ios' && { marginTop: 0 }
+            ]}>
                 <LogoImage />
                 <Text style={[styles.heading, { fontSize: 20 }]}>{language.appName}</Text>
             </View>

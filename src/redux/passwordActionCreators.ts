@@ -3,7 +3,7 @@ import * as operationActions from './operationActionCreators';
 import * as storage from '../modules/storage';
 import * as securityService from '../modules/securityService';
 import * as ActionTypes from './actionTypes';
-import { isNullOrEmpty } from '../modules/utils';
+import { consoleLogWithColor, isNullOrEmpty } from '../modules/utils';
 import { signInPassword, loadAuthData } from './authActionCreators';
 import { AppThunkActionType } from './store';
 import { AppError } from '../modules/types';
@@ -29,7 +29,7 @@ export function verifyCredentials(password?: string, pin?: string): AppThunkActi
                 dispatch(operationActions.clear());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch({ type: ActionTypes.CHANGEPASSWORD_CREDENTIALS_FAILED });
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Security5) : error));
                 dispatch(operationActions.clear());

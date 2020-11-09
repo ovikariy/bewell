@@ -124,7 +124,7 @@ export const PINInputWithButton = (props: PINInputWithButtonProps) => {
   return <View style={[{ flexDirection: 'row', alignItems: 'center' }, props.containerStyle]}>
     <TextInput
       {...props}
-      style={[styles.bodyText, styles.hugeText, {
+      style={[styles.bodyText, styles.titleText, {
         paddingVertical: 7, borderBottomWidth: 1,
         borderColor: styles.buttonPrimary.borderColor
       }]}
@@ -385,7 +385,7 @@ export const Loading = (props: { style: ViewStyle }) => {
       alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
       flex: 1,
     }, props.style]}>
-      <ActivityIndicator style={{ padding: 0, marginBottom: 10 }} size='large' />
+      <ActivityIndicator color={styles.highlightColor.color} style={[{ padding: 0, marginBottom: 10 }, styles.highlightBackground]} size='large' />
       <Text style={styles.bodyText}>{language.loading}</Text>
     </View>
   );

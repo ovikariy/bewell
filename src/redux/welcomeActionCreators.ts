@@ -4,6 +4,7 @@ import { loadAuthData } from './authActionCreators';
 import { ErrorMessage, ErrorCode } from '../modules/constants';
 import { AppThunkActionType } from './store';
 import { AppError } from '../modules/types';
+import { consoleLogWithColor } from '../modules/utils';
 
 export function initialize(): AppThunkActionType {
     return (dispatch) => {
@@ -14,7 +15,7 @@ export function initialize(): AppThunkActionType {
                 dispatch(loadAuthData());
             })
             .catch(error => {
-                console.log(error);
+                consoleLogWithColor(error);
                 dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Security8) : error));
                 dispatch(operationActions.clear());
             });
