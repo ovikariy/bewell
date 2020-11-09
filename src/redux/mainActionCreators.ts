@@ -8,7 +8,7 @@ import { AppThunkActionType } from './store';
 
 /**
  * @description Load item's data from storage
- * @param key e.g. "`@Morning:SETTINGS`" or "`@Morning:012019`"
+ * @param key e.g. "bewellapp_SETTINGS" or "bewellapp_012019"
  */
 export function load(key: string): AppThunkActionType {
     return (dispatch) => {
@@ -125,7 +125,7 @@ export function updateReduxAndPersist(key: string, allStoreItems: Readonly<ItemB
 }
 
 /**
- * @param key Store key of the group containing item to be removed e.g. Morning:SETTINGS or Morning:092020
+ * @param key Store key of the group containing item to be removed e.g. bewellapp_SETTINGS or bewellapp_092020
  * @param allStoreItems All items from redux store i.e. StoreReducerState.items
  * @param id id of the ItemBase type item to be removed
  */

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "morning",
-    "slug": "morning",
-    "description": "Personal joural app with an emphasis on data privacy",
+    "name": "BeWell",
+    "slug": "bewellapp",
+    "description": "Wellbeing Tracker, Open Source & Private",
     "privacy": "public",
     "sdkVersion": "39.0.0",
     "platforms": [
@@ -25,11 +25,11 @@
     "ios": {
       "icon": "./src/assets/images/icon-ios.png",
       "supportsTablet": true,
-      "bundleIdentifier": "net.health.tracking.morning"
+      "bundleIdentifier": "com.letsbewell.bewellapp"
     },
     "android": {
       "icon": "./src/assets/images/icon-android.png",
-      "package": "net.health.tracking.morning"
+      "package": "com.letsbewell.bewellapp"
     }
   }
 }

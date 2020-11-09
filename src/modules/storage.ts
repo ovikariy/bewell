@@ -153,8 +153,8 @@ export function encrypt(value: string) {
 }
 
 /**
- * @description Store key starts with "`@Morning:`" prefix followed by either a month/year in MMYYYY format or a wellknown key such as SETTINGS
- * e.g. "`@Morning:012019`" or "`@Morning:SETTINGS`"
+ * @description Store key starts with "bewellapp_" prefix followed by either a month/year in MMYYYY format or a wellknown key such as SETTINGS
+ * e.g. "bewellapp_012019" or "bewellapp_SETTINGS"
  * @param key
  */
 export function isValidStoreKey(key: string) {

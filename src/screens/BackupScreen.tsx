@@ -92,7 +92,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     */
     try {
       const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ExportDirectory);
-      const exportFilename = 'morning-app-export-' + formatDate(new Date(), 'MMMDDYYYY-hhmmss') + '.morning';
+      const exportFilename = 'bewellapp-export-' + formatDate(new Date(), 'MMMDDYYYY-hhmmss') + '.bewellapp';
       const exportFilepath = exportDirectory + '/' + exportFilename;
 
       const oldExportFiles = await FileHelpers.readDirectoryAsync(exportDirectory);

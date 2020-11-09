@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { Text, Button } from 'react-native-elements';
-import MorningAppIconFont from './CustomIconFont';
+import BeWellAppIconFont from './CustomIconFont';
 import { AppContext } from '../modules/appContext';
 
 export const CustomIconRating = (props: { children: ReactNode }) => {
@@ -37,10 +37,10 @@ export const CustomIconRatingItem = (props: CustomIconRatingItemType) => {
   const icon = props.onPress ? /* sometimes we don't want the icon clickable e.g. ItemHistory */
     <Button type='clear' containerStyle={[styles.ratingIconContainer, props.value.backgroundStyle]}
       onPress={() => props.onPress ? props.onPress(props.id) : {}} icon={
-        <MorningAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />} />
+        <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />} />
     :
     <View style={[styles.ratingIconContainer, props.value.backgroundStyle]}>
-      <MorningAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />
+      <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />
     </View>;
 
   return (

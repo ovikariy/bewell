@@ -118,7 +118,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     try {
       const importDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
-      const tempFilename = 'morning-app-import-' + formatDate(new Date(), 'YYMMMDD-hhmmss') + '.txt';
+      const tempFilename = 'bewellapp-import-' + formatDate(new Date(), 'YYMMMDD-hhmmss') + '.txt';
       const tempFilepath = importDirectory + '/' + tempFilename;
 
       /* copy to cache directory otherwise error when reading from its original location  */

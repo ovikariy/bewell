@@ -51,7 +51,7 @@ export default class App extends React.Component<AppProps, AppState> {
       ]),
       Font.loadAsync({
         'open-sans-condensed-light': require('./src/assets/fonts/OpenSansCondensed-Light.ttf'),
-        'morning-app-icon-font': require('./src/assets/fonts/icomoon/morning-app-icon-font.ttf')
+        'bewellapp-icon-font': require('./src/assets/fonts/icomoon/bewellapp-icon-font.ttf')
       }),
     ]);
   };

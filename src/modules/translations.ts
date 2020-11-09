@@ -167,7 +167,7 @@ export interface TranslationKeys {
 
 export const translations: TranslationMap = {
     en: {
-        appName: 'Wellbeing Tracker',
+        appName: 'Be Well',
         note: 'Note',
         mood: 'Mood',
         sleep: 'Sleep',
@@ -319,7 +319,7 @@ export const translations: TranslationMap = {
         [ErrorMessage.MaxLoginAttempts]: 'Lets try entering a password instead'
     },
     ru: {
-        appName: 'Трекер Благосостояния',
+        appName: 'Be Well',
         note: 'Запись',
         mood: 'Настроение',
         sleep: 'Сон',

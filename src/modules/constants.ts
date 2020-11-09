@@ -25,11 +25,11 @@ export class StoreConstants {
   static isInitialized = 'isInitialized';
   static loginAttempts = 'loginAttempts';
   static maxLoginAttempts = 6;
-  /* In storage we use '@Morning:key' pattern for keys in key/value pairs */
+  /* In storage we use 'bewellapp_key' pattern for keys in key/value pairs */
   /* DataEncryptionStoreKey is special as it will not be hashed
   and the value will be encrypted with the user's password. When the user changes password
   only DataEncryptionStoreKey will have to be re-encrypted in store */
-  static keyPrefix = '@Morning:';
+  static keyPrefix = 'bewellapp_';
   static keyDateFormat = 'MMYYYY';
   static monthsFromEpochDate = getMonthsFromEpochDate(StoreConstants.keyPrefix);
   static AllEncryptedStoreKeys = [...StoreConstants.monthsFromEpochDate];
