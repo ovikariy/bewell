@@ -1,2 +1,2 @@
-cd C:\Projects\Morning\morning
+cd ..
 start cmd /k "git push -u origin master"

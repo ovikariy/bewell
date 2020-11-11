@@ -1,2 +1,2 @@
-cd C:\Projects\Morning\morning
+cd ..
 start cmd /k "npm test"

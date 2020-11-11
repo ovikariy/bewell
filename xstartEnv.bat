@@ -3,5 +3,5 @@ start cmd /k "emulator.exe -avd Pixel_XL_API_30"
 
 timeout /t 10
 
-cd C:\Projects\Morning\morning
+cd %~dp0
 start cmd /k "npm start"

@@ -1,2 +1,2 @@
-
+cd ..
 start cmd /k
