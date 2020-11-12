@@ -1,10 +1,9 @@
 import 'react-native';
 import { createMockAsyncStorageService } from '../__mocks__/AsyncStorageService';
+import 'misc'; /* special mocks */
 
 /* import the code that uses the mocks after calling jest.mock */
 import * as storage from '../storage';
-import { ErrorCode, ErrorMessage, ItemTypes } from '../constants';
-import { AppError, ItemBase } from '../types';
 
 // Dirty hack to override AsyncStorageService
 // TODO: find a more elegant way to provide this override
