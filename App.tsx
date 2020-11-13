@@ -3,6 +3,7 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import Main from './src/components/Main';
+import { GlobalErrorBoundary } from './src/components/ErrorBoundary';
 
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
@@ -30,12 +31,14 @@ export default class App extends React.Component<AppProps, AppState> {
       />;
     }
     return (
-      <Provider store={store}>
-        {/** don't add any <Views> or other wrappers here since the
+      <GlobalErrorBoundary>
+        <Provider store={store}>
+          {/** don't add any <Views> or other wrappers here since the
          * top component has to be SafeAreaView to work well on iOS
          * which is used in Main */}
-        <Main />
-      </Provider>
+          <Main />
+        </Provider>
+      </GlobalErrorBoundary>
     );
   }
 
