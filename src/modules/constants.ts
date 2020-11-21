@@ -21,7 +21,6 @@ export const stateConstants = {
 };
 
 export class StoreConstants {
-  static password = 'password';
   static isInitialized = 'isInitialized';
   static loginAttempts = 'loginAttempts';
   static maxLoginAttempts = 6;
@@ -154,6 +153,8 @@ export enum ErrorCode {
   Security6 = 'SE1006',
   Security7 = 'SE1007',
   Security8 = 'SE1008',
+  Security9 = 'SE1009',
+  Security10 = 'SE1010',
   Import1 = 'I1001',
   Import2 = 'I1002',
   Import3 = 'I1003',

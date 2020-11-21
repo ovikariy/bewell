@@ -64,14 +64,14 @@ export function signInPIN(pin: string): AppThunkActionType {
 
 
 async function signInPasswordAsync(password: string) {
-    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync(); /** from AsyncStorage */
     if (!dataEncryptionStoreKey)
         throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth10);
     securityService.createEncryptDecryptDataFunctions(dataEncryptionStoreKey, password);
 }
 
 async function signInPINAsync(pin: string) {
-    const dataEncryptionStoreKey = await storage.getDataEncryptionStoreKeyAsync();
+    const dataEncryptionStoreKey = await securityService.getDataEncryptionKeyAsync(); /** from SecureStore */
     if (!dataEncryptionStoreKey)
         throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth11);
     await securityService.createEncryptDecryptDataFunctionsPINAsync(dataEncryptionStoreKey, pin);

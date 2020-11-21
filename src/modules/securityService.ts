@@ -38,14 +38,18 @@ export async function getMultipleHashedKeysAsync(keysToHash: string[]) {
   return hashedKeys;
 }
 
-export async function setupNewPINAsync(password: string, pin: string) {
+export async function setupNewPINAsync(password: string, pin: string, dataEncryptionKeyEncrypted: string) {
   if (isSignedIn() !== true)
     throw new AppError(ErrorMessage.Unauthorized);
-  if (isNullOrEmpty(password) || isNullOrEmpty(pin))
-    throw new AppError(ErrorMessage.MissingPassword);
+  if (isNullOrEmpty(password) || isNullOrEmpty(pin) || isNullOrEmpty(dataEncryptionKeyEncrypted))
+    throw new AppError(ErrorMessage.InvalidParameter);
 
-  const encryptedPassword = encrypt(password, pin); //TODO: check strong encryption even if PIN is short
-  await setToSecureStoreAsync(StoreConstants.password, encryptedPassword);
+  const dataEncryptionKeyDecrypted = decrypt(dataEncryptionKeyEncrypted, password);
+  if (!dataEncryptionKeyDecrypted)
+    throw new AppError(ErrorMessage.InvalidPassword, ErrorCode.Security10);
+
+  const reEncryptedWithPin = encrypt(dataEncryptionKeyDecrypted, pin);
+  await setToSecureStoreAsync(StoreConstants.DataEncryptionStoreKey, reEncryptedWithPin);
 }
 
 export function signOut() {
@@ -233,8 +237,8 @@ async function isInitializedAsync(): Promise<boolean> {
 
 async function isPinLockedAsync(): Promise<boolean> {
   try {
-    const passwordInStore = await getFromSecureStoreAsync(StoreConstants.password);
-    if (passwordInStore && (passwordInStore + '').trim().length > 0)
+    const hasDataEncryptionKeyInSecureStore = await getFromSecureStoreAsync(StoreConstants.DataEncryptionStoreKey);
+    if (hasDataEncryptionKeyInSecureStore && (hasDataEncryptionKeyInSecureStore + '').trim().length > 0)
       return true;
     return false;
   }
@@ -253,9 +257,9 @@ export function resetEncryptDecryptDataFunctions() {
   DataEncryption.getHash = null;
 }
 
-export function createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted: string, password: string) {
+export function createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted: string, passphrase: string) {
 
-  const functions = createCryptoFunctions(dataEncryptionKeyEncrypted, password);
+  const functions = createCryptoFunctions(dataEncryptionKeyEncrypted, passphrase);
 
   /** if we're here then we passed authentication, clear login attempts flag  */
   resetInvalidPINAttemptsAsync().catch(() => { throw new AppError(ErrorMessage.General, ErrorCode.Auth12); });
@@ -266,14 +270,15 @@ export function createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted: st
   DataEncryption.getHash = functions.getHash;
 }
 /**
- * @description createCryptoFunctions that takes password entered by the user during the logon process or import,
+ * @description createCryptoFunctions that takes password or PIN entered by the user during the logon process or import,
  * decrypts the dataEncryptionKey and creates the functions that handle crypto without
  * re-retrieving the data encryption key or the need to pass it around
  */
-export function createCryptoFunctions(dataEncryptionKeyEncrypted: string, password: string): DataEncryptionInterface {
-  if (!dataEncryptionKeyEncrypted || !password)
+export function createCryptoFunctions(dataEncryptionKeyEncrypted: string, passphrase: string): DataEncryptionInterface {
+  if (!dataEncryptionKeyEncrypted || !passphrase)
     throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth1);
-  const dataEncryptionKeyDecrypted = decrypt(dataEncryptionKeyEncrypted, password);
+  const dataEncryptionKeyDecrypted = decrypt(dataEncryptionKeyEncrypted, passphrase);
+
   if (!dataEncryptionKeyDecrypted)
     throw new AppError(ErrorMessage.InvalidPassword, ErrorCode.Auth2);
 
@@ -290,32 +295,27 @@ export function createCryptoFunctions(dataEncryptionKeyEncrypted: string, passwo
   return functions;
 }
 
-/* retrieve encrypted password from store and try to decrypt it with PIN */
+/* retrieve encrypted DataEncryptionStoreKey from SecureStore and try to decrypt it with PIN */
 export async function validatePINAsync(pin: string): Promise<void> {
   if (!pin)
     throw new AppError(ErrorMessage.InvalidPIN);
-  const encryptedPassword = await getFromSecureStoreAsync(StoreConstants.password);
-  if (isNullOrEmpty(encryptedPassword))
+  const dataEncryptionKeyEncrypted = await getFromSecureStoreAsync(StoreConstants.DataEncryptionStoreKey);
+  if (isNullOrEmpty(dataEncryptionKeyEncrypted))
     throw new AppError(ErrorMessage.InvalidPIN);
-  const decryptedPassword = decrypt(encryptedPassword + '', pin);
-  if (isNullOrEmpty(decryptedPassword))
+  const decrypted = decrypt(dataEncryptionKeyEncrypted + '', pin);
+  if (isNullOrEmpty(decrypted))
     throw new AppError(ErrorMessage.InvalidPIN);
 }
 
-/* user signing in with PIN number; retrieve encrypted password from store, try to decrypt it and
-use it to sign in if the PIN is correct; after StoreConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
+/* user signing in with PIN number; after StoreConstants.maxLoginAttempts failed attempts clear PIN so user has to re-enter password */
 export async function createEncryptDecryptDataFunctionsPINAsync(dataEncryptionKeyEncrypted: string, pin: string) {
-  if (!dataEncryptionKeyEncrypted || !pin)
-    throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Auth4);
-  const encryptedPassword = await getFromSecureStoreAsync(StoreConstants.password);
-  if (isNullOrEmpty(encryptedPassword))
-    throw new AppError(ErrorMessage.General, ErrorCode.Auth5);
-  const decryptedPassword = decrypt(encryptedPassword + '', pin);
-  if (isNullOrEmpty(decryptedPassword)) {
+  try {
+    createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted, pin);
+  }
+  catch (error) {
     await incrementInvalidPINAttemptsAsync();
     throw new AppError(ErrorMessage.InvalidPIN, ErrorCode.Auth6);
   }
-  createEncryptDecryptDataFunctions(dataEncryptionKeyEncrypted, decryptedPassword);
 }
 
 async function incrementInvalidPINAttemptsAsync() {
@@ -324,7 +324,7 @@ async function incrementInvalidPINAttemptsAsync() {
   const loginAttemptsNumber = parseInt(loginAttempts + '') ?? 0;
   if (loginAttemptsNumber >= StoreConstants.maxLoginAttempts) {
     //disable ability to login with PIN so user has to enter the password
-    await setToSecureStoreAsync(StoreConstants.password, '');
+    await setToSecureStoreAsync(StoreConstants.DataEncryptionStoreKey, '');
     throw new AppError(ErrorMessage.MaxLoginAttempts);
   }
   if (loginAttemptsNumber >= 0 && loginAttemptsNumber <= StoreConstants.maxLoginAttempts) {
@@ -343,12 +343,23 @@ async function resetInvalidPINAttemptsAsync() {
     });
 }
 
+/**
+ * When PIN Lock is used in the app, the DataEncryptionStoreKey is encrypted with PIN and stored in SecureStore
+ * When PIN Lock is NOT used, the DataEncryptionStoreKey is encrypted with Password and stored in AsyncStorage
+ */
+export async function getDataEncryptionKeyAsync(): Promise<string | null> {
+  const dataEncryptionKey = await getFromSecureStoreAsync(StoreConstants.DataEncryptionStoreKey);
+  if (dataEncryptionKey)
+    return dataEncryptionKey as string;
+  return null;
+}
+
 export function isSignedIn(): boolean {
   return DataEncryption.canEncryptDecrypt;
 }
 
 function generateRandomKey() {
-  return lib.WordArray.random(16).toString(); /* convert to string, important for decryption, otherwise the encodings will be different Utf8 vs Hex after re-encryption */
+  return lib.WordArray.random(256 / 8).toString(); /* convert to string, important for decryption, otherwise the encodings will be different Utf8 vs Hex after re-encryption */
 }
 
 function getHash(value: string, key: string) {

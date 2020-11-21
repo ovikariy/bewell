@@ -79,10 +79,6 @@ async function updatePasswordAsync(oldPassword: string, newPassword: string, pin
 
     /* 3. persist Data Encryption Key */
     await storage.setItemAsync(StoreConstants.DataEncryptionStoreKey, encryptionKeyEncrypted);
-
-    /* 4. encrypt new password with old PIN and persist that to keychain */
-    if (pin && isNullOrEmpty(pin) === false)
-        await securityService.setupNewPINAsync(newPassword, pin);
 }
 
 export function setupNewEncryption(newPassword: string): AppThunkActionType {

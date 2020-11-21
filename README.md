@@ -158,8 +158,8 @@ To sign out of the app and return to the 'Login' screen, tap the 'Sign Out' butt
 
 ### **Password**
 
-1. When you first launch the app, a unique data encryption key is generated that will be used to encrypt/decrypt your data. 
-2. This key is encrypted with your password using AES encryption and is stored along with your data. The password itself is not stored with the data and needs to be provided every time you launch the app.
+1. When you first launch the app, a unique Data Encryption Key is generated that will be used to encrypt/decrypt your data. 
+2. This key is encrypted with your password using 256-bit AES encryption and is stored along with your data. The password itself is not stored anywhere and needs to be provided when you log into the app.
 3. When you provide the password, it is used to create a set of functions (decryptData, encryptData, and getHash) to be used while running the app to secure your data before persisting it to the AsyncStorage. 
 
 ### **Data Partitioning**
@@ -168,7 +168,7 @@ Be Well app stores your data on your device in AsyncStorage using name/value pai
 
 1. The data in storage is partitioned by month and that is used as the storage name. 
     <br/>*For example, the data (value) for the month of July 2018 will be stored under '072018' name.* 
-2. This name is hashed with your password using HmacSHA256 algorithm and the data(value) is encrypted using AES encryption.
+2. The names are hashed with your password using HmacSHA256 algorithm and the data(values) are encrypted using 256-bit AES encryption.
 
 *Please be aware that some of your configured Settings are stored unencrypted such as Theme and Language. This is done because the app need these values before you had a chance to login and provide a password, e.g. to show text in your language on the Sign-in screen.*
 
@@ -176,11 +176,11 @@ Be Well app stores your data on your device in AsyncStorage using name/value pai
 
 The app provides the ability to enable a PIN lock for easier login. The PIN has to be at least 4 digits but we recommend at least 6 for stronger security. 
 
-1. If you choose to enable PIN lock, your password will be encrypted with the PIN number of your choice using AES encryption. 
+1. If you choose to enable PIN lock, your Data Encryption Key will be encrypted with the PIN number of your choice using 256-bit AES encryption. 
 2. It will then be stored into [SecureStore](https://docs.expo.io/versions/latest/sdk/securestore/) which provides it's own layer of encryption in addition to one provided by the app, using the Keychain Services on iOS and Keystore System on Android platform. 
-3. Any subsequent app launch will prompt for a PIN code instead of the password and will fetch the password from the SecureStore and continue the login process as if you entered the password. 
+3. Any subsequent app launch will prompt for a PIN code instead of the password and will fetch the Data Encryption Key from the SecureStore and continue the login process as if you entered the password. 
 
-*However, in case of 6 unsuccessful PIN login attempts, the app will disable the ability to login with PIN code. It will do so by removing the encrypted password from SecureStore and prompt to login with password. After successful login with the password, PIN lock can be re-enabled in the Settings.*
+*However, in case of 6 unsuccessful PIN login attempts, the app will disable the ability to login with PIN code. It will do so by removing the stored Data Encryption Key from SecureStore and prompt to login with password. After a successful login with the password, PIN lock can be re-enabled in the Settings.*
 
 <br/>
 

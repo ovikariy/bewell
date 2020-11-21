@@ -1,4 +1,5 @@
 import * as securityService from '../modules/securityService';
+import * as storage from '../modules/storage';
 import * as operationActions from './operationActionCreators';
 import { validatePasswordAsync } from './passwordActionCreators';
 import * as ActionTypes from './actionTypes';
@@ -69,7 +70,10 @@ export function submitPIN(password: string, pin: string): AppThunkActionType {
 async function submitPINAsync(password: string, pin: string) {
     /* verify password one more time */
     await validatePasswordAsync(password);
-    await securityService.setupNewPINAsync(password, pin);
+    const dataEncryptionKey = await storage.getDataEncryptionStoreKeyAsync(); /** from AsyncStorage */
+    if (!dataEncryptionKey)
+        throw new AppError(ErrorMessage.InvalidParameter, ErrorCode.Security9);
+    await securityService.setupNewPINAsync(password, pin, dataEncryptionKey);
 }
 
 

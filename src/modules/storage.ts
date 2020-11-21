@@ -163,6 +163,10 @@ export function isValidStoreKey(key: string) {
     return (StoreConstants.AllEncryptedStoreKeys.indexOf(StoreConstants.keyPrefix + key) >= 0 || StoreConstants.AllEncryptedStoreKeys.indexOf(key) >= 0);
 }
 
+/**
+ * When PIN Lock is used in the app, the DataEncryptionStoreKey is encrypted with PIN and stored in SecureStore
+ * When PIN Lock is NOT used, the DataEncryptionStoreKey is encrypted with Password and stored in AsyncStorage
+ */
 export async function getDataEncryptionStoreKeyAsync(): Promise<string | null> {
     const dataEncryptionStoreKey = await getItemAsync(StoreConstants.DataEncryptionStoreKey);
     if (dataEncryptionStoreKey)
