@@ -27,6 +27,7 @@ export class GlobalErrorBoundary extends React.Component<any, { hasError: boolea
         if (this.state.hasError) {
             return <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
                 <Text style={{ fontSize: 30 }}>Ooops something went wrong. Please close the app and try again.</Text>
+                <Text style={{ fontSize: 18, marginTop: 10 }}>If this continues to happen, please check for app updates via the app store.</Text>
             </View>;
         }
 
