@@ -166,9 +166,9 @@ To sign out of the app and return to the 'Login' screen, tap the 'Sign Out' butt
 
 Be Well app stores your data on your device in AsyncStorage using name/value pair format. 
 
-1. The data in storage is partitioned by month and that is used as the storage name. 
+1. The data in storage is partitioned by month and that is used as the storage name. With an average of 10 wellbeing entries per day, that would make 300 entries per month which seems to be a reasonable partition size. 
     <br/>*For example, the data (value) for the month of July 2018 will be stored under '072018' name.* 
-2. The names are hashed with your password using HmacSHA256 algorithm and the data(values) are encrypted using 256-bit AES encryption.
+2. The names are hashed with Data Encryption Key using HmacSHA256 algorithm and the data(values) are encrypted with Data Encryption Key using 256-bit AES encryption. We could have encrypted the names as well but since the names are well-known unlike the values, hashing was a superior choice for its fixed length feature.
 
 *Please be aware that some of your configured Settings are stored unencrypted such as Theme and Language. This is done because the app need these values before you had a chance to login and provide a password, e.g. to show text in your language on the Sign-in screen.*
 
@@ -176,7 +176,7 @@ Be Well app stores your data on your device in AsyncStorage using name/value pai
 
 The app provides the ability to enable a PIN lock for easier login. The PIN has to be at least 4 digits but we recommend at least 6 for stronger security. 
 
-1. If you choose to enable PIN lock, your Data Encryption Key will be encrypted with the PIN number of your choice using 256-bit AES encryption. 
+1. If you choose to enable PIN lock, your Data Encryption Key will be encrypted with the key derived from your PIN number using 256-bit AES encryption. 
 2. It will then be stored into [SecureStore](https://docs.expo.io/versions/latest/sdk/securestore/) which provides it's own layer of encryption in addition to one provided by the app, using the Keychain Services on iOS and Keystore System on Android platform. 
 3. Any subsequent app launch will prompt for a PIN code instead of the password and will fetch the Data Encryption Key from the SecureStore and continue the login process as if you entered the password. 
 
