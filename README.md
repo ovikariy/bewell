@@ -21,7 +21,7 @@
 
 ## Introduction
 
-Be Well app helps you track your moods, sleep and save notes and images throughout the day without worrying about your data being sent to servers and sold to advertizers or other third parties. Your data is yours. It is stored encrypted and stays on your device.</p>
+Be Well app helps you track your moods, sleep and save notes and images throughout the day without worrying about your data being sent to servers and sold to advertizers or other third parties. Your data is yours. It is stored encrypted and stays on your device.
 
 <br/> 
 
@@ -38,17 +38,16 @@ Be Well app helps you track your moods, sleep and save notes and images througho
 - Password protected and secure
 - Encypted with 256-bit Advanced Encryption Standard (AES) 
 - Multi language
-    - Currently suuports English, Russian and French. 
-    - *Would you like to see your language added? [Reach out](https://www.linkedin.com/in/olena-vikariy/) and we'll make it happen!*
+    - Currently supports English, Russian and French. 
+    - *Would you like to see your language added? [Reach out](https://www.linkedin.com/in/olena-vikariy/) and we'll work with you to make it happen!*
 - Multiple themes 
     - Currently supports Dark and Light 
     - *Would you like to create one with your name? [Get in touch](https://www.linkedin.com/in/olena-vikariy/)! We'll give you a shout out here too! :-)*
 - PIN Lock for faster app access
-- Extra security when using PIN Lock
-    - Disables the ability to use PIN after 6 invalid attemps and requires to use the password instead
+    - For extra security when using PIN lock, the app disables the ability to use PIN after 6 invalid attempts and requires to use the password instead
 - Import and Export functionality for backup and restore
     - Encrypted backup file can be stored anywhere e.g. Google Drive, memory card, sent via email, etc
-
+- Over-the-Air app updates of fixes and patches
 <br/>
 
 ## Technologies
@@ -198,13 +197,9 @@ The app provides the ability to enable a PIN lock for easier login. The PIN has 
 
 App developed and maintained by [Olena Vikariy](https://www.linkedin.com/in/olena-vikariy/). Code review by [Nicolas Chabra](https://www.linkedin.com/in/nchabra/). 
 
+Design adapted from [Traktiv UI Kit](https://pinspiry.com/traktiv-app-free-ui-kit-xd/) in AdobeXD.
+
 Wanna join us? If you like Be Well and want to help make it better then [get in touch](https://www.linkedin.com/in/olena-vikariy/) or check out the [Be Well repo](https://bitbucket.org/ovikariy/bewell) to work on the code. 
-
-</br>
-
-## Design
-
-Adapted by [Olena Vikariy](https://www.linkedin.com/in/olena-vikariy/) in AdobeXD based on [Traktiv UI Kit](https://pinspiry.com/traktiv-app-free-ui-kit-xd/), thanks [Cody Brown](http://codybrowndesign.com/)!
 
 <br/>
 

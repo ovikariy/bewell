@@ -5,6 +5,7 @@ import { View, Text } from 'react-native';
 import { StyledPicker, StyledPickerItemType } from '../components/MiscComponents';
 import { settingsConstants } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
+import { translations } from './translations';
 
 interface SettingsFactoryItemType {
     id: string,
@@ -25,10 +26,8 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
     const language = context.language;
     const styles = context.styles;
 
-    const languageItems: StyledPickerItemType[] = [
-        { label: language.english, value: "en" },
-        { label: language.russian, value: "ru" }
-    ];
+    const languageItems: StyledPickerItemType[] = Object.keys(translations)
+        .map(key => ({ label: translations[key].languageLabel, value: key }));
 
     const themeItems: StyledPickerItemType[] = [
         { label: language.dark, value: "dark" },

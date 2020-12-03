@@ -7,6 +7,7 @@ import { GlobalErrorBoundary } from './src/components/ErrorBoundary';
 
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
+import { fetchOverTheAirUpdate } from './src/modules/updates';
 
 interface AppState {
   isLoading: boolean
@@ -43,6 +44,7 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   loadResourcesAsync = async () => {
+    fetchOverTheAirUpdate();
     await Promise.all([
       Asset.loadAsync([
         require('./src/assets/images/logo_small_color.png'),

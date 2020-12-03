@@ -17,6 +17,7 @@
       "resizeMode": "cover"
     },
     "updates": {
+      "checkAutomatically": "ON_ERROR_RECOVERY",
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
@@ -25,13 +26,11 @@
     "ios": {
       "icon": "./src/assets/images/icon-ios.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.letsbewell.bewellapp",
-      "buildNumber": "1.0.0"
+      "bundleIdentifier": "com.letsbewell.bewellapp"
     },
     "android": {
       "icon": "./src/assets/images/icon-android.png",
-      "package": "com.letsbewell.bewellapp",
-      "versionCode": "1.0.0"
+      "package": "com.letsbewell.bewellapp"
     }
   }
 }

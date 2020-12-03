@@ -51,7 +51,7 @@ class WelcomeScreen extends Component<WelcomeScreenProps> {
 
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#region 1.1 */>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }}   >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeFriend}</ParagraphText>

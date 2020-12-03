@@ -196,7 +196,7 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
 
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#region 1.1 */>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.pinLockYourApp}</ParagraphText>
             <HorizontalLine />

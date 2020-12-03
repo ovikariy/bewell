@@ -1,3 +1,6 @@
+import { ErrorMessage } from "./translations";
+export { ErrorMessage };
+
 /* ItemTypes correspond to data keys in storage and will be hashed with DATA ENCRYPTION KEY
 and their values will be encrypted with the DATA ENCRYPTION KEY;
 These are only for widgets and not to be used for other storage items */
@@ -59,38 +62,6 @@ export const settingsConstants = {
   theme: 'theme',
   version: 'version'
 };
-
-export enum ErrorMessage {
-  General = 'General',
-  InvalidData = 'InvalidData',
-  EmptyData = 'EmptyData',
-  InvalidFormat = 'InvalidFormat',
-  InvalidFile = 'InvalidFile',
-  InvalidFileData = 'InvalidFileData',
-  NoRecordsInFile = 'NoRecordsInFile',
-  InvalidParameter = 'InvalidParameter',
-  InvalidKey = 'InvalidKey',
-  NewPasswordCannotBeBlank = 'NewPasswordCannotBeBlank',
-  InvalidPassword = 'InvalidPassword',
-  InvalidPIN = 'InvalidPIN',
-  InvalidCredentials = 'InvalidCredentials',
-  MissingPassword = 'MissingPassword',
-  InvalidFilePassword = 'InvalidFilePassword',
-  UnableToSave = 'UnableToSave',
-  UnableToDecrypt = 'UnableToDecrypt',
-  UnableToEncrypt = 'UnableToEncrypt',
-  ImportError = 'ImportError',
-  ExportError = 'ExportError',
-  AccessStorage = 'AccessStorage',
-  PasswordAlreadySet = 'PasswordAlreadySet',
-  CannotSetPIN = 'CannotSetPIN',
-  Unauthorized = 'Unauthorized',
-  PasswordSet = 'PasswordSet',
-  PinSet = 'PinSet',
-  CannotDeleteFile = 'CannotDeleteFile',
-  ImageNotFound = 'ImageNotFound',
-  MaxLoginAttempts = 'MaxLoginAttempts'
-}
 
 export enum ErrorCode {
   Encrypt1 = 'E1001',
