@@ -12,14 +12,20 @@ interface ThemePropertyStyleType {
 }
 
 export interface ThemePropertyType {
-    colors: ThemePropertyStyleType
+    id: string,
+    label: string;
+    colors: ThemePropertyStyleType;
 }
 export interface ThemeType {
     [key: string]: ThemePropertyType
 }
 
+export const themeIDs = { dark: 'dark', light: 'light' };
+
 export const themes: ThemeType = {
-    dark: {
+    [themeIDs.dark]: {
+        id: themeIDs.dark,
+        label: 'Dark',
         colors: {
             /* don't use short notation for colors because may need to append opacity e.g. tintColor + '70' */
             foreground: '#FFFFFF', /* snow white */
@@ -37,7 +43,9 @@ export const themes: ThemeType = {
             transparent: 'transparent'
         }
     },
-    light: {
+    [themeIDs.light]: {
+        id: themeIDs.light,
+        label: 'Light',
         colors: {
             /* don't use short notation for colors because may need to append opacity e.g. tintColor + '70' */
             foreground: '#125973',  /* dark aqua */

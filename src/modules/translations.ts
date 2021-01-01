@@ -3,12 +3,12 @@ e.g. helpers.ts but wanted to keep them next to the translations for consistency
 import 'moment/locale/ru';
 import 'moment/locale/fr';
 
-import messages from '../assets/translations/en.json'
+import messages from '../assets/translations/en.json';
 
 export type TranslationKeys = typeof messages;
 export const ErrorMessage: TranslationKeys = Object.keys(messages).reduce((result, key) => {
     result[key] = key;
-    return result
+    return result;
 }, {} as any);
 export type TranslationMap = { [language: string]: TranslationKeys };
 

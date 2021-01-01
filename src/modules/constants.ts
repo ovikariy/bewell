@@ -1,6 +1,18 @@
 import { ErrorMessage } from "./translations";
 export { ErrorMessage };
 
+export const images = {
+  logo_light: require('../assets/images/logo-light.png'),
+  logo_dark: require('../assets/images/logo-dark.png'),
+  logo_small_light: require('../assets/images/logo-small-light.png'),
+  logo_small_dark: require('../assets/images/logo-small-dark.png'),
+  splash: require('../assets/images/splash.png'),
+  icon: require('../assets/images/icon.png'),
+  header: getRandomHeaderImage(), /* chooses a random image from the folder for fun */
+  arrow_up_dark: require('../assets/images/arrow-up-dark.png'),
+  arrow_up_light: require('../assets/images/arrow-up-light.png'),
+};
+
 /* ItemTypes correspond to data keys in storage and will be hashed with DATA ENCRYPTION KEY
 and their values will be encrypted with the DATA ENCRYPTION KEY;
 These are only for widgets and not to be used for other storage items */
@@ -134,3 +146,52 @@ export enum ErrorCode {
   BackupRestore3 = 'BR1003',
   BackupRestore4 = 'BR1004',
 };
+/**
+ * @description Chooses an image from assets/images/headers directory
+ * based on a random number and image filename. This is just for fun
+ * instead of always showing the same header image. The filenames should
+ * be 'header1.png', 'header2.png' etc format
+ */
+function getRandomHeaderImage() {
+  const randomNumberForHeader = Math.floor(Math.random() * 11);  // returns a random integer from 0 to 10
+  let headerImage;
+  switch (randomNumberForHeader) {
+    case 0:
+      headerImage = require('../assets/images/headers/header1.png');
+      break;
+    case 1:
+      headerImage = require('../assets/images/headers/header1.png');
+      break;
+    case 2:
+      headerImage = require('../assets/images/headers/header2.png');
+      break;
+    case 3:
+      headerImage = require('../assets/images/headers/header3.png');
+      break;
+    case 4:
+      headerImage = require('../assets/images/headers/header4.png');
+      break;
+    case 5:
+      headerImage = require('../assets/images/headers/header5.png');
+      break;
+    case 6:
+      headerImage = require('../assets/images/headers/header6.png');
+      break;
+    case 7:
+      headerImage = require('../assets/images/headers/header7.png');
+      break;
+    case 8:
+      headerImage = require('../assets/images/headers/header8.png');
+      break;
+    case 9:
+      headerImage = require('../assets/images/headers/header9.png');
+      break;
+    case 10:
+      headerImage = require('../assets/images/headers/header10.png');
+      break;
+    default:
+      headerImage = require('../assets/images/headers/header1.png');
+      break;
+  }
+  return headerImage;
+}

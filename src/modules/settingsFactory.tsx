@@ -6,6 +6,7 @@ import { StyledPicker, StyledPickerItemType } from '../components/MiscComponents
 import { settingsConstants } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { translations } from './translations';
+import { themes } from './themes';
 
 interface SettingsFactoryItemType {
     id: string,
@@ -29,10 +30,8 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
     const languageItems: StyledPickerItemType[] = Object.keys(translations)
         .map(key => ({ label: translations[key].languageLabel, value: key }));
 
-    const themeItems: StyledPickerItemType[] = [
-        { label: language.dark, value: "dark" },
-        { label: language.light, value: "light" }
-    ];
+    const themeItems: StyledPickerItemType[] = Object.keys(themes)
+        .map(key => ({ label: language[key], value: key }));
 
     return (
         [

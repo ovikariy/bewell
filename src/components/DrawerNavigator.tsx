@@ -21,6 +21,7 @@ import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
 import { AuthState } from '../redux/reducerTypes';
 import { platform } from '../assets/styles/style';
+import { images } from '../modules/constants';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -32,9 +33,10 @@ const MenuHeaderButton = (props: { navigation: any }) => {
 
 const LogoImage = () => {
     const context = React.useContext(AppContext);
+    const theme = context.theme;
     const styles = context.styles;
 
-    return <Image source={require('../assets/images/logo_small_color.png')} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
+    return <Image source={images['logo_small_' + theme.id]} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
 };
 
 const ScreenNavOptions = (styles: any): StackNavigationOptions => {
@@ -208,15 +210,12 @@ function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOpt
     const context = React.useContext(AppContext);
     const language = context.language;
     const styles = context.styles;
+    const theme = context.theme;
 
     return (
         <DrawerContentScrollView style={styles.drawerBackground} {...props}>
-            <View style={[
-                styles.flex, styles.rowContainer, styles.drawerHeaderContainer,
-                platform.OS === 'ios' && { marginTop: 0 }
-            ]}>
-                <LogoImage />
-                <Text style={[styles.heading, { fontSize: 20 }]}>{language.appName}</Text>
+            <View style={[styles.drawerHeaderContainer, platform.OS === 'ios' && { marginTop: 0 }]}>
+                <Image source={images['logo_' + theme.id]} style={[styles.logoImage, { marginLeft: 10 }]} />
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}

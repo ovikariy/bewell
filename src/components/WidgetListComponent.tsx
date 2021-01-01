@@ -8,6 +8,7 @@ import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetFactory } from '../modules/widgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
+import { images } from '../modules/constants';
 
 interface WidgetListComponentProps {
   dailyData: WidgetBase[];
@@ -96,11 +97,12 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
 
   renderWelcomeMessage() {
     const language = this.context.language;
+    const theme = this.context.theme;
     const styles = this.context.styles;
     return (
       <View style={[styles.centered, styles.flex, { paddingTop: 40 }]}>
         {/* tintColor is not a valid prop type but it works in terms of changing color and I don't see another way to doing it via styles */}
-        <Image source={require('../assets/images/arrow-up.png')} tintColor={styles.titleText.color} style={[styles.widgetArrowContainer]} />
+        <Image source={images['arrow_up_' + theme.id]} style={[styles.widgetArrowContainer]} />
         <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>{language.howAreYou}</Text>
         <Text style={[styles.subTitleText, styles.centered, styles.spacedOut]}>{language.tapAddButtons}</Text>
       </View>

@@ -4,6 +4,7 @@ import { ImageBackground, View, KeyboardAvoidingView, Platform, Image, ViewProps
 import { Spacer, ParagraphText, LoadingScreeenOverlay } from './MiscComponents';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppContext } from '../modules/appContext';
+import { images } from '../modules/constants';
 
 /* Wrapper for a screen component; simplifies setting styles e.g. background image on various screens */
 export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNode }) => {
@@ -23,18 +24,12 @@ export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNo
 
 /* Commnly used large header with image background, app name and logo */
 export const ScreenImageHeader = (props: ViewProps) => {
-  const appContext = React.useContext(AppContext);
-  const language = appContext.language;
-  const styles = appContext.styles;
-
+  const context = React.useContext(AppContext);
+  const language = context.language;
+  const styles = context.styles;
+  const theme = context.theme;
   return (
-    <ImageBackground source={require('../assets/images/header.jpg')} style={[{ height: 250 }, props.style]}>
-      <View style={[styles.centered, styles.flex, styles.centeredVertical]}>
-        <Image source={require('../assets/images/logo_small.png')} style={[styles.logoImage]} />
-        <Spacer height={30} />
-        <ParagraphText style={[styles.heading, styles.brightColor, styles.appName]}>{language.appName}</ParagraphText>
-      </View>
-    </ImageBackground>
+    <ImageBackground source={images.header} style={[{ height: 250 }, props.style]} />
   );
 };
 

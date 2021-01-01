@@ -261,8 +261,8 @@ export function getThemeStyles(theme: ThemePropertyType) {
     /* navigator */
 
     logoImage: {
-      height: 50,
-      width: 50,
+      height: 60,
+      width: 150,
       resizeMode: 'contain'
     },
 
@@ -347,7 +347,7 @@ export function getThemeStyles(theme: ThemePropertyType) {
 
     drawerHeaderContainer: {
       marginBottom: 20,
-      justifyContent: 'flex-start'
+
     },
     drawerBackground: {
       backgroundColor: colors.background

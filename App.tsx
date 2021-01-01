@@ -8,6 +8,7 @@ import { GlobalErrorBoundary } from './src/components/ErrorBoundary';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import { fetchOverTheAirUpdate } from './src/modules/updates';
+import { images } from './src/modules/constants';
 
 interface AppState {
   isLoading: boolean
@@ -42,18 +43,11 @@ export default class App extends React.Component<AppProps, AppState> {
       </GlobalErrorBoundary>
     );
   }
-
+  
   loadResourcesAsync = async () => {
     fetchOverTheAirUpdate();
     await Promise.all([
-      Asset.loadAsync([
-        require('./src/assets/images/logo_small_color.png'),
-        require('./src/assets/images/logo_small.png'),
-        require('./src/assets/images/splash.png'),
-        require('./src/assets/images/icon.png'),
-        require('./src/assets/images/header.jpg'),
-        require('./src/assets/images/arrow-up.png'),
-      ]),
+      Asset.loadAsync(Object.keys(images).map(key => images[key])),
       Font.loadAsync({
         'open-sans-condensed-light': require('./src/assets/fonts/OpenSansCondensed-Light.ttf'),
         'bewellapp-icon-font': require('./src/assets/fonts/icomoon/bewellapp-icon-font.ttf')

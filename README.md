@@ -198,6 +198,7 @@ The app provides the ability to enable a PIN lock for easier login. The PIN has 
 App developed and maintained by [Olena Vikariy](https://www.linkedin.com/in/olena-vikariy/). Code review by [Nicolas Chabra](https://www.linkedin.com/in/nchabra/). 
 
 Design adapted from [Traktiv UI Kit](https://pinspiry.com/traktiv-app-free-ui-kit-xd/) in AdobeXD.
+Background photos by talented creators on [Pexels](https://www.pexels.com/)
 
 Wanna join us? If you like Be Well and want to help make it better then [get in touch](https://www.linkedin.com/in/olena-vikariy/) or check out the [Be Well repo](https://bitbucket.org/ovikariy/bewell) to work on the code. 
 
