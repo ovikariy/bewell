@@ -146,5 +146,6 @@
   "PinSet": "PIN défini avec succès",
   "CannotDeleteFile": "Impossible de supprimer le fichier",
   "ImageNotFound": "Ooops, fichier image not found",
-  "MaxLoginAttempts": "Permet d'essayer d'entrer un mot de passe à la place"
+  "MaxLoginAttempts": "Permet d'essayer d'entrer un mot de passe à la place",
+  "NotEnoughSpace": "Espace disque insuffisant pour créer le fichier"
 }

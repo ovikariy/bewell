@@ -28,7 +28,6 @@ export async function getItemsAsync(keys: string[]) {
     }
 }
 
-// TODO: rename to setItem
 export async function setItemAsync(key: string, value: string) {
     if (!key)
         throw new AppError(ErrorMessage.UnableToSave, ErrorCode.MissingKey3);

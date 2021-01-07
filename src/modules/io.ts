@@ -1,6 +1,7 @@
 import *  as FileSystem from 'expo-file-system';
 import { AppError } from './types';
 import { ErrorMessage } from './constants';
+global.Buffer = global.Buffer || require('buffer').Buffer;
 
 export const FileSystemConstants = {
   ExportDirectory: FileSystem.cacheDirectory + 'exports',
@@ -9,12 +10,10 @@ export const FileSystemConstants = {
 };
 
 export async function writeFileAsync(filepath: string, text: string, options: FileSystem.WritingOptions) {
-
-  /* TODO: FileSystem.getFreeDiskStorageAsync() and show error if no space avail
-    FileSystem.getFreeDiskStorageAsync().then(freeDiskStorage => {
-      Android: 17179869184
-      iOS: 17179869184
-    });  */
+  const diskSpaceNeeded = Buffer.byteLength(text);
+  const diskSpaceAvailable = await FileSystem.getFreeDiskStorageAsync();
+  if (diskSpaceNeeded > diskSpaceAvailable)
+    throw new AppError(ErrorMessage.NotEnoughSpace);
   await FileSystem.writeAsStringAsync(filepath, text, options ? options : {});
 }
 

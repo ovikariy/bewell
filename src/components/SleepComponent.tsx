@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
-import { IconForButton, TimePicker } from './MiscComponents';
+import { IconForButton, StyledDatePicker, TimePicker } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
-import { formatDate } from '../modules/utils';
+import { formatDate, addSubtractDays } from '../modules/utils';
 
 export interface SleepComponentWidgetType extends WidgetBase {
   rating?: number;
@@ -30,40 +30,43 @@ export class SleepComponent extends Component<SleepComponentProps> {
   }
 
   onStartDateChange(event: any, startDate?: Date) {
-    if (!startDate) {
-      this.props.onChange({ ...this.props.value, startDate: undefined });
+    if (!startDate)
       return;
-    }
-    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be
-    for today or yesterday. If selected time is greater than now, must mean it is yesterday */
-    const selectedDate = new Date(this.props.selectedDate);
-    const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
-
-    let startDatePickedByUser = new Date(selectedDate.toLocaleDateString() + ' ' + startDate.toLocaleTimeString());
-    if (startDatePickedByUser > selectedDate)
-      startDatePickedByUser = new Date(theDayBefore.toLocaleDateString() + ' ' + startDate.toLocaleTimeString());
-
-    const startDateISOString = startDatePickedByUser.toISOString();
-
-    this.props.onChange({ ...this.props.value, startDate: startDateISOString });
+    this.props.onChange({ ...this.props.value, startDate: startDate.toISOString() });
   }
 
   onEndDateChange(event: any, endDate?: Date) {
-    if (!endDate) {
-      this.props.onChange({ ...this.props.value, endDate: undefined });
+    if (!endDate)
+      return;
+    this.props.onChange({ ...this.props.value, endDate: endDate.toISOString() });
+  }
+
+  /**
+   * @description if the start date hasn't already been set,
+   * will default to one day before the date selected in the header
+   */
+  onStartTimeChange(event: any, startDate?: Date) {
+    if (!startDate || this.props.value.startDate) { /** we are either clearing the field or already have a date, no default needed */
+      this.onStartDateChange(event, startDate);
       return;
     }
-    //TODO: BUG: this logic doesn't work when editing time in the past days. see June 30th entry where both start and end are on the same day but end is earlier than start
-    /* Since we only ask the user to pick the time not the full date, we need to guess if it should be
-    for today or yesterday. If selected time is greater than now, must mean it is yesterday */
-    const selectedDate = new Date(this.props.selectedDate);
-    const theDayBefore = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - 1);
+    const date = this.props.selectedDate ? new Date(this.props.selectedDate) : new Date();
+    date.setHours(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds());
+    this.onStartDateChange(event, addSubtractDays(date, -1));
+  }
 
-    let endDatePickedByUser = new Date(Date.parse(selectedDate.toLocaleDateString() + ' ' + endDate.toLocaleTimeString()));
-    if (endDatePickedByUser > selectedDate)
-      endDatePickedByUser = new Date(Date.parse(theDayBefore.toLocaleDateString() + ' ' + endDate.toLocaleTimeString()));
-    const endDateISOString = endDatePickedByUser.toISOString();
-    this.props.onChange({ ...this.props.value, endDate: endDateISOString });
+    /**
+   * @description if the end date hasn't already been set,
+   * will default to the date selected in the header
+   */
+  onEndTimeChange(event: any, endDate?: Date) {
+    if (!endDate || this.props.value.endDate) { /** we are either clearing the field or already have a date, no default needed */
+      this.onEndDateChange(event, endDate);
+      return;
+    }
+    const date = this.props.selectedDate ? new Date(this.props.selectedDate) : new Date();
+    date.setHours(endDate.getHours(), endDate.getMinutes(), endDate.getSeconds());
+    this.onEndDateChange(event, date);
   }
 
   render() {
@@ -93,19 +96,37 @@ export class SleepComponent extends Component<SleepComponentProps> {
           styles.sleepComponentTimeFieldContainer
         ]}>
           <IconForButton name='moon-o' type='font-awesome' />
-          <TimePicker
-            value={startTime}
-            style={{ flex: 0.8 }}
-            placeholder={language.bedTime}
-            onChange={(event: any, startDate?: Date) => { this.onStartDateChange(event, startDate); }}
-          />
+          <View style={{ flex: 0.8 }}>
+            {startTime && /** if no startTime then don't show the date picker, it is only for changing the value after the time has been set */
+              <StyledDatePicker
+                value={startTime}
+                format='MMM D'
+                placeholder={' '}
+                onChange={(event: any, startDate?: Date) => { this.onStartDateChange(event, startDate); }}
+              />}
+            <TimePicker
+              value={startTime}
+              style={{ flex: 0.8 }}
+              placeholder={language.bedTime}
+              onChange={(event: any, startDate?: Date) => { this.onStartTimeChange(event, startDate); }}
+            />
+          </View>
           <IconForButton name='wb-sunny' />
-          <TimePicker
-            value={endTime}
-            style={{ flex: 0.8 }}
-            placeholder={language.wakeTime}
-            onChange={(event: any, endDate?: Date) => { this.onEndDateChange(event, endDate); }}
-          />
+          <View style={{ flex: 0.8 }}>
+            {endTime && /** if no endTime then don't show the date picker, it is only for changing the value after the time has been set */
+              <StyledDatePicker
+                value={endTime}
+                format='MMM D'
+                placeholder={' '}
+                onChange={(event: any, endDate?: Date) => { this.onEndDateChange(event, endDate); }}
+              />}
+            <TimePicker
+              value={endTime}
+              style={{ flex: 0.8 }}
+              placeholder={language.wakeTime}
+              onChange={(event: any, endDate?: Date) => { this.onEndTimeChange(event, endDate); }}
+            />
+          </View>
         </View>
       </View>
     );

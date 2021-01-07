@@ -146,5 +146,6 @@
   "PinSet": "PIN set successfully",
   "CannotDeleteFile": "Unable to delete file",
   "ImageNotFound": "Ooops, image file not found",
-  "MaxLoginAttempts": "Lets try entering a password instead"
+  "MaxLoginAttempts": "Lets try entering a password instead",
+  "NotEnoughSpace": "Not enough storage space to create a file"
 }

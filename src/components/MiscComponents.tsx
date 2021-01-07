@@ -375,7 +375,6 @@ export const LoadingScreeenOverlay = () => {
   return <Loading style={styles.loadingScreeenOverlay} />;
 };
 
-/* TODO: make a global loading component; maybe part of ScreenBackground or ScreenContent on the bottom like a Toast */
 export const Loading = (props: { style: ViewStyle }) => {
   const context = React.useContext(AppContext);
   const language = context.language;
@@ -532,7 +531,7 @@ export const StyledPicker = (props: StyledPickerProps) => {
             return;
           }
           if (props.onValueChange)
-            props.onValueChange(props.items[index].value, index); //TODO: check item value exists
+            props.onValueChange(props.items[index].value, index);
         }
       )}
     </View>

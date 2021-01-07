@@ -2,7 +2,6 @@ import { StyleSheet, Platform, Dimensions, StatusBar } from 'react-native';
 import { themes, ThemePropertyType } from '../../modules/themes';
 
 const fonts = {
-  //TODO: check iOS fonts
   primary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif',
   primaryLight: Platform.OS === 'ios' ? 'Helvetica' : 'open-sans-condensed-light',
   secondary: Platform.OS === 'ios' ? 'Helvetica' : 'sans-serif-medium',
