@@ -1,19 +1,16 @@
 <!-- Title -->
-<h1 align='center'><img src="./docs/images/logo.svg" alt="BeWell App Logo" height="100"/>
-</h1>
-
-<h1 align="center" style='border: none; font-size: large'>BeWell is an open source wellbeing tracker app with a focus on data privacy</h1>
+<h1 align='center'><img src="./docs/images/logo.svg" alt="BeWell App Logo" height="100"/></h1>
+<h2 align="center">BeWell is an open source wellbeing tracker app with a focus on data privacy</h2>
   
 What affects our wellbeing? What causes us to feel happy or upset? Sometimes we are having the worst luck or a busy and challenging day but we feel happy and collected. Yet other times we feel cranky even when everything seems to be going great. Let's try to discover some trends in our daily lives and influences on our wellbeing.
 
-- [Introduction](#-introduction)
-- [Features](#-features)
-- [Technologies](#-technologies)
-- [Using the app](#-using-the-app)
-- [Security and Storage](#-security-and-storage)
-- [The Team](#-the-team)
-- [Design](#-design)
-- [Contact](#-contact)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Using the app](#using-the-app)
+- [Security and Storage](#security-and-storage)
+- [The Team](#the-team)
+- [Contact](#contact)
 - [Website](https://letsbewell.app)
 
 ## Introduction
@@ -184,7 +181,7 @@ The app provides the ability to enable a PIN lock for easier login. The PIN has 
 *However, in case of 6 unsuccessful PIN login attempts, the app will disable the ability to login with PIN code. It will do so by removing the stored Data Encryption Key from SecureStore and prompt to login with password. After a successful login with the password, PIN lock can be re-enabled in the Settings.*
 
 
-## **Authentication Flow Diagram**
+### **Authentication Flow Diagram**
 
 
 <img src="./docs/images/authentication-flow.png" alt="BeWell Authentication Flow Diagram" height="540"/>
