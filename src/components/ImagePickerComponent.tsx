@@ -2,8 +2,6 @@ import React from 'react';
 import { ButtonPrimary, Toast, StyledImage, ActivityIndicator, RoundButton, ImageProps } from './MiscComponents';
 import { Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 import { AppContext } from '../modules/appContext';
 import * as FileHelpers from '../modules/io';
 import { consoleLogWithColor, friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/utils';
@@ -11,6 +9,7 @@ import { ErrorMessage, brokenImageURI } from '../modules/constants';
 import { encryptData, decryptData } from '../modules/securityService';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { AppError } from '../modules/types';
+import { platform } from '../assets/styles/style';
 
 
 export interface ImagePickerWidgetType extends WidgetBase {
@@ -44,7 +43,6 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
   }
 
   componentDidMount() {
-    this.getPermissionAsync();
     /* when images has been saved in the past, process it async from disk and update state when ready with new image data */
     if (this.props.value.imageProps)
       this.getImageFromFile();
@@ -138,6 +136,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
   }
 
   pickImageAsync = async () => {
+    await this.getPermissionAsync();
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       base64: true,
@@ -149,7 +148,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
   };
 
   onImagePicked(result: ImagePicker.ImagePickerResult) {
-    if (result.cancelled) /* this check is needed inside this funtion otherwise ImageInfo props will not be available if cancelled == false */
+    if (result.cancelled) /* this check is needed inside this function otherwise ImageInfo props will not be available if cancelled == false */
       return;
 
     this.saveImageToFileAsync(result.base64)
@@ -194,13 +193,15 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
   };
 
   getPermissionAsync = async () => {
-    const language = this.context.language;
-
-    if (Constants.platform && Constants.platform.ios) {
-      const status = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status.granted)
-        alert(language.cameroRollPermissions);
-
+    let permission = await ImagePicker.getCameraRollPermissionsAsync();
+    if (permission.status !== 'granted') {
+      permission = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (permission.status === 'granted')
+        return;
+      if (platform.OS === 'ios')
+        throw new AppError(ErrorMessage.cameraRollPermissionsiOS);
+      else
+        throw new AppError(ErrorMessage.cameraRollPermissionsAndroid);
     }
   };
 
