@@ -26,11 +26,17 @@
     "ios": {
       "icon": "./src/assets/images/icon-ios.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.letsbewell.bewellapp"
+      "bundleIdentifier": "com.letsbewell.bewellapp",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to let the user pick a photo and save it into the app's storage."
+      }
     },
     "android": {
       "icon": "./src/assets/images/icon-android.png",
-      "package": "com.letsbewell.bewellapp"
+      "package": "com.letsbewell.bewellapp",
+      "versionCode": 1,
+      "permissions" : ["MEDIA_LIBRARY"]
     }
   }
 }
