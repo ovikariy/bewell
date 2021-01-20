@@ -12,6 +12,7 @@ import { StackActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppError, AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -175,7 +176,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <PasswordInputWithButton value={this.state.password}
         containerStyle={styles.bottomPositioned}
         placeholder={language.passwordEnter}
@@ -191,14 +192,14 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordFile}</ParagraphText>
-      <Spacer height={40} />
+      <Spacer height={sizes[40]} />
       {this.renderFileField()}
       <View style={[styles.flex, styles.bottomPositioned]}>
         <ButtonPrimary
           title={language.importClear}
           onPress={() => { this.clearSelectedFile(); }}
         />
-        <Spacer height={20} />
+        <Spacer height={sizes[20]} />
         <PasswordInputWithButton value={this.state.filePassword}
           placeholder={language.passwordEnterFile}
           onPress={() => this.verifyFilePassword()}
@@ -214,9 +215,9 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.importBrowseExplanation}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonSecondary
-        containerStyle={[styles.bottomPositioned, { width: 280 }]}
+        containerStyle={[styles.bottomPositioned, styles.buttonLarge]}
         title={language.importBrowse}
         onPress={() => { this.browseForFile(); }}
       />
@@ -229,14 +230,14 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.importPress}</ParagraphText>
-      <Spacer height={40} />
+      <Spacer height={sizes[40]} />
       {this.renderFileField()}
       <View style={[styles.flex, styles.bottomPositioned]}>
         <ButtonPrimary
           title={language.importClear}
           onPress={() => { this.clearSelectedFile(); }}
         />
-        <Spacer height={20} />
+        <Spacer height={sizes[20]} />
         <ButtonSecondary
           title={language.import}
           onPress={() => { this.import(); }}
@@ -250,7 +251,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     const styles = this.context.styles;
 
     return <View style={styles.flex}>
-      <ParagraphText style={[styles.bodyTextLarge, { color: styles.titleText.color, marginBottom: 15 }]}>{language.importSelectedFile}</ParagraphText>
+      <ParagraphText style={[styles.bodyTextLarge, { color: styles.titleText.color, marginBottom: sizes[16] }]}>{language.importSelectedFile}</ParagraphText>
       <ParagraphText style={[styles.bodyTextLarge]}>{this.state.importFilename}</ParagraphText>
 
     </View>;
@@ -262,9 +263,9 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.importComplete}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonPrimary
-        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        containerStyle={[styles.bottomPositioned, styles.buttonMedium]}
         title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
@@ -294,7 +295,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard */>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.importExplanation}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}

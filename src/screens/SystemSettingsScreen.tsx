@@ -26,6 +26,8 @@ interface SystemSettingsScreenProps extends PropsFromRedux {
 }
 
 class SystemSettingsScreen extends Component<SystemSettingsScreenProps> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
 
   componentDidMount() {
     this.props.load(StoreConstants.SETTINGS);
@@ -37,10 +39,12 @@ class SystemSettingsScreen extends Component<SystemSettingsScreenProps> {
   }
 
   render() {
+    const styles = this.context.styles;
+
     const settings = this.props.STORE.items ? this.props.STORE.items[StoreConstants.SETTINGS] : undefined;
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} >
+        <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerLargeMargin, { paddingHorizontal: 0 }]} >
           <SystemSettingsComponent
             settings={settings}
             navigation={this.props.navigation}

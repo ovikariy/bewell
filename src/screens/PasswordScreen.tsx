@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { startChangePassword, verifyCredentials, updatePassword } from '../redux/passwordActionCreators';
-import { ParagraphText, PasswordInput, ActivityIndicator, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast, ButtonSecondary } from '../components/MiscComponents';
+import { ParagraphText, PasswordInput, ButtonPrimary, HorizontalLine, Spacer, PINInputWithButton, PasswordInputWithButton, Toast, ButtonSecondary } from '../components/MiscComponents';
 import { ToastAndroid, View } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,6 +10,7 @@ import { isNullOrEmpty } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE,
@@ -107,9 +108,9 @@ class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState>
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChanged}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonPrimary
-        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        containerStyle={[styles.bottomPositioned, styles.buttonMedium]}
         title={language.done}
         onPress={() => { this.done(); }}
       />
@@ -157,9 +158,9 @@ class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState>
     password for security reasons and PIN for encrypting new password */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordChoose}</ParagraphText>
-      <Spacer height={20} />
-      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{language.passwordMinimum}</ParagraphText>
-      <Spacer height={20} />
+      <Spacer height={sizes[20]} />
+      <ParagraphText style={[styles.placeholderText, { fontSize: sizes[16] }]}>{language.passwordMinimum}</ParagraphText>
+      <Spacer height={sizes[20]} />
       {this.props.AUTH.isPinLocked ?
         <PasswordInput
           inputStyle={styles.bodyTextLarge}
@@ -181,7 +182,7 @@ class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState>
         onSubmitEditing={() => { this.save(); }}
       />
       <ButtonSecondary
-        containerStyle={[{ marginTop: 60, width: 200, alignSelf: 'center' }]}
+        containerStyle={[styles.buttonSmallCentered]}
         title={language.save}
         onPress={() => { this.save(); }}
         iconName='check'
@@ -200,10 +201,12 @@ class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState>
   }
 
   render() {
+    const styles = this.context.styles;
+
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 70 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             {this.renderFields()}
           </ScreenContent>
         </ScrollView>

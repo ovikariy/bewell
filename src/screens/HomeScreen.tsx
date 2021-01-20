@@ -4,7 +4,7 @@ import { ScreenBackground, ScreenContent } from '../components/ScreenComponents'
 import WidgetListComponent from '../components/WidgetListComponent';
 import { ItemTypes } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
-import { DatePickerWithArrows } from '../components/MiscComponents';
+import { DatePickerWithArrows, Spacer } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getStorageKeyFromDate, consoleLogWithColor } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
@@ -12,6 +12,7 @@ import { deleteImageFromDiskAsync } from '../modules/io';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { RootState } from '../redux/store';
 import { ItemBase, AppNavigationProp } from '../modules/types';
+import { dimensions, sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -69,6 +70,8 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
   }
 
   render() {
+    const styles = this.context.styles;
+
     const widgetFactory = CreateWidgetFactory(this.context);
     const selectedDateString = new Date(this.state.selectedDate).toLocaleDateString();
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
@@ -78,7 +81,9 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} >
+          {!dimensions.isSmallDevice && <Spacer height={sizes[20]} />}
           <DatePickerWithArrows value={this.state.selectedDate} onChange={(event, newDate) => this.selectedDateChanged(event, newDate)} />
+          <Spacer height={sizes[5]} />
           <WidgetListComponent
             dailyData={data}
             selectedDate={this.state.selectedDate}

@@ -5,6 +5,7 @@ import { Text, View } from 'react-native';
 import { friendlyTime } from '../modules/utils';
 import { CustomIconType, CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
 import * as Animatable from 'react-native-animatable';
+import { sizes } from '../assets/styles/style';
 
 export interface MoodComponentWidgetType extends WidgetBase {
   rating?: number;
@@ -51,7 +52,7 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
     return <View />;
   const ratingIcon = moodRatingIcons[props.item.rating];
   return (
-    <View style={{ margin: 7 }}>
+    <View style={{ margin: sizes[10] }}>
       <Text style={props.isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
         {friendlyTime(props.item.date)}</Text>
       <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null} />

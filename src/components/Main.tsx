@@ -12,6 +12,7 @@ import { RootState } from '../redux/store';
 import { AuthState, OperationState } from '../redux/reducerTypes';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -64,8 +65,8 @@ export class MainWrapper extends React.Component<PropsFromRedux> {
           source={require('../assets/images/splash.png')}
         />
         <View style={{ position: 'absolute', alignSelf: 'center' }}>
-          <ActivityIndicator style={{ marginTop: 150 }} />
-          <Text style={{ marginTop: 20, color: 'white' }}>{}</Text>
+          <ActivityIndicator style={{ marginTop: sizes[150] }} />
+          <Text style={{ marginTop: sizes[20], color: 'white' }}>{}</Text>
         </View>
       </View>
     );

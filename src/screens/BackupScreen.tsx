@@ -14,6 +14,7 @@ import { shareAsync } from 'expo-sharing';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppError, AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -115,7 +116,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <PasswordInputWithButton value={this.state.password || ''}
         containerStyle={styles.bottomPositioned}
         placeholder={language.passwordEnter}
@@ -130,9 +131,9 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     const styles = this.context.styles;
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.exportSubExplanation}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonSecondary
-        containerStyle={[styles.bottomPositioned, { width: 280 }]}
+        containerStyle={[styles.bottomPositioned, { width: sizes[255] }]}
         buttonStyle={styles.buttonSecondary}
         title={language.export}
         onPress={() => { this.export(); }}
@@ -145,9 +146,9 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     const styles = this.context.styles;
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.exportComplete}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonPrimary
-        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        containerStyle={[styles.bottomPositioned, { width: sizes[180] }]}
         title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
@@ -170,7 +171,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard*/>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}

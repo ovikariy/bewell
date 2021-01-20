@@ -9,15 +9,20 @@ interface SettingsScreenProps {
 }
 
 export default class SettingsScreen extends Component<SettingsScreenProps> {
+  static contextType = AppContext;
+  context!: React.ContextType<typeof AppContext>;
+
   constructor(props: SettingsScreenProps) {
     super(props);
     //this.props.navigation.dispatch(NavigationActions.navigate({ routeName: 'BackupRestore' }));
   }
 
   render() {
+    const styles = this.context.styles;
+
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }} >
+        <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerLargeMargin, { paddingHorizontal: 0 }]} >
           <SettingsComponent navigation={this.props.navigation} />
         </ScreenContent>
       </ScreenBackground>

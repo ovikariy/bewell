@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
 import { StoreState } from '../redux/reducerTypes';
 import { ItemBaseAssociativeArray } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 interface ItemHistoryProps {
   store: StoreState,
@@ -52,7 +53,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
     groupedByDayMap.forEach((item: WidgetBase) => groupedByDayArray.push(item));
 
     return (
-      <View style={[{ marginTop: 20 }, { flex: 1 }, this.props.style]}>
+      <View style={[{ marginTop: sizes[20] }, { flex: 1 }, this.props.style]}>
         <List
           data={groupedByDayArray}
           renderItem={(item: any) => this.renderGroupedByDay(item.item)}
@@ -68,10 +69,10 @@ class ItemHistory extends Component<ItemHistoryProps> {
 
     return (
       <View style={[styles.flex]} key={daysData[0].date}>
-        <View style={[styles.row, styles.centered, styles.dimBackground, { flex: 0 }]}>
+        <View style={[styles.row, styles.centered, styles.listItemContainer, { height: 'auto', flex: 0 }]}>
           <Text style={[styles.titleText]}>
             {friendlyDay(daysData[0].date, { language })}</Text>
-          <Text style={[styles.bodyText, { marginHorizontal: 20, color: styles.bodyText.color + '80' }]}>
+          <Text style={[styles.bodyText, { marginHorizontal: sizes[20], color: styles.bodyText.color + '80' }]}>
             {formatDate(daysData[0].date, 'MMMM D')}</Text>
         </View>
         <View style={{ flex: 1 }}>
@@ -106,7 +107,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
     };
 
     return (
-      <TouchableOpacity activeOpacity={0.7} style={{ marginHorizontal: 5 }} onPress={() => { this.props.onSelected(item); }} key={item.id + ''}>
+      <TouchableOpacity activeOpacity={0.7} style={{ marginHorizontal: sizes[5] }} onPress={() => { this.props.onSelected(item); }} key={item.id + ''}>
         <View style={isSelectedItem ? [styles.highlightBackground, styles.row] : styles.row}>
           {customItemDisplay}
         </View>
