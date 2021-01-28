@@ -11,7 +11,7 @@ import { getDocumentAsync } from 'expo-document-picker';
 import { StackActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
-import { AppError, AppNavigationProp } from '../modules/types';
+import { AppError, AppNavigationProp, ImportInfo } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
@@ -32,8 +32,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 interface RestoreScreenState {
   password?: string,
   filePassword?: string,
-  data?: [string, string][],
-  importFilename?: string//'test.txt'
+  importInfo?: ImportInfo,
+  importFilename?: string
 }
 
 interface RestoreScreenProps extends PropsFromRedux {
@@ -50,7 +50,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     this.state = {
       password: undefined,
       filePassword: undefined,
-      data: undefined,
+      importInfo: undefined,
       importFilename: undefined//'test.txt'
     };
   }
@@ -64,7 +64,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       ...this.state,
       password: undefined,
       filePassword: undefined,
-      data: undefined,
+      importInfo: undefined,
       importFilename: undefined
     });
   }
@@ -87,10 +87,10 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       return;
     }
 
-    if (!this.state.data || this.state.data.length <= 0)
+    if (!this.state.importInfo || this.state.importInfo.data.length <= 0)
       throw new AppError(ErrorMessage.NoRecordsInFile);
 
-    this.props.tryDecryptFileData(this.state.data, this.state.filePassword);
+    this.props.tryDecryptFileData(this.state.importInfo.data, this.state.filePassword);
   }
 
   browseForFile() {
@@ -117,28 +117,18 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
   tryGetDataFromFileAsync = async (importFileUri: string) => {
     const language = this.context.language;
 
+    if (!this.state.password || isNullOrEmpty(this.state.password)) {
+      Toast.show(language.passwordPleaseEnter);
+      return;
+    }
+
     try {
-      const importDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
-      const tempFilename = 'bewellapp-import-' + formatDate(new Date(), 'YYMMMDD-hhmmss') + '.txt';
-      const tempFilepath = importDirectory + '/' + tempFilename;
-
-      /* copy to cache directory otherwise error when reading from its original location  */
-      await FileHelpers.clearDirectoryAsync(importDirectory);
-      await FileHelpers.copyFileAsync(importFileUri, tempFilepath);
-
-      const data = await FileHelpers.getJSONfromFileAsync(tempFilepath);
-      await FileHelpers.clearDirectoryAsync(FileHelpers.FileSystemConstants.ImportDirectory);
-
-      if (!data || data.length <= 0)
+      const importInfo = await FileHelpers.importUserDataZip(importFileUri);
+      if (!importInfo || !importInfo.data || importInfo.data.length <=0)
         throw new AppError(ErrorMessage.NoRecordsInFile);
 
-      if (!this.state.password || isNullOrEmpty(this.state.password)) {
-        Toast.show(language.passwordPleaseEnter);
-        return;
-      }
-
-      this.props.tryDecryptFileData(data, this.state.password);
-      this.setState({ ...this.state, data });
+      this.props.tryDecryptFileData(importInfo.data, this.state.password);
+      this.setState({ ...this.state, importInfo });
     }
     catch (error) {
       consoleLogWithColor(error);
@@ -156,7 +146,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
   import() {
     const language = this.context.language;
 
-    if (!this.state.data || this.state.data.length <= 0)
+    if (!this.state.importInfo || this.state.importInfo.data.length <= 0)
       throw new AppError(ErrorMessage.NoRecordsInFile);
 
     const password = this.state.filePassword ? this.state.filePassword : this.state.password;
@@ -166,7 +156,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       return;
     }
 
-    this.props.importData(this.state.data, password);
+    this.props.importData(this.state.importInfo, password);
   }
 
   renderPasswordField() {

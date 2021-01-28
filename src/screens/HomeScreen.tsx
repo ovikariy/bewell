@@ -52,7 +52,7 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
     this.refreshItems();
 
     const language = this.context.language;
-    //this.props.navigation.navigate('Settings', { screen: 'BackupRestore' });
+    //this.props.navigation.navigate('Settings');
     //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
   }
 

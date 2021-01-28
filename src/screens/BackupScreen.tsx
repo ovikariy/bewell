@@ -83,23 +83,14 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   }
 
   exportAsync = async (data: [string, string][]) => {
-
     /*
       1. After encrypted data has been loaded from the Async Storage
-      2. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
-      3. Share the file e.g. to Google Drive
-      4. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete
-         the sharing process in case it hangs etc)
+      2. Write the data and images to a temp zip in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
+      3. Share the zip file e.g. to Google Drive
     */
     try {
-      const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ExportDirectory);
-      const exportFilename = 'bewellapp-export-' + formatDate(new Date(), 'MMMDDYYYY-hhmmss') + '.bewellapp';
-      const exportFilepath = exportDirectory + '/' + exportFilename;
-
-      const oldExportFiles = await FileHelpers.readDirectoryAsync(exportDirectory);
-      await FileHelpers.writeFileAsync(exportFilepath, JSON.stringify(data), {});
-      shareAsync(exportFilepath);
-      FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
+      const exportZipFilePath = await FileHelpers.createUserDataZip(data);
+      shareAsync(exportZipFilePath);
       this.props.finishBackup();
     }
     catch (error) {

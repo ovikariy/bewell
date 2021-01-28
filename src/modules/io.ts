@@ -1,13 +1,129 @@
 import *  as FileSystem from 'expo-file-system';
-import { AppError } from './types';
+import { AppError, ImageInfoAssocArray, ImportInfo } from './types';
 import { ErrorMessage } from './constants';
+import JSZip from 'jszip';
+import { formatDate } from './utils';
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 export const FileSystemConstants = {
+  ExportFilePrefix: 'bewellapp-export-',
+  ExportFileExtension: '.bewellappdata',
+  ExportZipExtension: '.zip',
   ExportDirectory: FileSystem.cacheDirectory + 'exports',
   ImportDirectory: FileSystem.cacheDirectory + 'imports',
+  ImagesPrefix: 'images',
   ImagesSubDirectory: FileSystem.documentDirectory + 'images'
 };
+
+/**
+ * Creates a zip archive in app cache directory using JSZip with user data file and images subfolder:
+ *    bewellapp-export-Jan282021-073252.bewellappdata
+ *    images\3bf5420f-7620-4ccc-a154-2882bc795032
+ *    images\88914134-25aa-4922-ab91-303e8b7155da
+ */
+export async function createUserDataZip(data: [string, string][]) {
+  const exportDirectory = await getOrCreateDirectoryAsync(FileSystemConstants.ExportDirectory);
+
+  /** delete old files from export directory */
+  const oldExportFiles = await readDirectoryAsync(exportDirectory);
+  deleteFilesAsync(exportDirectory, oldExportFiles);
+
+  const fileName = FileSystemConstants.ExportFilePrefix + formatDate(new Date(), 'MMMDDYYYY-hhmmss');
+  const exportDataFilename = fileName + FileSystemConstants.ExportFileExtension;
+  const exportZipFilePath = exportDirectory + '/' + fileName + FileSystemConstants.ExportZipExtension;
+
+  /** add user data as file to zip, no need to write to disk first */
+  const jsZip = new JSZip();
+  jsZip.file(exportDataFilename, JSON.stringify(data));
+
+  /** add images data to zip */
+  const images = await getImages();
+  for (const imagePath of Object.keys(images))
+    jsZip.file(imagePath, images[imagePath]);
+
+  /** generate zip */
+  const zipContent = await jsZip.generateAsync({ type: "base64" });
+  /** write zip to cache */
+  await writeFileAsync(exportZipFilePath, zipContent, { encoding: FileSystem.EncodingType.Base64 });
+  return exportZipFilePath;
+}
+
+/**
+ * Gets images saved by the user to be written into a zip archive
+ */
+async function getImages() {
+  const imagesDirectory = await getOrCreateDirectoryAsync(FileSystemConstants.ImagesSubDirectory);
+  const imageFileNames = await readDirectoryAsync(imagesDirectory); /** file names are just names not full paths */
+  const result = {} as ImageInfoAssocArray;
+  for (const imageFileName of imageFileNames) {
+    const imageFileContent = await getStringfromFileAsync(imagesDirectory + '/' + imageFileName);
+    if (imageFileContent) {
+      const imagePath = FileSystemConstants.ImagesPrefix + '/' + imageFileName;
+      result[imagePath] = imageFileContent;
+    }
+  };
+  return result;
+}
+
+/**
+ * Reads a previously exported zip archive and loads user data from a file
+ * with extension 'bewellappdata' and loads images from 'images' subdirectory:
+ *    bewellapp-export-Jan282021-073252.bewellappdata
+ *    images\3bf5420f-7620-4ccc-a154-2882bc795032
+ *    images\88914134-25aa-4922-ab91-303e8b7155da
+ */
+export async function importUserDataZip(docPickerFileUri: string): Promise<ImportInfo | null> {
+  //TODO: test with large files
+  const importDirectory = await getOrCreateDirectoryAsync(FileSystemConstants.ImportDirectory);
+  const tempFilename = 'bewellapp-import-' + formatDate(new Date(), 'YYMMMDD-hhmmss') + FileSystemConstants.ExportZipExtension;
+  const tempFilepath = importDirectory + '/' + tempFilename;
+
+  /** copy to cache directory otherwise error when reading from its original location */
+  await clearDirectoryAsync(importDirectory);
+  await copyFileAsync(docPickerFileUri, tempFilepath);
+
+  /** read zip file from cache directory */
+  const zipContent = await FileSystem.readAsStringAsync(tempFilepath, { encoding: 'base64' });
+  if (!zipContent)
+    throw new AppError(ErrorMessage.InvalidFile);
+
+  /** unzip the archive */
+  const jsZip = new JSZip();
+  const upzippedContent = await jsZip.loadAsync(zipContent, { base64: true });
+
+  /** find the data file and images in the zip */
+  const result = { images: {} } as ImportInfo;
+  for (const filename in upzippedContent.files) {
+    const fileContent = await jsZip.files[filename].async("string");
+    if (filename.endsWith(FileSystemConstants.ExportFileExtension))
+      result.data = fileContent;
+    else if (filename.startsWith(FileSystemConstants.ImagesPrefix)) {
+      const imageFileName = filename.replace(FileSystemConstants.ImagesPrefix + '/', '');
+      if (imageFileName && fileContent)
+        result.images[imageFileName] = fileContent;
+    }
+  }
+
+  /** zip data is in memory, can wipe the temp file */
+  await clearDirectoryAsync(FileSystemConstants.ImportDirectory);
+
+  if (!result.data)
+    return null;
+  result.data = JSON.parse(result.data);
+  return result;
+}
+
+/**
+ * Writes image content to file under FileSystemConstants.ImagesSubDirectory
+ * @param imageFileName e.g. '3bf5420f-7620-4ccc-a154-2882bc795032'
+ * @param imageContent encrypted base64 image string
+ */
+export async function writeImageToDisk(imageFileName: string, imageContent: string) {
+  if (!imageFileName || !imageContent)
+    return;
+  const imagePath = FileSystemConstants.ImagesSubDirectory + '/' + imageFileName;
+  return writeFileAsync(imagePath, imageContent, {});
+}
 
 export async function writeFileAsync(filepath: string, text: string, options: FileSystem.WritingOptions) {
   const diskSpaceNeeded = Buffer.byteLength(text);
