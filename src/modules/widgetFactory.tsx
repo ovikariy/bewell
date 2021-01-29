@@ -8,6 +8,7 @@ import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType,
 import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
 import { ItemBase } from './types';
+import { sizes } from '../assets/styles/style';
 
 export function CreateWidgetFactory(context: AppContextState) {
   const language = context.language;
@@ -85,7 +86,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           itemTypeName: ItemTypes.IMAGE,
           isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           addIcon: { text: language.image, name: 'picture-o', type: 'font-awesome' } as WidgetAddIconConfig,
-          style: { paddingVertical: 0, paddingTop: 20 } as ViewStyle
+          style: { paddingVertical: 0, paddingTop: sizes[20] } as ViewStyle
         } as WidgetConfig,
         renderWidgetItem: (props: ImagePickerComponentProps, config: WidgetConfig) => {
           return <ImagePickerComponent  {...props} config={config} readonly={false} />;

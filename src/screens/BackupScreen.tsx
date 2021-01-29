@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ParagraphText, Toast, PasswordInputWithButton,
-  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
+  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary, LoadingScreeenOverlay
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
@@ -14,6 +14,7 @@ import { shareAsync } from 'expo-sharing';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppError, AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -31,6 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BackupScreenState {
   password?: string;
+  loading: boolean;
 }
 
 interface BackupScreenProps extends PropsFromRedux {
@@ -44,7 +46,8 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   constructor(props: BackupScreenProps) {
     super(props);
     this.state = {
-      password: undefined
+      password: undefined,
+      loading: false
     };
   }
 
@@ -55,7 +58,8 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   reset() {
     this.setState({
       ...this.state,
-      password: undefined
+      password: undefined,
+      loading: false
     });
   }
 
@@ -82,27 +86,21 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   }
 
   exportAsync = async (data: [string, string][]) => {
-
     /*
       1. After encrypted data has been loaded from the Async Storage
-      2. Write the data to a temp file in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
-      3. Share the file e.g. to Google Drive
-      4. Cleanup prior temp files (the current file can be cleanup up on the next go round because we don't want to wait for the user to complete
-         the sharing process in case it hangs etc)
+      2. Write the data and images to a temp zip in a cache directory. Files stored here may be automatically deleted by the system when low on storage.
+      3. Share the zip file e.g. to Google Drive
     */
     try {
-      const exportDirectory = await FileHelpers.getOrCreateDirectoryAsync(FileHelpers.FileSystemConstants.ExportDirectory);
-      const exportFilename = 'bewellapp-export-' + formatDate(new Date(), 'MMMDDYYYY-hhmmss') + '.bewellapp';
-      const exportFilepath = exportDirectory + '/' + exportFilename;
-
-      const oldExportFiles = await FileHelpers.readDirectoryAsync(exportDirectory);
-      await FileHelpers.writeFileAsync(exportFilepath, JSON.stringify(data), {});
-      shareAsync(exportFilepath);
-      FileHelpers.deleteFilesAsync(exportDirectory, oldExportFiles);
+      this.setState({ ...this.state, loading: true });
+      const exportZipFilePath = await FileHelpers.createUserDataZip(data);
+      this.setState({ ...this.state, loading: false });
+      shareAsync(exportZipFilePath);
       this.props.finishBackup();
     }
     catch (error) {
       consoleLogWithColor(error);
+      this.setState({ ...this.state, loading: false });
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :
         Toast.showError(error, this.context);
@@ -115,7 +113,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <PasswordInputWithButton value={this.state.password || ''}
         containerStyle={styles.bottomPositioned}
         placeholder={language.passwordEnter}
@@ -130,9 +128,9 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     const styles = this.context.styles;
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.exportSubExplanation}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonSecondary
-        containerStyle={[styles.bottomPositioned, { width: 280 }]}
+        containerStyle={[styles.bottomPositioned, { width: sizes[255] }]}
         buttonStyle={styles.buttonSecondary}
         title={language.export}
         onPress={() => { this.export(); }}
@@ -145,9 +143,9 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     const styles = this.context.styles;
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.exportComplete}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonPrimary
-        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        containerStyle={[styles.bottomPositioned, { width: sizes[180] }]}
         title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
@@ -170,9 +168,10 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard*/>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />
+            {this.state.loading && <LoadingScreeenOverlay text={language.fileGenerating} />}
             {this.renderFields()}
           </ScreenContent>
         </ScrollView>

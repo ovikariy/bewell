@@ -1,8 +1,7 @@
 
 import React, { ReactNode } from 'react';
-import { ImageBackground, View, KeyboardAvoidingView, Platform, Image, ViewProps, StatusBar } from 'react-native';
-import { Spacer, ParagraphText, LoadingScreeenOverlay } from './MiscComponents';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ImageBackground, View, KeyboardAvoidingView, Platform, ViewProps } from 'react-native';
+import { LoadingScreeenOverlay } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { images } from '../modules/constants';
 
@@ -22,14 +21,10 @@ export const ScreenBackground = (props: { isLoading?: boolean, children: ReactNo
   );
 };
 
-/* Commnly used large header with image background, app name and logo */
+/* Commonly used large header with image background, app name and logo */
 export const ScreenImageHeader = (props: ViewProps) => {
-  const context = React.useContext(AppContext);
-  const language = context.language;
-  const styles = context.styles;
-  const theme = context.theme;
   return (
-    <ImageBackground source={images.header} style={[{ height: 250 }, props.style]} />
+    <ImageBackground source={images.header} style={[{ height: '40%', alignItems: 'flex-start' }, props.style]} />
   );
 };
 

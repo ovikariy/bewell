@@ -75,7 +75,7 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
     const styles = this.context.styles;
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true}>
+        <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerMediumMargin, { paddingHorizontal: 0 }]}>
           <ItemHistory style={[styles.toolbarBottomOffset]}
             store={this.props.STORE}
             itemType={this.itemType}

@@ -20,14 +20,14 @@ import SignOutScreen from '../screens/SignOutScreen';
 import SetupPasswordScreen from '../screens/SetupPasswordScreen';
 import SetupPINScreen from '../screens/SetupPINScreen';
 import { AuthState } from '../redux/reducerTypes';
-import { platform } from '../assets/styles/style';
+import { dimensions, platform, sizes } from '../assets/styles/style';
 import { images } from '../modules/constants';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    return <Icon name='menu' size={30} containerStyle={{ marginLeft: 16 }}
+    return <Icon name='menu' iconStyle={styles.iconPrimary} underlayColor={'transparent'} containerStyle={{ marginLeft: sizes[16] }}
         color={styles.bodyText.color} onPress={() => props.navigation.toggleDrawer()} />;
 };
 
@@ -36,7 +36,7 @@ const LogoImage = () => {
     const theme = context.theme;
     const styles = context.styles;
 
-    return <Image source={images['logo_small_' + theme.id]} style={[styles.logoImageSmall, { marginRight: 10 }]} />;
+    return <Image source={images['logo_small_' + theme.id]} style={[styles.logoImageSmall, { marginRight: sizes[10] }]} />;
 };
 
 const ScreenNavOptions = (styles: any): StackNavigationOptions => {
@@ -44,7 +44,7 @@ const ScreenNavOptions = (styles: any): StackNavigationOptions => {
         headerStyle: { borderWidth: 0 },
         headerTitleStyle: styles.heading,
         headerTitleAlign: 'center',
-        headerStatusBarHeight: 0, /** this is handled in Main by SafeAreaView, no need for extra padding */
+        headerStatusBarHeight: platform.OS === 'ios' ? 0 : dimensions.safeAreaAndroidPadding,
         headerTransparent: true,
         headerTintColor: styles.heading.color
     };
@@ -214,8 +214,8 @@ function CustomDrawerContent(props: DrawerContentComponentProps<DrawerContentOpt
 
     return (
         <DrawerContentScrollView style={styles.drawerBackground} {...props}>
-            <View style={[styles.drawerHeaderContainer, platform.OS === 'ios' && { marginTop: 0 }]}>
-                <Image source={images['logo_' + theme.id]} style={[styles.logoImage, { marginLeft: 10 }]} />
+            <View style={[styles.drawerHeaderContainer, platform.OS === 'ios' ? { marginTop: 0 } : { marginTop: sizes[20] }]}>
+                <Image source={images['logo_' + theme.id]} style={[styles.logoImage, { marginLeft: sizes[10] }]} />
             </View>
             <DrawerItemList itemStyle={[styles.drawerItem]}
                 labelStyle={[styles.drawerLabel]}

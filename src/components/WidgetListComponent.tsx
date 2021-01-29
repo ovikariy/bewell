@@ -9,6 +9,7 @@ import { WidgetBase, WidgetFactory } from '../modules/widgetFactory';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
 import { images } from '../modules/constants';
+import { sizes } from '../assets/styles/style';
 
 interface WidgetListComponentProps {
   dailyData: WidgetBase[];
@@ -100,7 +101,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
     const theme = this.context.theme;
     const styles = this.context.styles;
     return (
-      <View style={[styles.centered, styles.flex, { paddingTop: 40 }]}>
+      <View style={[styles.centered, styles.flex, { paddingTop: sizes[50] }]}>
         {/* tintColor is not a valid prop type but it works in terms of changing color and I don't see another way to doing it via styles */}
         <Image source={images['arrow_up_' + theme.id]} style={[styles.widgetArrowContainer]} />
         <Text style={[styles.titleText, styles.centered, styles.spacedOut]}>{language.howAreYou}</Text>
@@ -114,7 +115,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
 
     return (
       <View style={[styles.flex]}>
-        <Toolbar style={{ flex: 0, paddingVertical: 6 }}>{this.renderAddNewButtons(this.props.widgetFactory)}</Toolbar>
+        <Toolbar style={{ flex: 0, paddingVertical: sizes[6] }}>{this.renderAddNewButtons(this.props.widgetFactory)}</Toolbar>
         <ListWithRefresh style={[styles.flex, styles.toolbarBottomOffset]}
           onPulldownRefresh={() => this.props.onPulldownRefresh()}
         >

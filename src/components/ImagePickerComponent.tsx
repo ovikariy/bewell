@@ -9,7 +9,7 @@ import { ErrorMessage, brokenImageURI } from '../modules/constants';
 import { encryptData, decryptData } from '../modules/securityService';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { AppError } from '../modules/types';
-import { platform } from '../assets/styles/style';
+import { platform, sizes } from '../assets/styles/style';
 
 
 export interface ImagePickerWidgetType extends WidgetBase {
@@ -66,13 +66,13 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     if (!image) {
       if (this.props.value && this.props.value.imageProps && this.props.value.imageProps.filename) {
         /* we have a filename but haven't finished loading it from disk yet */
-        return <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 20 }}>
-          <ActivityIndicator />
+        return <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: sizes[20] }}>
+          <ActivityIndicator color={styles.highlightColor.color} />
         </View>;
       }
       else {
         /* it's a blank widget and user hasn't picked an image yet */
-        return <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: 20 }}>
+        return <View style={{ alignItems: 'center', justifyContent: 'center', paddingBottom: sizes[20] }}>
           <ButtonPrimary
             title={language.pickImage}
             onPress={() => this.pickImage()}
@@ -84,7 +84,7 @@ export class ImagePickerComponent extends React.Component<ImagePickerComponentPr
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         {this.props.readonly !== true && this.props.isSelected
-          && <RoundButton name="close" onPress={() => this.clearImage()} containerStyle={styles.imageComponentClearButtonContainer} />}
+          && <RoundButton name="close" onPress={() => this.clearImage()} containerStyle={styles.imageComponentClearButtonContainer} iconStyle={styles.iconPrimary} />}
         {this.props.value.imageProps
           && <StyledImage image={image} imageProps={this.props.value.imageProps} />}
       </View >
@@ -240,7 +240,7 @@ export const ImagePickerHistoryComponent = (props: ImagePickerHistoryComponentPr
   return (
     <View style={styles.row}>
       <View style={[styles.flex]}>
-        <Text style={[styles.bodyText, { marginBottom: 10 }, props.isSelectedItem ? styles.highlightColor : null]}>
+        <Text style={[styles.bodyText, { marginBottom: sizes[10] }, props.isSelectedItem ? styles.highlightColor : null]}>
           {friendlyTime(props.item.date)}</Text>
         <ImagePickerComponent value={props.item} config={props.config} readonly={true} onChange={() => { }} selectedDate={new Date()} />
       </View>

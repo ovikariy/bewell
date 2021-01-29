@@ -6,8 +6,9 @@ import * as securityService from '../modules/securityService';
 import * as ActionTypes from './actionTypes';
 import { validatePasswordAsync } from './passwordActionCreators';
 import { AppThunkActionType } from './store';
-import { AppError } from '../modules/types';
+import { AppError, ImportInfo } from '../modules/types';
 import { consoleLogWithColor } from '../modules/utils';
+import { writeImageToDisk } from '../modules/io';
 
 export function startRestore(): AppThunkActionType {
     return (dispatch) => {
@@ -87,10 +88,10 @@ function getDataEncryptionKeyFromFileData(data: [string, string][]) {
     return dataEncryptionKey;
 }
 
-export function importData(data: [string, string][], password: string): AppThunkActionType {
+export function importData(importInfo: ImportInfo, password: string): AppThunkActionType {
     return (dispatch) => {
         dispatch(operationActions.start());
-        importDataAsync(data, password)
+        importDataAsync(importInfo, password)
             .then(() => {
                 dispatch({ type: ActionTypes.RESTORE_COMPLETE });
                 dispatch(loadAllData());
@@ -102,17 +103,17 @@ export function importData(data: [string, string][], password: string): AppThunk
             });
     };
 }
-async function importDataAsync(data: [string, string][], password: string) {
+async function importDataAsync(importInfo: ImportInfo, password: string) {
     // data = [
     //   ["bewellapp_DATAENCRYPTIONKEY", "U2FsdGVkX1+fedf5ozrNQ50f7D1N3OkexHbp6ErikGdL06qhHs3T8xhy7WeNyW/R4W1NNUx95BAg+lirav1AntihAS87Z8iWcEOXX3Br6gUrhhT5JNRk2FLdH50Grbm5"]
     //   ["bewellapp_SETTINGS","[{\"id\":\"language\",\"date\":\"2020-07-31T08:02:58.050Z\",\"value\":\"en\"},{\"id\":\"theme\",\"date\":\"2020-07-31T08:02:50.524Z\",\"value\":\"dark\"}]"]
     //   ["J8PUrI3a39kNZrcqbV7BeMKzs0Hc8uYYlMXzHjZW6ko=", null],
     //   ["Wf4rh34+qer48MSihQbrsCADTNfn31tavmFhnxX+S/o=", "U2FsdGVkX184dB4pXueAFrxIz9ZwhN1MTnSOdVu/jMC0DoUXGMOJls2ZptvvjkoVlrMmBuwipR3NV4ChVgfetfMAFRZYkQTXizbYMrlyk1/lyn8G+rcBlUe1gh2gqScp"],
     // ];
-    const dataEncryptionKeyEncrypted = getDataEncryptionKeyFromFileData(data);
+    const dataEncryptionKeyEncrypted = getDataEncryptionKeyFromFileData(importInfo.data);
     const cryptoFunctions = securityService.createCryptoFunctions(dataEncryptionKeyEncrypted, password);
 
-    const items = await securityService.decryptAllItemsFromImportAsync(data, cryptoFunctions.getHash, cryptoFunctions.decryptData);
+    const items = await securityService.decryptAllItemsFromImportAsync(importInfo.data, cryptoFunctions.getHash, cryptoFunctions.decryptData);
 
     if (!items || items.length <= 0)
         throw new AppError(ErrorMessage.NoRecordsInFile, ErrorCode.Import1);
@@ -132,11 +133,18 @@ async function importDataAsync(data: [string, string][], password: string) {
             continue;
 
         /* one more check, the records must have ids and dates at the minimum */
-        itemTypeRecords.forEach((record: any) => {
+        for (const record of itemTypeRecords) {
             if (!record.id || !record.date)
                 throw new AppError(ErrorMessage.InvalidFileData, ErrorCode.Import3);
-        });
 
+            /* if this is an image record then the zip also contains an image file corresponding to record.imageProps.filename
+            and needs to be saved to the document directory */
+            if (record.imageProps && record.imageProps.filename) {
+                const imageContent = importInfo.images[record.imageProps.filename];
+                if (imageContent)
+                    await writeImageToDisk(record.imageProps.filename, imageContent);
+            }
+        }
         /* persist records by item type */
         await storage.mergeByIdAsync(itemTypeName, itemTypeRecords);
     }

@@ -71,10 +71,9 @@ class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 30 }} >
+          <ScreenContent style={styles.screenBodyContainerSmallMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeBack}</ParagraphText>
             <HorizontalLine />
-            <Spacer height={70} />
             {this.props.AUTH.isPinLocked ?
               <PINInputWithButton
                 containerStyle={[styles.bottomPositioned]}

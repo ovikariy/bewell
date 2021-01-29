@@ -7,6 +7,7 @@ import { CommonActions } from '@react-navigation/native';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
@@ -34,17 +35,17 @@ class SignOutScreen extends Component<SignOutProps> {
 
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+        <ScreenContent style={styles.screenBodyContainerLargeMargin} >
           <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.signOutClick}</ParagraphText>
           <HorizontalLine />
           <ParagraphText style={[styles.bodyTextLarge]}>{language.signOutWillClear}</ParagraphText>
-          <Spacer height={70} />
+          <Spacer   />
           <ButtonPrimary
-            containerStyle={{ alignSelf: 'center', marginTop: 20 }}
+            containerStyle={{ alignSelf: 'center', marginTop: sizes[20] }}
             title={language.signOut}
             onPress={() => { this.props.signOut(); }}
           />
-          <Spacer height={40} />
+          <Spacer height={sizes[40]} />
           <LinkButton title={language.goBackNo} titleStyle={{ opacity: 0.5 }}
             onPress={() => this.props.navigation.dispatch(CommonActions.goBack())} />
         </ScreenContent>

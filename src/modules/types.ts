@@ -63,3 +63,18 @@ export type RootStackParamList = {
  */
 export type AppNavigationProp<RouteName extends keyof RootStackParamList> = StackNavigationProp<RootStackParamList, RouteName>;
 export type AppRouteProp<RouteName extends keyof RootStackParamList> = RouteProp<RootStackParamList, RouteName>;
+
+/**
+ * Useful when importing user data
+ */
+export interface ImportInfo {
+    data: [string, string][] | string;
+    images: ImageInfoAssocArray
+}
+
+/**
+ * Useful when importing/exporting user images
+ */
+export interface ImageInfoAssocArray {
+    [key: string]: string  /** { path-to-image-or-filename: base64-content } */
+}

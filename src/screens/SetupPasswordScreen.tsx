@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { setupNewEncryption } from '../redux/passwordActionCreators';
 import { initialize } from '../redux/welcomeActionCreators';
-import { stateConstants } from '../modules/constants';
-import { ActivityIndicator, ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
-import { View, ScrollView } from 'react-native';
+import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine } from '../components/MiscComponents';
+import { ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../components/ScreenComponents';
 import { isNullOrEmpty } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
@@ -97,11 +97,11 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.secureDataWith}</ParagraphText>
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
-            <Spacer height={40} />
+            <Spacer height={sizes[40]} />
             {this.state.showPasswordReentered === false ?
               <PasswordInputWithButton
                 containerStyle={[styles.bottomPositioned]}

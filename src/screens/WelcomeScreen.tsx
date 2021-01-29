@@ -7,6 +7,7 @@ import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../component
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   AUTH: state.AUTH,
@@ -53,14 +54,14 @@ class WelcomeScreen extends Component<WelcomeScreenProps> {
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 40 }}   >
+          <ScreenContent style={styles.screenBodyContainerSmallMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeFriend}</ParagraphText>
             <HorizontalLine />
             <ParagraphText style={[styles.bodyTextLarge]}>{language.track}</ParagraphText>
-            <Spacer height={40} />
+            <Spacer height={sizes[40]} />
             <ButtonPrimary
               containerStyle={styles.bottomPositioned}
-              buttonStyle={{ paddingHorizontal: 50 }}
+              buttonStyle={{ paddingHorizontal: sizes[50] }}
               title={language.quickSetup}
               onPress={() => { this.quickSetup(); }}
               iconName='chevron-right' iconRight={true} iconStyle={styles.iconPrimary}

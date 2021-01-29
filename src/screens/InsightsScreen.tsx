@@ -52,6 +52,8 @@ class InsightsScreen extends Component<InsightsScreenProps> {
     return groupedByItemType;
   }
   render() {
+    const styles = this.context.styles;
+
     const listItems: any = [];
     const groupedByItemType = this.getCountsByItemType();
 
@@ -71,7 +73,7 @@ class InsightsScreen extends Component<InsightsScreenProps> {
 
     return (
       <ScreenBackground>
-        <ScreenContent isKeyboardAvoidingView={true} style={{ paddingVertical: 20 }}>
+        <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerLargeMargin, { paddingHorizontal: 0 }]}>
           <ListWithRefresh useFlatList={true} data={listItems} onPulldownRefresh={() => this.refreshItems()} />
         </ScreenContent>
       </ScreenBackground>

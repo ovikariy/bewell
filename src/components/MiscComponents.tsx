@@ -12,12 +12,14 @@ import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
 import { AppError } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 import { AppContextState } from '../redux/reducerTypes';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
+
   return <View style={[
     props.width ? { width: props.width } : {},
-    props.height ? { height: props.height } : {}
+    props.height ? { height: props.height } : { height: sizes[70] }
   ]} />;
 };
 
@@ -71,9 +73,9 @@ export const PasswordInput = (props: InputProps) => {
   return <Input
     {...props}
     leftIcon={{ name: 'lock', color: styles.iconPrimary.color }}
-    containerStyle={[{ marginTop: 30, paddingLeft: 0 }, props.containerStyle]}
+    containerStyle={[{ marginTop: sizes[30], paddingLeft: 0 }, props.containerStyle]}
     inputContainerStyle={[props.inputContainerStyle]}
-    inputStyle={[{ marginLeft: 10 }, styles.bodyText, props.inputStyle]}
+    inputStyle={[{ marginLeft: sizes[10] }, styles.bodyText, props.inputStyle]}
     leftIconContainerStyle={{ marginLeft: 0 }}
     placeholderTextColor={styles.placeholderText.color}
     autoCompleteType='off'
@@ -93,8 +95,8 @@ export const PasswordInputWithButton = (props: PasswordInputWithButtonProps) => 
   return <Input
     {...props}
     inputContainerStyle={[{ borderBottomWidth: 0 }, props.inputContainerStyle]}
-    inputStyle={[{ marginLeft: 10 }, styles.bodyTextLarge, props.inputStyle]}
-    containerStyle={[styles.brightBackground, styles.rounded, styles.border, props.containerStyle]}
+    inputStyle={[{ marginLeft: sizes[10] }, styles.bodyTextLarge, props.inputStyle]}
+    containerStyle={[styles.brightBackground, styles.rounded, styles.border, styles.padded, props.containerStyle]}
     placeholderTextColor={styles.placeholderHighlight.color}
     autoCompleteType='off'
     autoCorrect={false}
@@ -125,7 +127,7 @@ export const PINInputWithButton = (props: PINInputWithButtonProps) => {
     <TextInput
       {...props}
       style={[styles.bodyText, styles.titleText, {
-        paddingVertical: 7, borderBottomWidth: 1,
+        paddingVertical: sizes[10], borderBottomWidth: 1,
         borderColor: styles.buttonPrimary.borderColor
       }]}
       placeholderTextColor={styles.placeholderText.color}
@@ -140,7 +142,7 @@ export const PINInputWithButton = (props: PINInputWithButtonProps) => {
           props.onPress();
       }}
     />
-    <RoundButton containerStyle={{ marginLeft: 30 }} name="keyboard-arrow-right" onPress={props.onPress} />
+    <RoundButton containerStyle={{ marginLeft: sizes[30] }} name="keyboard-arrow-right" onPress={props.onPress} />
   </View>;
 };
 
@@ -161,6 +163,7 @@ interface StyledDatePickerProps {
   mode?: any;
   format?: string;
   style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   placeholder?: string;
   onChange?: (event: any, date?: Date) => void;
 }
@@ -185,7 +188,7 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
     <View style={{ justifyContent: 'center' }}>
       <View>
         <TouchableOpacity onPress={() => setShow(true)}>
-          <Text style={[styles.bodyText, { marginHorizontal: 10 }]}>{displayText}</Text>
+          <Text style={[styles.bodyText, { marginHorizontal: sizes[10] }, props.textStyle]}>{displayText}</Text>
         </TouchableOpacity>
       </View>
       { show && getPlatformSpecificPicker()}
@@ -228,16 +231,16 @@ const DateTimePickerIOS = (props: StyledDatePickerProps & { show?: boolean, onCa
   return (
     <Modal animationType='fade' transparent={true} visible={props.show}>
       <View style={styles.modalWrapper}>
-        <View style={[styles.modal, styles.brightBackground, { paddingBottom: 20 }]}>
+        <View style={[styles.modal, styles.brightBackground, { paddingBottom: sizes[20] }]}>
           <DateTimePicker
             mode={props.mode ? props.mode : 'date'}
             value={value || new Date()}
             onChange={(event: any, newDate: any) => setValue(newDate)}
-            style={[{ width: 255 }]}
+            style={[{ width: sizes[255] }]}
           />
           {/* centered and stretched button row */}
           <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: sizes[20] }}>
               <LinkButton title={language.cancel} titleStyle={[styles.buttonText, styles.dimColor]}
                 onPress={onCancelPress} />
               <LinkButton title={language.ok} titleStyle={[styles.buttonText, styles.dimColor]}
@@ -295,7 +298,8 @@ export const DatePickerWithArrows = (props: StyledDatePickerProps) => {
       <StyledDatePicker
         value={props.value ? new Date(props.value) : new Date(NaN)}
         format='ddd, MMM D Y'
-        style={{ width: 160 }}
+        textStyle={styles.bodyTextLarge}
+        style={{ width: sizes[150] }}
         onChange={onChange}
       />
       <Button onPress={() => { changeDays(1); }}
@@ -330,10 +334,10 @@ export const ButtonPrimary = (props: ButtonPropsInterface) => {
 
   return (
     <Button {...props}
-      containerStyle={[{ width: 250 }, props.containerStyle]}
+      containerStyle={[{ width: sizes[255] }, props.containerStyle]}
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
       titleStyle={[styles.buttonText, props.titleStyle]}
-      icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: 20, color: styles.buttonText.color }, ...props.iconStyle }} /> : <React.Fragment />} />
+      icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: sizes[20], color: styles.buttonText.color }, ...props.iconStyle }} /> : <React.Fragment />} />
   );
 };
 
@@ -368,14 +372,14 @@ export function showMessages(operation: any, context: AppContextState) {
     Toast.showTranslated(operation.successMessage, context);
 }
 
-export const LoadingScreeenOverlay = () => {
+export const LoadingScreeenOverlay = (props: { style?: ViewStyle, text?: string }) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
-  return <Loading style={styles.loadingScreeenOverlay} />;
+  return <Loading {...props} style={[styles.loadingScreeenOverlay, props.style]} />;
 };
 
-export const Loading = (props: { style: ViewStyle }) => {
+export const Loading = (props: { style?: ViewStyle, text?: string }) => {
   const context = React.useContext(AppContext);
   const language = context.language;
   const styles = context.styles;
@@ -384,8 +388,8 @@ export const Loading = (props: { style: ViewStyle }) => {
       alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
       flex: 1,
     }, props.style]}>
-      <ActivityIndicator color={styles.highlightColor.color} style={[{ padding: 0, marginBottom: 10 }, styles.highlightBackground]} size='large' />
-      <Text style={styles.bodyText}>{language.loading}</Text>
+      <ActivityIndicator color={styles.highlightColor.color} style={[{ padding: 0, marginBottom: sizes[10] }, styles.highlightBackground]} size='large' />
+      <Text style={styles.bodyText}>{props.text || language.loading}</Text>
     </View>
   );
 };
@@ -395,7 +399,7 @@ export const EmptyList = () => {
   const language = context.language;
   const styles = context.styles;
   return (
-    <View style={[styles.centered, styles.flex, { marginTop: 40 }]} >
+    <View style={[styles.centered, styles.flex, { marginTop: sizes[50] }]} >
       <Text style={styles.subTitleText}>{language.emptyList}</Text>
     </View>
   );
@@ -432,7 +436,7 @@ export class ListWithRefresh extends React.Component<ListWithRefreshProps, ListW
   render() {
     if (this.props.useFlatList)
       return <List {...this.props} refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />} data={this.props.data} />;
-    /* deault to ScrollView */
+    /* default to ScrollView */
     return <ScrollView {...this.props} refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
       ref={ref => this.scrollView = ref} /* this is needed for scrollTo */
       onContentSizeChange={(contentWidth, contentHeight) => {
@@ -462,7 +466,7 @@ export const List = (props: any) => {
               <Text style={[styles.heading2]}>{item.title}</Text>
               {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
             </View>}
-          {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: 15 }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
+          {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: sizes[16] }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
           {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
         </View>
       </TouchableOpacity>
@@ -491,7 +495,7 @@ export const HorizontalLine = (props: DividerProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
-  return <Divider style={[styles.highlightBackground, { marginVertical: 15, width: 50, height: 2 }, props.style]} />;
+  return <Divider style={[styles.highlightBackground, { marginVertical: sizes[16], width: sizes[50], height: 2 }, props.style]} />;
 };
 
 export interface StyledPickerItemType { label: string, value: string }
@@ -560,7 +564,7 @@ export const StyledImage = (props: StyledImageProps) => {
 
   if (!props.imageProps || !props.image || props.image === brokenImageURI) {
     return <View style={{ width: '100%', borderWidth: 1, alignItems: 'center', borderColor: styles.bodyText.color }}>
-      <ParagraphText style={{ margin: 20 }}>{language[ErrorMessage.ImageNotFound]}</ParagraphText>
+      <ParagraphText style={{ margin: sizes[20] }}>{language[ErrorMessage.ImageNotFound]}</ParagraphText>
     </View>;
   }
   const imageProps = props.imageProps;

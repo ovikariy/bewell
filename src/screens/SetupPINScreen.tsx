@@ -12,6 +12,7 @@ import { StackActions } from '@react-navigation/native';
 import { startPINsetup, verifyPassword, submitPIN } from '../redux/pinSetupActionCreators';
 import { RootState } from '../redux/store';
 import { AppNavigationProp } from '../modules/types';
+import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION,
@@ -117,9 +118,9 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.pinHasSet}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <ButtonPrimary
-        containerStyle={[styles.bottomPositioned, { width: 180 }]}
+        containerStyle={[styles.bottomPositioned, styles.buttonMedium]}
         title={language.done}
         onPress={() => { this.props.navigation.dispatch(StackActions.popToTop()); }}
       />
@@ -133,7 +134,7 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
     /* re-prompt for password even if logged in; if verified then allow setting PIN */
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordConfirm}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer />
       <PasswordInputWithButton value={this.state.password}
         containerStyle={styles.bottomPositioned}
         placeholder={language.password}
@@ -149,9 +150,9 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.pinEnter}</ParagraphText>
-      <Spacer height={20} />
-      <ParagraphText style={[styles.placeholderText, { fontSize: 16 }]}>{language.pinTip}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer height={sizes[20]} />
+      <ParagraphText style={[styles.placeholderText, { fontSize: sizes[16] }]}>{language.pinTip}</ParagraphText>
+      <Spacer   />
       <PINInputWithButton value={this.state.PIN}
         containerStyle={styles.bottomPositioned}
         placeholder={language.pinEnter}
@@ -167,7 +168,7 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
 
     return <View style={styles.flex}>
       <ParagraphText style={[styles.bodyTextLarge]}>{language.pinReEnter}</ParagraphText>
-      <Spacer height={70} />
+      <Spacer   />
       <PINInputWithButton value={this.state.PINreentered}
         containerStyle={styles.bottomPositioned}
         placeholder={language.pinReEnterPlaceholder}
@@ -197,7 +198,7 @@ class SetupPINScreen extends Component<SetupPINScreenProps, SetupPINScreenState>
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard */>
-          <ScreenContent style={{ paddingHorizontal: 40, marginTop: 100 }} >
+          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.pinLockYourApp}</ParagraphText>
             <HorizontalLine />
             {this.renderFields()}
