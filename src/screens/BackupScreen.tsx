@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ParagraphText, Toast, PasswordInputWithButton,
-  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary
+  Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary, LoadingScreeenOverlay
 } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
@@ -32,6 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface BackupScreenState {
   password?: string;
+  loading: boolean;
 }
 
 interface BackupScreenProps extends PropsFromRedux {
@@ -45,7 +46,8 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   constructor(props: BackupScreenProps) {
     super(props);
     this.state = {
-      password: undefined
+      password: undefined,
+      loading: false
     };
   }
 
@@ -56,7 +58,8 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
   reset() {
     this.setState({
       ...this.state,
-      password: undefined
+      password: undefined,
+      loading: false
     });
   }
 
@@ -89,12 +92,15 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
       3. Share the zip file e.g. to Google Drive
     */
     try {
+      this.setState({ ...this.state, loading: true });
       const exportZipFilePath = await FileHelpers.createUserDataZip(data);
+      this.setState({ ...this.state, loading: false });
       shareAsync(exportZipFilePath);
       this.props.finishBackup();
     }
     catch (error) {
       consoleLogWithColor(error);
+      this.setState({ ...this.state, loading: false });
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :
         Toast.showError(error, this.context);
@@ -165,6 +171,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
           <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />
+            {this.state.loading && <LoadingScreeenOverlay text={language.fileGenerating} />}
             {this.renderFields()}
           </ScreenContent>
         </ScrollView>

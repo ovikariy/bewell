@@ -224,7 +224,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     const styles = this.context.styles;
 
     return <View style={styles.flex}>
-      {this.state.loading && <LoadingScreeenOverlay text={language.filePleaseWait} /> /** TODO: language 'Verifying file, please wait' */}
+      {this.state.loading && <LoadingScreeenOverlay text={language.filePleaseWait} />}
       <ParagraphText style={[styles.bodyTextLarge]}>{language.importPress}</ParagraphText>
       <Spacer height={sizes[40]} />
       {this.renderFileField()}

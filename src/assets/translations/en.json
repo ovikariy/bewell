@@ -95,6 +95,7 @@
   "fileInvalidItemName": "Invalid type name found",
   "fileInvalidCopy": "Invalid file to copy",
   "filePleaseWait": "Verifying file, please wait",
+  "fileGenerating": "Generating file, please wait",
   "importExport": "Import and Export",
   "export": "Export",
   "exportExplanation": "Export data to file to be used as a backup or for moving data to another device",
