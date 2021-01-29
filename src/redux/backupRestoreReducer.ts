@@ -4,7 +4,6 @@ import { BackupRestoreAction, BackupRestoreState } from './reducerTypes';
 export const BACKUPRESTORE = (state: BackupRestoreState = {
   isPasswordVerified: false,
   isFilePasswordNeeded: false,
-  isFilePasswordVerified: false,
   backupData: null,
   backupDataReady: false,
   isComplete: false
@@ -15,14 +14,6 @@ export const BACKUPRESTORE = (state: BackupRestoreState = {
         ...state,
         isPasswordVerified: false,
         isFilePasswordNeeded: false,
-        isFilePasswordVerified: false,
-        isComplete: false
-      };
-    case ActionTypes.RESTORE_FAILED:
-      return {
-        ...state,
-        isPasswordVerified: false,
-        isFilePasswordVerified: false,
         isComplete: false
       };
     case ActionTypes.RESTORE_PASSWORD_VERIFIED:
@@ -38,19 +29,18 @@ export const BACKUPRESTORE = (state: BackupRestoreState = {
     case ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED:
       return {
         ...state,
-        isFilePasswordVerified: true
+        isFilePasswordNeeded: false
       };
     case ActionTypes.RESTORE_FILE_PASSWORD_FAILED:
       return {
         ...state,
-        isFilePasswordVerified: false
+        isFilePasswordNeeded: true
       };
     case ActionTypes.RESTORE_COMPLETE:
       return {
         ...state,
         isPasswordVerified: false,
         isFilePasswordNeeded: false,
-        isFilePasswordVerified: false,
         isComplete: true
       };
     case ActionTypes.BACKUP_STARTED:

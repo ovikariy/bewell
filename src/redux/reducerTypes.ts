@@ -55,14 +55,12 @@ export type StoreAction = ReplaceItemsInReduxStore | ClearReduxStore;
 export interface BackupRestoreState {
   isPasswordVerified: boolean;
   isFilePasswordNeeded: boolean;
-  isFilePasswordVerified: boolean;
   backupData: [string, string][] | null;
   backupDataReady: boolean;
   isComplete: boolean;
 }
 
 interface RestoreStarted { type: typeof ActionTypes.RESTORE_STARTED }
-interface RestoreFailed { type: typeof ActionTypes.RESTORE_FAILED }
 interface RestorePasswordVerified { type: typeof ActionTypes.RESTORE_PASSWORD_VERIFIED }
 interface RestorePasswordFailed { type: typeof ActionTypes.RESTORE_PASSWORD_FAILED }
 interface RestoreFilePasswordVerified { type: typeof ActionTypes.RESTORE_FILE_PASSWORD_VERIFIED }
@@ -73,7 +71,7 @@ interface BackupDataReady { type: typeof ActionTypes.BACKUP_DATA_READY; payload:
 interface BackupDataFailed { type: typeof ActionTypes.BACKUP_DATA_FAILED }
 interface BackupComplete { type: typeof ActionTypes.BACKUP_COMPLETE }
 
-export type BackupRestoreAction = RestoreStarted | RestoreFailed | RestorePasswordVerified |
+export type BackupRestoreAction = RestoreStarted | RestorePasswordVerified |
   RestorePasswordFailed | RestoreFilePasswordVerified | RestoreFilePasswordFailed |
   RestoreComplete | BackupStarted | BackupDataReady | BackupDataFailed | BackupComplete;
 

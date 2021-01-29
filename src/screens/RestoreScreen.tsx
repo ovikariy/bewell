@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ErrorMessage } from '../modules/constants';
-import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary } from '../components/MiscComponents';
+import { ParagraphText, Toast, PasswordInputWithButton, Spacer, HorizontalLine, ButtonPrimary, ButtonSecondary, ActivityIndicator, LoadingScreeenOverlay } from '../components/MiscComponents';
 import { View, ScrollView } from 'react-native';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { isNullOrEmpty, formatDate, consoleLogWithColor } from '../modules/utils';
+import { isNullOrEmpty, consoleLogWithColor } from '../modules/utils';
 import { startRestore, verifyPasswordForRestore, tryDecryptFileData, importData } from '../redux/backupRestoreActionCreators';
 import * as FileHelpers from '../modules/io';
 import { getDocumentAsync } from 'expo-document-picker';
@@ -33,7 +33,8 @@ interface RestoreScreenState {
   password?: string,
   filePassword?: string,
   importInfo?: ImportInfo,
-  importFilename?: string
+  importFilename?: string,
+  loading: boolean
 }
 
 interface RestoreScreenProps extends PropsFromRedux {
@@ -51,7 +52,8 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       password: undefined,
       filePassword: undefined,
       importInfo: undefined,
-      importFilename: undefined//'test.txt'
+      importFilename: undefined,
+      loading: false
     };
   }
 
@@ -65,7 +67,8 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       password: undefined,
       filePassword: undefined,
       importInfo: undefined,
-      importFilename: undefined
+      importFilename: undefined,
+      loading: false
     });
   }
 
@@ -115,6 +118,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
   };
 
   tryGetDataFromFileAsync = async (importFileUri: string) => {
+    this.setState({ ...this.state, loading: true });
     const language = this.context.language;
 
     if (!this.state.password || isNullOrEmpty(this.state.password)) {
@@ -124,13 +128,14 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
 
     try {
       const importInfo = await FileHelpers.importUserDataZip(importFileUri);
-      if (!importInfo || !importInfo.data || importInfo.data.length <=0)
+      if (!importInfo || !importInfo.data || importInfo.data.length <= 0)
         throw new AppError(ErrorMessage.NoRecordsInFile);
 
       this.props.tryDecryptFileData(importInfo.data, this.state.password);
-      this.setState({ ...this.state, importInfo });
+      this.setState({ ...this.state, importInfo, loading: false });
     }
     catch (error) {
+      this.setState({ ...this.state, loading: false });
       consoleLogWithColor(error);
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :
@@ -184,7 +189,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       <ParagraphText style={[styles.bodyTextLarge]}>{language.passwordFile}</ParagraphText>
       <Spacer height={sizes[40]} />
       {this.renderFileField()}
-      <View style={[styles.flex, styles.bottomPositioned]}>
+      <View style={[styles.flex, styles.bottomPositioned, { width: '100%', alignItems: 'center'}]}>
         <ButtonPrimary
           title={language.importClear}
           onPress={() => { this.clearSelectedFile(); }}
@@ -219,6 +224,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     const styles = this.context.styles;
 
     return <View style={styles.flex}>
+      {this.state.loading && <LoadingScreeenOverlay text={language.filePleaseWait} /> /** TODO: language 'Verifying file, please wait' */}
       <ParagraphText style={[styles.bodyTextLarge]}>{language.importPress}</ParagraphText>
       <Spacer height={sizes[40]} />
       {this.renderFileField()}
@@ -228,10 +234,11 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
           onPress={() => { this.clearSelectedFile(); }}
         />
         <Spacer height={sizes[20]} />
-        <ButtonSecondary
+        {!this.state.loading && <ButtonSecondary
           title={language.import}
+          disabled={this.state.loading}
           onPress={() => { this.import(); }}
-        />
+        />}
       </View>
     </View>;
   }
@@ -272,7 +279,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
     if (!this.state.importFilename)
       return this.renderBrowseForFile();
 
-    if (this.props.BACKUPRESTORE.isFilePasswordVerified !== true)
+    if (this.props.BACKUPRESTORE.isFilePasswordNeeded === true)
       return this.renderFilePasswordFields();
 
     return this.renderSelectedFile();

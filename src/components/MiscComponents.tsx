@@ -372,14 +372,14 @@ export function showMessages(operation: any, context: AppContextState) {
     Toast.showTranslated(operation.successMessage, context);
 }
 
-export const LoadingScreeenOverlay = () => {
+export const LoadingScreeenOverlay = (props: { style?: ViewStyle, text?: string }) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
-  return <Loading style={styles.loadingScreeenOverlay} />;
+  return <Loading {...props} style={[styles.loadingScreeenOverlay, props.style]} />;
 };
 
-export const Loading = (props: { style: ViewStyle }) => {
+export const Loading = (props: { style?: ViewStyle, text?: string }) => {
   const context = React.useContext(AppContext);
   const language = context.language;
   const styles = context.styles;
@@ -389,7 +389,7 @@ export const Loading = (props: { style: ViewStyle }) => {
       flex: 1,
     }, props.style]}>
       <ActivityIndicator color={styles.highlightColor.color} style={[{ padding: 0, marginBottom: sizes[10] }, styles.highlightBackground]} size='large' />
-      <Text style={styles.bodyText}>{language.loading}</Text>
+      <Text style={styles.bodyText}>{props.text || language.loading}</Text>
     </View>
   );
 };

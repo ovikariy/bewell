@@ -94,6 +94,7 @@
   "fileInvalidFormat": "Format invalide",
   "fileInvalidItemName": "Nom du Trouvées type non valide",
   "fileInvalidCopy": "Fichier non valide pour copie",
+  "filePleaseWait": "Vérification du fichier en cours",
   "importExport": "Importer et exporter",
   "export": "Exporter",
   "exportExplanation": "Exporter des données vers le fichier à utiliser comme une sauvegarde ou pour transférer des données vers un autre appareil",

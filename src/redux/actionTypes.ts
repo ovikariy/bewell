@@ -26,7 +26,6 @@ export const RESTORE_PASSWORD_VERIFIED = 'RESTORE_PASSWORD_VERIFIED';
 export const RESTORE_FILE_PASSWORD_VERIFIED = 'RESTORE_FILE_PASSWORD_VERIFIED'; /* exported file can have password different from app */
 export const RESTORE_PASSWORD_FAILED = 'RESTORE_PASSWORD_FAILED';
 export const RESTORE_FILE_PASSWORD_FAILED = 'RESTORE_FILE_PASSWORD_FAILED'; /* exported file can have password different from app */
-export const RESTORE_FAILED = 'RESTORE_FAILED';
 export const RESTORE_COMPLETE = 'RESTORE_COMPLETE';
 
 export const CHANGEPASSWORD_STARTED = 'CHANGEPASSWORD_STARTED';
