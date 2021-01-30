@@ -235,8 +235,9 @@ const DateTimePickerIOS = (props: StyledDatePickerProps & { show?: boolean, onCa
           <DateTimePicker
             mode={props.mode ? props.mode : 'date'}
             value={value || new Date()}
+            display={'spinner'}
             onChange={(event: any, newDate: any) => setValue(newDate)}
-            style={[{ width: sizes[255] }]}
+            style={[{ width: sizes[255]}]}
           />
           {/* centered and stretched button row */}
           <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>

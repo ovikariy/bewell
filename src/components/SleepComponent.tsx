@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
-import { IconForButton, StyledDatePicker, TimePicker } from './MiscComponents';
+import { IconForButton, Spacer, StyledDatePicker, TimePicker } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { formatDate, addSubtractDays } from '../modules/utils';
+import { sizes } from '../assets/styles/style';
 
 export interface SleepComponentWidgetType extends WidgetBase {
   rating?: number;
@@ -55,10 +56,10 @@ export class SleepComponent extends Component<SleepComponentProps> {
     this.onStartDateChange(event, addSubtractDays(date, -1));
   }
 
-    /**
-   * @description if the end date hasn't already been set,
-   * will default to the date selected in the header
-   */
+  /**
+ * @description if the end date hasn't already been set,
+ * will default to the date selected in the header
+ */
   onEndTimeChange(event: any, endDate?: Date) {
     if (!endDate || this.props.value.endDate) { /** we are either clearing the field or already have a date, no default needed */
       this.onEndDateChange(event, endDate);
@@ -104,6 +105,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
                 placeholder={' '}
                 onChange={(event: any, startDate?: Date) => { this.onStartDateChange(event, startDate); }}
               />}
+            {startTime && <Spacer height={sizes[5]} />}
             <TimePicker
               value={startTime}
               style={{ flex: 0.8 }}
@@ -120,6 +122,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
                 placeholder={' '}
                 onChange={(event: any, endDate?: Date) => { this.onEndDateChange(event, endDate); }}
               />}
+            {startTime && <Spacer height={sizes[5]} />}
             <TimePicker
               value={endTime}
               style={{ flex: 0.8 }}
