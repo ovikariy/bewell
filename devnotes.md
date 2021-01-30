@@ -1,5 +1,22 @@
 <h2>Building and Publishing the App</h2>
 
+To run locally:
+
+npm start
+
+To publish a prod update to the app stores:
+
+***Increment version number in app.json and if needed release channel in scripts
+
+bewell\scripts\expo-build-prod-android.bat 
+bewell\scripts\expo-build-prod-ios.bat
+
+To publish a prod JS only update OTA:
+
+bewell\scripts\expo-publish-prod.bat 
+
+For staging, use corresponding bat files in the scripts directory.
+
 By default, the app uses Expo's [Over The Air (OTA)](https://docs.expo.io/guides/configuring-ota-updates/) service which fetches and applies the updates to the JavaScript code and assets without building a new version of the app and re-submitting to app stores.
 
 We turned off automatic OTA updates by setting "checkAutomatically" to "ON_ERROR_RECOVERY" in app.json which means it will only automatically fetch an update if the last run of the cached bundle produced a fatal JS error.
@@ -25,6 +42,7 @@ Each time we are releasing an update that might break the app, run the build com
 Then can use expo publish for the subsequest updates until the next potentially incompatible release. 
 
 </br>
+
 <h2>ScrollView and Keyboard</h2>
 
 ScrollView is used as a view wrapper because it handles keyboard dismiss properly, otherwise keyboard remains visible even after leaving the text input and pressing buttons on the screen. If cannot use a ScrollView, use [another approach](https://stackoverflow.com/questions/29685421/hide-keyboard-in-react-native). And use contentContainerStyle to stretch the content vertically:
