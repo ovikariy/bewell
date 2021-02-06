@@ -8,6 +8,8 @@ import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarCo
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppNavigationProp, AppRouteProp } from '../modules/types';
+import { Calendar } from '../components/Calendar';
+import { filterByItemType } from '../modules/utils';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -61,6 +63,8 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
   }
 
   render() {
+    const styles = this.context.styles;
+
     const widgetFactory = CreateWidgetFactory(this.context);
     const itemType = this.itemType;
 
@@ -72,12 +76,23 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
       };
     }
 
-    const styles = this.context.styles;
+    let renderCalendarItem;
+    const renderCalendarItemFunction = widgetFactory[itemType].renderCalendarItem;
+    if (renderCalendarItemFunction) {
+      renderCalendarItem = function (item: WidgetBase) {
+        return renderCalendarItemFunction(item, widgetFactory[itemType].config);
+      };
+    }
+
+    const items = filterByItemType(this.props.STORE.items, this.itemType);
+
+    /** TODO: remove 1 === 0 below to enable calendar feature */
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerMediumMargin, { paddingHorizontal: 0 }]}>
+          {1 === 0 && renderCalendarItem && <Calendar selectedDate={new Date()} data={items} renderItem={renderCalendarItem} />}
           <ItemHistory style={[styles.toolbarBottomOffset]}
-            store={this.props.STORE}
+            items={items}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
             onSelected={(item) => { this.onSelected(item); }}

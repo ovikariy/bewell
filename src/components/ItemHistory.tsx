@@ -1,16 +1,14 @@
 import React, { Component, ReactNode } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
-import { friendlyDate, friendlyTime, isEmptyWidgetItem, groupBy, friendlyDay, formatDate } from '../modules/utils';
+import { friendlyDate, friendlyTime, groupBy, friendlyDay, formatDate, filterByItemType } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
-import { StoreState } from '../redux/reducerTypes';
-import { ItemBaseAssociativeArray } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 
 interface ItemHistoryProps {
-  store: StoreState,
+  items: WidgetBase[],
   itemType: string
   config: WidgetConfig,
   style?: StyleProp<ViewStyle>;
@@ -23,30 +21,14 @@ class ItemHistory extends Component<ItemHistoryProps> {
   static contextType = AppContext;
   context!: React.ContextType<typeof AppContext>;
 
-  filterByItemType(items: ItemBaseAssociativeArray , itemType: string) {
-    const result = [] as WidgetBase[];
 
-    if (!items)
-      return result;
-    Object.keys(items).forEach((key: string) => {
-      if (!items[key])
-        return;
-      const filtered = (items[key] as WidgetBase[]).filter((item: WidgetBase) => item.type === itemType);
-      filtered.forEach((filteredItem: WidgetBase) => {
-        if (!isEmptyWidgetItem(filteredItem))
-          result.push(filteredItem);
-      });
-    });
-    return result.sort((b: WidgetBase, a: WidgetBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
-  }
 
   render() {
     const language = this.context.language;
 
-    const items = this.filterByItemType(this.props.store.items, this.props.itemType);
+    const items = this.props.items;
     if (!items || items.length <= 0)
       return <EmptyList />;
-
 
     const groupedByDayMap = groupBy(items, (item: WidgetBase) => friendlyDate(item.date, { language }), undefined);
     const groupedByDayArray = [] as WidgetBase[]; //TODO: this is a waste of resources to copy a map into an array because map cannot be passed as data to FlatList

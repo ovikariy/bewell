@@ -3,6 +3,8 @@ import 'react-native-get-random-values'; /** polyfills for uuid */
 import { v4 as uuidv4 } from 'uuid';
 import { StoreConstants } from './constants';
 import { TranslationKeys } from './translations';
+import { ItemBaseAssociativeArray } from './types';
+import { WidgetBase } from './widgetFactory';
 
 export function configLocale(locale: string) {
   /* make sure all needed locales are imported in translations file i.e. import 'moment/locale/ru'; */
@@ -169,6 +171,23 @@ export function groupBy(list: any[], keyGetter: any, appendToMap?: Map<any, any>
 
   });
   return map;
+}
+
+export function filterByItemType(items: ItemBaseAssociativeArray, itemType: string) {
+  const result = [] as WidgetBase[];
+
+  if (!items)
+    return result;
+  Object.keys(items).forEach((key: string) => {
+    if (!items[key])
+      return;
+    const filtered = (items[key] as WidgetBase[]).filter((item: WidgetBase) => item.type === itemType);
+    filtered.forEach((filteredItem: WidgetBase) => {
+      if (!isEmptyWidgetItem(filteredItem))
+        result.push(filteredItem);
+    });
+  });
+  return result.sort((b: WidgetBase, a: WidgetBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
 }
 
 export const consoleColors = {

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { ItemTypes } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
-import { MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
+import { MoodCalendarComponent, MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
 import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent } from '../components/SleepComponent';
 import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType, ImagePickerHistoryComponent } from '../components/ImagePickerComponent';
 import { StyleProp, ViewStyle } from 'react-native';
@@ -53,6 +53,9 @@ export function CreateWidgetFactory(context: AppContextState) {
         },
         renderHistoryItem: (item: MoodComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <MoodHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: MoodComponentWidgetType, config: WidgetConfig) => {
+          return <MoodCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.SLEEP]:
@@ -141,4 +144,5 @@ export interface WidgetFactoryType {
   config: WidgetConfig;
   renderWidgetItem: (props: WidgetComponentPropsBase, config: WidgetConfig) => ReactNode;
   renderHistoryItem?: (item: WidgetBase, isSelectedItem: boolean, config: WidgetConfig) => ReactNode;
+  renderCalendarItem?: (item: WidgetBase, config: WidgetConfig) => ReactNode;
 }

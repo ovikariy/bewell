@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import BeWellAppIconFont from './CustomIconFont';
 import { AppContext } from '../modules/appContext';
@@ -27,6 +27,9 @@ interface CustomIconRatingItemType {
   value: CustomIconType,
   selected?: boolean,
   textColor?: string,
+  hideText?: boolean,
+  containerStyle?: StyleProp<ViewStyle>;
+  iconStyle?: StyleProp<TextStyle>;
   onPress?: ((id: number) => void)
 }
 
@@ -35,12 +38,12 @@ export const CustomIconRatingItem = (props: CustomIconRatingItemType) => {
   const styles = context.styles;
 
   const icon = props.onPress ? /* sometimes we don't want the icon clickable e.g. ItemHistory */
-    <Button type='clear' containerStyle={[styles.ratingIconContainer, props.value.backgroundStyle]}
+    <Button type='clear' containerStyle={[styles.ratingIconContainer, props.value.backgroundStyle, props.containerStyle]}
       onPress={() => props.onPress ? props.onPress(props.id) : {}} icon={
-        <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />} />
+        <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle, props.iconStyle]} />} />
     :
-    <View style={[styles.ratingIconContainer, props.value.backgroundStyle]}>
-      <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle]} />
+    <View style={[styles.ratingIconContainer, props.value.backgroundStyle, props.containerStyle]}>
+      <BeWellAppIconFont name={props.value.icon} style={[styles.ratingIconStyle, props.value.iconStyle, props.iconStyle]} />
     </View>;
 
   return (
@@ -48,7 +51,7 @@ export const CustomIconRatingItem = (props: CustomIconRatingItemType) => {
       <View style={[styles.ratingOutlineContainer, props.selected ? styles.ratingOutlineContainerSelected : '']} >
         {icon}
       </View>
-      <Text style={[styles.bodyText, styles.centered, props.textColor ? { color: props.textColor } : '']}>{props.value.name}</Text>
+      {!props.hideText && <Text style={[styles.bodyText, styles.centered, props.textColor ? { color: props.textColor } : '']}>{props.value.name}</Text>}
     </View>
   );
 };

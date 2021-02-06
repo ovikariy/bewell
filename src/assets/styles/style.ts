@@ -367,6 +367,17 @@ export function getThemeStyles(theme: ThemePropertyType) {
       fontSize: sizes[30],
       color: colors.foreground
     },
+    ratingIconSmallContainer: {
+      alignItems: 'center', /* horizontal center */
+      justifyContent: 'center', /* vertical center */
+      borderRadius: 100,
+      height: sizes[24],
+      width: sizes[24]
+    },
+    ratingIconSmallStyle: {
+      fontSize: sizes[16],
+      color: colors.foreground
+    },
 
     /* form fields */
     formItem: {

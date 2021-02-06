@@ -59,3 +59,18 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
     </View>
   );
 };
+
+export const MoodCalendarComponent = (props: MoodHistoryComponentProps) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  /* config is basically this object i.e config[itemType]  */
+  /* custom render item to show small mood icon in the calendar */
+  const moodRatingIcons = props.config.icons;
+  if (!moodRatingIcons || props.item.rating === undefined)
+    return <View />;
+  const ratingIcon = moodRatingIcons[props.item.rating];
+  return <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} hideText={true}
+    iconStyle={styles.ratingIconSmallStyle}
+    containerStyle={styles.ratingIconSmallContainer} />;
+};
