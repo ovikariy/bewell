@@ -56,7 +56,6 @@ export function submitPIN(password: string, pin: string): AppThunkActionType {
             .then(() => {
                 dispatch({ type: ActionTypes.PIN_SETUP_COMPLETE });
                 dispatch(loadAuthData());
-                dispatch(operationActions.complete(ErrorMessage.PinSet));
                 dispatch(operationActions.clear());
             })
             .catch(error => {
