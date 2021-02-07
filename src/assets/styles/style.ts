@@ -37,6 +37,7 @@ export const sizes = {
   20: normalizeSize(20),
   22: normalizeSize(22),
   24: normalizeSize(24),
+  26: normalizeSize(26),
   30: normalizeSize(30),
   40: normalizeSize(40),
   50: normalizeSize(50),
@@ -141,7 +142,7 @@ export function getThemeStyles(theme: ThemePropertyType) {
     },
     hugeText: {
       fontFamily: fonts.secondary,
-      fontSize: sizes[30],
+      fontSize: sizes[26],
       letterSpacing: 2
     },
     appName: {

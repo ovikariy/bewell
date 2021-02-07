@@ -52,7 +52,7 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
       password: undefined,
       passwordReentered: undefined,
       showPasswordReentered: false,
-      instructionText: language.passwordMinimum
+      instructionText: ''
     });
   }
 
@@ -77,6 +77,7 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
         passwordReentered: undefined,
         showPasswordReentered: false
       });
+      return;
     }
 
     if (!this.state.password || isNullOrEmpty(this.state.password) || this.state.password.length < 8) {
@@ -93,31 +94,31 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
     const language = this.context.language;
     const styles = this.context.styles;
 
+    const passwordField = this.state.showPasswordReentered === false ?
+      <PasswordInputWithButton
+        containerStyle={[styles.bottomPositioned]}
+        placeholder={language.passwordEnterNewPlaceholder}
+        onPress={() => this.showPasswordReenter()}
+        value={this.state.password}
+        onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
+      /> :
+      <PasswordInputWithButton
+        containerStyle={[styles.bottomPositioned]}
+        placeholder={language.passwordReEnterPlaceholder}
+        onPress={() => this.submitPassword()}
+        value={this.state.passwordReentered}
+        onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }); }}
+      />;
+
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
-          <ScreenContent style={styles.screenBodyContainerLargeMargin} >
+          <ScreenContent style={styles.screenBodyContainerMediumMargin}>
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.secureDataWith}</ParagraphText>
             <HorizontalLine />
-            <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText}</ParagraphText>
-            <Spacer height={sizes[40]} />
-            {this.state.showPasswordReentered === false ?
-              <PasswordInputWithButton
-                containerStyle={[styles.bottomPositioned]}
-                placeholder={language.passwordEnterNewPlaceholder}
-                onPress={() => this.showPasswordReenter()}
-                value={this.state.password}
-                onChangeText={(value) => { this.setState({ ...this.state, password: value }); }}
-              /> :
-              <PasswordInputWithButton
-                containerStyle={[styles.bottomPositioned]}
-                placeholder={language.passwordReEnterPlaceholder}
-                onPress={() => this.submitPassword()}
-                value={this.state.passwordReentered}
-                onChangeText={(value) => { this.setState({ ...this.state, passwordReentered: value }); }}
-              />
-            }
+            <ParagraphText style={[styles.bodyTextLarge]}>{this.state.instructionText || language.passwordMinimum}</ParagraphText>
+            {!this.props.OPERATION.isLoading && passwordField}
           </ScreenContent>
         </ScrollView>
       </ScreenBackground>
