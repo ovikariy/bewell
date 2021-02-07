@@ -39,7 +39,7 @@ export function signInPassword(password: string): AppThunkActionType {
             })
             .catch(error => {
                 consoleLogWithColor(error);
-                dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth7) : error));
+                dispatch(operationActions.fail(new AppError(ErrorMessage.InvalidCredentials, error.code)));
                 dispatch(operationActions.clear());
                 dispatch(signOut());
             });
@@ -55,7 +55,7 @@ export function signInPIN(pin: string): AppThunkActionType {
             })
             .catch(error => {
                 consoleLogWithColor(error);
-                dispatch(operationActions.fail(error instanceof AppError !== true ? new AppError(ErrorMessage.General, ErrorCode.Auth8) : error));
+                dispatch(operationActions.fail(new AppError(ErrorMessage.InvalidCredentials, error.code)));
                 dispatch(operationActions.clear());
                 dispatch(signOut());
             });

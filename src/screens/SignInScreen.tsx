@@ -49,7 +49,6 @@ class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
       return;
     }
     this.props.signInPassword(this.state.password);
-    this.setState({ ...this.state, password: undefined });
   }
 
   submitPIN() {
@@ -60,7 +59,6 @@ class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
       return;
     }
     this.props.signInPIN(this.state.PIN);
-    this.setState({ ...this.state, PIN: undefined });
   }
 
   render() {
