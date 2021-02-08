@@ -126,6 +126,7 @@
   "EmptyData": "On dirait pas de documents ont été trouvés",
   "InvalidFormat": "Format invalide",
   "InvalidFile": "Fichier non valide",
+  "InvalidDirectory": "Directory does not exist",
   "InvalidFileData": "Des données non valides, s'il vous plaît essayer un autre fichier",
   "NoRecordsInFile": "On dirait qu'il n'y a pas enregistrements dans le fichier",
   "InvalidParameter": "Paramètre invalide",

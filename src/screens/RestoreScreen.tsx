@@ -135,7 +135,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       this.setState({ ...this.state, importInfo, loading: false });
     }
     catch (error) {
-      this.setState({ ...this.state, loading: false });
+      this.setState({ ...this.state, importFilename: undefined, loading: false });
       consoleLogWithColor(error);
       (error instanceof AppError !== true) ?
         Toast.showTranslated(error.message, this.context) :

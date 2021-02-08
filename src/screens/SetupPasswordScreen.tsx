@@ -8,7 +8,6 @@ import { ScreenBackground, ScreenContent, ScreenImageHeader } from '../component
 import { isNullOrEmpty } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
-import { sizes } from '../assets/styles/style';
 
 const mapStateToProps = (state: RootState) => ({
   OPERATION: state.OPERATION
@@ -45,8 +44,6 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
   }
 
   reset() {
-    const language = this.context.language;
-
     this.setState({
       ...this.state,
       password: undefined,
@@ -71,12 +68,7 @@ class SetupPasswordScreen extends Component<PropsFromRedux, SetupPasswordScreenS
 
     if (this.state.password !== this.state.passwordReentered) {
       Toast.show(language.passwordsMatch);
-      this.setState({
-        ...this.state,
-        password: undefined,
-        passwordReentered: undefined,
-        showPasswordReentered: false
-      });
+      this.reset();
       return;
     }
 

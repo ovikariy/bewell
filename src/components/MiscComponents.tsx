@@ -95,10 +95,11 @@ export const PasswordInputWithButton = (props: PasswordInputWithButtonProps) => 
   return <Input
     {...props}
     inputContainerStyle={[{ borderBottomWidth: 0 }, props.inputContainerStyle]}
-    inputStyle={[{ marginLeft: sizes[10] }, styles.bodyTextLarge, props.inputStyle]}
-    containerStyle={[styles.brightBackground, styles.rounded, styles.border, styles.padded, props.containerStyle]}
+    inputStyle={[{ marginLeft: sizes[10] }, styles.bodyText, props.inputStyle]}
+    containerStyle={[styles.brightBackground, styles.rounded, styles.border, props.containerStyle]}
     placeholderTextColor={styles.placeholderHighlight.color}
     autoCompleteType='off'
+    numberOfLines={1}
     autoCorrect={false}
     secureTextEntry={true}
     rightIcon={<RoundButton name="keyboard-arrow-right" onPress={props.onPress} />}

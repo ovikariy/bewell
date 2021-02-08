@@ -145,6 +145,10 @@ export enum ErrorCode {
   BackupRestore2 = 'BR1002',
   BackupRestore3 = 'BR1003',
   BackupRestore4 = 'BR1004',
+  File1 = 'F1001',
+  File2 = 'F1002',
+  File3 = 'F1003',
+  File4 = 'F1004'
 };
 /**
  * @description Chooses an image from assets/images/headers directory

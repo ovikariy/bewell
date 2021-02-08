@@ -1,6 +1,6 @@
 import *  as FileSystem from 'expo-file-system';
 import { AppError, ImageInfoAssocArray, ImportInfo } from './types';
-import { ErrorMessage } from './constants';
+import { ErrorCode, ErrorMessage } from './constants';
 import JSZip from 'jszip';
 import { formatDate } from './utils';
 global.Buffer = global.Buffer || require('buffer').Buffer;
@@ -85,7 +85,7 @@ export async function importUserDataZip(docPickerFileUri: string): Promise<Impor
   /** read zip file from cache directory */
   const zipContent = await FileSystem.readAsStringAsync(tempFilepath, { encoding: 'base64' });
   if (!zipContent)
-    throw new AppError(ErrorMessage.InvalidFile);
+    throw new AppError(ErrorMessage.InvalidFile, ErrorCode.File2);
 
   /** unzip the archive */
   const jsZip = new JSZip();
@@ -121,15 +121,21 @@ export async function importUserDataZip(docPickerFileUri: string): Promise<Impor
 export async function writeImageToDisk(imageFileName: string, imageContent: string) {
   if (!imageFileName || !imageContent)
     return;
+  await getOrCreateDirectoryAsync(FileSystemConstants.ImagesSubDirectory);
   const imagePath = FileSystemConstants.ImagesSubDirectory + '/' + imageFileName;
   return writeFileAsync(imagePath, imageContent, {});
 }
 
 export async function writeFileAsync(filepath: string, text: string, options: FileSystem.WritingOptions) {
+  if (!filepath || filepath.length <= 0)
+    throw new AppError(ErrorMessage.InvalidFile, ErrorCode.File3);
   const diskSpaceNeeded = Buffer.byteLength(text);
   const diskSpaceAvailable = await FileSystem.getFreeDiskStorageAsync();
   if (diskSpaceNeeded > diskSpaceAvailable)
     throw new AppError(ErrorMessage.NotEnoughSpace);
+  const targetDirectory = filepath.substring(0, filepath.lastIndexOf('/'));
+  if (!await existsAsync(targetDirectory))
+    throw new AppError(ErrorMessage.InvalidDirectory, ErrorCode.File4);
   await FileSystem.writeAsStringAsync(filepath, text, options ? options : {});
 }
 
@@ -189,7 +195,7 @@ export async function getJSONfromFileAsync(filePath: string) {
 export async function copyFileAsync(from: string, to: string) {
   const fromPathInfo = await FileSystem.getInfoAsync(from);
   if (!fromPathInfo.exists || fromPathInfo.size <= 0)
-    throw new AppError(ErrorMessage.InvalidFile);
+    throw new AppError(ErrorMessage.InvalidFile, ErrorCode.File1);
   await FileSystem.copyAsync({ from, to });
 }
 
