@@ -173,21 +173,23 @@ export function groupBy(list: any[], keyGetter: any, appendToMap?: Map<any, any>
   return map;
 }
 
-export function filterByItemType(items: ItemBaseAssociativeArray, itemType: string) {
+export function filterByItemType(data: ItemBaseAssociativeArray, itemType: string) {
   const result = [] as WidgetBase[];
 
-  if (!items)
+  if (!data)
     return result;
-  Object.keys(items).forEach((key: string) => {
-    if (!items[key])
-      return;
-    const filtered = (items[key] as WidgetBase[]).filter((item: WidgetBase) => item.type === itemType);
-    filtered.forEach((filteredItem: WidgetBase) => {
-      if (!isEmptyWidgetItem(filteredItem))
-        result.push(filteredItem);
-    });
-  });
-  return result.sort((b: WidgetBase, a: WidgetBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+
+  for(const monthKey in data) {
+    const monthItems = data[monthKey] as WidgetBase[];
+    if (!monthItems)
+      continue;
+
+    for (const item of monthItems) {
+      if (item && item.type === itemType && !isEmptyWidgetItem(item))
+        result.push(item);
+    }
+  };
+  return result;
 }
 
 export const consoleColors = {

@@ -93,7 +93,7 @@ async function loadAsync(key: string) {
     }
     else {
         const items = await storage.getItemsAndDecryptAsync(key);
-        return items.sort((a: ItemBase, b: ItemBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+        return items;//.sort((a: ItemBase, b: ItemBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     }
 }
 

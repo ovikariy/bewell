@@ -73,14 +73,14 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
 
   renderSortedWidgets(widgetFactory: WidgetFactory) {
     /* collect widgets for each itemTypeName into a single array so they could be sorted by date */
-    const sortedData = this.props.dailyData.sort((b: WidgetBase, a: WidgetBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
-    const widgets = sortedData.map(record => {
-      return this.renderWidget(widgetFactory, record);
-    });
+    //const sortedData = this.props.dailyData.sort((b: WidgetBase, a: WidgetBase) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+    const sortedWidgets = [];
+    for (let i = this.props.dailyData.length - 1; i >= 0; i--) /** feature requested: reverse sort by array index so items show in the order they were added, newest first */
+      sortedWidgets.push(this.renderWidget(widgetFactory, this.props.dailyData[i]));
 
-    if (!(widgets.length > 0))
+    if (!(sortedWidgets.length > 0))
       return this.renderWelcomeMessage();
-    return widgets;
+    return sortedWidgets;
   }
 
   renderWidget(widgetFactory: WidgetFactory, record: WidgetBase) {

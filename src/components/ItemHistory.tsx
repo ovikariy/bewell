@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
-import { friendlyDate, friendlyTime, groupBy, friendlyDay, formatDate, filterByItemType } from '../modules/utils';
+import { friendlyDate, friendlyTime, groupBy, friendlyDay, formatDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { EmptyList, List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,8 +21,6 @@ class ItemHistory extends Component<ItemHistoryProps> {
   static contextType = AppContext;
   context!: React.ContextType<typeof AppContext>;
 
-
-
   render() {
     const language = this.context.language;
 
@@ -30,12 +28,13 @@ class ItemHistory extends Component<ItemHistoryProps> {
     if (!items || items.length <= 0)
       return <EmptyList />;
 
-    const groupedByDayMap = groupBy(items, (item: WidgetBase) => friendlyDate(item.date, { language }), undefined);
-    const groupedByDayArray = [] as WidgetBase[]; //TODO: this is a waste of resources to copy a map into an array because map cannot be passed as data to FlatList
-    groupedByDayMap.forEach((item: WidgetBase) => groupedByDayArray.push(item));
+    const sorted = items.slice(0).reverse(); /** sort without reversing the original array */
+
+    const groupedByDayMap = groupBy(sorted, (item: WidgetBase) => friendlyDate(item.date, { language }), undefined);
+    const groupedByDayArray = Array.from(groupedByDayMap.values());
 
     return (
-      <View style={[{ marginTop: sizes[20] }, { flex: 1 }, this.props.style]}>
+      <View style={[{ marginTop: sizes[20] }, { flex: 1 }, this.props.style]} >
         <List
           data={groupedByDayArray}
           renderItem={(item: any) => this.renderGroupedByDay(item.item)}

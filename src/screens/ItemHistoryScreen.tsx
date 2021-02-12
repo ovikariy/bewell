@@ -68,21 +68,11 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
     const widgetFactory = CreateWidgetFactory(this.context);
     const itemType = this.itemType;
 
-    let renderHistoryItem;
-    const renderHistoryItemFunction = widgetFactory[itemType].renderHistoryItem;
-    if (renderHistoryItemFunction) {
-      renderHistoryItem = function (item: WidgetBase, isSelectedItem: boolean) {
-        return renderHistoryItemFunction(item, isSelectedItem, widgetFactory[itemType].config);
-      };
-    }
+    const renderHistoryItem = !widgetFactory[itemType].renderHistoryItem ? undefined :
+      (item: WidgetBase, isSelectedItem: boolean) => widgetFactory[itemType].renderHistoryItem(item, isSelectedItem, widgetFactory[itemType].config);
 
-    let renderCalendarItem;
-    const renderCalendarItemFunction = widgetFactory[itemType].renderCalendarItem;
-    if (renderCalendarItemFunction) {
-      renderCalendarItem = function (item: WidgetBase) {
-        return renderCalendarItemFunction(item, widgetFactory[itemType].config);
-      };
-    }
+    const renderCalendarItem = !widgetFactory[itemType].renderCalendarItem ? undefined :
+      (item: WidgetBase) => widgetFactory[itemType].renderCalendarItem(item, widgetFactory[itemType].config);
 
     const items = filterByItemType(this.props.STORE.items, this.itemType);
 
