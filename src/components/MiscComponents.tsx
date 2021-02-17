@@ -464,12 +464,12 @@ export const List = (props: any) => {
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
           {item.iconName ? <IconForButton name={item.iconName} type='font-awesome' iconStyle={{ ...styles.iconSecondary, ...styles.listItemLeftIcon }} /> : <React.Fragment />}
           {item.itemContent ? item.itemContent :
-            <View>
+            <View style={styles.flex}>
               <Text style={[styles.heading2]}>{item.title}</Text>
               {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
             </View>}
-          {item.itemCount ? <View style={[styles.flex, { alignItems: 'flex-end', marginRight: sizes[16] }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View style={styles.flex} />}
-          {item.onPress ? <IconForButton iconStyle={styles.iconPrimarySmall} name='chevron-right' type='font-awesome' /> : <View />}
+          {item.itemCount ? <View style={[{ alignItems: 'flex-end', marginRight: sizes[16] }]}><Text style={[styles.subHeading]}>{item.itemCount}</Text></View> : <View />}
+          {item.onPress ? <View style={[{ alignItems: 'flex-end', marginRight: sizes[16] }]}><IconForButton iconStyle={[styles.iconPrimarySmall]} name='chevron-right' type='font-awesome' /></View> : <View />}
         </View>
       </TouchableOpacity>
     );

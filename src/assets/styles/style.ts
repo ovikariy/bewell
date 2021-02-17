@@ -508,6 +508,14 @@ export function getThemeStyles(theme: ThemePropertyType) {
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5
+    },
+
+    /* switch (toggle control) */
+    switchThumb: {
+      color: colors.colorful1
+    },
+    switchTrack: {
+      color: colors.foreground
     }
   });
 }

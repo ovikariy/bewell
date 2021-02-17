@@ -14,8 +14,9 @@ export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: A
 
             const language = action.payload.settings.find((setting) => setting.id === settingsConstants.language);
             const theme = action.payload.settings.find((setting) => setting.id === settingsConstants.theme);
+            const hideNoteText = action.payload.settings.find((setting) => setting.id === settingsConstants.hideNoteText);
 
-            if (!language && !theme)
+            if (!language && !theme && !hideNoteText)
                 return state;
 
             const context = { ...state };
@@ -27,6 +28,8 @@ export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: A
                 context.theme = themes[theme.value];
                 context.styles = getThemeStyles(context.theme);
             }
+            if (hideNoteText && hideNoteText.value)
+                context.otherSettings.hideNoteText = (hideNoteText.value === 'true');
 
             return context;
         }

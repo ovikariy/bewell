@@ -8,7 +8,10 @@ export const defaultAppContext = {
   language: translations.en,
   theme: themes.dark,
   styles: getThemeStyles(themes.dark),
-  locale: 'en'
+  locale: 'en',
+  otherSettings: {
+    hideNoteText: false
+  }
 } as AppContextState;
 
 export const AppContext = React.createContext(defaultAppContext);

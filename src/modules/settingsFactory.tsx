@@ -7,6 +7,7 @@ import { settingsConstants } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { translations } from './translations';
 import { themes } from './themes';
+import { Switch } from 'react-native-gesture-handler';
 
 interface SettingsFactoryItemType {
     id: string,
@@ -41,7 +42,7 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                 value: 'en',
                 iconName: settingsConstants.language,
                 itemContent: (value, onChange, onCancelChange, show) => {
-                    return <View>
+                    return <View style={styles.flex}>
                         <Text style={[styles.heading2]}>{language.language}</Text>
                         <StyledPicker selectedValue={value}
                             show={show}
@@ -59,7 +60,7 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                 value: 'dark',
                 iconName: 'paint-brush',
                 itemContent: (value, onChange, onCancelChange, show) => {
-                    return <View>
+                    return <View style={styles.flex}>
                         <Text style={[styles.heading2]}>{language.theme}</Text>
                         <StyledPicker selectedValue={value}
                             show={show}
@@ -67,6 +68,28 @@ export function DefaultSettings(context: AppContextState): SettingsFactoryItemTy
                             items={themeItems}
                             onCancelChange={onCancelChange}
                             onValueChange={(newValue, itemIndex) => onChange(newValue)}
+                        />
+                    </View>;
+                },
+            },
+            {
+                id: settingsConstants.hideNoteText,
+                title: language.hideNoteText,
+                value: 'false',
+                iconName: 'eye',
+                readOnly: true,
+                itemContent: (value, onChange, onCancelChange, show) => {
+                    return <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center'}}>
+                        <View style={{flex: 1}}>
+                            <Text style={[styles.heading2]}>{language.hideNoteText}</Text>
+                            <Text style={[styles.subHeading]}>{language.hideNoteTextSubtitle}</Text>
+                        </View>
+                        <Switch
+                            trackColor={{ true: styles.switchTrack.color, false: styles.switchTrack.color + '50' }}
+                            thumbColor={styles.switchThumb.color}
+                            ios_backgroundColor={styles.switchTrack.color + '50'}
+                            onValueChange={newValue => onChange(newValue ? 'true' : 'false')}
+                            value={value === 'true' ? true : false}
                         />
                     </View>;
                 },

@@ -1,7 +1,7 @@
 import { LoginInfo } from '../modules/securityService';
 import { ThemePropertyType } from '../modules/themes';
 import { TranslationKeys } from '../modules/translations';
-import { AppError, ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
+import { AppError, ItemBaseAssociativeArray, ItemBaseMultiArray, SettingType } from '../modules/types';
 import * as ActionTypes from './actionTypes';
 
 /* OPERATION */
@@ -113,7 +113,12 @@ export interface AppContextState {
   language: TranslationKeys,
   theme: ThemePropertyType,
   styles: any,
-  locale: string
+  locale: string,
+  otherSettings: OtherSettings
+}
+
+export interface OtherSettings {
+  hideNoteText: boolean
 }
 
 interface SettingsChanged {

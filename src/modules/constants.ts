@@ -72,7 +72,8 @@ function getMonthsFromEpochDate(keyPrefix: string) {
 export const settingsConstants = {
   language: 'language',
   theme: 'theme',
-  version: 'version'
+  version: 'version',
+  hideNoteText: 'hideNoteText'
 };
 
 export enum ErrorCode {

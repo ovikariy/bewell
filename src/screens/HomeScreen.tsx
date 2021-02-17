@@ -50,11 +50,13 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
 
   componentDidMount() {
     this.refreshItems();
-
-    const language = this.context.language;
-    //this.props.navigation.navigate('Settings');
-    //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
   }
+
+  //componentDidUpdate() {
+    //this.props.navigation.navigate('Settings', { screen: 'SystemSettings' });
+    //const language = this.context.language;
+    //this.props.navigation.navigate('ItemHistory', { 'title': language['sleep'], 'itemType': ItemTypes.SLEEP });
+  //}
 
   refreshItems() {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
