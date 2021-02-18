@@ -166,6 +166,8 @@ interface StyledDatePickerProps {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   placeholder?: string;
+  defaultMinutes?: number;
+  defaultHours?: number;
   onChange?: (event: any, date?: Date) => void;
 }
 
@@ -196,11 +198,23 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
     </View>
   );
 
+  function getDefaultDate() {
+    const defaultDate = new Date();
+    if (props.defaultMinutes !== undefined)
+      defaultDate.setMinutes(props.defaultMinutes);
+    if (props.defaultHours !== undefined)
+      defaultDate.setHours(props.defaultHours);
+    return defaultDate;
+  }
+
   function getPlatformSpecificPicker() {
+    const defaultDate = getDefaultDate();
+
     if (Platform.OS === 'ios') {
       return <DateTimePickerIOS
         {...props}
         show={show}
+        value={props.value || defaultDate}
         onChange={onChange}
         onCancel={() => setShow(false)}
       />;
@@ -208,7 +222,7 @@ export const StyledDatePicker = (props: StyledDatePickerProps) => {
     else {
       return <DateTimePicker
         mode={props.mode ? props.mode : 'date'}
-        value={props.value || new Date()}
+        value={props.value || defaultDate}
         onChange={onChange}
         style={props.style ? props.style : {}}
       />;
@@ -238,7 +252,7 @@ const DateTimePickerIOS = (props: StyledDatePickerProps & { show?: boolean, onCa
             value={value || new Date()}
             display={'spinner'}
             onChange={(event: any, newDate: any) => setValue(newDate)}
-            style={[{ width: sizes[255]}]}
+            style={[{ width: sizes[255] }]}
           />
           {/* centered and stretched button row */}
           <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>

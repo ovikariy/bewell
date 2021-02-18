@@ -107,6 +107,8 @@ export class SleepComponent extends Component<SleepComponentProps> {
               />}
             {startTime && <Spacer height={sizes[5]} />}
             <TimePicker
+              defaultHours={23}
+              defaultMinutes={0}
               value={startTime}
               style={{ flex: 0.8 }}
               placeholder={language.bedTime}
@@ -124,6 +126,8 @@ export class SleepComponent extends Component<SleepComponentProps> {
               />}
             {startTime && <Spacer height={sizes[5]} />}
             <TimePicker
+              defaultHours={7}
+              defaultMinutes={0}
               value={endTime}
               style={{ flex: 0.8 }}
               placeholder={language.wakeTime}
