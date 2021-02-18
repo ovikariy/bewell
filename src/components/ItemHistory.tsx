@@ -50,7 +50,7 @@ class ItemHistory extends Component<ItemHistoryProps> {
 
     return (
       <View style={[styles.flex]} key={daysData[0].date}>
-        <View style={[styles.row, styles.centered, styles.listItemContainer, { height: 'auto', flex: 0 }]}>
+        <View style={[styles.row, styles.centered, styles.listItemContainer, { minHeight: 'auto', flex: 0 }]}>
           <Text style={[styles.titleText]}>
             {friendlyDay(daysData[0].date, { language })}</Text>
           <Text style={[styles.bodyText, { marginHorizontal: sizes[20], color: styles.bodyText.color + '80' }]}>

@@ -480,7 +480,7 @@ export function getThemeStyles(theme: ThemePropertyType) {
     /* list */
 
     listItemContainer: {
-      height: sizes[70],
+      minHeight: sizes[70],
       marginBottom: normalizeSize(2),
       backgroundColor: colors.foreground + '20'
     },
