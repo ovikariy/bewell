@@ -235,10 +235,17 @@ export const MonthPicker = (props: { selectedDate: Date, onChange: (newDate?: Da
   }
 
   function onOkPress() {
-    const selectedDate = new Date();
-    selectedDate.setFullYear(selectedYear.value);
-    selectedDate.setMonth(selectedMonth.index);
-    onChange(selectedDate);
+    const date = new Date();
+
+    const year = selectedYear.value > -1 ? selectedYear.value : selectedDate.getFullYear();
+    if (year > -1)
+      date.setFullYear(year); /** wrong value in setFullYear will crash the app, try/catch does not work nor does the error screen */
+
+    const month = selectedMonth.index > -1 ? selectedMonth.index : selectedDate.getMonth();
+    if (month > -1)
+      date.setMonth(month); /** wrong value in setMonth will crash the app, try/catch does not help nor does the error screen  */
+
+    onChange(date);
     setShow(false);
   }
 
