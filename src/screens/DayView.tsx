@@ -34,8 +34,8 @@ interface DayViewState {
 }
 
 interface DayViewProps extends PropsFromRedux {
-  navigation: AppNavigationProp<'DayView'>
-  route: AppRouteProp<'DayView'>
+  navigation: any
+  route: any
 }
 
 class DayView extends Component<DayViewProps, DayViewState>  {
@@ -45,7 +45,7 @@ class DayView extends Component<DayViewProps, DayViewState>  {
   constructor(props: DayViewProps) {
     super(props);
     this.state = {
-      selectedDate: props.route.params.date ? new Date(props.route.params.date) : new Date(),
+      selectedDate: (props.route.params && props.route.params.date) ? new Date(props.route.params.date) : new Date(),
       selectedItem: undefined
     };
   }
@@ -92,7 +92,8 @@ class DayView extends Component<DayViewProps, DayViewState>  {
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem !== undefined}>
           <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item); }} />
-          <ViewHistoryButton item={this.state.selectedItem} itemConfig={this.state.selectedItem ? widgetFactory[this.state.selectedItem.type].config : undefined} navigation={this.props.navigation} />
+          {/* don't show history button here as it is not needed and now can get to this view from history screen by tapping on calendar day
+          <ViewHistoryButton item={this.state.selectedItem} itemConfig={this.state.selectedItem ? widgetFactory[this.state.selectedItem.type].config : undefined} navigation={this.props.navigation} /> */}
         </FloatingToolbar>
       </ScreenBackground>
     );
