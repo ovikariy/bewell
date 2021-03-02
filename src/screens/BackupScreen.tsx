@@ -167,7 +167,7 @@ class BackupScreen extends Component<BackupScreenProps, BackupScreenState> {
     const styles = this.context.styles;
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard*/>
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1 }}  /** @see devnotes.md#scrollView-and-keyboard*/>
           <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.exportExplanation}</ParagraphText>
             <HorizontalLine />

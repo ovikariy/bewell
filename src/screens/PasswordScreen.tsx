@@ -205,7 +205,7 @@ class PasswordScreen extends Component<PasswordScreenProps, PasswordScreenState>
 
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenContent style={styles.screenBodyContainerLargeMargin} >
             {this.renderFields()}
           </ScreenContent>

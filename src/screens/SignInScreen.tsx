@@ -67,7 +67,7 @@ class SignInScreen extends Component<SignInScreenProps, SignInScreenState> {
 
     return (
       <ScreenBackground isLoading={this.props.OPERATION.isLoading}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
+        <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1 }} /** @see devnotes.md#scrollView-and-keyboard */>
           <ScreenImageHeader />
           <ScreenContent style={styles.screenBodyContainerSmallMargin} >
             <ParagraphText style={[styles.titleText, styles.hugeText]}>{language.welcomeBack}</ParagraphText>
