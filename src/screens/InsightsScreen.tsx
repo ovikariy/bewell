@@ -39,7 +39,7 @@ class InsightsScreen extends Component<InsightsScreenProps> {
   }
 
   getCountsByItemType() {
-    //TODO: check for performance issues with bigger data set
+    //TODO: check for performance with bigger data set
     const groupedByItemType = new Map();
     const items = this.props.STORE.items;
 

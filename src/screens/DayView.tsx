@@ -5,15 +5,15 @@ import WidgetListComponent from '../components/WidgetListComponent';
 import { ItemTypes } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { Spacer } from '../components/MiscComponents';
-import { DatePickerWithArrows } from '../components/DatetimeComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
 import { getStorageKeyFromDate, consoleLogWithColor } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { deleteImageFromDiskAsync } from '../modules/io';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
 import { RootState } from '../redux/store';
-import { ItemBase, AppNavigationProp } from '../modules/types';
+import { AppNavigationProp, AppRouteProp, ItemBase } from '../modules/types';
 import { dimensions, sizes } from '../assets/styles/style';
+import { DatePickerWithArrows } from '../components/DatetimeComponents';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -28,35 +28,30 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface HomeScreenState {
+interface DayViewState {
   selectedDate: Date,
   selectedItem?: WidgetBase
 }
 
-interface HomeScreenProps extends PropsFromRedux {
-  navigation: AppNavigationProp<'Home'>
+interface DayViewProps extends PropsFromRedux {
+  navigation: AppNavigationProp<'DayView'>
+  route: AppRouteProp<'DayView'>
 }
 
-class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
+class DayView extends Component<DayViewProps, DayViewState>  {
   static contextType = AppContext;
   context!: React.ContextType<typeof AppContext>;
 
-  constructor(props: HomeScreenProps) {
+  constructor(props: DayViewProps) {
     super(props);
     this.state = {
-      selectedDate: new Date(),
+      selectedDate: props.route.params.date ? new Date(props.route.params.date) : new Date(),
       selectedItem: undefined
     };
   }
 
   componentDidMount() {
     this.refreshItems();
-  }
-
-  componentDidUpdate() {
-    //this.props.navigation.navigate('Settings', { screen: 'SystemSettings' });
-    const language = this.context.language;
-   // this.props.navigation.navigate('ItemHistory', { title: language.mood, itemType: ItemTypes.MOOD });
   }
 
   refreshItems() {
@@ -73,8 +68,6 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
   }
 
   render() {
-    const styles = this.context.styles;
-
     const widgetFactory = CreateWidgetFactory(this.context);
     const selectedDateString = new Date(this.state.selectedDate).toLocaleDateString();
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
@@ -139,4 +132,4 @@ class HomeScreen extends Component<HomeScreenProps, HomeScreenState>  {
   }
 }
 
-export default connector(HomeScreen);
+export default connector(DayView);

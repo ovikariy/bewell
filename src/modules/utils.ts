@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { DurationInputArg1, DurationInputArg2 } from 'moment';
 import 'react-native-get-random-values'; /** polyfills for uuid */
 import { v4 as uuidv4 } from 'uuid';
 import { StoreConstants } from './constants';
@@ -99,9 +99,11 @@ export function isEmptyWidgetItem(item: any) {
 }
 
 export function addSubtractDays(date: string | Date | moment.Moment, numDays: number) {
-  if (numDays < 0 || numDays > 0)
-    return moment(date).add(numDays, 'days');
-  return date;
+  return addSubtractFromDate(date, numDays, 'days');
+}
+
+export function addSubtractFromDate(date: string | Date | moment.Moment, amount: DurationInputArg1, unit: DurationInputArg2) {
+  return moment(date).add(amount, unit);
 }
 
 export function dateDiff(dateA: string | Date, dateB: string | Date) {
@@ -179,7 +181,7 @@ export function filterByItemType(data: ItemBaseAssociativeArray, itemType: strin
   if (!data)
     return result;
 
-  for(const monthKey in data) {
+  for (const monthKey in data) {
     const monthItems = data[monthKey] as WidgetBase[];
     if (!monthItems)
       continue;

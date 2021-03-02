@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
-import { IconForButton, Spacer, StyledDatePicker, TimePicker } from './MiscComponents';
+import { IconForButton, Spacer } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { formatDate, addSubtractDays } from '../modules/utils';
 import { sizes } from '../assets/styles/style';
+import { StyledDatePicker, TimePicker } from './DatetimeComponents';
 
 export interface SleepComponentWidgetType extends WidgetBase {
   rating?: number;
@@ -171,4 +172,19 @@ export const SleepHistoryComponent = (props: SleepHistoryComponentProps) => {
       </View>
     </View>
   );
+};
+
+export const SleepCalendarComponent = (props: SleepHistoryComponentProps) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  /* config is basically this object i.e config[itemType]  */
+  /* custom render item to show small mood icon in the calendar */
+  const sleepRatingIcons = props.config.icons;
+  if (!sleepRatingIcons || props.item.rating === undefined)
+    return <View />;
+  const ratingIcon = sleepRatingIcons[props.item.rating];
+  return <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} hideText={true}
+    iconStyle={[styles.ratingIconSmallStyle, { color: styles.brightColor.color }]}
+    containerStyle={[styles.ratingIconSmallContainer, { margin: -2 }]} />;
 };

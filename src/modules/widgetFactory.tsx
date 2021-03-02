@@ -3,7 +3,7 @@ import { ItemTypes } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { MoodCalendarComponent, MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
-import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent } from '../components/SleepComponent';
+import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent, SleepCalendarComponent } from '../components/SleepComponent';
 import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType, ImagePickerHistoryComponent } from '../components/ImagePickerComponent';
 import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
@@ -78,6 +78,9 @@ export function CreateWidgetFactory(context: AppContextState) {
         },
         renderHistoryItem: (item: SleepComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <SleepHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: SleepComponentWidgetType, config: WidgetConfig) => {
+          return <SleepCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.IMAGE]:

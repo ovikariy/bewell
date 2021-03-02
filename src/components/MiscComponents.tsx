@@ -1,19 +1,19 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
   TouchableOpacity, FlatList, RefreshControl, TextInput, Dimensions, Image,
-  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, Modal
+  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, ThemeConsumer, colors } from 'react-native-elements';
-import { addSubtractDays, isValidDate, wait, formatDate } from '../modules/utils';
+import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps } from 'react-native-elements';
+import { wait } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
 import { getTranslationMessage } from '../modules/translations';
 import { AppError } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 import { AppContextState } from '../redux/reducerTypes';
+import ScrollPicker from 'react-native-wheel-scrollview-picker';
 
 export const Spacer = (props: { width?: number, height?: number }) => {
 
@@ -157,132 +157,16 @@ export const RoundButton = (props: IconProps) => {
   />;
 };
 
-
-
-interface StyledDatePickerProps {
-  value?: Date;
-  mode?: any;
-  format?: string;
-  style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-  placeholder?: string;
-  defaultMinutes?: number;
-  defaultHours?: number;
-  onChange?: (event: any, date?: Date) => void;
-}
-
-export const StyledDatePicker = (props: StyledDatePickerProps) => {
-  const context = React.useContext(AppContext);
-  const language = context.language;
-  const styles = context.styles;
-  /* DateTimePicker shows by default when rendered so need to hide and only show e.g. on button press */
-  const [show, setShow] = useState(false);
-
-  function onChange(event: any, newDate: any) {
-    setShow(false);
-    if (props.onChange)
-      props.onChange(event, newDate);
-  }
-
-  const format = props.format ? props.format : 'ddd, MMM D Y';
-  const displayText = props.value ? formatDate(props.value, format) : (props.placeholder ? props.placeholder : language.dateAndTime);
-
-  return (
-    <View style={{ justifyContent: 'center' }}>
-      <View>
-        <TouchableOpacity onPress={() => setShow(true)}>
-          <Text style={[styles.bodyText, { marginHorizontal: sizes[10] }, props.textStyle]}>{displayText}</Text>
-        </TouchableOpacity>
-      </View>
-      { show && getPlatformSpecificPicker()}
+export const ButtonRow = (props: { containerStyle?: ViewStyle, buttons: { title: string, onPress: () => void }[], justifyButtons?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' }) => {
+  const styles = React.useContext(AppContext).styles;
+  return <View style={[{ flexDirection: 'row', alignSelf: 'stretch' }, props.containerStyle]}>
+    <View style={{ flex: 1, flexDirection: 'row', justifyContent: props.justifyButtons ? props.justifyButtons : 'space-between', marginTop: sizes[20] }}>
+      {props.buttons.map((button, index) => {
+        return <LinkButton key={index} title={button.title} titleStyle={[styles.buttonText, styles.dimColor]}
+          onPress={button.onPress} />;
+      })}
     </View>
-  );
-
-  function getDefaultDate() {
-    const defaultDate = new Date();
-    if (props.defaultMinutes !== undefined)
-      defaultDate.setMinutes(props.defaultMinutes);
-    if (props.defaultHours !== undefined)
-      defaultDate.setHours(props.defaultHours);
-    return defaultDate;
-  }
-
-  function getPlatformSpecificPicker() {
-    const defaultDate = getDefaultDate();
-
-    if (Platform.OS === 'ios') {
-      return <DateTimePickerIOS
-        {...props}
-        show={show}
-        value={props.value || defaultDate}
-        onChange={onChange}
-        onCancel={() => setShow(false)}
-      />;
-    }
-    else {
-      return <DateTimePicker
-        mode={props.mode ? props.mode : 'date'}
-        value={props.value || defaultDate}
-        onChange={onChange}
-        style={props.style ? props.style : {}}
-      />;
-    }
-  }
-};
-
-const DateTimePickerIOS = (props: StyledDatePickerProps & { show?: boolean, onCancel: () => void; }) => {
-  const { language, styles } = React.useContext(AppContext);
-  const [value, setValue] = useState(props.value);
-
-  function onOkPress() {
-    if (props.onChange) props.onChange(null, value);
-  };
-
-  function onCancelPress() {
-    setValue(props.value);
-    props.onCancel();
-  };
-
-  return (
-    <Modal animationType='fade' transparent={true} visible={props.show}>
-      <View style={styles.modalWrapper}>
-        <View style={[styles.modal, styles.brightBackground, { paddingBottom: sizes[20] }]}>
-          <DateTimePicker
-            mode={props.mode ? props.mode : 'date'}
-            value={value || new Date()}
-            display={'spinner'}
-            onChange={(event: any, newDate: any) => setValue(newDate)}
-            style={[{ width: sizes[255] }]}
-          />
-          {/* centered and stretched button row */}
-          <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: sizes[20] }}>
-              <LinkButton title={language.cancel} titleStyle={[styles.buttonText, styles.dimColor]}
-                onPress={onCancelPress} />
-              <LinkButton title={language.ok} titleStyle={[styles.buttonText, styles.dimColor]}
-                onPress={onOkPress} />
-            </View>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
-
-export const TimePicker = (props: StyledDatePickerProps & { value?: Date }) => {
-  const context = React.useContext(AppContext);
-  const language = context.language;
-  const styles = context.styles;
-  return (
-    <View style={styles.formItem}>
-      <StyledDatePicker
-        {...props}
-        format='LT' /* Local Time (format support by moment.js) */  /* maybe allow settings overwrite */
-        mode='time'
-        placeholder={props.placeholder || language.pickTime}
-      />
-    </View>
-  );
+  </View>;
 };
 
 export const IconForButton = (props: IconProps) => {
@@ -290,42 +174,6 @@ export const IconForButton = (props: IconProps) => {
   const styles = context.styles;
   return <Icon iconStyle={{ ...styles.iconPrimarySmall, ...props.iconStyle }} {...props} />;
 };
-
-export const DatePickerWithArrows = (props: StyledDatePickerProps) => {
-  const context = React.useContext(AppContext);
-  const styles = context.styles;
-
-  function changeDays(numDays: number) {
-    if (props.onChange)
-      props.onChange(null, addSubtractDays(props.value, numDays));
-  }
-
-  function onChange(event: any, newDate?: Date) {
-    if (isValidDate(newDate) && props.onChange)
-      props.onChange(event, newDate);
-  }
-
-  return (
-    <View style={styles.selectedDateContainer}>
-      <Button onPress={() => { changeDays(-1); }}
-        type='clear'
-        icon={<IconForButton name='chevron-left' iconStyle={styles.iconSecondary} />}
-      />
-      <StyledDatePicker
-        value={props.value ? new Date(props.value) : new Date(NaN)}
-        format='ddd, MMM D Y'
-        textStyle={styles.bodyTextLarge}
-        style={{ width: sizes[150] }}
-        onChange={onChange}
-      />
-      <Button onPress={() => { changeDays(1); }}
-        type='clear'
-        icon={<IconForButton name='chevron-right' iconStyle={styles.iconSecondary} />}
-      />
-    </View>
-  );
-};
-
 export interface ButtonPropsInterface extends ButtonProps {
   iconName?: string,
   iconType?: string,
@@ -491,6 +339,7 @@ export const List = (props: any) => {
 
   return (
     <FlatList
+      ListEmptyComponent={<EmptyList />}
       keyExtractor={item => item.id}
       {...props}
       renderItem={({ item }) => props.renderItem ? props.renderItem({ item }) : renderListItem({ item })}
@@ -599,4 +448,21 @@ export const StyledImage = (props: StyledImageProps) => {
       height,
       width
     }} />;
+};
+
+export const StyledScrollPicker = (props: { data: any[], selectedIndex: number, pickerHeight: number, onValueChange: (data: any, selectedIndex: any) => void }) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+  return <ScrollPicker
+    dataSource={props.data}
+    selectedIndex={props.selectedIndex}
+    renderItem={(data: any, index: any) => { }}
+    onValueChange={props.onValueChange}
+    wrapperHeight={props.pickerHeight}
+    wrapperBackground={styles.brightBackground.color}
+    itemHeight={sizes[60]}
+    activeItemTextStyle={styles.bodyText}
+    highlightColor={styles.bodyText.color}
+    highlightBorderWidth={1}
+  />;
 };

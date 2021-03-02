@@ -22,6 +22,8 @@ import SetupPINScreen from '../screens/SetupPINScreen';
 import { AuthState } from '../redux/reducerTypes';
 import { dimensions, platform, sizes } from '../assets/styles/style';
 import { images } from '../modules/constants';
+import DayView from '../screens/DayView';
+import DayViewScreen from '../screens/DayViewScreen';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -104,6 +106,13 @@ function HomeNavigator() {
                 options={ItemHistoryScreen.getNavigationOptions}
             /* dynamic nav options in the component */
             />
+            <HomeStack.Screen
+                name='DayView'
+                component={DayViewScreen}
+                options={({ route, navigation }) => ({
+                    title: language.yourWellbeing
+                })}
+            />
         </HomeStack.Navigator>
     );
 }
@@ -129,6 +138,13 @@ function InsightsNavigator() {
                 name='ItemHistory'
                 component={ItemHistoryScreen}
                 options={ItemHistoryScreen.getNavigationOptions} /* dynamic nav options in the component */
+            />
+            <InsightsStack.Screen
+                name='DayView'
+                component={DayViewScreen}
+                options={({ route, navigation }) => ({
+                    title: language.yourWellbeing
+                })}
             />
         </InsightsStack.Navigator>
     );

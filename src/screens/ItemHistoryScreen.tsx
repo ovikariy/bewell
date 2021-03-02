@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
 import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
-import ItemHistory from '../components/ItemHistory';
+import { ItemHistory } from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
 import { AppNavigationProp, AppRouteProp } from '../modules/types';
-import { Calendar } from '../components/Calendar';
 import { filterByItemType } from '../modules/utils';
 
 const mapStateToProps = (state: RootState) => ({
@@ -76,19 +75,19 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
 
     const items = filterByItemType(this.props.STORE.items, this.itemType);
 
-    /** TODO: remove 1 === 0 below to enable calendar feature */
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerMediumMargin, { paddingHorizontal: 0 }]}>
-          {1 === 0 && renderCalendarItem && <Calendar selectedDate={new Date()} data={items} renderItem={renderCalendarItem} />}
           <ItemHistory style={[styles.toolbarBottomOffset]}
             items={items}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
             onSelected={(item) => { this.onSelected(item); }}
             renderItem={renderHistoryItem} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
+            renderCalendarItem={renderCalendarItem}
             config={widgetFactory[this.itemType].config}
-          ></ItemHistory>
+            navigation={this.props.navigation}
+          />
         </ScreenContent>
         <FloatingToolbar isVisible={this.state.selectedItem !== undefined}>
           <DeleteWidgetItemButton item={this.state.selectedItem} onDelete={(storeKey, item) => { this.deleteItem(storeKey, item); }} />

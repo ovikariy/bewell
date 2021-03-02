@@ -32,7 +32,7 @@
   "selectItemFirst": "Select an item first",
   "itemDeleted": "Item deleted",
   "updatedSuccessfully": "Updated successfully",
-  "emptyList": "Oops...empty list",
+  "emptyList": "Looks like no records here",
   "password": "Password",
   "passwordEnter": "Enter password",
   "passwordEnterFile": "Enter File Password",

@@ -41,11 +41,12 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
   }
 
   addBlankRecordOfType(itemTypeName: string) {
-    const selecetedDateCurrentTime = updateTimeStringToNow(this.props.selectedDate.toISOString());
+    const selectedDateCurrentTime = updateTimeStringToNow(this.props.selectedDate.toISOString());
     const emptyRecord = {
       id: getNewUuid(),
       type: itemTypeName,
-      date: selecetedDateCurrentTime
+      date: selectedDateCurrentTime,
+      dateCreated: new Date().toISOString()
     } as WidgetBase;
 
     this.onChange(emptyRecord);

@@ -70,7 +70,7 @@ export const SystemSettingsComponent = (props: SystemSettingsComponentProps) => 
 
   function onChange(id: string, newValue: string) {
     setSelectedItemId('');
-    props.onChange({ id, date: new Date().toISOString(), value: newValue });
+    props.onChange({ id, date: new Date().toISOString(), dateCreated: new Date().toISOString(), value: newValue });
   }
 
   function onCancelChange() {

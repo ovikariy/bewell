@@ -46,7 +46,8 @@ export const sizes = {
   100: normalizeSize(100),
   150: normalizeSize(150),
   180: normalizeSize(180),
-  255: normalizeSize(255)
+  255: normalizeSize(255),
+  300: normalizeSize(300),
 };
 
 export function normalizeSize(size: number, factor?: number) {
@@ -115,6 +116,11 @@ export function getThemeStyles(theme: ThemePropertyType) {
     bodyTextLarge: {
       fontFamily: fonts.primary,
       fontSize: normalizeSize(18, 1.2),
+      color: colors.colorful1
+    },
+    bodyTextTiny: {
+      fontFamily: fonts.primary,
+      fontSize: normalizeSize(12, 1.2),
       color: colors.colorful1
     },
     placeholderText: {
@@ -307,7 +313,6 @@ export function getThemeStyles(theme: ThemePropertyType) {
       resizeMode: 'contain'
     },
 
-    //TODO: normalize
     sleepComponentTimeFieldContainer: {
       width: normalizeSize(300),
       paddingVertical: normalizeSize(10, 0.5),
@@ -516,6 +521,26 @@ export function getThemeStyles(theme: ThemePropertyType) {
     },
     switchTrack: {
       color: colors.foreground
+    },
+
+    /* calendar */
+    calendarHeaderContainer: {
+      flexDirection: 'row',
+      marginVertical: sizes[10],
+      paddingHorizontal: sizes[5] + '%',
+      backgroundColor: colors.colorful2,
+    },
+    calendarBodyContainer: {
+      flexDirection: 'row',
+      marginVertical: sizes[10],
+      marginHorizontal: sizes[5] + '%',
+      minHeight: sizes[50] * 6 /* calendarDayContainer.minHeight * 6 */
+    },
+    calendarDayContainer: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: normalizeSize(5, 10),
+      minHeight: sizes[50] /* = calendarBodyContainer.minHeight / 6 */
     }
   });
 }

@@ -32,7 +32,7 @@
   "selectItemFirst": "Sélectionnez d'abord un élément",
   "itemDeleted": "Élément supprimé",
   "updatedSuccessfully": "Mis à jour avec succés",
-  "emptyList": "Liste vide...",
+  "emptyList": "Il n'y a pas d'élément dans la liste",
   "password": "Mot de passe",
   "passwordEnter": "Entrez le mot de passe",
   "passwordEnterFile": "Entrez le mot de passe fichier",

@@ -13,6 +13,7 @@ export class AppError extends Error {
 export interface ItemBase {
     id: string;
     date: string;
+    dateCreated: string;  /** putting this field here, might be useful for sorting in the future but early pre-production records might not have date */
 }
 
 /**
@@ -44,6 +45,7 @@ export type RootStackParamList = {
     Backup: undefined
     BackupRestore: undefined
     Home: undefined
+    DayView: { date: string }
     Insights: undefined
     ItemHistory: { itemType: string, title: string }
     Password: undefined

@@ -52,10 +52,12 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
     return <View />;
   const ratingIcon = moodRatingIcons[props.item.rating];
   return (
-    <View style={{ margin: sizes[10] }}>
+    <View style={{ margin: sizes[10], alignContent: 'center' }}>
       <Text style={props.isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
         {friendlyTime(props.item.date)}</Text>
-      <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null} />
+      <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null}
+        iconStyle={{fontSize: sizes[26]}}
+        containerStyle={{ height: sizes[40], width: sizes[40] }} />
     </View>
   );
 };
@@ -71,6 +73,6 @@ export const MoodCalendarComponent = (props: MoodHistoryComponentProps) => {
     return <View />;
   const ratingIcon = moodRatingIcons[props.item.rating];
   return <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} hideText={true}
-    iconStyle={styles.ratingIconSmallStyle}
-    containerStyle={styles.ratingIconSmallContainer} />;
+    iconStyle={[styles.ratingIconSmallStyle, { color: styles.brightColor.color }]}
+    containerStyle={[styles.ratingIconSmallContainer, { margin: -2 }]} />;
 };
