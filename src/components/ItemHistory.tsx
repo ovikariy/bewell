@@ -36,7 +36,7 @@ export const ItemHistory = (props: ItemHistoryProps) => {
   /** 1st sort as the widget records were added but reversed */
   const sorted = items.slice(0).reverse(); /** items.slice(0).reverse() sorts without reversing the original array which is what we want but items.reverse() does */
 
-  const groupedByDayMap = groupBy(sorted, (item: WidgetBase) => item.date.substring(0, 10), undefined); /** group by first 10 chars e.g. 2020-01-01 */
+  const groupedByDayMap = groupBy(sorted, (item: WidgetBase) => new Date(item.date).toLocaleDateString(), undefined); /** group by locale date */
   const groupedByDayArray = Array.from(groupedByDayMap.values()) as [WidgetBase[]];
 
   /** 2st sort day groups by the date of the group's first element */
