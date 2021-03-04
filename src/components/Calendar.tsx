@@ -72,7 +72,13 @@ export const Calendar = (props: CalendarProps) => {
       if (weekdayGroups[dayOfWeek].length === 0 && i > dayOfWeek + 1)
         weekdayGroups[dayOfWeek].push(renderDayContent(tempDateString, i + 100));
 
-      const matchingItem = props.data.find(item => new Date(item.date).toLocaleDateString() === tempDateString);
+      let matchingItem;
+      for (let i = props.data.length - 1; i >= 0; i--) {
+        if (new Date(props.data[i].date).toLocaleDateString() === tempDateString) {
+          matchingItem = props.data[i];
+          break;
+        }
+      }
       if (matchingItem && props.renderItem) {
         const customDisplay = props.renderItem(matchingItem);
         weekdayGroups[dayOfWeek].push(renderDayContent(tempDateString, i, i, matchingItem, customDisplay));

@@ -9,7 +9,7 @@ interface HomeScreenProps {
 class HomeScreen extends Component<HomeScreenProps>  {
 
   componentDidUpdate() {
-    //this.props.navigation.navigate('Settings', { screen: 'SystemSettings' });
+    //this.props.navigation.navigate('Settings');
     //const language = this.context.language;
     // this.props.navigation.navigate('ItemHistory', { title: language.mood, itemType: ItemTypes.MOOD });
   }

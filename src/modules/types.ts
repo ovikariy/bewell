@@ -56,7 +56,6 @@ export type RootStackParamList = {
     SetupPIN: undefined
     SignIn: undefined
     SignOut: undefined
-    SystemSettings: undefined
     Welcome: undefined
 };
 
