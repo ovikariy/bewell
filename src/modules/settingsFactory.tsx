@@ -14,7 +14,7 @@ interface SettingsFactoryItemType {
     title: string,
     subTitle?: string,
     value?: string
-    iconName?: string,
+    iconName: string,
     readOnly?: boolean,
     itemContent?: (
         value: string | undefined,

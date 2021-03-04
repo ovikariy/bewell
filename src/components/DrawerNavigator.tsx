@@ -8,7 +8,6 @@ import { AppContext } from '../modules/appContext';
 import HomeScreen from '../screens/HomeScreen';
 import ItemHistoryScreen from '../screens/ItemHistoryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import SystemSettingsScreen from '../screens/SystemSettingsScreen';
 import PasswordScreen from '../screens/PasswordScreen';
 import BackupRestoreScreen from '../screens/BackupRestore';
 import RestoreScreen from '../screens/RestoreScreen';
@@ -166,11 +165,6 @@ function SettingsNavigator() {
                     headerLeft: () => <MenuHeaderButton navigation={navigation} />,
                     headerRight: () => <LogoImage />
                 })}
-            />
-            <SettingsStack.Screen
-                name='SystemSettings'
-                component={SystemSettingsScreen}
-                options={{ title: language.system, }}
             />
             <SettingsStack.Screen
                 name='Password'
