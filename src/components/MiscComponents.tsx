@@ -379,23 +379,33 @@ export const StyledPicker = (props: StyledPickerProps) => {
   if (!props.items)
     return <View />;
 
-  const { showActionSheetWithOptions } = useActionSheet();
   const options = props.items.map((item) => item.label);
   options.push(language.cancel); /* append cancel button last */
 
   const selectedItem = props.items.find((item) => item.value === props.selectedValue);
-
   return (
     <View>
       <Text style={styles.bodyText}>{selectedItem && selectedItem.label}</Text>
-      {props.show && showActionSheetWithOptions(
+      {props.show && <ActionSheet options={options} {...props} />}
+    </View>
+  );
+};
+
+export const ActionSheet = (props: StyledPickerProps & { options: string[] }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
+  /** separated useActionSheet into a separate component because was giving an error when used inside StyledPicker:
+   *  Cannot update during an existing state transition (such as within `render`). Render methods should be a pure function of props and state.*/
+  return (
+    <View>
+      <React.Fragment />
+      {showActionSheetWithOptions(
         {
           title: props.title,
-          cancelButtonIndex: options.length - 1,
-          options
+          cancelButtonIndex: props.options.length - 1,
+          options: props.options
         },
         (index) => {
-          if (index === options.length - 1 && props.onCancelChange) { /* cancel button pressed */
+          if (index === props.options.length - 1 && props.onCancelChange) { /* cancel button pressed */
             props.onCancelChange();
             return;
           }
