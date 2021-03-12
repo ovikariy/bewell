@@ -89,7 +89,17 @@ export async function importUserDataZip(docPickerFileUri: string): Promise<Impor
 
   /** unzip the archive */
   const jsZip = new JSZip();
-  const upzippedContent = await jsZip.loadAsync(zipContent, { base64: true });
+
+  let upzippedContent;
+  try {
+    upzippedContent = await jsZip.loadAsync(zipContent, { base64: true });
+  }
+  catch (error) {
+    throw new AppError(ErrorMessage.InvalidFile, ErrorCode.Zip1);
+  }
+
+  if (!upzippedContent)
+    throw new AppError(ErrorMessage.InvalidFile, ErrorCode.Zip2);
 
   /** find the data file and images in the zip */
   const result = { images: {} } as ImportInfo;

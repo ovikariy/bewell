@@ -149,7 +149,9 @@ export enum ErrorCode {
   File1 = 'F1001',
   File2 = 'F1002',
   File3 = 'F1003',
-  File4 = 'F1004'
+  File4 = 'F1004',
+  Zip1 = 'Z1001',
+  Zip2 = 'Z1002',
 };
 /**
  * @description Chooses an image from assets/images/headers directory
