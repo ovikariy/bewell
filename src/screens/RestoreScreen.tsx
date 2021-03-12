@@ -191,6 +191,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       {this.renderFileField()}
       <View style={[styles.flex, styles.bottomPositioned, { width: '100%', alignItems: 'center'}]}>
         <ButtonPrimary
+          iconName='arrow-back'
           title={language.importClear}
           onPress={() => { this.clearSelectedFile(); }}
         />
@@ -230,6 +231,7 @@ class RestoreScreen extends Component<RestoreScreenProps, RestoreScreenState> {
       {this.renderFileField()}
       <View style={[styles.flex, styles.bottomPositioned]}>
         <ButtonPrimary
+          iconName='arrow-back'
           title={language.importClear}
           onPress={() => { this.clearSelectedFile(); }}
         />

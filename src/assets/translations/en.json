@@ -87,7 +87,7 @@
   "importPress": "Press the button below to import the selected file",
   "importSelectedFile": "Selected File:",
   "importBrowse": "Browse for file",
-  "importClear": "Clear file",
+  "importClear": "Back to browse",
   "fileEmpty": "Looks like the file is empty",
   "fileNoValidRecords": "No valid records were found in the file",
   "fileInvalidData": "Invalid data, please try another file",

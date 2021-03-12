@@ -87,7 +87,7 @@
   "importPress": "Appuyez sur le bouton ci-dessous pour importer le fichier sélectionné",
   "importSelectedFile": "Le fichier sélectionné:",
   "importBrowse": "Rechercher le fichier",
-  "importClear": "Effacer le fichier",
+  "importClear": "Revenir en arrière",
   "fileEmpty": "On dirait que le fichier est vide",
   "fileNoValidRecords": "Aucun enregistrement valide n'a été trouvé dans le fichier",
   "fileInvalidData": "Les données sont pasvalides, s'il vous plaît essayer un autre fichier",
