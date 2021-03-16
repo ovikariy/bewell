@@ -73,3 +73,19 @@ there is a script *scripts/export-translations.js*. The output filename can be s
 node export-translations.js output.tsv
 
 **Note that these files should not be modified by hand.** 
+
+<h2>Testing the App with Jest</h2>
+
+To run all tests:
+
+<pre> npm test </pre>
+
+With test coverage enabled, this will produce a report at coverage\lcov-report\index.html
+
+To run a specific test file io-tests.ts: 
+
+<pre> npm test -- io-tests.ts </pre>
+
+To suppress generating test coverage and console.log statements:
+
+<pre> npm test -- io-tests.ts --coverage=false --silent </pre>

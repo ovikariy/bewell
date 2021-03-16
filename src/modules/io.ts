@@ -2,7 +2,7 @@ import *  as FileSystem from 'expo-file-system';
 import { AppError, ImageInfoAssocArray, ImportInfo } from './types';
 import { ErrorCode, ErrorMessage } from './constants';
 import JSZip from 'jszip';
-import { formatDate } from './utils';
+import { formatDate, isNullOrEmpty } from './utils';
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 export const FileSystemConstants = {
@@ -55,6 +55,8 @@ async function getImages() {
   const imagesDirectory = await getOrCreateDirectoryAsync(FileSystemConstants.ImagesSubDirectory);
   const imageFileNames = await readDirectoryAsync(imagesDirectory); /** file names are just names not full paths */
   const result = {} as ImageInfoAssocArray;
+  if (!imageFileNames || imageFileNames.length <= 0)
+    return result;
   for (const imageFileName of imageFileNames) {
     const imageFileContent = await getStringfromFileAsync(imagesDirectory + '/' + imageFileName);
     if (imageFileContent) {
@@ -136,7 +138,7 @@ export async function writeImageToDisk(imageFileName: string, imageContent: stri
   return writeFileAsync(imagePath, imageContent, {});
 }
 
-export async function writeFileAsync(filepath: string, text: string, options: FileSystem.WritingOptions) {
+export async function writeFileAsync(filepath: string, text: string, options?: FileSystem.WritingOptions) {
   if (!filepath || filepath.length <= 0)
     throw new AppError(ErrorMessage.InvalidFile, ErrorCode.File3);
   const diskSpaceNeeded = Buffer.byteLength(text);
@@ -147,31 +149,35 @@ export async function writeFileAsync(filepath: string, text: string, options: Fi
   if (!await existsAsync(targetDirectory))
     throw new AppError(ErrorMessage.InvalidDirectory, ErrorCode.File4);
   await FileSystem.writeAsStringAsync(filepath, text, options ? options : {});
+  return filepath;
 }
 
 export async function deleteFilesAsync(directory: string, filenames: string[]) {
-  if (!directory || !filenames)
+  if (isNullOrEmpty(directory) || !filenames)
     return;
   for (const filename of filenames) {
     const fileInfo = await FileSystem.getInfoAsync(directory + '/' + filename);
     if (fileInfo.exists === true && fileInfo.isDirectory === false)
-      await FileSystem.deleteAsync(fileInfo.uri);
+      await deleteFileAsync(fileInfo.uri);
   }
 }
 
 export async function deleteFileAsync(filepath: string) {
-  if (!filepath)
+  if (isNullOrEmpty(filepath))
     return;
   await FileSystem.deleteAsync(filepath);
 }
 
 export async function readDirectoryAsync(directory: string) {
+  if (isNullOrEmpty(directory))
+    return [];
   return FileSystem.readDirectoryAsync(directory);
 }
 
 export async function clearDirectoryAsync(directory: string) {
-  const filesToDelete = await FileSystem.readDirectoryAsync(directory);
-  return deleteFilesAsync(directory, filesToDelete);
+  const filesToDelete = await readDirectoryAsync(directory);
+  if (filesToDelete)
+    return deleteFilesAsync(directory, filesToDelete);
 }
 
 export async function getOrCreateDirectoryAsync(path: string) {
@@ -189,6 +195,8 @@ export async function existsAsync(path: string) {
 }
 
 export async function getStringfromFileAsync(filePath: string) {
+  if (isNullOrEmpty(filePath))
+    return null;
   const fileContent = await FileSystem.readAsStringAsync(filePath);
   if (!fileContent)
     return null;
@@ -196,7 +204,7 @@ export async function getStringfromFileAsync(filePath: string) {
 }
 
 export async function getJSONfromFileAsync(filePath: string) {
-  const fileContent = await FileSystem.readAsStringAsync(filePath);
+  const fileContent = await getStringfromFileAsync(filePath);
   if (!fileContent)
     return null;
   return JSON.parse(fileContent);
