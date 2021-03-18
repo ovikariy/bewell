@@ -1,5 +1,5 @@
 import 'react-native';
-import 'misc'; /* special mocks */
+import '../../__mocks__/misc'; /** special mocks */
 import *  as FileSystem from 'expo-file-system';
 import * as io from '../io';
 import { fs, createFileSystemMock } from '../__mocks__/FileSystemMock';

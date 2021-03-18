@@ -142,7 +142,7 @@ export class SleepComponent extends Component<SleepComponentProps> {
 }
 
 
-interface SleepHistoryComponentProps {
+export interface SleepHistoryComponentProps {
   item: SleepComponentWidgetType;
   isSelectedItem: boolean;
   config: WidgetConfig;

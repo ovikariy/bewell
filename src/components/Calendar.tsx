@@ -6,7 +6,7 @@ import moment from 'moment';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MonthPicker } from './DatetimeComponents';
 
-interface CalendarProps {
+export interface CalendarProps {
   selectedDate: Date, data: any[],
   renderItem?: (item: any) => ReactNode,
   onItemPress?: (date: string, item: any) => void,

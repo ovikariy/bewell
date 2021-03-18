@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoteComponent renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "paddingHorizontal": 10,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderBottomWidth": 0,
+        "borderColor": "#86939e",
+        "borderWidth": 0,
+        "flexDirection": "row",
+        "margin": 0,
+        "padding": 0,
+        "transform": Array [
+          Object {
+            "translateX": 0,
+          },
+        ],
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      autoFocus={true}
+      editable={true}
+      multiline={true}
+      numberOfLines={1}
+      onChangeText={[Function]}
+      placeholder="What's on your mind?"
+      placeholderTextColor="#FFFFFF70"
+      rejectResponderTermination={true}
+      scrollEnabled={false}
+      style={
+        Object {
+          "alignSelf": "center",
+          "color": "#87BCBF",
+          "flex": 1,
+          "fontFamily": "Helvetica",
+          "fontSize": 17,
+          "minHeight": 40,
+        }
+      }
+      testID="RNE__Input__text-input"
+      textAlignVertical="top"
+      underlineColorAndroid="transparent"
+    />
+  </View>
+</View>
+`;
+
+exports[`NoteComponent renders correctly 2`] = `
+<View
+  style={
+    Object {
+      "paddingHorizontal": 10,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderBottomWidth": 0,
+        "borderColor": "#86939e",
+        "borderWidth": 0,
+        "flexDirection": "row",
+        "margin": 0,
+        "padding": 0,
+        "transform": Array [
+          Object {
+            "translateX": 0,
+          },
+        ],
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      autoFocus={false}
+      editable={true}
+      multiline={true}
+      numberOfLines={1}
+      onChangeText={[Function]}
+      placeholder="What's on your mind?"
+      placeholderTextColor="#FFFFFF70"
+      rejectResponderTermination={true}
+      scrollEnabled={false}
+      style={
+        Object {
+          "alignSelf": "center",
+          "color": "#87BCBF",
+          "flex": 1,
+          "fontFamily": "Helvetica",
+          "fontSize": 17,
+          "minHeight": 40,
+        }
+      }
+      testID="RNE__Input__text-input"
+      textAlignVertical="top"
+      underlineColorAndroid="transparent"
+      value="\\"testing note's line 1
+  line 2
+  line 3
+  \\""
+    />
+  </View>
+</View>
+`;

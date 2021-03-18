@@ -1,6 +1,6 @@
 import 'react-native';
+import '../../__mocks__/misc'; /** special mocks */
 import { createMockAsyncStorageService } from '../__mocks__/AsyncStorageService';
-import 'misc'; /* special mocks */
 
 /* import the code that uses the mocks after calling jest.mock */
 import * as storage from '../storage';
