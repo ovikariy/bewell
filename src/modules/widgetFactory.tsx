@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { ItemTypes } from './constants';
+import { ItemTypes, settingsConstants } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { MoodCalendarComponent, MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
@@ -9,6 +9,8 @@ import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
 import { ItemBase } from './types';
 import { sizes } from '../assets/styles/style';
+import { RatingCalendarComponent, RatingComponent, RatingComponentProps, RatingComponentWidgetType, RatingHistoryComponent } from '../components/RatingComponent';
+import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, ActivityComponentWidgetType, ActivityHistoryComponent } from '../components/ActivityComponent';
 
 export function CreateWidgetFactory(context: AppContextState) {
   const language = context.language;
@@ -100,7 +102,89 @@ export function CreateWidgetFactory(context: AppContextState) {
         renderHistoryItem: (item: ImagePickerWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ImagePickerHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         }
-      } as WidgetFactoryType
+      } as WidgetFactoryType,
+    [ItemTypes.MOVE]:
+      {
+        config: {
+          widgetTitle: 'Movement', //TODO: language.waterIntake,
+          historyTitle: 'Movement', //TODO: language.waterIntake,
+          itemTypeName: ItemTypes.MOVE,
+          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
+          addIcon: { text: 'Move', name: 'walk', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle
+        },
+        renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
+          return <ActivityComponent activities={settingsConstants.exercises} showDistance={true} showDuration={true} {...props} config={config} />;
+        },
+        renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: ActivityComponentWidgetType, config: WidgetConfig) => {
+          return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+    [ItemTypes.WATER]:
+      {
+        config: {
+          widgetTitle: language.waterIntake,
+          historyTitle: language.waterIntake,
+          itemTypeName: ItemTypes.WATER,
+          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
+          addIcon: { text: language.water, name: 'cup', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle,
+          ratings: [1, 2, 3, 4, 5, 6, 7, 8]
+        },
+        renderWidgetItem: (props: RatingComponentProps, config: WidgetConfig) => {
+          return <RatingComponent iconName='cup' {...props} config={config} />;
+        },
+        renderHistoryItem: (item: RatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <RatingHistoryComponent iconName='cup' item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: RatingComponentWidgetType, config: WidgetConfig) => {
+          return <RatingCalendarComponent iconName='cup' item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+    [ItemTypes.CREATE]:
+      {
+        config: {
+          widgetTitle: 'Creativity', //TODO: language.waterIntake,
+          historyTitle: 'Creativity', //TODO: language.waterIntake,
+          itemTypeName: ItemTypes.CREATE,
+          isQuickAccess: false, /* means will show in the toolbar without having to press 'more' button */
+          addIcon: { text: 'Create', name: 'creation', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle
+        },
+        renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
+          return <ActivityComponent activities={settingsConstants.creativity} showDuration={true} {...props} config={config} />;
+        },
+        renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: ActivityComponentWidgetType, config: WidgetConfig) => {
+          return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+    [ItemTypes.MEDITATE]:
+      {
+        config: {
+          widgetTitle: 'Meditation (minutes)', //TODO: language.waterIntake,
+          historyTitle: 'Meditation', //TODO: language.waterIntake,
+          itemTypeName: ItemTypes.MEDITATE,
+          isQuickAccess: false, /* means will show in the toolbar without having to press 'more' button */
+          addIcon: { text: 'Meditate', name: 'spa', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle,
+          ratings: [1, 3, 5, 10, 15, 20, 30, 60]
+        } as WidgetConfig,
+        renderWidgetItem: (props: RatingComponentProps, config: WidgetConfig & { ratings: number[]}) => {
+          return <RatingComponent iconName='spa' {...props} config={config} />;
+        },
+        renderHistoryItem: (item: RatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <RatingHistoryComponent iconName='spa' item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: RatingComponentWidgetType, config: WidgetConfig) => {
+          return <RatingCalendarComponent iconName='spa' item={item} isSelectedItem={false} config={config} hideText={true} />;
+        }
+      } as WidgetFactoryType,
   };
 
   return widgetFactory;
@@ -115,7 +199,7 @@ export interface WidgetComponentPropsBase {
   selectedDate: Date,
   isSelected?: boolean;
   config: WidgetConfig;
-  onChange: (newValue: WidgetBase) => void
+  onChange?: (newValue: WidgetBase) => void
   onSelected?: (id: string) => void;
 }
 

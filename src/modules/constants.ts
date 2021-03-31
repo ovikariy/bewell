@@ -20,7 +20,11 @@ export const ItemTypes = {
   MOOD: 'MOOD',
   NOTE: 'NOTE',
   SLEEP: 'SLEEP',
-  IMAGE: 'IMAGE'
+  IMAGE: 'IMAGE',
+  WATER: 'WATER',
+  MOVE: 'MOVE',
+  CREATE: 'CREATE',
+  MEDITATE: 'MEDITATE'
 };
 
 export const brokenImageURI = 'broken'; /* this is just so that we can show something to user to indicate the image will not get loaded */
@@ -73,7 +77,11 @@ export const settingsConstants = {
   language: 'language',
   theme: 'theme',
   version: 'version',
-  hideNoteText: 'hideNoteText'
+  hideNoteText: 'hideNoteText',
+  durationPickerItems: ['none', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],//TODO: translations
+  distancePickerItems: ['none', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50], //TODO: translations
+  exercises: ['Walking', 'Running', 'Swimming', 'Surfing', 'Jogging', 'Yoga', 'Biking', 'Playing Sports', 'Workout'], //TODO: translations
+  creativity: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'] //TODO: translations
 };
 
 export enum ErrorCode {

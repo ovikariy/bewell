@@ -60,7 +60,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
         hasNonQuickAccessItems = true;
       if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
         return;
-      return <ToolbarButton iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
+      return <ToolbarButton containerStyle={{ marginHorizontal: sizes[15], marginVertical: sizes[5] }} iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
         onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />;
     });
     if (hasNonQuickAccessItems) {

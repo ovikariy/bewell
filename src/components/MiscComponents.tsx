@@ -1,11 +1,11 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
   TouchableOpacity, FlatList, RefreshControl, TextInput, Dimensions, Image,
   StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps } from 'react-native-elements';
+import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, Overlay } from 'react-native-elements';
 import { wait } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { brokenImageURI, ErrorMessage } from '../modules/constants';
@@ -192,6 +192,22 @@ export const ButtonSecondary = (props: ButtonPropsInterface) => {
   );
 };
 
+export const ButtonTertiary = (props: ButtonPropsInterface) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  return (
+    <ButtonSecondary {...props}
+      containerStyle={[{ width: 'auto' }, props.containerStyle]}
+      buttonStyle={[styles.buttonTertiary, props.buttonStyle]}
+      iconRight={props.iconRight || true}
+      iconType={props.iconType || 'font-awesome'}
+      iconStyle={props.iconStyle || { marginLeft: sizes[10], marginRight: 0, fontSize: sizes[16], color: styles.brightColor.color }}
+      titleStyle={props.titleStyle || [styles.bodyText, styles.brightColor, { textTransform: 'none' }]}
+    />
+  );
+};
+
 export const ButtonPrimary = (props: ButtonPropsInterface) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
@@ -201,7 +217,7 @@ export const ButtonPrimary = (props: ButtonPropsInterface) => {
       containerStyle={[{ width: sizes[255] }, props.containerStyle]}
       buttonStyle={[styles.buttonPrimary, props.buttonStyle]}
       titleStyle={[styles.buttonText, props.titleStyle]}
-      icon={props.iconName ? <IconForButton name={props.iconName} iconStyle={{ ...{ marginRight: sizes[20], color: styles.buttonText.color }, ...props.iconStyle }} /> : <React.Fragment />} />
+      icon={props.iconName ? <IconForButton name={props.iconName} type={props.iconType || 'default'} iconStyle={{ ...{ marginRight: sizes[20], color: styles.buttonText.color }, ...props.iconStyle }} /> : <React.Fragment />} />
   );
 };
 
@@ -324,7 +340,7 @@ export const List = (props: any) => {
         style={[styles.dimBackground, styles.listItemContainer]}
         onPress={item.onPress ? item.onPress : null} >
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
-          {item.iconName ? <IconForButton name={item.iconName} type='font-awesome' iconStyle={{ ...styles.iconSecondary, ...styles.listItemLeftIcon }} /> : <React.Fragment />}
+          {item.iconName ? <IconForButton name={item.iconName} type={item.iconType ?? 'font-awesome'} iconStyle={{ ...styles.iconSecondary, ...styles.listItemLeftIcon }} /> : <React.Fragment />}
           {item.itemContent ? item.itemContent :
             <View style={styles.flex}>
               <Text style={[styles.heading2]}>{item.title}</Text>
@@ -475,4 +491,79 @@ export const StyledScrollPicker = (props: { data: any[], selectedIndex: number, 
     highlightColor={styles.bodyText.color}
     highlightBorderWidth={1}
   />;
+};
+
+
+export interface WheelPickerProps {
+  value?: any;
+  placeholder?: string;
+  textLeft?: string;
+  textRight?: string;
+  icon?: IconProps;
+  isSelected?: boolean;
+  containerStyle?: StyleProp<ViewStyle>
+}
+
+/** WheelPickerReadonly is useful if need to show the same component as the wheel picker without the clickable part e.g. inside ExerciseComponent */
+export const WheelPickerReadonly = (props: WheelPickerProps) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+  //TODO: translation for <pick value>
+  return <View style={[{ flexDirection: 'row' }, props.containerStyle]}>
+    {props.icon && <IconForButton type={props.icon.type || 'material-community'} iconStyle={styles.bodyText} containerStyle={[{ justifyContent: 'center' }, styles.spacedOut]} {...props.icon} />}
+    {props.textLeft && <Text style={[styles.bodyText, styles.spacedOut]}>{props.textLeft}</Text>}
+    <Text style={[styles.bodyText, styles.spacedOut, { marginLeft: sizes[10] }]}>{props.value || props.placeholder || '<pick value>'}</Text>
+    {(props.textRight && props.value !== undefined) && <Text style={[styles.bodyText, styles.spacedOut]}>{props.textRight}</Text>}
+  </View>;
+};
+
+/** Wheel picker */
+export const WheelPicker = (props: WheelPickerProps & { data: any[], firstValueIsEmpty?: boolean, title?: string, onChange: (selectedValue?: any) => void }) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+  const language = context.language;
+
+  const [show, setShow] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(props.value);
+
+  return <View>
+    <TouchableOpacity onPress={() => setShow(true)}>
+      <WheelPickerReadonly {...props} />
+    </TouchableOpacity>
+    {show && showPicker()}
+  </View>;
+
+  function showPicker() {
+    const pickerHeight = sizes[180];
+    const selectedIndex = props.data?.indexOf(props.value);
+    return <Overlay height={pickerHeight + sizes[100]} isVisible={true}>
+      <View>
+        {props.title && <Text style={[styles.bodyTextLarge, styles.dimColor, styles.spacedOut]}>{props.title}</Text>}
+        <View style={{ height: pickerHeight, flexDirection: 'row' }}>
+          <StyledScrollPicker data={props.data} selectedIndex={selectedIndex} pickerHeight={pickerHeight}
+            onValueChange={onValueChange} />
+        </View>
+        <View>
+          <ButtonRow justifyButtons='space-evenly' buttons={[{ title: language.cancel, onPress: onCancelPress }, { title: language.ok, onPress: onOkPress }]} />
+        </View>
+      </View>
+    </Overlay>;
+  }
+
+  function onValueChange(value: any, selectedIndex: any) {
+    if (props.firstValueIsEmpty && selectedIndex === 0) /** first item is for clearing selected e.g. data={['none', 1, 2, 3, 4, 5]} */
+      setSelectedValue(undefined);
+    else
+      setSelectedValue(value);
+  }
+
+  function onOkPress() {
+    if (props.onChange)
+      props.onChange(selectedValue);
+    setShow(false);
+  }
+
+  function onCancelPress() {
+    setShow(false);
+  }
 };

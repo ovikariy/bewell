@@ -39,6 +39,7 @@ export const sizes = {
   24: normalizeSize(24),
   26: normalizeSize(26),
   30: normalizeSize(30),
+  34: normalizeSize(34),
   40: normalizeSize(40),
   50: normalizeSize(50),
   60: normalizeSize(60),
@@ -212,7 +213,17 @@ export function getThemeStyles(theme: ThemePropertyType) {
     },
     buttonSecondary: {
       backgroundColor: colors.colorful2,
-      borderWidth: 0,
+      borderColor: colors.transparent,
+      borderWidth: 1,
+      borderRadius: 40,
+      paddingHorizontal: normalizeSize(10, 0.5),
+      paddingVertical: normalizeSize(10, 0.5),
+      margin: normalizeSize(3, 0.5)
+    },
+    buttonTertiary: {
+      backgroundColor: colors.background2,
+      borderColor: colors.transparent,
+      borderWidth: 1,
       borderRadius: 40,
       paddingHorizontal: normalizeSize(10, 0.5),
       paddingVertical: normalizeSize(10, 0.5),
@@ -288,7 +299,6 @@ export function getThemeStyles(theme: ThemePropertyType) {
     },
     widgetTitle: {
       color: colors.foreground,
-      textTransform: 'capitalize',
       fontSize: sizes[20]
     },
     widgetSubTitle: {

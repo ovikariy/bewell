@@ -67,6 +67,7 @@ class InsightsScreen extends Component<InsightsScreenProps> {
         title: widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle,
         itemCount,
         iconName: widgetConfig.addIcon.name,
+        iconType: widgetConfig.addIcon.type,
         onPress: () => { this.props.navigation.navigate('ItemHistory', { itemType, title: (widgetConfig.historyTitle ? widgetConfig.historyTitle : widgetConfig.widgetTitle) }); }
       });
     });
