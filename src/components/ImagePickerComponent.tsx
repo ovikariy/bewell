@@ -240,7 +240,7 @@ export const ImagePickerHistoryComponent = (props: ImagePickerHistoryComponentPr
   return (
     <View style={styles.row}>
       <View style={[styles.flex]}>
-        <Text style={[styles.bodyText, { marginBottom: sizes[10] }, props.isSelectedItem ? styles.highlightColor : null]}>
+        <Text style={[styles.bodyText, { marginBottom: sizes[10], color: styles.titleText.color }]}>
           {friendlyTime(props.item.date)}</Text>
         <ImagePickerComponent value={props.item} config={props.config} readonly={true} onChange={() => { }} selectedDate={new Date()} />
       </View>

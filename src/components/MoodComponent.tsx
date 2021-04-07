@@ -53,9 +53,9 @@ export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
   const ratingIcon = moodRatingIcons[props.item.rating];
   return (
     <View style={{ margin: sizes[10], alignContent: 'center' }}>
-      <Text style={props.isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
+      <Text style={styles.bodyText}>
         {friendlyTime(props.item.date)}</Text>
-      <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null}
+      <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={styles.titleText.color}
         iconStyle={{fontSize: sizes[26]}}
         containerStyle={{ height: sizes[40], width: sizes[40] }} />
     </View>

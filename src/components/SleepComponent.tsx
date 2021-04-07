@@ -162,12 +162,12 @@ export const SleepHistoryComponent = (props: SleepHistoryComponentProps) => {
   return (
     <View style={styles.row}>
       <View style={[styles.flex, styles.centered]}>
-        <CustomIconRatingItem id={props.item.rating} value={ratingIcon} textColor={props.isSelectedItem ? styles.highlightColor.color : null} />
+        <CustomIconRatingItem id={props.item.rating} value={ratingIcon} textColor={styles.titleText.color} />
       </View>
-      <View style={{ flex: 2 }}>
-        <Text style={props.isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
+      <View style={{ flex: 2, justifyContent: 'center' }}>
+        <Text style={styles.bodyText}>
           {(props.item.startDate) ? language.bedTime + formatDate(props.item.startDate, 'h:mm A') : undefined}</Text>
-        <Text style={props.isSelectedItem ? [styles.subTitleText, styles.highlightColor] : styles.subTitleText}>
+        <Text style={styles.bodyText}>
           {(props.item.endDate) ? language.wakeTime + formatDate(props.item.endDate, 'h:mm A') : undefined}</Text>
       </View>
     </View>

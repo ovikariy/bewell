@@ -1,10 +1,11 @@
 import React from 'react';
 import { AppContext } from '../modules/appContext';
 import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { sizes } from '../assets/styles/style';
 import { IconButton } from './MiscComponents';
+import { friendlyTime } from '../modules/utils';
 
 export interface RatingComponentWidgetType extends WidgetBase {
   rating?: number;
@@ -51,8 +52,12 @@ interface RatingHistoryComponentProps {
   iconName?: string;
 }
 export const RatingHistoryComponent = (props: RatingHistoryComponentProps) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
   return (
     <View style={{ marginTop: sizes[10] }}>
+      <Text style={[styles.bodyText, {color: styles.titleText.color}]}>
+        {friendlyTime(props.item.date)}</Text>
       <RatingComponent value={props.item} {...props} selectedDate={new Date(props.item.date)} />
     </View>
   );

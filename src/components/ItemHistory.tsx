@@ -78,10 +78,10 @@ export const ItemHistory = (props: ItemHistoryProps) => {
   function renderGroupedByDay(daysData: WidgetBase[]) {
     return (
       <View style={[styles.flex]} key={daysData[0].date}>
-        <View style={[styles.row, styles.centered, styles.listItemContainer, { minHeight: 'auto', flex: 0 }]}>
+        <View style={[styles.row, styles.centered, styles.listItemContainer, { minHeight: 'auto', flex: 0, marginVertical: 2 }]}>
           <Text style={[styles.titleText]}>
             {friendlyDay(daysData[0].date, { language })}</Text>
-          <Text style={[styles.bodyText, { marginHorizontal: sizes[20], color: styles.bodyText.color + '80' }]}>
+          <Text style={[styles.bodyText, { marginHorizontal: sizes[20], color: styles.bodyText.color }]}>
             {formatDate(daysData[0].date, 'MMMM D')}</Text>
         </View>
         <View style={{ flex: 1 }}>
@@ -115,8 +115,8 @@ export const ItemHistory = (props: ItemHistoryProps) => {
     };
 
     return (
-      <TouchableOpacity activeOpacity={0.7} style={{ marginHorizontal: sizes[5] }} onPress={() => { props.onSelected(item); }} key={item.id + ''}>
-        <View style={[styles.row, { paddingTop: 0 }, isSelectedItem && styles.highlightBackground]}>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => { props.onSelected(item); }} key={item.id + ''}>
+        <View style={[styles.row, { paddingTop: 0, marginHorizontal: 0 }, isSelectedItem && styles.widgetContainerSelected]}>
           {customItemDisplay}
         </View>
       </TouchableOpacity>

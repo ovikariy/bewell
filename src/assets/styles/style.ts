@@ -314,7 +314,7 @@ export function getThemeStyles(theme: ThemePropertyType) {
       borderBottomWidth: 1
     },
     widgetContainerSelected: {
-      backgroundColor: colors.foreground + '20'
+      backgroundColor: colors.foreground + '15'
     },
     widgetArrowContainer: {
       height: sizes[50],
@@ -497,10 +497,9 @@ export function getThemeStyles(theme: ThemePropertyType) {
     listItemContainer: {
       minHeight: sizes[70],
       marginBottom: normalizeSize(2),
-      backgroundColor: colors.foreground + '20'
+      backgroundColor: colors.foreground + '30'
     },
     listItemLeftIcon: {
-      marginLeft: sizes[5],
       width: sizes[50]
     },
 

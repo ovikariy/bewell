@@ -340,7 +340,7 @@ export const List = (props: any) => {
         style={[styles.dimBackground, styles.listItemContainer]}
         onPress={item.onPress ? item.onPress : null} >
         <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
-          {item.iconName ? <IconForButton name={item.iconName} type={item.iconType ?? 'font-awesome'} iconStyle={{ ...styles.iconSecondary, ...styles.listItemLeftIcon }} /> : <React.Fragment />}
+          {item.iconName ? <IconForButton name={item.iconName} type={item.iconType ?? 'font-awesome'} iconStyle={styles.iconSecondary} containerStyle={styles.listItemLeftIcon} /> : <React.Fragment />}
           {item.itemContent ? item.itemContent :
             <View style={styles.flex}>
               <Text style={[styles.heading2]}>{item.title}</Text>

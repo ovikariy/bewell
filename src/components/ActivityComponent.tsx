@@ -75,7 +75,7 @@ export const ActivityHistoryComponent = (props: ActivityHistoryComponentProps) =
 
   return (<View style={styles.row}>
     <View style={[styles.flex]}>
-      <Text style={props.isSelectedItem ? [styles.bodyText, styles.highlightColor] : styles.bodyText}>
+      <Text style={[styles.bodyText,{color: styles.titleText.color}]}>
         {friendlyTime(props.item.date)}</Text>
       <ActivityComponent value={props.item} config={props.config} selectedDate={new Date(props.item.date)} isSelected={props.isSelectedItem} />
     </View>
