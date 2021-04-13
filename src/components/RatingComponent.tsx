@@ -63,6 +63,7 @@ export const RatingHistoryComponent = (props: RatingHistoryComponentProps) => {
   );
 };
 
+//TODO: sum up all ratings for the day in calendar, enabled by property in widgetFactory
 export const RatingCalendarComponent = (props: RatingHistoryComponentProps & { hideText?: boolean }) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;

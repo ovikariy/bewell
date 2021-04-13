@@ -7,71 +7,73 @@ import { CustomIconType, CustomIconRating, CustomIconRatingItem } from './Custom
 import * as Animatable from 'react-native-animatable';
 import { sizes } from '../assets/styles/style';
 
-export interface MoodComponentWidgetType extends WidgetBase {
+export interface CustomIconRatingComponentWidgetType extends WidgetBase {
   rating?: number;
 }
 
-export interface MoodComponentProps extends WidgetComponentPropsBase {
-  value: MoodComponentWidgetType;
-  onChange: (newValue: MoodComponentWidgetType) => void
+export interface CustomIconRatingComponentProps extends WidgetComponentPropsBase {
+  value: CustomIconRatingComponentWidgetType;
+  onChange: (newValue: CustomIconRatingComponentWidgetType) => void
 }
 
-export const MoodComponent = (props: MoodComponentProps) => {
+export const CustomIconRatingComponent = (props: CustomIconRatingComponentProps) => {
   const ratings = !props.config.icons ? <View /> : props.config.icons.map((icon: CustomIconType, index: number) => {
     return (
       <CustomIconRatingItem key={index} id={index} value={icon}
-        selected={props.value && props.value.rating === index}
-        onPress={(rating) => {
-          if (!Number.isInteger(rating))
-            return; //nothing to do since rating wasn't selected
-          if (props.onChange)
-            props.onChange({ ...props.value, rating });
-        }} />
+        iconStyle={{ fontSize: sizes[30] }}
+        containerStyle={{ height: sizes[50], width: sizes[50] }}
+        selected = { props.value && props.value.rating === index }
+    onPress = {(rating) => {
+  if (!Number.isInteger(rating))
+    return; //nothing to do since rating wasn't selected
+  if (props.onChange)
+    props.onChange({ ...props.value, rating });
+}} />
     );
   });
-  return (
-    <Animatable.View animation="fadeIn" duration={500}>
-      <CustomIconRating>{ratings}</CustomIconRating>
-    </Animatable.View>
-  );
+return (
+  <Animatable.View animation="fadeIn" duration={500}>
+    <CustomIconRating>{ratings}</CustomIconRating>
+  </Animatable.View>
+);
 };
 
-interface MoodHistoryComponentProps {
-  item: MoodComponentWidgetType;
+export interface CustomIconRatingHistoryComponentProps {
+  item: CustomIconRatingComponentWidgetType;
   isSelectedItem: boolean;
   config: WidgetConfig;
 }
-export const MoodHistoryComponent = (props: MoodHistoryComponentProps) => {
+export const CustomIconRatingHistoryComponent = (props: CustomIconRatingHistoryComponentProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
   /* config is basically this object i.e config[itemType]  */
   /* custom render item to show mood icon in the row */
-  const moodRatingIcons = props.config.icons;
-  if (!moodRatingIcons || props.item.rating === undefined)
+  const ratingIcons = props.config.icons;
+  if (!ratingIcons || props.item.rating === undefined)
     return <View />;
-  const ratingIcon = moodRatingIcons[props.item.rating];
+  const ratingIcon = ratingIcons[props.item.rating];
   return (
     <View style={{ margin: sizes[10], alignContent: 'center' }}>
       <Text style={styles.bodyText}>
         {friendlyTime(props.item.date)}</Text>
       <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} textColor={styles.titleText.color}
-        iconStyle={{fontSize: sizes[26]}}
+        iconStyle={{ fontSize: sizes[26] }}
         containerStyle={{ height: sizes[40], width: sizes[40] }} />
     </View>
   );
 };
 
-export const MoodCalendarComponent = (props: MoodHistoryComponentProps) => {
+export const CustomIconRatingCalendarComponent = (props: CustomIconRatingHistoryComponentProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
   /* config is basically this object i.e config[itemType]  */
   /* custom render item to show small mood icon in the calendar */
-  const moodRatingIcons = props.config.icons;
-  if (!moodRatingIcons || props.item.rating === undefined)
+  const ratingIcons = props.config.icons;
+  if (!ratingIcons || props.item.rating === undefined)
     return <View />;
-  const ratingIcon = moodRatingIcons[props.item.rating];
+  const ratingIcon = ratingIcons[props.item.rating];
   return <CustomIconRatingItem id={props.item.rating || -1} value={ratingIcon} hideText={true}
     iconStyle={[styles.ratingIconSmallStyle, { color: styles.brightColor.color }]}
     containerStyle={[styles.ratingIconSmallContainer, { margin: -2 }]} />;

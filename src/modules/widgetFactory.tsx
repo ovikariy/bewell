@@ -2,12 +2,12 @@ import React, { ReactNode } from 'react';
 import { ItemTypes, settingsConstants } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
-import { MoodCalendarComponent, MoodComponent, MoodComponentProps, MoodComponentWidgetType, MoodHistoryComponent } from '../components/MoodComponent';
+import { CustomIconRatingCalendarComponent, CustomIconRatingComponent, CustomIconRatingComponentProps, CustomIconRatingComponentWidgetType, CustomIconRatingHistoryComponent } from '../components/CustomIconRatingComponent';
 import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent, SleepCalendarComponent } from '../components/SleepComponent';
 import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType, ImagePickerHistoryComponent } from '../components/ImagePickerComponent';
 import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
-import { ItemBase } from './types';
+import { ItemBase, WidgetBaseFields } from './types';
 import { sizes } from '../assets/styles/style';
 import { RatingCalendarComponent, RatingComponent, RatingComponentProps, RatingComponentWidgetType, RatingHistoryComponent } from '../components/RatingComponent';
 import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, ActivityComponentWidgetType, ActivityHistoryComponent } from '../components/ActivityComponent';
@@ -50,14 +50,14 @@ export function CreateWidgetFactory(context: AppContextState) {
             { name: language.couldBeBetter, icon: 'mood-sad', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#517fa4' } } as CustomIconType
           ]
         },
-        renderWidgetItem: (props: MoodComponentProps, config: WidgetConfig) => {
-          return <MoodComponent  {...props} config={config} />;
+        renderWidgetItem: (props: CustomIconRatingComponentProps, config: WidgetConfig) => {
+          return <CustomIconRatingComponent  {...props} config={config} />;
         },
-        renderHistoryItem: (item: MoodComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
-          return <MoodHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        renderHistoryItem: (item: CustomIconRatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <CustomIconRatingHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         },
-        renderCalendarItem: (item: MoodComponentWidgetType, config: WidgetConfig) => {
-          return <MoodCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        renderCalendarItem: (item: CustomIconRatingComponentWidgetType, config: WidgetConfig) => {
+          return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
     [ItemTypes.SLEEP]:
@@ -175,7 +175,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           style: {} as ViewStyle,
           ratings: [1, 3, 5, 10, 15, 20, 30, 60]
         } as WidgetConfig,
-        renderWidgetItem: (props: RatingComponentProps, config: WidgetConfig & { ratings: number[]}) => {
+        renderWidgetItem: (props: RatingComponentProps, config: WidgetConfig & { ratings: number[] }) => {
           return <RatingComponent iconName='spa' {...props} config={config} />;
         },
         renderHistoryItem: (item: RatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
@@ -185,13 +185,44 @@ export function CreateWidgetFactory(context: AppContextState) {
           return <RatingCalendarComponent iconName='spa' item={item} isSelectedItem={false} config={config} hideText={true} />;
         }
       } as WidgetFactoryType,
+    [ItemTypes.PERIOD]:
+      {
+        config: {
+          widgetTitle: 'Period', //TODO: translate
+          historyTitle: 'Period', //TODO: translate
+          itemTypeName: ItemTypes.PERIOD,
+          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
+          isHorizontalHistoryRow: true, /* on the history screen, show all items for the day in one row */
+          addIcon: { text: 'Period', name: 'water', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle,
+          icons: [
+            { name: 'Light', icon: 'period-light', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#FCB99B' } } as CustomIconType,
+            { name: 'Medium', icon: 'period-medium', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#FE9D72' } } as CustomIconType,
+            { name: 'Heavy', icon: 'period-heavy', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#F67E49' } } as CustomIconType
+          ]
+        },
+        renderWidgetItem: (props: CustomIconRatingComponentProps, config: WidgetConfig) => {
+          return <CustomIconRatingComponent  {...props} config={config} />;
+        },
+        renderHistoryItem: (item: CustomIconRatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <CustomIconRatingHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: CustomIconRatingComponentWidgetType, config: WidgetConfig) => {
+          return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
   };
 
   return widgetFactory;
 }
 
 export interface WidgetBase extends ItemBase {
-  type: string;
+  [WidgetBaseFields.type]: string;
+}
+
+export function isEmptyWidget(widget: any) {
+  /** if object has fields other than in the WidgetBaseFields then it's not empty */
+  return (Object.keys(widget).filter(key => Object.keys(WidgetBaseFields).indexOf(key) < 0).length === 0);
 }
 
 export interface WidgetComponentPropsBase {

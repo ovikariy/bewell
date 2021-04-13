@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ButtonTertiary, WheelPicker, WheelPickerReadonly, IconButton } from './MiscComponents';
+import { WheelPicker, WheelPickerReadonly, IconButton } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
 import { WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
 import { Text, View } from 'react-native';
 import { friendlyTime } from '../modules/utils';
 import { sizes } from '../assets/styles/style';
-import { TagsComponent, TagsComponentWidgetType } from './TagComponent';
+import { Tag, TagsComponent, TagsComponentWidgetType } from './TagComponent';
 import { settingsConstants } from '../modules/constants';
 
 export interface ActivityComponentWidgetType extends TagsComponentWidgetType {
@@ -38,14 +38,17 @@ export const ActivityComponent = (props: ActivityComponentProps) => {
 
   //TODO: translations
   function renderDisplaySection() {
-    return <View style={{ flex: 1, flexDirection: 'row' }}>
-      <ButtonTertiary title={props.value.tags || 'Make a selection'}
-        onPress={(e) => { setIsEditMode(!isEditMode); }} />
-      <View style={{ marginLeft: sizes[20], justifyContent: 'center' }}>
-        {(props.value?.duration > 0) && <WheelPickerReadonly textLeft='Duration:' textRight='minutes' value={props.value.duration} icon={{ name: 'clock-outline' }} isSelected={props.isSelected} />}
-        {(props.value?.distance > 0) && <WheelPickerReadonly textLeft='Distance:' textRight='km' value={props.value.distance} icon={{ name: 'map-marker-distance' }} isSelected={props.isSelected} />}
-      </View>
-    </View>;
+    return <Text onPress={(e) => { setIsEditMode(!isEditMode); }}> {/* NOTE: <Text> component here is a cludge because it accepts child nodes AND has onPress event AND doesn't bubble up the event to the widget row touchable */}
+      {
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <Tag tag={props.value.tags + ''} isSelected={true} onPress={() => { setIsEditMode(!isEditMode); }} />
+          <View style={{ marginLeft: sizes[20], justifyContent: 'center' }}>
+            {(props.value?.duration > 0) && <WheelPickerReadonly textLeft='Duration:' textRight='minutes' value={props.value.duration} icon={{ name: 'clock-outline' }} isSelected={props.isSelected} />}
+            {(props.value?.distance > 0) && <WheelPickerReadonly textLeft='Distance:' textRight='km' value={props.value.distance} icon={{ name: 'map-marker-distance' }} isSelected={props.isSelected} />}
+          </View>
+        </View>
+      }
+    </Text>;
   }
 
   //TODO: translations
@@ -75,7 +78,7 @@ export const ActivityHistoryComponent = (props: ActivityHistoryComponentProps) =
 
   return (<View style={styles.row}>
     <View style={[styles.flex]}>
-      <Text style={[styles.bodyText,{color: styles.titleText.color}]}>
+      <Text style={[styles.bodyText, { color: styles.titleText.color }]}>
         {friendlyTime(props.item.date)}</Text>
       <ActivityComponent value={props.item} config={props.config} selectedDate={new Date(props.item.date)} isSelected={props.isSelectedItem} />
     </View>

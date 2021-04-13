@@ -10,10 +10,12 @@ export class AppError extends Error {
     }
 }
 
+/** WidgetBaseFields are basic fields, if no other fields are filled on an object then it's empty */
+export enum WidgetBaseFields { id = 'id', date = 'date', dateCreated = 'dateCreated', type = 'type' };
 export interface ItemBase {
-    id: string;
-    date: string;
-    dateCreated: string;  /** putting this field here, might be useful for sorting in the future but early pre-production records might not have date */
+    [WidgetBaseFields.id]: string;
+    [WidgetBaseFields.date]: string;
+    [WidgetBaseFields.dateCreated]: string;  /** putting this field here, might be useful for sorting in the future but early pre-production records might not have dateCreated */
 }
 
 /**

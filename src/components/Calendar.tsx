@@ -75,7 +75,7 @@ export const Calendar = (props: CalendarProps) => {
       let matchingItem;
       for (let i = props.data.length - 1; i >= 0; i--) {
         if (new Date(props.data[i].date).toLocaleDateString() === tempDateString) {
-          matchingItem = props.data[i];
+          matchingItem = props.data[i]; /** TODO: don't break here but collect multi items for the day and pass them to the render item so in there can sum up or pick latest value  */
           break;
         }
       }
