@@ -18,6 +18,10 @@ export interface ItemBase {
     [WidgetBaseFields.dateCreated]: string;  /** putting this field here, might be useful for sorting in the future but early pre-production records might not have dateCreated */
 }
 
+export interface WidgetBase extends ItemBase {
+    [WidgetBaseFields.type]: string;
+  }
+
 /**
  * @example
  * {"bewellapp_SETTINGS":[{"id":"language","date":"2020-09-03T08:43:22.617Z","value":"en"},{"id":"theme","date":"2020-09-15T07:05:39.937Z","value":"light"}]}

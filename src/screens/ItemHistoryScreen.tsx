@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
-import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
+import { CreateWidgetFactory } from '../modules/widgetFactory';
 import { ItemHistory } from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
-import { AppNavigationProp, AppRouteProp } from '../modules/types';
+import { AppNavigationProp, AppRouteProp, WidgetBase } from '../modules/types';
 import { filterByItemType } from '../modules/utils';
 
 const mapStateToProps = (state: RootState) => ({

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppContext } from '../modules/appContext';
-import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
+import { WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
+import { WidgetBase } from '../modules/types';
 import { Text, View } from 'react-native';
 import { friendlyTime } from '../modules/utils';
 import { CustomIconType, CustomIconRating, CustomIconRatingItem } from './CustomIconRating';

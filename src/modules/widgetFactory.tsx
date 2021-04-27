@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { ItemTypes, settingsConstants } from './constants';
+import { ItemTypes, settingsConstants, settingsLists } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { CustomIconRatingCalendarComponent, CustomIconRatingComponent, CustomIconRatingComponentProps, CustomIconRatingComponentWidgetType, CustomIconRatingHistoryComponent } from '../components/CustomIconRatingComponent';
@@ -7,7 +7,7 @@ import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHis
 import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType, ImagePickerHistoryComponent } from '../components/ImagePickerComponent';
 import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
-import { ItemBase, WidgetBaseFields } from './types';
+import { WidgetBase } from './types';
 import { sizes } from '../assets/styles/style';
 import { RatingCalendarComponent, RatingComponent, RatingComponentProps, RatingComponentWidgetType, RatingHistoryComponent } from '../components/RatingComponent';
 import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, ActivityComponentWidgetType, ActivityHistoryComponent } from '../components/ActivityComponent';
@@ -23,7 +23,6 @@ export function CreateWidgetFactory(context: AppContextState) {
           widgetTitle: language.note,
           historyTitle: language.notes,
           itemTypeName: ItemTypes.NOTE,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           addIcon: { text: language.note, name: 'pencil-square-o', type: 'font-awesome' } as WidgetAddIconConfig,
           style: {} as ViewStyle
         } as WidgetConfig,
@@ -40,7 +39,6 @@ export function CreateWidgetFactory(context: AppContextState) {
           widgetTitle: language.mood,
           historyTitle: language.moods,
           itemTypeName: ItemTypes.MOOD,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           isHorizontalHistoryRow: true, /* on the history screen, show all items for the day in one row */
           addIcon: { text: language.mood, name: 'smile-o', type: 'font-awesome' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
@@ -66,7 +64,6 @@ export function CreateWidgetFactory(context: AppContextState) {
           widgetTitle: language.sleep,
           historyTitle: language.sleeps,
           itemTypeName: ItemTypes.SLEEP,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           addIcon: { text: language.sleep, name: 'moon-o', type: 'font-awesome' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
           icons: [
@@ -92,7 +89,6 @@ export function CreateWidgetFactory(context: AppContextState) {
           hideTitleInHeader: true,
           historyTitle: language.images,
           itemTypeName: ItemTypes.IMAGE,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           addIcon: { text: language.image, name: 'picture-o', type: 'font-awesome' } as WidgetAddIconConfig,
           style: { paddingVertical: 0, paddingTop: sizes[20] } as ViewStyle
         } as WidgetConfig,
@@ -106,15 +102,14 @@ export function CreateWidgetFactory(context: AppContextState) {
     [ItemTypes.MOVE]:
       {
         config: {
-          widgetTitle: 'Movement', //TODO: language.waterIntake,
-          historyTitle: 'Movement', //TODO: language.waterIntake,
+          widgetTitle: language.movement,
+          historyTitle: language.movement,
           itemTypeName: ItemTypes.MOVE,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
-          addIcon: { text: 'Move', name: 'walk', type: 'material-community' } as WidgetAddIconConfig,
+          addIcon: { text: language.move, name: 'walk', type: 'material-community' } as WidgetAddIconConfig,
           style: {} as ViewStyle
         },
         renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
-          return <ActivityComponent activities={settingsConstants.exercises} showDistance={true} showDuration={true} {...props} config={config} />;
+          return <ActivityComponent activities={settingsLists.exercises} showDistance={true} showDuration={true} {...props} config={config} />;
         },
         renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
@@ -129,7 +124,6 @@ export function CreateWidgetFactory(context: AppContextState) {
           widgetTitle: language.waterIntake,
           historyTitle: language.waterIntake,
           itemTypeName: ItemTypes.WATER,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           addIcon: { text: language.water, name: 'cup', type: 'material-community' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
           ratings: [1, 2, 3, 4, 5, 6, 7, 8]
@@ -147,15 +141,14 @@ export function CreateWidgetFactory(context: AppContextState) {
     [ItemTypes.CREATE]:
       {
         config: {
-          widgetTitle: 'Creativity', //TODO: language.waterIntake,
-          historyTitle: 'Creativity', //TODO: language.waterIntake,
+          widgetTitle: language.creativity,
+          historyTitle: language.creativity,
           itemTypeName: ItemTypes.CREATE,
-          isQuickAccess: false, /* means will show in the toolbar without having to press 'more' button */
-          addIcon: { text: 'Create', name: 'creation', type: 'material-community' } as WidgetAddIconConfig,
+          addIcon: { text: language.create, name: 'creation', type: 'material-community' } as WidgetAddIconConfig,
           style: {} as ViewStyle
         },
         renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
-          return <ActivityComponent activities={settingsConstants.creativity} showDuration={true} {...props} config={config} />;
+          return <ActivityComponent activities={settingsLists.creativity} showDuration={true} {...props} config={config} />;
         },
         renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
@@ -167,11 +160,10 @@ export function CreateWidgetFactory(context: AppContextState) {
     [ItemTypes.MEDITATE]:
       {
         config: {
-          widgetTitle: 'Meditation (minutes)', //TODO: language.waterIntake,
-          historyTitle: 'Meditation', //TODO: language.waterIntake,
+          widgetTitle: language.meditationMinutes,
+          historyTitle: language.meditation,
           itemTypeName: ItemTypes.MEDITATE,
-          isQuickAccess: false, /* means will show in the toolbar without having to press 'more' button */
-          addIcon: { text: 'Meditate', name: 'spa', type: 'material-community' } as WidgetAddIconConfig,
+          addIcon: { text: language.meditate, name: 'spa', type: 'material-community' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
           ratings: [1, 3, 5, 10, 15, 20, 30, 60]
         } as WidgetConfig,
@@ -188,12 +180,11 @@ export function CreateWidgetFactory(context: AppContextState) {
     [ItemTypes.PERIOD]:
       {
         config: {
-          widgetTitle: 'Period', //TODO: translate
-          historyTitle: 'Period', //TODO: translate
+          widgetTitle: language.period,
+          historyTitle:  language.period,
           itemTypeName: ItemTypes.PERIOD,
-          isQuickAccess: true, /* means will show in the toolbar without having to press 'more' button */
           isHorizontalHistoryRow: true, /* on the history screen, show all items for the day in one row */
-          addIcon: { text: 'Period', name: 'water', type: 'material-community' } as WidgetAddIconConfig,
+          addIcon: { text: language.period, name: 'water', type: 'material-community' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
           icons: [
             { name: 'Light', icon: 'period-light', iconStyle: styles.brightColor, backgroundStyle: { backgroundColor: '#FCB99B' } } as CustomIconType,
@@ -214,15 +205,6 @@ export function CreateWidgetFactory(context: AppContextState) {
   };
 
   return widgetFactory;
-}
-
-export interface WidgetBase extends ItemBase {
-  [WidgetBaseFields.type]: string;
-}
-
-export function isEmptyWidget(widget: any) {
-  /** if object has fields other than in the WidgetBaseFields then it's not empty */
-  return (Object.keys(widget).filter(key => Object.keys(WidgetBaseFields).indexOf(key) < 0).length === 0);
 }
 
 export interface WidgetComponentPropsBase {
@@ -249,7 +231,6 @@ export interface WidgetConfig {
   addIcon: WidgetAddIconConfig;
   style?: StyleProp<ViewStyle>;
   hideTitleInHeader?: boolean;
-  isQuickAccess?: boolean; /* means will show in the toolbar without having to press 'more' button */
   isHorizontalHistoryRow?: boolean, /* on the history screen, show all items for the day in one row */
   icons?: CustomIconType[]
 }

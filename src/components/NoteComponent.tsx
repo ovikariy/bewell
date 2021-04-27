@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ClearTextArea, IconButton } from './MiscComponents';
 import { AppContext } from '../modules/appContext';
-import { WidgetBase, WidgetComponentPropsBase } from '../modules/widgetFactory';
+import { WidgetComponentPropsBase } from '../modules/widgetFactory';
+import { WidgetBase } from '../modules/types';
 import { Text, View } from 'react-native';
 import { friendlyTime } from '../modules/utils';
 import { sizes } from '../assets/styles/style';

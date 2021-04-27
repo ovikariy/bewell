@@ -7,6 +7,14 @@
   "image": "Фото",
   "water": "Water",
   "waterIntake": "Water Intake",
+  "movement": "Movement",
+  "move": "Move",
+  "creativity": "Creativity",
+  "create": "Create",
+  "meditationMinutes": "Meditation (minutes)",
+  "meditation": "Meditation",
+  "meditate": "Meditate",
+  "period": "Period",
   "images": "Фото",
   "notes": "Записи",
   "moods": "Настроения",
@@ -157,5 +165,9 @@
   "CannotDeleteFile": "Невозможно удалить файл",
   "ImageNotFound": "Файл изображения не найден",
   "MaxLoginAttempts": "Попробуйте ввести пароль",
-  "NotEnoughSpace": "Недостаточно места на диске для хранения файла"
+  "NotEnoughSpace": "Недостаточно места на диске для хранения файла",
+  "Duration": "Duration",
+  "Minutes": "Minutes",
+  "Kilometers": "Kilometers",
+  "Distance": "Distance"
 }

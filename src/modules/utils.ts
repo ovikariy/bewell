@@ -3,8 +3,8 @@ import 'react-native-get-random-values'; /** polyfills for uuid */
 import { v4 as uuidv4 } from 'uuid';
 import { StoreConstants } from './constants';
 import { TranslationKeys } from './translations';
-import { ItemBaseAssociativeArray } from './types';
-import { isEmptyWidget, WidgetBase } from './widgetFactory';
+import { ItemBaseAssociativeArray, WidgetBase, WidgetBaseFields } from './types';
+import { toNumber } from 'lodash';
 
 export function configLocale(locale: string) {
   /* make sure all needed locales are imported in translations file i.e. import 'moment/locale/ru'; */
@@ -92,9 +92,9 @@ export function isEmptyWidgetItem(item: any) {
   if (Object.keys(item).indexOf('type') < 0)
     return false;
 
-  /* if an item only has an id property we don't want to save it because it is an empty item
+  /* if an item only has WidgetBase properties we don't want to save it because it is an empty item
   added by the plus button but not updated by the user */
-  return isEmptyWidget(item);
+  return (Object.keys(item).filter(key => Object.keys(WidgetBaseFields).indexOf(key) < 0).length === 0);
 }
 
 export function addSubtractDays(date: string | Date | moment.Moment, numDays: number) {
@@ -206,4 +206,8 @@ export function consoleLogWithColor(message: string, color?: string) {
     console.log('\x1b[32m', 'this text is green', '\x1b[0m'); */
   if (__DEV__)
     console.log(color ? color : consoleColors.green, message, consoleColors.reset);
+}
+
+export function convertToNumber(value: any): any {
+  return toNumber(value);
 }

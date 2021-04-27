@@ -4,7 +4,8 @@ import { friendlyTime, groupBy, friendlyDay, formatDate } from '../modules/utils
 import { AppContext } from '../modules/appContext';
 import { List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
+import { WidgetConfig } from '../modules/widgetFactory';
+import { WidgetBase } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 import { Calendar } from './Calendar';
 

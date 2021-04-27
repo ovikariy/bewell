@@ -118,7 +118,8 @@ export interface AppContextState {
 }
 
 export interface OtherSettings {
-  hideNoteText: boolean
+  hideNoteText: boolean,
+  numAddWidgetButtonsVisible: number
 }
 
 interface SettingsChanged {

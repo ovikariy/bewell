@@ -7,6 +7,14 @@
   "image": "Image",
   "water": "Water",
   "waterIntake": "Water Intake",
+  "movement": "Movement",
+  "move": "Move",
+  "creativity": "Creativity",
+  "create": "Create",
+  "meditationMinutes": "Meditation (minutes)",
+  "meditation": "Meditation",
+  "meditate": "Meditate",
+  "period": "Period",
   "images": "Images",
   "notes": "Notes",
   "moods": "Moods",
@@ -157,5 +165,9 @@
   "CannotDeleteFile": "Unable to delete file",
   "ImageNotFound": "Ooops, image file not found",
   "MaxLoginAttempts": "Lets try entering a password instead",
-  "NotEnoughSpace": "Not enough storage space to create a file"
+  "NotEnoughSpace": "Not enough storage space to create a file",
+  "Duration": "Duration",
+  "Minutes": "Minutes",
+  "Kilometers": "Kilometers",
+  "Distance": "Distance"
 }

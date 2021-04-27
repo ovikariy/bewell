@@ -5,6 +5,7 @@ import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
 import { defaultAppContext } from '../modules/appContext';
 import { AppContextAction, AppContextState } from './reducerTypes';
+import { convertToNumber } from '../modules/utils';
 
 export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: AppContextAction) => {
     switch (action.type) {
@@ -12,26 +13,34 @@ export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: A
             if (!action.payload.settings || !(action.payload.settings.length > 0))
                 return state;
 
-            const language = action.payload.settings.find((setting) => setting.id === settingsConstants.language);
-            const theme = action.payload.settings.find((setting) => setting.id === settingsConstants.theme);
-            const hideNoteText = action.payload.settings.find((setting) => setting.id === settingsConstants.hideNoteText);
+            const newState = { ...state };
+            let hasChanges = false;
 
-            if (!language && !theme && !hideNoteText)
+            action.payload.settings.forEach(setting => {
+                if (!setting.value)
+                    return;
+                else
+                    hasChanges = true;
+
+                if (setting.id === settingsConstants.language) {
+                    newState.language = translations[setting.value];
+                    newState.locale = setting.value;
+                }
+                if (setting.id === settingsConstants.theme) {
+                    newState.theme = themes[setting.value];
+                    newState.styles = getThemeStyles(newState.theme);
+                }
+                if (setting.id === settingsConstants.hideNoteText)
+                    newState.otherSettings.hideNoteText = (setting.value === 'true');
+                //TODO: implement UI for this on the settings screen, currently it's only hardcoded
+                if (setting.id === settingsConstants.numAddWidgetButtonsVisible)
+                    newState.otherSettings.numAddWidgetButtonsVisible = convertToNumber(setting.value);
+
+            });
+            if (hasChanges)
+                return newState;
+            else
                 return state;
-
-            const context = { ...state };
-            if (language && language.value) {
-                context.language = translations[language.value];
-                context.locale = language.value;
-            }
-            if (theme && theme.value) {
-                context.theme = themes[theme.value];
-                context.styles = getThemeStyles(context.theme);
-            }
-            if (hideNoteText && hideNoteText.value)
-                context.otherSettings.hideNoteText = (hideNoteText.value === 'true');
-
-            return context;
         }
         default:
             return state;

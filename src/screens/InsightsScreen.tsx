@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { stateConstants, StoreConstants } from '../modules/constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
-import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
+import { CreateWidgetFactory } from '../modules/widgetFactory';
 import { ListWithRefresh } from '../components/MiscComponents';
 import { groupBy } from '../modules/utils';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
-import { AppNavigationProp } from '../modules/types';
+import { AppNavigationProp, WidgetBase } from '../modules/types';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE

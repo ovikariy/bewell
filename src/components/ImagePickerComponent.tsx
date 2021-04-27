@@ -7,8 +7,8 @@ import * as FileHelpers from '../modules/io';
 import { consoleLogWithColor, friendlyTime, getNewUuid, isNullOrEmpty } from '../modules/utils';
 import { ErrorMessage, brokenImageURI } from '../modules/constants';
 import { encryptData, decryptData } from '../modules/securityService';
-import { WidgetBase, WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
-import { AppError } from '../modules/types';
+import { WidgetComponentPropsBase, WidgetConfig } from '../modules/widgetFactory';
+import { AppError, WidgetBase } from '../modules/types';
 import { platform, sizes } from '../assets/styles/style';
 
 

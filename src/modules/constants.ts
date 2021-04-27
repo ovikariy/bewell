@@ -79,8 +79,14 @@ export const settingsConstants = {
   theme: 'theme',
   version: 'version',
   hideNoteText: 'hideNoteText',
-  durationPickerItems: ['none', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],//TODO: translations
-  distancePickerItems: ['none', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50], //TODO: translations
+  numAddWidgetButtonsVisible: 'numAddWidgetButtonsVisible',
+  exercises: 'exercises',
+  creativity: 'creativity'
+};
+
+export const settingsLists = {
+  durationPickerItems: [' - ', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],
+  distancePickerItems: [' - ', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50],
   exercises: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Jogging', 'Yoga', 'Biking', 'Playing Sports', 'Workout'], //TODO: translations
   creativity: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'] //TODO: translations
 };

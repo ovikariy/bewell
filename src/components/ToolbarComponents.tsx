@@ -3,7 +3,8 @@ import { Alert, View, ViewProps } from 'react-native';
 import { IconButton, ButtonPropsInterface } from './MiscComponents';
 import { getStorageKeyFromDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
-import { WidgetBase, WidgetConfig } from '../modules/widgetFactory';
+import { WidgetConfig } from '../modules/widgetFactory';
+import { WidgetBase } from '../modules/types';
 
 export const Toolbar = (props: PropsWithChildren<ViewProps>) => {
     const context = React.useContext(AppContext);
@@ -37,7 +38,7 @@ export const ToolbarButton = (props: ButtonPropsInterface) => {
     const styles = context.styles;
 
     return <IconButton iconType={props.iconType || 'font-awesome'}
-        containerStyle={styles.toolbarButtonContainer}
+        containerStyle={[styles.toolbarButtonContainer, props.containerStyle]}
         iconStyle={props.iconStyle || { ...styles.iconPrimary, ...{ color: styles.brightColor.color } }}
         titleStyle={props.titleStyle || { ...styles.toolbarButtonText, ...{ color: styles.brightColor.color } }}
         {...props} />;

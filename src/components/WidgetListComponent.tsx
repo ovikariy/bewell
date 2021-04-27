@@ -5,7 +5,8 @@ import { Image, Text } from 'react-native-elements';
 import { WidgetComponent } from './WidgetComponent';
 import { updateArrayImmutable, updateTimeStringToNow, getNewUuid } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
-import { WidgetBase, WidgetFactory } from '../modules/widgetFactory';
+import { WidgetFactory } from '../modules/widgetFactory';
+import { WidgetBase } from '../modules/types';
 import { Toolbar, ToolbarButton } from './ToolbarComponents';
 import { ListWithRefresh } from './MiscComponents';
 import { images } from '../modules/constants';
@@ -53,22 +54,13 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
   }
 
   renderAddNewButtons(widgetFactory: WidgetFactory) {
-    const language = this.context.language;
-    let hasNonQuickAccessItems = false; /* isQuickAccess will make this widget's add button always visible on home screen, the rest of items will be shown if button 'more' is pressed  */
-    const widgetButtons = Object.values(widgetFactory).map((item) => {
-      if (!item.config.isQuickAccess)
-        hasNonQuickAccessItems = true;
-      if (!this.state.showAllAddButtons && !item.config.isQuickAccess)
-        return;
-      return <ToolbarButton containerStyle={{ marginHorizontal: sizes[15], marginVertical: sizes[5] }} iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
-        onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />;
+    const numAddWidgetButtonsVisible = this.context.otherSettings.numAddWidgetButtonsVisible;
+    const widgetButtons = Object.values(widgetFactory).map((item, index) => {
+      if (this.state.showAllAddButtons || index < numAddWidgetButtonsVisible) {
+        return <ToolbarButton containerStyle={{ marginHorizontal: sizes[15], marginVertical: sizes[5] }} iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
+          onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />;
+      }
     });
-    if (hasNonQuickAccessItems) {
-      widgetButtons.push(<ToolbarButton iconType='material'
-        iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
-        title={this.state.showAllAddButtons ? language.less : language.more}
-        onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />);
-    }
     return widgetButtons;
   }
 
@@ -113,10 +105,19 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
 
   render() {
     const styles = this.context.styles;
+    const language = this.context.language;
 
     return (
       <View style={[styles.flex]}>
-        <Toolbar style={{ flex: 0, paddingVertical: sizes[6] }}>{this.renderAddNewButtons(this.props.widgetFactory)}</Toolbar>
+        <View style={{ flexDirection: 'row' }}>
+          <Toolbar style={{ flex: 5, paddingVertical: sizes[6] }}>{this.renderAddNewButtons(this.props.widgetFactory)}</Toolbar>
+          <Toolbar style={{ flex: 1, paddingVertical: sizes[6], flexDirection: 'column' }}>
+            <ToolbarButton iconType='material' containerStyle={{}}
+              iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
+              title={this.state.showAllAddButtons ? language.less : language.more}
+              onPress={() => this.setState({ ...this.state, showAllAddButtons: !this.state.showAllAddButtons })} />
+          </Toolbar>
+        </View>
         <ListWithRefresh style={[styles.flex, styles.toolbarBottomOffset]}
           onPulldownRefresh={() => this.props.onPulldownRefresh()}
         >

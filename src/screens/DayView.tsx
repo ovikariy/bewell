@@ -9,9 +9,9 @@ import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../c
 import { getStorageKeyFromDate, consoleLogWithColor } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { deleteImageFromDiskAsync } from '../modules/io';
-import { CreateWidgetFactory, WidgetBase } from '../modules/widgetFactory';
+import { CreateWidgetFactory } from '../modules/widgetFactory';
 import { RootState } from '../redux/store';
-import { AppNavigationProp, AppRouteProp, ItemBase } from '../modules/types';
+import { AppNavigationProp, AppRouteProp, ItemBase, WidgetBase } from '../modules/types';
 import { dimensions, sizes } from '../assets/styles/style';
 import { DatePickerWithArrows } from '../components/DatetimeComponents';
 
