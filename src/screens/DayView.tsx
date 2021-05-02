@@ -102,6 +102,11 @@ class DayView extends Component<DayViewProps, DayViewState>  {
   selectedDateChanged(event: any, newDate: Date | undefined) {
     if (!newDate)
       return;
+    /** since data in storage is keyed by month, we need to re-load it when selected month changes */
+    const selectedMonth = getStorageKeyFromDate(newDate);
+    const previousMonth = getStorageKeyFromDate(this.state.selectedDate);
+    if (selectedMonth !== previousMonth)
+      this.props.load(selectedMonth);
     this.setState({ ...this.state, selectedDate: newDate, selectedItem: undefined });
   }
 
