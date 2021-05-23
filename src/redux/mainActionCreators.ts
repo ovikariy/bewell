@@ -17,7 +17,7 @@ export function load(key: string): AppThunkActionType {
             .then((items) => {
                 dispatch(replaceItemsInRedux([[key, items]]));
                 dispatch(operationActions.clear());
-                if (key === StoreConstants.SETTINGS)
+                if (key === StoreConstants.SETTINGS || key === StoreConstants.SETTINGSENCRYPTED)
                     dispatch(settingsChanged(items));
             })
             .catch(error => {
@@ -145,7 +145,7 @@ function updateReduxAndPersistInternal(key: string, updatedItems: ItemBase[]): A
 
         dispatch(replaceItemsInRedux([[key, updatedItems]]));
 
-        if (key === StoreConstants.SETTINGS)
+        if (key === StoreConstants.SETTINGS || key === StoreConstants.SETTINGSENCRYPTED)
             dispatch(settingsChanged(updatedItems as ItemBase[]));
 
         persistReduxAsync(key, updatedItems)

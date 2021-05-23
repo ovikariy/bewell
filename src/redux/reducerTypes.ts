@@ -1,3 +1,4 @@
+import { EncryptedSettingsEnum, ItemTypes } from '../modules/constants';
 import { LoginInfo } from '../modules/securityService';
 import { ThemePropertyType } from '../modules/themes';
 import { TranslationKeys } from '../modules/translations';
@@ -114,12 +115,17 @@ export interface AppContextState {
   theme: ThemePropertyType,
   styles: any,
   locale: string,
-  otherSettings: OtherSettings
+  otherSettings: OtherSettings,
+  encryptedSettings: EncryptedSettings
 }
 
 export interface OtherSettings {
   hideNoteText: boolean,
   numAddWidgetButtonsVisible: number
+}
+export interface EncryptedSettings {
+  [EncryptedSettingsEnum.MOVE]: string[],
+  [EncryptedSettingsEnum.CREATE]: string[],
 }
 
 interface SettingsChanged {

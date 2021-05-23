@@ -21,8 +21,9 @@ import SetupPINScreen from '../screens/SetupPINScreen';
 import { AuthState } from '../redux/reducerTypes';
 import { dimensions, platform, sizes } from '../assets/styles/style';
 import { images } from '../modules/constants';
-import DayView from '../screens/DayView';
 import DayViewScreen from '../screens/DayViewScreen';
+import CustomizeScreen from '../screens/Customize';
+import CustomizeSettingScreen from '../screens/CustomizeSettingScreen';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -190,6 +191,16 @@ function SettingsNavigator() {
                 name='Backup'
                 component={BackupScreen}
                 options={{ title: language.export }}
+            />
+            <SettingsStack.Screen
+                name='Customize'
+                component={CustomizeScreen}
+                options={{ title: language.customize }}
+            />
+            <SettingsStack.Screen
+                name='CustomizeSetting'
+                component={CustomizeSettingScreen}
+                options={CustomizeSettingScreen.getNavigationOptions} /* dynamic nav options in the component */
             />
         </SettingsStack.Navigator>
     );

@@ -121,7 +121,7 @@ export async function logStorageDataAsync() {
 }
 
 export async function getItemsAndDecryptAsync(key: string) {
-    if (!isValidStoreKey(key))
+    if (!isValidStoreKey(key)) //TODO: bug getting invalid store key when browsing to a future month
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey9);
     const storeKey = await getStoreKeyHashAsync(key);
     const items = await getItemAsync(storeKey);

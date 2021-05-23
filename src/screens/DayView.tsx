@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetListComponent from '../components/WidgetListComponent';
-import { ItemTypes } from '../modules/constants';
+import { ItemTypes, StoreConstants } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { Spacer } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
@@ -56,6 +56,7 @@ class DayView extends Component<DayViewProps, DayViewState>  {
 
   refreshItems() {
     const selectedMonth = getStorageKeyFromDate(this.state.selectedDate);
+    this.props.load(StoreConstants.SETTINGSENCRYPTED); /** e.g. customizations to MOVE and CREATE lists */
     this.props.load(selectedMonth);
     this.setState({ ...this.state, selectedItem: undefined });
   }

@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import {
   ActivityIndicator as NativeActivityIndicator, Platform, Text, ToastAndroid, View, ScrollView,
   TouchableOpacity, FlatList, RefreshControl, TextInput, Dimensions, Image,
-  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps
+  StyleProp, ViewStyle, TextProps, TextInputProps, TextStyle, ActivityIndicatorProps, FlatListProps
 } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Button, Icon, Input, Divider, InputProps, IconProps, ButtonProps, DividerProps, Overlay } from 'react-native-elements';
@@ -84,11 +84,11 @@ export const PasswordInput = (props: InputProps) => {
   />;
 };
 
-interface PasswordInputWithButtonProps extends InputProps {
+interface InputWithButtonProps extends InputProps {
   onPress?: () => void;
 }
 
-export const PasswordInputWithButton = (props: PasswordInputWithButtonProps) => {
+export const InputWithButton = (props: InputWithButtonProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
@@ -98,15 +98,21 @@ export const PasswordInputWithButton = (props: PasswordInputWithButtonProps) => 
     inputStyle={[{ marginLeft: sizes[10] }, styles.bodyText, props.inputStyle]}
     containerStyle={[styles.brightBackground, styles.rounded, styles.border, props.containerStyle]}
     placeholderTextColor={styles.placeholderHighlight.color}
-    autoCompleteType='off'
     numberOfLines={1}
-    autoCorrect={false}
-    secureTextEntry={true}
     rightIcon={<RoundButton name="keyboard-arrow-right" onPress={props.onPress} />}
     onSubmitEditing={() => {
       if (props.onPress)
         props.onPress();
     }}
+  />;
+};
+
+export const PasswordInputWithButton = (props: InputWithButtonProps) => {
+  return <InputWithButton
+    {...props}
+    autoCompleteType='off'
+    autoCorrect={false}
+    secureTextEntry={true}
   />;
 };
 
@@ -363,6 +369,65 @@ export const List = (props: any) => {
   );
 };
 
+export const ReorderableList = (props: FlatListProps<any> & { preventDelete: boolean, onListReordered: (data: any[]) => void }) => {
+  const context = React.useContext(AppContext);
+  const styles = context.styles;
+
+  const [selectedItem, setSelectedItem] = useState(undefined);
+
+  function onPress(item: any) {
+    setSelectedItem(item);
+  }
+
+  function onArrowPress(item: any, index: number, arrowUpPressed: boolean) {
+    /** re-order data */
+    const indexOfTemp = arrowUpPressed ? index - 1 : index + 1;
+    if (!props.data || (indexOfTemp < 0 && index === 0) || props.data.length < index + 1 || props.data.length < indexOfTemp + 1)
+      return;
+    const newData = [...props.data]; /* should not mutate */
+    const temp = newData[indexOfTemp];
+    newData[indexOfTemp] = newData[index];
+    newData[index] = temp;
+    props.onListReordered(newData);
+  }
+
+  function onDeletePress(item: any, index: number) {
+    if (props.preventDelete || !props.data || index < 0 || index >= props.data.length)
+      return;
+    const newData = [...props.data]; //should not mutate
+    newData.splice(index, 1);
+    props.onListReordered(newData);
+  }
+
+  function renderListItem({ item, index }: any) {
+    const isSelected = (selectedItem !== undefined && selectedItem.id === item.id);
+    /* list item with left icon, title, subtitle, right up and down arrows for re-ordering the items */
+    return (
+      <TouchableOpacity key={item.id} activeOpacity={0.7} style={[styles.dimBackground, styles.listItemContainer]} onPress={() => onPress(item)}>
+        <View style={[styles.row, styles.flex, { alignItems: 'center' }]}>
+          {item.iconName ? <IconForButton name={item.iconName} type={item.iconType ?? 'font-awesome'} iconStyle={styles.iconSecondarySmall} containerStyle={styles.listItemLeftIcon} /> : <React.Fragment />}
+          <View style={styles.flex}>
+            <Text style={[styles.heading2]}>{item.title}</Text>
+            {item.subTitle ? <Text style={[styles.subHeading, styles.flex]}>{item.subTitle}</Text> : <View />}
+          </View>
+          {isSelected &&
+            <View style={[{ flexDirection: 'row', alignItems: 'flex-end', marginRight: sizes[16] }]}>
+              <IconForButton iconStyle={[styles.iconPrimary, { marginRight: sizes[15] }]} name='chevron-up' type='font-awesome'
+                onPress={() => onArrowPress(item, index, true)} />
+              <IconForButton iconStyle={[styles.iconPrimary, { marginRight: sizes[15] }]} name='chevron-down' type='font-awesome'
+                onPress={() => onArrowPress(item, index, false)} />
+              {!props.preventDelete &&
+                <IconForButton iconStyle={[styles.iconPrimary]} name='remove' type='font-awesome'
+                  onPress={() => onDeletePress(item, index)} />}
+            </View>}
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  return <FlatList ListEmptyComponent={<EmptyList />} keyExtractor={item => item.id} renderItem={renderListItem} {...props} />;
+};
+
 export const ActivityIndicator = (props: ActivityIndicatorProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
@@ -508,11 +573,12 @@ export interface WheelPickerProps {
 export const WheelPickerReadonly = (props: WheelPickerProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
-  //TODO: translation for <pick value>
+  const language = context.language;
+  const pickValue = '<' + language.pickValue + '>';
   return <View style={[{ flexDirection: 'row' }, props.containerStyle]}>
     {props.icon && <IconForButton type={props.icon.type || 'material-community'} iconStyle={styles.bodyText} containerStyle={[{ justifyContent: 'center' }, styles.spacedOut]} {...props.icon} />}
     {props.textLeft && <Text style={[styles.bodyText, styles.spacedOut]}>{props.textLeft}</Text>}
-    <Text style={[styles.bodyText, styles.spacedOut, { marginLeft: sizes[10] }]}>{props.value || props.placeholder || '<pick value>'}</Text>
+    <Text style={[styles.bodyText, styles.spacedOut, { marginLeft: sizes[10] }]}>{props.value || props.placeholder || pickValue}</Text>
     {(props.textRight && props.value !== undefined) && <Text style={[styles.bodyText, styles.spacedOut]}>{props.textRight}</Text>}
   </View>;
 };

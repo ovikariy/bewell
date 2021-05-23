@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { ItemTypes, settingsConstants, settingsLists } from './constants';
+import { EncryptedSettingsEnum, ItemTypes, settingsConstants, settingsLists } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
 import { CustomIconRatingCalendarComponent, CustomIconRatingComponent, CustomIconRatingComponentProps, CustomIconRatingComponentWidgetType, CustomIconRatingHistoryComponent } from '../components/CustomIconRatingComponent';
@@ -15,6 +15,7 @@ import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, A
 export function CreateWidgetFactory(context: AppContextState) {
   const language = context.language;
   const styles = context.styles;
+  const encryptedSettings = context.encryptedSettings;
 
   const widgetFactory: WidgetFactory = {
     [ItemTypes.NOTE]:
@@ -109,7 +110,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           style: {} as ViewStyle
         },
         renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
-          return <ActivityComponent activities={settingsLists.exercises} showDistance={true} showDuration={true} {...props} config={config} />;
+          return <ActivityComponent activities={encryptedSettings[EncryptedSettingsEnum.MOVE]} showDistance={true} showDuration={true} {...props} config={config} />;
         },
         renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
@@ -148,7 +149,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           style: {} as ViewStyle
         },
         renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
-          return <ActivityComponent activities={settingsLists.creativity} showDuration={true} {...props} config={config} />;
+          return <ActivityComponent activities={encryptedSettings[EncryptedSettingsEnum.CREATE]} showDuration={true} {...props} config={config} />;
         },
         renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;

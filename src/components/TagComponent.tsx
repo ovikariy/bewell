@@ -23,12 +23,13 @@ export interface TagsComponentProps extends WidgetComponentPropsBase {
 export const TagsComponent = (props: TagsComponentProps) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
+  const language = context.language;
 
   const selectedTags = (props.value?.tags || '').split(',');
 
   const tags = props.allTags?.map((tag) => {
     const selectedIndex = selectedTags.indexOf(tag);
-    return <Tag key={tag} tag={tag + ''}
+    return <Tag key={tag} tag={language[tag] ? language[tag] : language[tag] + ''}
       isSelected={selectedIndex >= 0}
       onPress={!props.onChange ? undefined : () => onPress(tag, selectedIndex)}
     />;
@@ -36,7 +37,7 @@ export const TagsComponent = (props: TagsComponentProps) => {
 
   return (
     <View style={[{paddingTop: sizes[20]}, props.containerStyle]}>
-      <Text style={[styles.bodyText, {paddingLeft: sizes[5]}]}>Tap to select below:</Text>
+      <Text style={[styles.bodyText, {paddingLeft: sizes[5]}]}>{language.tapToSelect}:</Text>
       <Animatable.View animation="fadeIn" duration={1000} style={{ flexDirection: 'row', flexWrap: 'wrap', paddingTop: sizes[5] }}>
         {tags}
       </Animatable.View>

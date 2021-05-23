@@ -51,9 +51,10 @@ export class StoreConstants {
   static keyPrefix = 'bewellapp_';
   static keyDateFormat = 'MMYYYY';
   static monthsFromEpochDate = getMonthsFromEpochDate(StoreConstants.keyPrefix);
-  static AllEncryptedStoreKeys = [...StoreConstants.monthsFromEpochDate];
+  static AllEncryptedStoreKeys = [...StoreConstants.monthsFromEpochDate, StoreConstants.keyPrefix + 'SETTINGSENCRYPTED'];
   static DataEncryptionStoreKey = StoreConstants.keyPrefix + 'DATAENCRYPTIONKEY';
   static SETTINGS = StoreConstants.keyPrefix + 'SETTINGS';
+  static SETTINGSENCRYPTED = StoreConstants.keyPrefix + 'SETTINGSENCRYPTED';
 }
 
 function getMonthsFromEpochDate(keyPrefix: string) {
@@ -79,16 +80,20 @@ export const settingsConstants = {
   theme: 'theme',
   version: 'version',
   hideNoteText: 'hideNoteText',
-  numAddWidgetButtonsVisible: 'numAddWidgetButtonsVisible',
-  exercises: 'exercises',
-  creativity: 'creativity'
+  numAddWidgetButtonsVisible: 'numAddWidgetButtonsVisible'
 };
+
+export enum EncryptedSettingsEnum {
+  MOVE = 'MOVE',
+  CREATE = 'CREATE'
+}
 
 export const settingsLists = {
   durationPickerItems: [' - ', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],
   distancePickerItems: [' - ', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50],
-  exercises: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Jogging', 'Yoga', 'Biking', 'Playing Sports', 'Workout'], //TODO: translations
-  creativity: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'] //TODO: translations
+  /** remember to add translations when adding new items below */
+  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'Playing Sports', 'Workout'], //TODO: translations
+  [EncryptedSettingsEnum.CREATE]: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing']
 };
 
 export enum ErrorCode {
@@ -132,6 +137,7 @@ export enum ErrorCode {
   Storage10 = 'S1010',
   Storage11 = 'S1011',
   Storage12 = 'S1012',
+  Storage13 = 'S1013',
   Auth1 = 'A1001',
   Auth2 = 'A1002',
   Auth3 = 'A1003',

@@ -96,6 +96,12 @@ export const SettingsComponent = (props: SettingsComponentProps) => {
       title: language.importExport,
       iconName: 'retweet',
       onPress: () => { props.navigation.navigate('BackupRestore'); }
+    },
+    {
+      id: 'Customize',
+      title: language.customize,
+      iconName: 'list',
+      onPress: () => { props.navigation.navigate('Customize'); }
     }
   ];
 

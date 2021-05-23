@@ -40,8 +40,13 @@ export type ItemBaseMultiArrayElement = [string, ItemBase[]];
  * */
 export type ItemBaseMultiArray = ItemBaseMultiArrayElement[];
 
+/**
+ * @example
+ * {"bewellapp_SETTINGS":[{"id":"language","date":"2020-09-03T08:43:22.617Z","value":"en"},{"id":"theme","date":"2020-09-15T07:05:39.937Z","value":"light"}]}
+ */
+ export type SettingsAssociativeArray = { [key: string]: SettingType };
 export interface SettingType extends ItemBase {
-    value?: string
+    value?: any
 }
 
 /**
@@ -63,6 +68,8 @@ export type RootStackParamList = {
     SignIn: undefined
     SignOut: undefined
     Welcome: undefined
+    Customize: undefined
+    CustomizeSetting: { id: string, title: string }
 };
 
 /**

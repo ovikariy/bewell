@@ -26,8 +26,6 @@ export const ActivityComponent = (props: ActivityComponentProps) => {
   const language = context.language;
   const styles = context.styles;
 
-  //TODO: allow user to enter their own (I'm guessing in their language so we can use that first then append translated values)
-
   const isEmpty = !props.value || !props.value.tags; /** if just adding a new item or changing selection, tags should be visible by default */
   const [isEditMode, setIsEditMode] = useState(isEmpty);
 
@@ -40,10 +38,10 @@ export const ActivityComponent = (props: ActivityComponentProps) => {
     return <Text onPress={(e) => { setIsEditMode(!isEditMode); }}> {/* NOTE: <Text> component here is a cludge because it accepts child nodes AND has onPress event AND doesn't bubble up the event to the widget row touchable */}
       {
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Tag tag={props.value.tags + ''} isSelected={true} onPress={() => { setIsEditMode(!isEditMode); }} />
+          <Tag tag={language[props.value.tags] ? language[props.value.tags] : props.value.tags + ''} isSelected={true} onPress={() => { setIsEditMode(!isEditMode); }} />
           <View style={{ marginLeft: sizes[20], justifyContent: 'center' }}>
-            {(props.value?.duration > 0) && <WheelPickerReadonly textLeft={language.Duration + ':'} textRight={language.Minutes.toLowerCase()} value={props.value.duration} icon={{ name: 'clock-outline' }} isSelected={props.isSelected} />}
-            {(props.value?.distance > 0) && <WheelPickerReadonly textLeft={language.Distance + ':'} textRight={language.Kilometers.toLowerCase()} value={props.value.distance} icon={{ name: 'map-marker-distance' }} isSelected={props.isSelected} />}
+            {(props.value?.duration > 0) && <WheelPickerReadonly textLeft={language.Duration + ':'} textRight={language.Minutes} value={props.value.duration} icon={{ name: 'clock-outline' }} isSelected={props.isSelected} />}
+            {(props.value?.distance > 0) && <WheelPickerReadonly textLeft={language.Distance + ':'} textRight={language.Kilometers} value={props.value.distance} icon={{ name: 'map-marker-distance' }} isSelected={props.isSelected} />}
           </View>
         </View>
       }
@@ -54,12 +52,12 @@ export const ActivityComponent = (props: ActivityComponentProps) => {
     return <View>
       <TagsComponent allTags={props.activities || []} {...props} containerStyle={{ marginBottom: sizes[20] }} />
       {props.showDuration === true &&
-        <WheelPicker title={language.Minutes} textLeft={language.Duration + '?'} textRight={language.Minutes.toLocaleLowerCase()} icon={{ name: 'clock-outline' }}
+        <WheelPicker title={language.Minutes} textLeft={language.Duration + '?'} textRight={language.Minutes} icon={{ name: 'clock-outline' }}
           containerStyle={{ marginBottom: sizes[5] }}
           data={settingsLists.durationPickerItems} value={props.value?.duration} firstValueIsEmpty={true}
           onChange={(duration) => { if (props.onChange) props.onChange({ ...props.value, duration }); }} />}
       {props.showDistance === true &&
-        <WheelPicker title={language.Kilometers} textLeft={language.Distance + '?'} textRight={language.Kilometers.toLocaleLowerCase()} icon={{ name: 'map-marker-distance' }}
+        <WheelPicker title={language.Kilometers} textLeft={language.Distance + '?'} textRight={language.Kilometers} icon={{ name: 'map-marker-distance' }}
           data={settingsLists.distancePickerItems} value={props.value?.distance} firstValueIsEmpty={true}
           onChange={(distance) => { if (props.onChange) props.onChange({ ...props.value, distance }); }} />}
     </View>;

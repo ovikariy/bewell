@@ -1,5 +1,5 @@
 import * as ActionTypes from './actionTypes';
-import { settingsConstants } from '../modules/constants';
+import { EncryptedSettingsEnum, settingsConstants } from '../modules/constants';
 import { translations } from '../modules/translations';
 import { themes } from '../modules/themes';
 import { getThemeStyles } from '../assets/styles/style';
@@ -36,6 +36,8 @@ export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: A
                 if (setting.id === settingsConstants.numAddWidgetButtonsVisible)
                     newState.otherSettings.numAddWidgetButtonsVisible = convertToNumber(setting.value);
 
+                if (setting.id === EncryptedSettingsEnum[setting.id]) /** customized lists e.g. EncryptedSettingsEnum['CREATE'] or EncryptedSettingsEnum['MOVE'] */
+                    newState.encryptedSettings[setting.id] = setting.value;
             });
             if (hasChanges)
                 return newState;
