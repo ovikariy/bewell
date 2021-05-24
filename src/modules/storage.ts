@@ -1,6 +1,6 @@
 import { ErrorCode, ErrorMessage, StoreConstants } from './constants';
 import * as securityService from './securityService';
-import { consoleLogWithColor, consoleColors } from './utils';
+import { consoleLogWithColor, consoleColors, isNullOrEmpty, isValidDate } from './utils';
 import { AppError, ItemBase, ItemBaseMultiArray } from './types';
 import { AsyncStorage } from 'react-native';
 
@@ -121,7 +121,7 @@ export async function logStorageDataAsync() {
 }
 
 export async function getItemsAndDecryptAsync(key: string) {
-    if (!isValidStoreKey(key)) //TODO: bug getting invalid store key when browsing to a future month
+    if (!isValidStoreKey(key))
         throw new AppError(ErrorMessage.InvalidKey, ErrorCode.MissingKey9);
     const storeKey = await getStoreKeyHashAsync(key);
     const items = await getItemAsync(storeKey);
@@ -157,7 +157,11 @@ export function encrypt(value: string) {
  * @param key
  */
 export function isValidStoreKey(key: string) {
+    if (isNullOrEmpty(key))
+        return false;
     if (StoreConstants.keyPrefix + key === StoreConstants.SETTINGS || key === StoreConstants.SETTINGS)
+        return true;
+    if (key.match('^(' + StoreConstants.keyPrefix + ')?\\d{6}$'))  /** match with or without store prefix followed by 6 digits e.g. 012019 or bewellapp_012019 */
         return true;
     return (StoreConstants.AllEncryptedStoreKeys.indexOf(StoreConstants.keyPrefix + key) >= 0 || StoreConstants.AllEncryptedStoreKeys.indexOf(key) >= 0);
 }
