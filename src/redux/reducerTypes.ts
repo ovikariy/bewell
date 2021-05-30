@@ -120,8 +120,7 @@ export interface AppContextState {
 }
 
 export interface OtherSettings {
-  hideNoteText: boolean,
-  numAddWidgetButtonsVisible: number
+  hideNoteText: boolean
 }
 export interface EncryptedSettings {
   [EncryptedSettingsEnum.MOVE]: string[],

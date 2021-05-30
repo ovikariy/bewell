@@ -70,6 +70,7 @@ export type RootStackParamList = {
     Welcome: undefined
     Customize: undefined
     CustomizeSetting: { id: string, title: string }
+    CustomizeWidgets: undefined
 };
 
 /**

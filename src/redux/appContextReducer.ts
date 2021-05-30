@@ -32,9 +32,6 @@ export const APPCONTEXT = (state: AppContextState = defaultAppContext, action: A
                 }
                 if (setting.id === settingsConstants.hideNoteText)
                     newState.otherSettings.hideNoteText = (setting.value === 'true');
-                //TODO: implement UI for this on the settings screen, currently it's only hardcoded
-                if (setting.id === settingsConstants.numAddWidgetButtonsVisible)
-                    newState.otherSettings.numAddWidgetButtonsVisible = convertToNumber(setting.value);
 
                 if (setting.id === EncryptedSettingsEnum[setting.id]) /** customized lists e.g. EncryptedSettingsEnum['CREATE'] or EncryptedSettingsEnum['MOVE'] */
                     newState.encryptedSettings[setting.id] = setting.value;

@@ -13,6 +13,7 @@ import { images } from '../modules/constants';
 import { sizes } from '../assets/styles/style';
 
 interface WidgetListComponentProps {
+  orderedWidgetsTypes: any[] | undefined; /** array of widget types ordered to user preference */
   dailyData: WidgetBase[];
   selectedDate: Date;
   selectedItem?: WidgetBase;
@@ -28,6 +29,8 @@ interface WidgetListComponentState {
 class WidgetListComponent extends React.Component<WidgetListComponentProps, WidgetListComponentState>  {
   static contextType = AppContext;
   context!: React.ContextType<typeof AppContext>;
+
+  toolbarHeight = sizes[54]; /* fixed height so only the first button row is visible, works flexibly with languages where widget names are long */
 
   constructor(props: WidgetListComponentProps) {
     super(props);
@@ -54,12 +57,13 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
   }
 
   renderAddNewButtons(widgetFactory: WidgetFactory) {
-    const numAddWidgetButtonsVisible = this.context.otherSettings.numAddWidgetButtonsVisible;
-    const widgetButtons = Object.values(widgetFactory).map((item, index) => {
-      if (this.state.showAllAddButtons || index < numAddWidgetButtonsVisible) {
-        return <ToolbarButton containerStyle={{ marginHorizontal: sizes[15], marginVertical: sizes[5] }} iconName={item.config.addIcon.name} title={item.config.addIcon.text} iconType={item.config.addIcon.type} key={'button' + item.config.itemTypeName}
-          onPress={() => this.addBlankRecordOfType(item.config.itemTypeName)} />;
-      }
+    const widgetOrder = this.props.orderedWidgetsTypes || Object.values(widgetFactory).map((item, index) => item.config.itemTypeName);
+    const widgetButtons = widgetOrder.map((item, index) => {
+      const widget = widgetFactory[item];
+      return <ToolbarButton containerStyle={{ height: this.toolbarHeight, marginHorizontal: sizes[3] + '%' }} /** margin as percent to work well with different screens */
+        title={widget.config.addIcon.text}
+        iconName={widget.config.addIcon.name} iconType={widget.config.addIcon.type} key={'button' + widget.config.itemTypeName}
+        onPress={() => this.addBlankRecordOfType(widget.config.itemTypeName)} />;
     });
     return widgetButtons;
   }
@@ -110,8 +114,13 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
     return (
       <View style={[styles.flex]}>
         <View style={{ flexDirection: 'row' }}>
-          <Toolbar style={{ flex: 5, paddingVertical: sizes[6] }}>{this.renderAddNewButtons(this.props.widgetFactory)}</Toolbar>
-          <Toolbar style={{ flex: 1, paddingVertical: sizes[6], flexDirection: 'column' }}>
+          <Toolbar style={{
+            flex: 6, height: this.state.showAllAddButtons ? 'auto' : this.toolbarHeight + sizes[6],
+            overflow: 'hidden', alignContent: 'flex-start', paddingVertical: sizes[5]
+          }}>
+            {this.renderAddNewButtons(this.props.widgetFactory)}
+          </Toolbar>
+          <Toolbar style={{ flex: 1, paddingVertical: sizes[5], flexDirection: 'column' }}>
             <ToolbarButton iconType='material' containerStyle={{}}
               iconName={this.state.showAllAddButtons ? 'arrow-drop-up' : 'arrow-drop-down'} key={'more'}
               title={this.state.showAllAddButtons ? language.less : language.more}

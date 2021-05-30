@@ -28,6 +28,7 @@ export const platform = {
  * i.e. style={{ marginTop: sizes[10] }}
  */
 export const sizes = {
+  3: normalizeSize(3),
   5: normalizeSize(5),
   6: normalizeSize(6),
   10: normalizeSize(10),
@@ -42,6 +43,7 @@ export const sizes = {
   34: normalizeSize(34),
   40: normalizeSize(40),
   50: normalizeSize(50),
+  54: normalizeSize(54),
   60: normalizeSize(60),
   70: normalizeSize(70),
   100: normalizeSize(100),

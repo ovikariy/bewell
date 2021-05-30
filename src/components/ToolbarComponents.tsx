@@ -20,28 +20,23 @@ export const FloatingToolbar = (props: PropsWithChildren<ViewProps> & { isVisibl
     const styles = context.styles;
 
     if (props.isVisible) {
-return (
-            <Toolbar style={[styles.floatingContainer, props.style]}>
-                {props.children}
-            </Toolbar>
-        );
-}
-    else {
-return (
-            <Toolbar style={[styles.floatingContainer]} />
-        );
-}
+        return <Toolbar style={[styles.floatingContainer, props.style]}>
+            {props.children}
+        </Toolbar>;
+    }
+    else
+        return <Toolbar style={[styles.floatingContainer]} />;
 };
 
 export const ToolbarButton = (props: ButtonPropsInterface) => {
     const context = React.useContext(AppContext);
     const styles = context.styles;
 
-    return <IconButton iconType={props.iconType || 'font-awesome'}
+    return <IconButton {...props} iconType={props.iconType || 'font-awesome'}
         containerStyle={[styles.toolbarButtonContainer, props.containerStyle]}
         iconStyle={props.iconStyle || { ...styles.iconPrimary, ...{ color: styles.brightColor.color } }}
         titleStyle={props.titleStyle || { ...styles.toolbarButtonText, ...{ color: styles.brightColor.color } }}
-        {...props} />;
+    />;
 };
 
 export const ViewHistoryButton = (props: { item?: WidgetBase, itemConfig?: WidgetConfig, navigation: any }) => {

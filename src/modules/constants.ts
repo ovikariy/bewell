@@ -79,21 +79,21 @@ export const settingsConstants = {
   language: 'language',
   theme: 'theme',
   version: 'version',
-  hideNoteText: 'hideNoteText',
-  numAddWidgetButtonsVisible: 'numAddWidgetButtonsVisible'
+  hideNoteText: 'hideNoteText'
 };
 
 export enum EncryptedSettingsEnum {
   MOVE = 'MOVE',
-  CREATE = 'CREATE'
+  CREATE = 'CREATE',
+  WidgetOrder = 'WidgetOrder'
 }
 
 export const settingsLists = {
   durationPickerItems: [' - ', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],
   distancePickerItems: [' - ', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50],
   /** remember to add translations when adding new items below */
-  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'Playing Sports', 'Workout'], //TODO: translations
-  [EncryptedSettingsEnum.CREATE]: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing']
+  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'Playing Sports', 'Workout'],
+  [EncryptedSettingsEnum.CREATE]: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'],
 };
 
 export enum ErrorCode {

@@ -11,8 +11,7 @@ export const defaultAppContext = {
   styles: getThemeStyles(themes.dark),
   locale: 'en',
   otherSettings: {
-    hideNoteText: false,
-    numAddWidgetButtonsVisible: 5 //TODO: different default on screen sizes and allow user overwrite
+    hideNoteText: false
   },
   encryptedSettings: {
     [EncryptedSettingsEnum.MOVE]: settingsLists[EncryptedSettingsEnum.MOVE],

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import WidgetListComponent from '../components/WidgetListComponent';
-import { ItemTypes, StoreConstants } from '../modules/constants';
+import { EncryptedSettingsEnum, ItemTypes, StoreConstants } from '../modules/constants';
 import { load, removeFromReduxAndPersist, updateReduxAndPersist } from '../redux/mainActionCreators';
 import { Spacer } from '../components/MiscComponents';
 import { FloatingToolbar, DeleteWidgetItemButton, ViewHistoryButton } from '../components/ToolbarComponents';
-import { getStorageKeyFromDate, consoleLogWithColor } from '../modules/utils';
+import { getStorageKeyFromDate, consoleLogWithColor, getSettingValueFromStoreItems } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { deleteImageFromDiskAsync } from '../modules/io';
 import { CreateWidgetFactory } from '../modules/widgetFactory';
@@ -75,6 +75,8 @@ class DayView extends Component<DayViewProps, DayViewState>  {
     let data: WidgetBase[] = [];
     if (this.props.STORE && this.props.STORE.items)
       data = (this.props.STORE.items[selectedMonth] as WidgetBase[] || []).filter((item) => new Date(item.date).toLocaleDateString() === selectedDateString);
+    const customOrderedWidgetsTypes = getSettingValueFromStoreItems(this.props.STORE.items[StoreConstants.SETTINGSENCRYPTED], EncryptedSettingsEnum.WidgetOrder);
+
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} >
@@ -83,6 +85,7 @@ class DayView extends Component<DayViewProps, DayViewState>  {
           <Spacer height={sizes[5]} />
           <WidgetListComponent
             dailyData={data}
+            orderedWidgetsTypes={customOrderedWidgetsTypes}
             selectedDate={this.state.selectedDate}
             selectedItem={this.state.selectedItem}
             widgetFactory={widgetFactory}

@@ -3,7 +3,7 @@ import 'react-native-get-random-values'; /** polyfills for uuid */
 import { v4 as uuidv4 } from 'uuid';
 import { StoreConstants } from './constants';
 import { TranslationKeys } from './translations';
-import { ItemBaseAssociativeArray, WidgetBase, WidgetBaseFields } from './types';
+import { ItemBaseAssociativeArray, SettingType, WidgetBase, WidgetBaseFields } from './types';
 import { toNumber } from 'lodash';
 
 export function configLocale(locale: string) {
@@ -210,4 +210,13 @@ export function consoleLogWithColor(message: string, color?: string) {
 
 export function convertToNumber(value: any): any {
   return toNumber(value);
+}
+
+export function getSettingValueFromStoreItems(settingsFromStore: any[], id: string) {
+  if (!settingsFromStore || settingsFromStore.length <= 0 || isNullOrEmpty(id))
+    return null;
+  const setting = settingsFromStore.find(item => item[WidgetBaseFields.id] === id);
+  if (setting)
+    return (setting as SettingType).value;
+  return null;
 }

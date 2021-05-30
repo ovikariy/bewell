@@ -24,6 +24,7 @@ import { images } from '../modules/constants';
 import DayViewScreen from '../screens/DayViewScreen';
 import CustomizeScreen from '../screens/Customize';
 import CustomizeSettingScreen from '../screens/CustomizeSettingScreen';
+import CustomizeWidgetsScreen from '../screens/CustomizeWidgetsScreen';
 
 const MenuHeaderButton = (props: { navigation: any }) => {
     const context = React.useContext(AppContext);
@@ -201,6 +202,11 @@ function SettingsNavigator() {
                 name='CustomizeSetting'
                 component={CustomizeSettingScreen}
                 options={CustomizeSettingScreen.getNavigationOptions} /* dynamic nav options in the component */
+            />
+            <SettingsStack.Screen
+                name='CustomizeWidgets'
+                component={CustomizeWidgetsScreen}
+                options={{ title: language.widgetOrder }}
             />
         </SettingsStack.Navigator>
     );

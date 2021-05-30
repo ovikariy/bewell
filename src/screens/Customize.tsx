@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ItemTypes } from '../modules/constants';
+import { EncryptedSettingsEnum, ItemTypes } from '../modules/constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CreateWidgetFactory } from '../modules/widgetFactory';
 import { List } from '../components/MiscComponents';
@@ -21,6 +21,13 @@ class CustomizeScreen extends Component<CustomizeScreenProps> {
     const widgetFactory = CreateWidgetFactory(this.context);
 
     const listItems: any = [
+      {
+        id: EncryptedSettingsEnum.WidgetOrder,
+        title: language.widgetOrder,
+        iconName: 'widgets',
+        iconType: 'material-community',
+        onPress: () => { this.props.navigation.navigate('CustomizeWidgets'); }
+      },
       {
         id: ItemTypes.MOVE,
         title: language.movement,
