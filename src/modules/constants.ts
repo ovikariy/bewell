@@ -25,7 +25,9 @@ export const ItemTypes = {
   MOVE: 'MOVE',
   CREATE: 'CREATE',
   MEDITATE: 'MEDITATE',
-  PERIOD: 'PERIOD'
+  PERIOD: 'PERIOD',
+  STRESS: 'STRESS',
+  MEDICINE: 'MEDICINE'
 };
 
 export const brokenImageURI = 'broken'; /* this is just so that we can show something to user to indicate the image will not get loaded */
@@ -83,17 +85,20 @@ export const settingsConstants = {
 };
 
 export enum EncryptedSettingsEnum {
+  WidgetOrder = 'WidgetOrder',
   MOVE = 'MOVE',
   CREATE = 'CREATE',
-  WidgetOrder = 'WidgetOrder'
+  MEDICINE = 'MEDICINE'
 }
 
 export const settingsLists = {
   durationPickerItems: [' - ', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],
   distancePickerItems: [' - ', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50],
-  /** remember to add translations when adding new items below */
-  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'Playing Sports', 'Workout'],
+  /** remember to add translations when adding new items below and update defaultAppContext */
+  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'PlayingSports', 'Workout'],
   [EncryptedSettingsEnum.CREATE]: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'],
+  [EncryptedSettingsEnum.MEDICINE]: ['Painkiller', 'SleepAid', 'BloodPressure', 'Cholesterol',
+    'Antacid', 'Antibiotic', 'AntiDiabetic', 'AntiAnxiety', 'Antidepressant']
 };
 
 export enum ErrorCode {

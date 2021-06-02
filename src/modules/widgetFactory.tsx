@@ -203,6 +203,46 @@ export function CreateWidgetFactory(context: AppContextState) {
           return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
+      [ItemTypes.STRESS]:
+      {
+        config: {
+          widgetTitle: language.stress,
+          historyTitle: language.stress,
+          itemTypeName: ItemTypes.STRESS,
+          addIcon: { text: language.stress, name: 'flash', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle,
+          ratings: [1, 2, 3, 4, 5]
+        },
+        renderWidgetItem: (props: RatingComponentProps, config: WidgetConfig) => {
+          return <RatingComponent iconName='flash' {...props} config={config} />;
+        },
+        renderHistoryItem: (item: RatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <RatingHistoryComponent iconName='flash' item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: RatingComponentWidgetType, config: WidgetConfig) => {
+          return <RatingCalendarComponent iconName='flash' textAlignRight={true} item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+      [ItemTypes.MEDICINE]:
+      {
+        config: {
+          widgetTitle: language.medicine,
+          historyTitle: language.medicine,
+          itemTypeName: ItemTypes.MEDICINE,
+          addIcon: { text: language.med, name: 'medical-bag', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle
+        },
+        renderWidgetItem: (props: ActivityComponentProps, config: WidgetConfig) => {
+          return <ActivityComponent activities={encryptedSettings[EncryptedSettingsEnum.MEDICINE]} {...props} config={config} />;
+        },
+        renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: ActivityComponentWidgetType, config: WidgetConfig) => {
+          return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+
   };
 
   return widgetFactory;

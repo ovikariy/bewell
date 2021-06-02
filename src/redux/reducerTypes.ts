@@ -123,8 +123,7 @@ export interface OtherSettings {
   hideNoteText: boolean
 }
 export interface EncryptedSettings {
-  [EncryptedSettingsEnum.MOVE]: string[],
-  [EncryptedSettingsEnum.CREATE]: string[],
+  [key: string]: string[]
 }
 
 interface SettingsChanged {

@@ -75,7 +75,12 @@ class DayView extends Component<DayViewProps, DayViewState>  {
     let data: WidgetBase[] = [];
     if (this.props.STORE && this.props.STORE.items)
       data = (this.props.STORE.items[selectedMonth] as WidgetBase[] || []).filter((item) => new Date(item.date).toLocaleDateString() === selectedDateString);
-    const customOrderedWidgetsTypes = getSettingValueFromStoreItems(this.props.STORE.items[StoreConstants.SETTINGSENCRYPTED], EncryptedSettingsEnum.WidgetOrder);
+    const customOrderedWidgetsTypes = getSettingValueFromStoreItems(this.props.STORE.items[StoreConstants.SETTINGSENCRYPTED], EncryptedSettingsEnum.WidgetOrder) || [];
+    Object.values(widgetFactory).forEach((item, index) => {
+      /** merge with item types that may not be saved in the settings yet, i.e. when new widget types are added after the user saved the setting */
+      if (customOrderedWidgetsTypes.indexOf(item.config.itemTypeName) < 0)
+        customOrderedWidgetsTypes.push(item.config.itemTypeName);
+    });
 
     return (
       <ScreenBackground>

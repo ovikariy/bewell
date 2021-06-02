@@ -57,7 +57,7 @@ export const RatingHistoryComponent = (props: RatingHistoryComponentProps) => {
   const styles = context.styles;
   return (
     <View style={{ marginTop: sizes[10] }}>
-      <Text style={[styles.bodyText, {color: styles.titleText.color}]}>
+      <Text style={[styles.bodyText, { color: styles.titleText.color }]}>
         {friendlyTime(props.item.date)}</Text>
       <RatingComponent value={props.item} {...props} selectedDate={new Date(props.item.date)} />
     </View>
@@ -65,16 +65,15 @@ export const RatingHistoryComponent = (props: RatingHistoryComponentProps) => {
 };
 
 //TODO: sum up all ratings for the day in calendar, enabled by property in widgetFactory
-export const RatingCalendarComponent = (props: RatingHistoryComponentProps & { hideText?: boolean }) => {
+export const RatingCalendarComponent = (props: RatingHistoryComponentProps & { hideText?: boolean, textAlignRight?: boolean }) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
 
   return <IconButton iconType={props.iconType || 'material-community'} iconName={props.iconName || 'star'} title={props.hideText === true ? '' : props.item.rating + ''}
-    containerStyle={styles.toolbarButtonContainer}
+    containerStyle={[styles.toolbarButtonContainer, { flexDirection: 'row' }]}
     iconStyle={{ ...styles.iconPrimary, color: styles.bodyText.color }}
-    titleStyle={{
-      ...styles.toolbarButtonText, ...styles.bodyText, fontSize: sizes[16],
-      position: 'absolute', paddingTop: sizes[5], color: styles.highlightColor.color
-    }}
+    titleStyle={[{
+      ...styles.toolbarButtonText, ...styles.bodyText, fontSize: sizes[16]
+    }, props.textAlignRight ? {} : { position: 'absolute', paddingTop: sizes[5], color: styles.highlightColor.color }]}
   />;
 };

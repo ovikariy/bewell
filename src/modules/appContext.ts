@@ -15,7 +15,8 @@ export const defaultAppContext = {
   },
   encryptedSettings: {
     [EncryptedSettingsEnum.MOVE]: settingsLists[EncryptedSettingsEnum.MOVE],
-    [EncryptedSettingsEnum.CREATE]: settingsLists[EncryptedSettingsEnum.CREATE]
+    [EncryptedSettingsEnum.CREATE]: settingsLists[EncryptedSettingsEnum.CREATE],
+    [EncryptedSettingsEnum.MEDICINE]: settingsLists[EncryptedSettingsEnum.MEDICINE]
   }
 } as AppContextState;
 

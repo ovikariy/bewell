@@ -13,7 +13,7 @@ import { images } from '../modules/constants';
 import { sizes } from '../assets/styles/style';
 
 interface WidgetListComponentProps {
-  orderedWidgetsTypes: any[] | undefined; /** array of widget types ordered to user preference */
+  orderedWidgetsTypes: any[]; /** array of widget types ordered to user preference */
   dailyData: WidgetBase[];
   selectedDate: Date;
   selectedItem?: WidgetBase;
@@ -57,8 +57,7 @@ class WidgetListComponent extends React.Component<WidgetListComponentProps, Widg
   }
 
   renderAddNewButtons(widgetFactory: WidgetFactory) {
-    const widgetOrder = this.props.orderedWidgetsTypes || Object.values(widgetFactory).map((item, index) => item.config.itemTypeName);
-    const widgetButtons = widgetOrder.map((item, index) => {
+    const widgetButtons = this.props.orderedWidgetsTypes.map((item, index) => {
       const widget = widgetFactory[item];
       return <ToolbarButton containerStyle={{ height: this.toolbarHeight, marginHorizontal: sizes[3] + '%' }} /** margin as percent to work well with different screens */
         title={widget.config.addIcon.text}

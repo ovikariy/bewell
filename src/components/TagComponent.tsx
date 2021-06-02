@@ -29,7 +29,7 @@ export const TagsComponent = (props: TagsComponentProps) => {
 
   const tags = props.allTags?.map((tag) => {
     const selectedIndex = selectedTags.indexOf(tag);
-    return <Tag key={tag} tag={language[tag] ? language[tag] : language[tag] + ''}
+    return <Tag key={tag} tag={language[tag] ? language[tag] : tag}
       isSelected={selectedIndex >= 0}
       onPress={!props.onChange ? undefined : () => onPress(tag, selectedIndex)}
     />;

@@ -27,22 +27,22 @@ class CustomizeScreen extends Component<CustomizeScreenProps> {
         iconName: 'widgets',
         iconType: 'material-community',
         onPress: () => { this.props.navigation.navigate('CustomizeWidgets'); }
-      },
-      {
-        id: ItemTypes.MOVE,
-        title: language.movement,
-        iconName: widgetFactory[ItemTypes.MOVE].config.addIcon.name,
-        iconType: widgetFactory[ItemTypes.MOVE].config.addIcon.type,
-        onPress: () => { this.props.navigation.navigate('CustomizeSetting', { id: ItemTypes.MOVE, title: language.movement }); }
-      },
-      {
-        id: ItemTypes.CREATE,
-        title: language.creativity,
-        iconName: widgetFactory[ItemTypes.CREATE].config.addIcon.name,
-        iconType: widgetFactory[ItemTypes.CREATE].config.addIcon.type,
-        onPress: () => { this.props.navigation.navigate('CustomizeSetting', { id: ItemTypes.CREATE, title: language.creativity }); }
       }
     ];
+
+    /** add encrypted settings */
+    Object.values(EncryptedSettingsEnum).forEach(item => {
+      if (widgetFactory[item]) {
+        const widgetConfig = widgetFactory[item].config;
+        listItems.push({
+          id: widgetConfig.itemTypeName,
+          title: widgetConfig.widgetTitle,
+          iconName: widgetConfig.addIcon.name,
+          iconType: widgetConfig.addIcon.type,
+          onPress: () => { this.props.navigation.navigate('CustomizeSetting', { id: widgetConfig.itemTypeName, title: widgetConfig.widgetTitle }); }
+        });
+      }
+    });
 
     return (
       <ScreenBackground>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { stateConstants, StoreConstants } from '../modules/constants';
+import { EncryptedSettingsEnum, StoreConstants } from '../modules/constants';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { CreateWidgetFactory } from '../modules/widgetFactory';
 import { ListWithRefresh } from '../components/MiscComponents';
-import { groupBy } from '../modules/utils';
+import { getSettingValueFromStoreItems, groupBy } from '../modules/utils';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
@@ -58,8 +58,13 @@ class InsightsScreen extends Component<InsightsScreenProps> {
     const groupedByItemType = this.getCountsByItemType();
 
     const widgetFactory = CreateWidgetFactory(this.context);
-
-    Object.keys(widgetFactory).forEach(itemType => {
+    const customOrderedWidgetsTypes = getSettingValueFromStoreItems(this.props.STORE.items[StoreConstants.SETTINGSENCRYPTED], EncryptedSettingsEnum.WidgetOrder) || [];
+    Object.values(widgetFactory).forEach((item, index) => {
+      /** merge with item types that may not be saved in the settings yet, i.e. when new widget types are added after the user saved the setting */
+      if (customOrderedWidgetsTypes.indexOf(item.config.itemTypeName) < 0)
+        customOrderedWidgetsTypes.push(item.config.itemTypeName);
+    });
+    customOrderedWidgetsTypes.forEach((itemType: string) => {
       const widgetConfig = widgetFactory[itemType].config;
       const itemCount = groupedByItemType.get(itemType) ? groupedByItemType.get(itemType).length : '';
       listItems.push({
