@@ -95,10 +95,10 @@ export const settingsLists = {
   durationPickerItems: [' - ', 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180],
   distancePickerItems: [' - ', 1, 2, 3, 4, 5, 10, 13, 15, 18, 20, 26, 30, 31, 42, 50],
   /** remember to add translations when adding new items below and update defaultAppContext */
-  [EncryptedSettingsEnum.MOVE]: ['Walking', 'Dancing', 'Running', 'Swimming', 'Surfing', 'Yoga', 'Biking', 'PlayingSports', 'Workout'],
-  [EncryptedSettingsEnum.CREATE]: ['Writing', 'Drawing', 'Painting', 'Crafting', 'Playing', 'Singing'],
-  [EncryptedSettingsEnum.MEDICINE]: ['Painkiller', 'SleepAid', 'BloodPressure', 'Cholesterol',
-    'Antacid', 'Antibiotic', 'AntiDiabetic', 'AntiAnxiety', 'Antidepressant']
+  [EncryptedSettingsEnum.MOVE]: ['walking', 'dancing', 'running', 'swimming', 'surfing', 'yoga', 'biking', 'playingSports', 'workout'],
+  [EncryptedSettingsEnum.CREATE]: ['writing', 'drawing', 'painting', 'crafting', 'playing', 'singing'],
+  [EncryptedSettingsEnum.MEDICINE]: ['painkiller', 'sleepAid', 'bloodPressure', 'cholesterol',
+    'antacid', 'antibiotic', 'antiDiabetic', 'antiAnxiety', 'antidepressant']
 };
 
 export enum ErrorCode {
