@@ -206,5 +206,10 @@
   "antibiotic": "Antibiotic",
   "antiDiabetic": "Anti-diabetic",
   "antiAnxiety": "Anti-anxiety",
-  "antidepressant": "Antidepressant"
+  "antidepressant": "Antidepressant",
+  "thoughtLog": "Thought Log",
+  "event": "Event",
+  "thought": "Thought",
+  "consequence": "Consequence (emotion & behavior)",
+  "alternateResponse": "Alternate Response"
 }

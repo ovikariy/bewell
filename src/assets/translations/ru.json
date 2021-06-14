@@ -206,5 +206,10 @@
   "antibiotic": "Антибиотик",
   "antiDiabetic": "Антидиабетический",
   "antiAnxiety": "Успокаивающее",
-  "antidepressant": "Антидепрессант"
+  "antidepressant": "Антидепрессант",
+  "thoughtLog": "Дневник Мыслей",
+  "event": "Событие",
+  "thought": "Мысль",
+  "consequence": "Последствие",
+  "alternateResponse": "Альтернативный ответ"
 }

@@ -27,7 +27,8 @@ export const ItemTypes = {
   MEDITATE: 'MEDITATE',
   PERIOD: 'PERIOD',
   STRESS: 'STRESS',
-  MEDICINE: 'MEDICINE'
+  MEDICINE: 'MEDICINE',
+  THOUGHTLOG: 'THOUGHTLOG'
 };
 
 export const brokenImageURI = 'broken'; /* this is just so that we can show something to user to indicate the image will not get loaded */

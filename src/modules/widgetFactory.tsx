@@ -11,6 +11,7 @@ import { WidgetBase } from './types';
 import { sizes } from '../assets/styles/style';
 import { RatingCalendarComponent, RatingComponent, RatingComponentProps, RatingComponentWidgetType, RatingHistoryComponent } from '../components/RatingComponent';
 import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, ActivityComponentWidgetType, ActivityHistoryComponent } from '../components/ActivityComponent';
+import { ThoughtLogComponent, ThoughtLogComponentProps, ThoughtLogComponentWidgetType, ThoughtLogHistoryComponent } from '../components/ThoughLogComponent';
 
 export function CreateWidgetFactory(context: AppContextState) {
   const language = context.language;
@@ -237,6 +238,25 @@ export function CreateWidgetFactory(context: AppContextState) {
         },
         renderHistoryItem: (item: ActivityComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <ActivityHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderCalendarItem: (item: ActivityComponentWidgetType, config: WidgetConfig) => {
+          return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;
+        }
+      } as WidgetFactoryType,
+      [ItemTypes.THOUGHTLOG]:
+      {
+        config: {
+          widgetTitle: language.thoughtLog,
+          historyTitle: language.thoughtLog,
+          itemTypeName: ItemTypes.THOUGHTLOG,
+          addIcon: { text: language.thought, name: 'lightbulb-outline', type: 'material-community' } as WidgetAddIconConfig,
+          style: {} as ViewStyle
+        },
+        renderWidgetItem: (props: ThoughtLogComponentProps, config: WidgetConfig) => {
+          return <ThoughtLogComponent {...props} config={config} />;
+        },
+        renderHistoryItem: (item: ThoughtLogComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
+          return <ThoughtLogHistoryComponent item={item} isSelectedItem={isSelectedItem} />;
         },
         renderCalendarItem: (item: ActivityComponentWidgetType, config: WidgetConfig) => {
           return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;

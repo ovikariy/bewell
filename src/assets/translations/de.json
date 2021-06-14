@@ -206,5 +206,10 @@
   "antibiotic": "Antibiotikum",
   "antiDiabetic": "Antidiabetikum ",
   "antiAnxiety": " Anti-Angst Mittel",
-  "antidepressant": "Antidepressivum"
+  "antidepressant": "Antidepressivum",
+  "thoughtLog": "Gedankenprotokoll",
+  "event": "Situation",
+  "thought": "Gedanken",
+  "consequence": "Konsequenz (Emotion und Verhalten)",
+  "alternateResponse": "Alternative Gedanken"
 }
