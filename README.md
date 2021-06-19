@@ -15,7 +15,7 @@ What affects our wellbeing? What causes us to feel happy or upset? Sometimes we 
 
 ## Introduction
 
-[BeWell](https://letsbewell.app) app helps you track your moods, sleep and save notes and images throughout the day without worrying about your data being sent to servers and sold to advertisers or other third parties. Your data is yours. It is stored encrypted and stays on your device.
+[BeWell](https://letsbewell.app) app helps you track your moods, sleep, movement, creative tasks, stress levels, meditation time and so much more! It also allows saving notes and images throughout the day without worrying about your data being sent to servers and sold to advertisers or other third parties. Your data is yours. It is stored encrypted and stays on your device.
 
 <p>
     <img style="float: left; margin: 10px" src="./docs/images/screenshots/screenshot1.png" alt="BeWell App Home Screen" height="300"/>
@@ -25,8 +25,11 @@ What affects our wellbeing? What causes us to feel happy or upset? Sometimes we 
 
 ## Features
 
-- Quick and easy mood and sleep rating by tapping on icons
-- Allows adding notes and images to the wellbeing timeline
+- Quick and easy Mood and Sleep rating by tapping on icons
+- Newly added widgets: Movement, Creativity, Water Intake, Meditation, Stress, Medication, Period, and Thought Log!
+- Allows adding Notes and Images to the wellbeing timeline
+- Allows customizing the order of widgets for convenient access
+- Allows customizing list items for widgets such as Movement, Creativity and Medications
 - Auto save of items added to the wellbeing timeline
 - Serverless app, doesn't send your data anywhere
 - Open source
@@ -34,10 +37,11 @@ What affects our wellbeing? What causes us to feel happy or upset? Sometimes we 
 - Password protected and secure
 - Encrypted with 256-bit Advanced Encryption Standard (AES) 
 - Multi language
-    - Currently supports English, Russian and French. 
+    - Currently supports **English**, **Russian**, **French** and
+    **German** (Thanks [What's Next Reisen](https://www.instagram.com/whatsnext.reisen/) and [Sabine Virtual Services](https://www.sabinevirtualservices.com/) for translations!)
     - *Would you like to see your language added? [Reach out](https://www.linkedin.com/in/olena-vikariy/) and we'll work with you to make it happen!*
 - Multiple themes 
-    - Currently supports Dark and Light 
+    - Currently supports **Dark** and **Light** 
     - *Would you like to create one with your name? [Get in touch](https://www.linkedin.com/in/olena-vikariy/)! We'll give you a shout out here too! :-)*
 - PIN Lock for faster app access
     - For extra security when using PIN lock, the app disables the ability to use PIN after 6 invalid attempts and requires to use the password instead
