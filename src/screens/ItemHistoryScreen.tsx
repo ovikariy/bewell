@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { removeFromReduxAndPersist } from '../redux/mainActionCreators';
-import { CreateWidgetFactory } from '../modules/widgetFactory';
+import { CreateWidgetFactory, WidgetConfig, WidgetFactory } from '../modules/widgetFactory';
 import { ItemHistory } from '../components/ItemHistory';
 import { ScreenBackground, ScreenContent } from '../components/ScreenComponents';
 import { DeleteWidgetItemButton, FloatingToolbar } from '../components/ToolbarComponents';
@@ -70,21 +70,23 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
     const renderHistoryItem = !widgetFactory[itemType].renderHistoryItem ? undefined :
       (item: WidgetBase, isSelectedItem: boolean) => widgetFactory[itemType].renderHistoryItem(item, isSelectedItem, widgetFactory[itemType].config);
 
+    const renderHistorySummary = !widgetFactory[itemType].renderHistorySummary ? undefined :
+      (itemsGroupedByItemType: Map<string, WidgetBase[]>) => widgetFactory[itemType].renderHistorySummary(itemsGroupedByItemType, widgetFactory[itemType].config, widgetFactory);
+
     const renderCalendarItem = !widgetFactory[itemType].renderCalendarItem ? undefined :
       (item: WidgetBase) => widgetFactory[itemType].renderCalendarItem(item, widgetFactory[itemType].config);
-
-    const items = filterByItemType(this.props.STORE.items, this.itemType);
 
     return (
       <ScreenBackground>
         <ScreenContent isKeyboardAvoidingView={true} style={[styles.screenBodyContainerMediumMargin, { paddingHorizontal: 0 }]}>
           <ItemHistory style={[styles.toolbarBottomOffset]}
-            items={items}
+            items={this.props.STORE.items}
             itemType={this.itemType}
             selectedItem={this.state.selectedItem}
             onSelected={(item) => { this.onSelected(item); }}
             renderItem={renderHistoryItem} /* make sure the prop name and function name are different, otherwise will get called but the return from function is undefined */
             renderCalendarItem={renderCalendarItem}
+            renderHistorySummary={renderHistorySummary}
             config={widgetFactory[this.itemType].config}
             navigation={this.props.navigation}
           />

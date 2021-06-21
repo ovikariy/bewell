@@ -1,7 +1,7 @@
 import { ErrorCode, ErrorMessage, StoreConstants } from './constants';
 import * as securityService from './securityService';
-import { consoleLogWithColor, consoleColors, isNullOrEmpty, isValidDate } from './utils';
-import { AppError, ItemBase, ItemBaseMultiArray } from './types';
+import { consoleLogWithColor, consoleColors, isNullOrEmpty, isValidDate, groupBy } from './utils';
+import { AppError, ItemBase, ItemBaseAssociativeArray, ItemBaseMultiArray, WidgetBase } from './types';
 import { AsyncStorage } from 'react-native';
 
 export async function getItemAsync(key: string) {
@@ -161,9 +161,37 @@ export function isValidStoreKey(key: string) {
         return false;
     if (StoreConstants.keyPrefix + key === StoreConstants.SETTINGS || key === StoreConstants.SETTINGS)
         return true;
-    if (key.match('^(' + StoreConstants.keyPrefix + ')?\\d{6}$'))  /** match with or without store prefix followed by 6 digits e.g. 012019 or bewellapp_012019 */
+    if (isValidMonthYearPattern(key))
         return true;
     return (StoreConstants.AllEncryptedStoreKeys.indexOf(StoreConstants.keyPrefix + key) >= 0 || StoreConstants.AllEncryptedStoreKeys.indexOf(key) >= 0);
+}
+
+/**
+ * @description For arrays of widget records, store key starts with "bewellapp_" prefix followed MMYYYY
+ * e.g. "bewellapp_012019"
+ * @param key
+ */
+export function isValidMonthYearPattern(key: string) {
+    if (key.match('^(' + StoreConstants.keyPrefix + ')?\\d{6}$'))  /** match with or without store prefix followed by 6 digits e.g. 012019 or bewellapp_012019 */
+        return true;
+    return false;
+}
+
+/**
+ * @description Create a map of ItemTypes and arrays of records of that type
+ * e.g. { "MOOD": [mood1, mood2, ...], "SLEEP": [sleep1, sleep2, ...]
+ * @param items
+ */
+export function getItemGroupsByItemType(items: ItemBaseAssociativeArray) {
+    //TODO: check for performance with bigger data set
+    const groupedByItemType = new Map<string, WidgetBase[]>();
+    for (const key in items) {
+        if (!isValidMonthYearPattern(key))
+            continue;
+        if (items[key] && items[key].length > 0)
+            groupBy(items[key], (item: WidgetBase) => item.type, groupedByItemType);
+    };
+    return groupedByItemType;
 }
 
 /**

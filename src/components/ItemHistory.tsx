@@ -1,16 +1,18 @@
 import React, { ReactNode, useState } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
-import { friendlyTime, groupBy, friendlyDay, formatDate } from '../modules/utils';
+import { friendlyTime, groupBy, friendlyDay, formatDate, filterByItemType } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetConfig } from '../modules/widgetFactory';
-import { WidgetBase } from '../modules/types';
+import { WidgetBase, ItemBaseAssociativeArray } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 import { Calendar } from './Calendar';
+import { getItemGroupsByItemType } from '../modules/storage';
+import { ItemTypes } from '../modules/constants';
 
 interface ItemHistoryProps {
-  items: WidgetBase[],
+  items: ItemBaseAssociativeArray,
   itemType: string,
   config: WidgetConfig,
   style?: StyleProp<ViewStyle>,
@@ -18,6 +20,7 @@ interface ItemHistoryProps {
   onSelected: (item: WidgetBase) => void,
   renderItem?: (item: WidgetBase, isSelectedItem: boolean) => ReactNode,
   renderCalendarItem?: (item: WidgetBase) => ReactNode,
+  renderHistorySummary?: (itemsGroupedByItemType: Map<string, WidgetBase[]>, config: WidgetConfig) => ReactNode;
   navigation: any
 }
 
@@ -30,7 +33,10 @@ export const ItemHistory = (props: ItemHistoryProps) => {
 
   const showCalendarComponent = props.renderCalendarItem ? true : false;
 
-  const items = !showCalendarComponent ? props.items : filterItemsByMonth(selectedDate, props.items); /** only show current month's items */
+  const itemsOfAllItemTypes = getItemGroupsByItemType(props.items); //TODO: filter by month if needed first
+  const itemsOfCurrentType = itemsOfAllItemTypes.get(props.itemType) as WidgetBase[];
+
+  const items = !showCalendarComponent ? itemsOfCurrentType : filterItemsByMonth(selectedDate, itemsOfCurrentType); /** only show current month's items */
 
   /** need double sort: 1) widget records need to be sorted as they were added but reversed and 2) day groups need to be sorted by date descending */
 
@@ -47,12 +53,15 @@ export const ItemHistory = (props: ItemHistoryProps) => {
     <View style={[{ flex: 1, marginTop: showCalendarComponent ? 0 : sizes[40] }, props.style]} >
       <List
         ListHeaderComponent={showCalendarComponent &&
-          <Calendar data={items}
-            onItemPress={(date, item) => { props.navigation.navigate('DayView', { date: item ? item.date : date }); }}
-            selectedDate={selectedDate}
-            onSelectedDateChanged={(newDate) => selectedDateChanged(newDate)}
-            renderItem={props.renderCalendarItem}
-          />}
+          <View>
+            <Calendar data={items}
+              onItemPress={(date, item) => { props.navigation.navigate('DayView', { date: item ? item.date : date }); }}
+              selectedDate={selectedDate}
+              onSelectedDateChanged={(newDate) => selectedDateChanged(newDate)}
+              renderItem={props.renderCalendarItem}
+            />
+            {props.renderHistorySummary ? props.renderHistorySummary(itemsOfAllItemTypes, props.config) : <React.Fragment />}
+          </View>}
         data={groupedByDayArray}
         renderItem={(item: any) => renderGroupedByDay(item.item)}
         keyExtractor={(item: WidgetBase[]) => item[0].date + ''} /* keyExtractor expects a string */

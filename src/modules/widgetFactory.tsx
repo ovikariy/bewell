@@ -2,12 +2,12 @@ import React, { ReactNode } from 'react';
 import { EncryptedSettingsEnum, ItemTypes, settingsConstants, settingsLists } from './constants';
 import { AppContextState } from '../redux/reducerTypes';
 import { NoteComponent, NoteComponentProps, NoteComponentWidgetType, NoteHistoryComponent } from '../components/NoteComponent';
-import { CustomIconRatingCalendarComponent, CustomIconRatingComponent, CustomIconRatingComponentProps, CustomIconRatingComponentWidgetType, CustomIconRatingHistoryComponent } from '../components/CustomIconRatingComponent';
+import { CustomIconRatingCalendarComponent, CustomIconRatingComponent, CustomIconRatingComponentProps, CustomIconRatingComponentWidgetType, CustomIconRatingHistoryComponent, CustomIconRatingHistorySummaryComponent } from '../components/CustomIconRatingComponent';
 import { SleepComponent, SleepComponentProps, SleepComponentWidgetType, SleepHistoryComponent, SleepCalendarComponent } from '../components/SleepComponent';
 import { ImagePickerComponent, ImagePickerComponentProps, ImagePickerWidgetType, ImagePickerHistoryComponent } from '../components/ImagePickerComponent';
 import { StyleProp, ViewStyle } from 'react-native';
 import { CustomIconType } from '../components/CustomIconRating';
-import { WidgetBase } from './types';
+import { ItemBase, WidgetBase } from './types';
 import { sizes } from '../assets/styles/style';
 import { RatingCalendarComponent, RatingComponent, RatingComponentProps, RatingComponentWidgetType, RatingHistoryComponent } from '../components/RatingComponent';
 import { ActivityCalendarComponent, ActivityComponent, ActivityComponentProps, ActivityComponentWidgetType, ActivityHistoryComponent } from '../components/ActivityComponent';
@@ -55,6 +55,9 @@ export function CreateWidgetFactory(context: AppContextState) {
         },
         renderHistoryItem: (item: CustomIconRatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <CustomIconRatingHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderHistorySummary: (itemsGroupedByItemType: Map<string, ItemBase[]>, config: WidgetConfig, widgetFactory: WidgetFactory) => {
+          return <CustomIconRatingHistorySummaryComponent itemsGroupedByItemType={itemsGroupedByItemType} config={config} widgetFactory={widgetFactory} />;
         },
         renderCalendarItem: (item: CustomIconRatingComponentWidgetType, config: WidgetConfig) => {
           return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
@@ -183,7 +186,7 @@ export function CreateWidgetFactory(context: AppContextState) {
       {
         config: {
           widgetTitle: language.period,
-          historyTitle:  language.period,
+          historyTitle: language.period,
           itemTypeName: ItemTypes.PERIOD,
           isHorizontalHistoryRow: true, /* on the history screen, show all items for the day in one row */
           addIcon: { text: language.period, name: 'water', type: 'material-community' } as WidgetAddIconConfig,
@@ -204,7 +207,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
-      [ItemTypes.STRESS]:
+    [ItemTypes.STRESS]:
       {
         config: {
           widgetTitle: language.stress,
@@ -224,7 +227,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           return <RatingCalendarComponent iconName='flash' textAlignRight={true} item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
-      [ItemTypes.MEDICINE]:
+    [ItemTypes.MEDICINE]:
       {
         config: {
           widgetTitle: language.medicine,
@@ -243,7 +246,7 @@ export function CreateWidgetFactory(context: AppContextState) {
           return <ActivityCalendarComponent item={item} isSelectedItem={false} config={config} />;
         }
       } as WidgetFactoryType,
-      [ItemTypes.THOUGHTLOG]:
+    [ItemTypes.THOUGHTLOG]:
       {
         config: {
           widgetTitle: language.thoughtLog,
@@ -304,5 +307,6 @@ export interface WidgetFactoryType {
   config: WidgetConfig;
   renderWidgetItem: (props: WidgetComponentPropsBase, config: WidgetConfig) => ReactNode;
   renderHistoryItem?: (item: WidgetBase, isSelectedItem: boolean, config: WidgetConfig) => ReactNode;
+  renderHistorySummary?: (itemsGroupedByItemType: Map<string, WidgetBase[]>, config: WidgetConfig, widgetFactory: WidgetFactory) => ReactNode;
   renderCalendarItem?: (item: WidgetBase, config: WidgetConfig) => ReactNode;
 }

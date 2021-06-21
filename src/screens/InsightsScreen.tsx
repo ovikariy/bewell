@@ -8,7 +8,8 @@ import { getSettingValueFromStoreItems, groupBy } from '../modules/utils';
 import { loadAllWidgetData } from '../redux/mainActionCreators';
 import { AppContext } from '../modules/appContext';
 import { RootState } from '../redux/store';
-import { AppNavigationProp, WidgetBase } from '../modules/types';
+import { AppNavigationProp, ItemBaseAssociativeArray, WidgetBase } from '../modules/types';
+import { getItemGroupsByItemType, isValidMonthYearPattern } from '../modules/storage';
 
 const mapStateToProps = (state: RootState) => ({
   STORE: state.STORE
@@ -38,24 +39,11 @@ class InsightsScreen extends Component<InsightsScreenProps> {
     this.props.loadAllWidgetData();
   }
 
-  getCountsByItemType() {
-    //TODO: check for performance with bigger data set
-    const groupedByItemType = new Map();
-    const items = this.props.STORE.items;
-
-    StoreConstants.monthsFromEpochDate.forEach((monthKey) => {
-      if (items[monthKey] && items[monthKey].length > 0)
-        groupBy(items[monthKey], (item: WidgetBase) => item.type, groupedByItemType);
-
-    });
-
-    return groupedByItemType;
-  }
   render() {
     const styles = this.context.styles;
 
     const listItems: any = [];
-    const groupedByItemType = this.getCountsByItemType();
+    const groupedByItemType = getItemGroupsByItemType(this.props.STORE.items);
 
     const widgetFactory = CreateWidgetFactory(this.context);
     const customOrderedWidgetsTypes = getSettingValueFromStoreItems(this.props.STORE.items[StoreConstants.SETTINGSENCRYPTED], EncryptedSettingsEnum.WidgetOrder) || [];
