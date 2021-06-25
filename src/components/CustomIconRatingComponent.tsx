@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { AppContext } from '../modules/appContext';
 import { WidgetComponentPropsBase, WidgetConfig, WidgetFactory } from '../modules/widgetFactory';
-import { ItemBase, WidgetBase, WidgetBaseFields } from '../modules/types';
+import { WidgetBase, WidgetBaseFields } from '../modules/types';
 import { Text, View } from 'react-native';
-import { configLocale, friendlyTime } from '../modules/utils';
+import { friendlyTime } from '../modules/utils';
 import { CustomIconType, CustomIconRating, CustomIconRatingItem } from './CustomIconRating';
 import * as Animatable from 'react-native-animatable';
 import { sizes } from '../assets/styles/style';
@@ -66,33 +66,104 @@ export const CustomIconRatingHistoryComponent = (props: CustomIconRatingHistoryC
   );
 };
 
-export const CustomIconRatingHistorySummaryComponent = (props: { itemsGroupedByItemType: Map<string, ItemBase[]>, config: WidgetConfig, widgetFactory: WidgetFactory }) => {
+export const CustomIconRatingHistorySummaryComponent = (props: { items: WidgetBase[], config: WidgetConfig, widgetFactory: WidgetFactory }) => {
   const context = React.useContext(AppContext);
   const styles = context.styles;
+  const language = context.language;
 
-  const content = [] as ReactNode[];
-  props.itemsGroupedByItemType.forEach((itemTypeItems, key) => {
-    if (key === props.config.itemTypeName)
-      return; //skip the item type for which we are viewing history
-    const widgetTitle = props.widgetFactory[key].config.widgetTitle;
-    if (key === ItemTypes.SLEEP) {
-      const goodSleepIconName = props.widgetFactory[ItemTypes.SLEEP].config.icons[0].name;
-      content.push(
-        <Text style={styles.bodyText}>
-          {itemTypeItems?.filter(item => item.rating === 0)?.length + ' had ' + goodSleepIconName + ' ' + widgetTitle}
-        </Text>);
+  const itemsGroupedByItemType = new Map<string, WidgetBase[]>();
+  const datesOfItemsWithGoodDays = {} as { [key: string]: string };
+  props.items?.forEach(item => {
+    const date = new Date(item.date).toLocaleDateString(); /** we want to count one item of itemType per day */
+    const collection = itemsGroupedByItemType.get(item[WidgetBaseFields.type]);
+    if (!collection)
+      itemsGroupedByItemType.set(item[WidgetBaseFields.type], [item]);
+    else {
+      if (collection.find(x => x.date && new Date(x.date).toLocaleDateString() === date))
+        return; /** don't add item, we already have it for this day */
+      collection.push(item);
     }
-    else
-      content.push(<Text style={styles.bodyText}>{itemTypeItems.length + ' had ' + widgetTitle}</Text>);
+    if (item[WidgetBaseFields.type] === props.config.itemTypeName)
+      datesOfItemsWithGoodDays[date] = date;
   });
 
+  const itemsWithGoodDays = itemsGroupedByItemType.get(props.config.itemTypeName)?.filter((item: CustomIconRatingComponentWidgetType) => item.rating === 0);
+  const numGoodDays = itemsWithGoodDays?.length;
+  if (!numGoodDays || numGoodDays <= 0)
+    return <React.Fragment />; /** TODO: what to show when no good days?  */
+  const summaryLines = renderSummaryLines();
   return (
-    <View style={{ margin: sizes[10], alignContent: 'center' }}>
-      <Text style={styles.bodyText}>{'This month there were ' + props.itemsGroupedByItemType.get(ItemTypes.MOOD)?.filter(mood => mood.rating === 0)?.length + ' days with ' + props.config.icons[0].name + ' Mood'}</Text>
-      <Text style={styles.bodyText}>{'Out of those:'}</Text>
-      {content}
+    <View style={{
+      margin: sizes[10], alignContent: 'center', marginVertical: sizes[20], paddingVertical: sizes[20],
+      borderColor: styles.toolbarContainer.backgroundColor, borderTopWidth: 1
+    }}>
+      {renderGoodDayCount()}
+      {summaryLines?.length > 0 && <Text style={[styles.bodyTextLarge, { marginVertical: sizes[20], paddingHorizontal: '10%' }]}>{language.outOfThoseDays + ':'}</Text>}
+      {summaryLines}
     </View>
   );
+
+  function renderGoodDayCount() {
+    return <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: '10%' }}>
+      <Text style={[styles.bodyText, { fontSize: 100, flex: 1, textAlign: 'center', color: styles.toolbarContainer.backgroundColor }]}>{numGoodDays}</Text>
+      <Text style={[styles.titleText, { fontSize: 30, flex: 1, textAlign: 'left' }]}>
+        {props.config.historySummary}
+      </Text>
+    </View>;
+  }
+
+  function renderSummaryLines() {
+    const summaryLines = [] as { key: number, value: ReactNode }[];
+    itemsGroupedByItemType.forEach((itemTypeItems, key) => {
+      //skip the item type for which we are viewing history e.g. if we're viewing Mood history then mood count would already be shown in renderGoodDayCount
+      if (key === props.config.itemTypeName)
+        return;
+
+      //skip items that don't fall on the good days we're talking about
+      const itemTypeItemsForGoodDays = itemTypeItems?.filter(item => {
+        const date = new Date(item.date).toLocaleDateString();
+        return datesOfItemsWithGoodDays[date] === date;
+      });
+
+      if (!(itemTypeItemsForGoodDays?.length > 0))
+        return;
+
+      const widgetTitle = props.widgetFactory[key].config.widgetTitle;
+
+      if (key === ItemTypes.SLEEP || key === ItemTypes.MOOD) {
+        const goodRatingName = props.widgetFactory[key].config.icons[0].name;
+        const goodRatingItems = itemTypeItemsForGoodDays?.filter(item => item.rating === 0);
+
+        if (!(goodRatingItems?.length > 0))
+          return;
+
+        summaryLines.push({
+          key: goodRatingItems?.length,
+          value: renderSummaryLine(key, goodRatingItems?.length, widgetTitle + ': ' + goodRatingName)
+        });
+      }
+      else {
+        summaryLines.push({
+          key: itemTypeItemsForGoodDays?.length,
+          value: renderSummaryLine(key, itemTypeItemsForGoodDays?.length, widgetTitle)
+        });
+      }
+    });
+
+    /** sort summary lines with item counts in descending order */
+    return summaryLines.sort((a, b) => b.key - a.key).map(item => item.value);
+  }
+
+  function renderSummaryLine(key: string, itemCount: number, summaryText: string) {
+    return <View key={key} style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <Text style={[styles.bodyTextLarge, { flex: 1, textAlign: 'right', color: styles.titleText.color, fontWeight: 'bold' }]}>
+        {itemCount}
+      </Text>
+      <Text style={[styles.bodyTextLarge, { marginLeft: sizes[15], flex: 3, textAlign: 'left' }]}>
+        {summaryText}
+      </Text>
+    </View>;
+  };
 };
 
 export const CustomIconRatingCalendarComponent = (props: CustomIconRatingHistoryComponentProps) => {

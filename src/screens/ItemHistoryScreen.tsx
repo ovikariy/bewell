@@ -71,7 +71,7 @@ class ItemHistoryScreen extends Component<ItemHistoryScreenProps, ItemHistoryScr
       (item: WidgetBase, isSelectedItem: boolean) => widgetFactory[itemType].renderHistoryItem(item, isSelectedItem, widgetFactory[itemType].config);
 
     const renderHistorySummary = !widgetFactory[itemType].renderHistorySummary ? undefined :
-      (itemsGroupedByItemType: Map<string, WidgetBase[]>) => widgetFactory[itemType].renderHistorySummary(itemsGroupedByItemType, widgetFactory[itemType].config, widgetFactory);
+      (items: WidgetBase[]) => widgetFactory[itemType].renderHistorySummary(items, widgetFactory[itemType].config, widgetFactory);
 
     const renderCalendarItem = !widgetFactory[itemType].renderCalendarItem ? undefined :
       (item: WidgetBase) => widgetFactory[itemType].renderCalendarItem(item, widgetFactory[itemType].config);

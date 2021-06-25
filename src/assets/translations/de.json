@@ -205,11 +205,14 @@
   "antacid": "Antazidum",
   "antibiotic": "Antibiotikum",
   "antiDiabetic": "Antidiabetikum ",
-  "antiAnxiety": " Anti-Angst Mittel",
+  "antiAnxiety": "Anti-Angst Mittel",
   "antidepressant": "Antidepressivum",
   "thoughtLog": "Gedankenprotokoll",
   "event": "Situation",
   "thought": "Gedanken",
   "consequence": "Konsequenz (Emotion und Verhalten)",
-  "alternateResponse": "Alternative Gedanken"
+  "alternateResponse": "Alternative Gedanken",
+  "daysWithHappyMood": "Tage mit glücklicher Stimmung",
+  "daysWithHappySleep": "Tage mit erholsamen Schlaf",
+  "outOfThoseDays": "Die Anzahl der Tage die davon auch hatten"
 }

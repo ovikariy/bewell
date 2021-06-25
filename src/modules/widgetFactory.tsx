@@ -40,6 +40,7 @@ export function CreateWidgetFactory(context: AppContextState) {
         config: {
           widgetTitle: language.mood,
           historyTitle: language.moods,
+          historySummary: language.daysWithHappyMood,
           itemTypeName: ItemTypes.MOOD,
           isHorizontalHistoryRow: true, /* on the history screen, show all items for the day in one row */
           addIcon: { text: language.mood, name: 'smile-o', type: 'font-awesome' } as WidgetAddIconConfig,
@@ -56,8 +57,8 @@ export function CreateWidgetFactory(context: AppContextState) {
         renderHistoryItem: (item: CustomIconRatingComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <CustomIconRatingHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
         },
-        renderHistorySummary: (itemsGroupedByItemType: Map<string, ItemBase[]>, config: WidgetConfig, widgetFactory: WidgetFactory) => {
-          return <CustomIconRatingHistorySummaryComponent itemsGroupedByItemType={itemsGroupedByItemType} config={config} widgetFactory={widgetFactory} />;
+        renderHistorySummary: (items: WidgetBase[], config: WidgetConfig, widgetFactory: WidgetFactory) => {
+          return <CustomIconRatingHistorySummaryComponent items={items} config={config} widgetFactory={widgetFactory} />;
         },
         renderCalendarItem: (item: CustomIconRatingComponentWidgetType, config: WidgetConfig) => {
           return <CustomIconRatingCalendarComponent item={item} isSelectedItem={false} config={config} />;
@@ -68,6 +69,7 @@ export function CreateWidgetFactory(context: AppContextState) {
         config: {
           widgetTitle: language.sleep,
           historyTitle: language.sleeps,
+          historySummary: language.daysWithHappySleep,
           itemTypeName: ItemTypes.SLEEP,
           addIcon: { text: language.sleep, name: 'moon-o', type: 'font-awesome' } as WidgetAddIconConfig,
           style: {} as ViewStyle,
@@ -82,6 +84,9 @@ export function CreateWidgetFactory(context: AppContextState) {
         },
         renderHistoryItem: (item: SleepComponentWidgetType, isSelectedItem: boolean, config: WidgetConfig) => {
           return <SleepHistoryComponent item={item} isSelectedItem={isSelectedItem} config={config} />;
+        },
+        renderHistorySummary: (items: WidgetBase[], config: WidgetConfig, widgetFactory: WidgetFactory) => {
+          return <CustomIconRatingHistorySummaryComponent items={items} config={config} widgetFactory={widgetFactory} />;
         },
         renderCalendarItem: (item: SleepComponentWidgetType, config: WidgetConfig) => {
           return <SleepCalendarComponent item={item} isSelectedItem={false} config={config} />;
@@ -165,7 +170,7 @@ export function CreateWidgetFactory(context: AppContextState) {
     [ItemTypes.MEDITATE]:
       {
         config: {
-          widgetTitle: language.meditationMinutes,
+          widgetTitle: language.meditation,
           historyTitle: language.meditation,
           itemTypeName: ItemTypes.MEDITATE,
           addIcon: { text: language.meditate, name: 'spa', type: 'material-community' } as WidgetAddIconConfig,
@@ -291,6 +296,7 @@ export interface WidgetAddIconConfig {
 export interface WidgetConfig {
   widgetTitle: string;
   historyTitle: string;
+  historySummary?: string;
   itemTypeName: string;
   addIcon: WidgetAddIconConfig;
   style?: StyleProp<ViewStyle>;
@@ -307,6 +313,6 @@ export interface WidgetFactoryType {
   config: WidgetConfig;
   renderWidgetItem: (props: WidgetComponentPropsBase, config: WidgetConfig) => ReactNode;
   renderHistoryItem?: (item: WidgetBase, isSelectedItem: boolean, config: WidgetConfig) => ReactNode;
-  renderHistorySummary?: (itemsGroupedByItemType: Map<string, WidgetBase[]>, config: WidgetConfig, widgetFactory: WidgetFactory) => ReactNode;
+  renderHistorySummary?: (items: WidgetBase[], config: WidgetConfig, widgetFactory: WidgetFactory) => ReactNode;
   renderCalendarItem?: (item: WidgetBase, config: WidgetConfig) => ReactNode;
 }

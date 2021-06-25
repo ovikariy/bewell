@@ -211,5 +211,8 @@
   "event": "Event",
   "thought": "Thought",
   "consequence": "Consequence (emotion & behavior)",
-  "alternateResponse": "Alternate Response"
+  "alternateResponse": "Alternate Response",
+  "daysWithHappyMood": "Days with Happy Mood",
+  "daysWithHappySleep": "Days with Restful Sleep",
+  "outOfThoseDays": "Out of those, the number of days that also had"
 }

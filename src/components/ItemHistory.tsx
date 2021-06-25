@@ -1,11 +1,11 @@
 import React, { ReactNode, useState } from 'react';
 import { Text, View, StyleProp, ViewStyle } from 'react-native';
-import { friendlyTime, groupBy, friendlyDay, formatDate, filterByItemType } from '../modules/utils';
+import { friendlyTime, groupBy, friendlyDay, formatDate, filterByItemType, getStorageKeyFromDate } from '../modules/utils';
 import { AppContext } from '../modules/appContext';
 import { List } from './MiscComponents';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { WidgetConfig } from '../modules/widgetFactory';
-import { WidgetBase, ItemBaseAssociativeArray } from '../modules/types';
+import { WidgetBase, ItemBaseAssociativeArray, WidgetBaseFields } from '../modules/types';
 import { sizes } from '../assets/styles/style';
 import { Calendar } from './Calendar';
 import { getItemGroupsByItemType } from '../modules/storage';
@@ -20,7 +20,7 @@ interface ItemHistoryProps {
   onSelected: (item: WidgetBase) => void,
   renderItem?: (item: WidgetBase, isSelectedItem: boolean) => ReactNode,
   renderCalendarItem?: (item: WidgetBase) => ReactNode,
-  renderHistorySummary?: (itemsGroupedByItemType: Map<string, WidgetBase[]>, config: WidgetConfig) => ReactNode;
+  renderHistorySummary?: (items: WidgetBase[], config: WidgetConfig) => ReactNode;
   navigation: any
 }
 
@@ -33,34 +33,33 @@ export const ItemHistory = (props: ItemHistoryProps) => {
 
   const showCalendarComponent = props.renderCalendarItem ? true : false;
 
-  const itemsOfAllItemTypes = getItemGroupsByItemType(props.items); //TODO: filter by month if needed first
-  const itemsOfCurrentType = itemsOfAllItemTypes.get(props.itemType) as WidgetBase[];
-
-  const items = !showCalendarComponent ? itemsOfCurrentType : filterItemsByMonth(selectedDate, itemsOfCurrentType); /** only show current month's items */
+  let items = !showCalendarComponent ? Object.values(props.items).flat() : props.items[getStorageKeyFromDate(selectedDate)]; /** only show current month's items */
+  items = items || [];
 
   /** need double sort: 1) widget records need to be sorted as they were added but reversed and 2) day groups need to be sorted by date descending */
 
+  const itemsOfCurrentType = items.filter(item => item && item[WidgetBaseFields.type] === props.itemType) as WidgetBase[];
+
   /** 1st sort as the widget records were added but reversed */
-  const sorted = items.slice(0).reverse(); /** items.slice(0).reverse() sorts without reversing the original array which is what we want but items.reverse() does */
+  const sorted = itemsOfCurrentType.slice(0).reverse(); /** items.slice(0).reverse() sorts without reversing the original array which is what we want but items.reverse() does */
 
   const groupedByDayMap = groupBy(sorted, (item: WidgetBase) => new Date(item.date).toLocaleDateString(), undefined); /** group by locale date */
   const groupedByDayArray = Array.from(groupedByDayMap.values()) as [WidgetBase[]];
 
   /** 2st sort day groups by the date of the group's first element */
   groupedByDayArray.sort((a, b) => a[0].date < b[0].date ? 1 : a[0].date > b[0].date ? -1 : 0);
-
   return (
     <View style={[{ flex: 1, marginTop: showCalendarComponent ? 0 : sizes[40] }, props.style]} >
       <List
         ListHeaderComponent={showCalendarComponent &&
           <View>
-            <Calendar data={items}
+            <Calendar data={itemsOfCurrentType}
               onItemPress={(date, item) => { props.navigation.navigate('DayView', { date: item ? item.date : date }); }}
               selectedDate={selectedDate}
               onSelectedDateChanged={(newDate) => selectedDateChanged(newDate)}
               renderItem={props.renderCalendarItem}
             />
-            {props.renderHistorySummary ? props.renderHistorySummary(itemsOfAllItemTypes, props.config) : <React.Fragment />}
+            {props.renderHistorySummary ? props.renderHistorySummary(items, props.config) : <React.Fragment />}
           </View>}
         data={groupedByDayArray}
         renderItem={(item: any) => renderGroupedByDay(item.item)}

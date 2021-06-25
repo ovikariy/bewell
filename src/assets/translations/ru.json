@@ -211,5 +211,8 @@
   "event": "Событие",
   "thought": "Мысль",
   "consequence": "Последствие",
-  "alternateResponse": "Альтернативный ответ"
+  "alternateResponse": "Альтернативный ответ",
+  "daysWithHappyMood": "Дней с Классным Настроением",
+  "daysWithHappySleep": "Дней со Сладким Сном",
+  "outOfThoseDays": "Из них, количество дней которые так же имели"
 }

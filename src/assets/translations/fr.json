@@ -211,5 +211,8 @@
   "event": "Situation",
   "thought": "Pensée",
   "consequence": "Conséquence (émotion et comportement)",
-  "alternateResponse": "Réponse alternative"
+  "alternateResponse": "Réponse alternative",
+  "daysWithHappyMood": "Jours heureux",
+  "daysWithHappySleep": "Jours avec un bon sommeil",
+  "outOfThoseDays": "Parmis ces jours"
 }
