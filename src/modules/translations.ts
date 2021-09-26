@@ -3,6 +3,7 @@ e.g. helpers.ts but wanted to keep them next to the translations for consistency
 import 'moment/locale/ru';
 import 'moment/locale/fr';
 import 'moment/locale/de';
+import 'moment/locale/ja';
 
 import messages from '../assets/translations/en.json';
 
@@ -22,5 +23,6 @@ export const translations: TranslationMap = {
     en: messages,
     ru: require('../assets/translations/ru.json'),
     fr: require('../assets/translations/fr.json'),
-    de: require('../assets/translations/de.json')
+    de: require('../assets/translations/de.json'),
+    ja: require('../assets/translations/ja.json')
 };
