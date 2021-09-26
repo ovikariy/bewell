@@ -37,8 +37,8 @@ What affects our wellbeing? What causes us to feel happy or upset? Sometimes we 
 - Password protected and secure
 - Encrypted with 256-bit Advanced Encryption Standard (AES) 
 - Multi language
-    - Currently supports **English**, **Russian**, **French** and
-    **German** (Thanks [What's Next Reisen](https://www.instagram.com/whatsnext.reisen/) and [Sabine Virtual Services](https://www.sabinevirtualservices.com/) for translations!)
+    - Currently supports **English**, **Russian**, **French**, **German** and **Japanese**
+     (Thanks [What's Next Reisen](https://www.instagram.com/whatsnext.reisen/), [Sabine Virtual Services](https://www.sabinevirtualservices.com/) and [oksya8and8](https://github.com/oksya8and8) for translations!)
     - *Would you like to see your language added? [Reach out](https://www.linkedin.com/in/olena-vikariy/) and we'll work with you to make it happen!*
 - Multiple themes 
     - Currently supports **Dark** and **Light** 

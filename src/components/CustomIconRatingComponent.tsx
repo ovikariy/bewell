@@ -71,10 +71,21 @@ export const CustomIconRatingHistorySummaryComponent = (props: { items: WidgetBa
   const styles = context.styles;
   const language = context.language;
 
-  const itemsGroupedByItemType = new Map<string, WidgetBase[]>();
+  /** collect the dates of days we are going to be counting, we only want dates of items with 'good' rating of 0 */
   const datesOfItemsWithGoodDays = {} as { [key: string]: string };
   props.items?.forEach(item => {
+    if (item[WidgetBaseFields.type] === props.config.itemTypeName && item.rating === 0) {
+      const date = new Date(item.date).toLocaleDateString();
+      datesOfItemsWithGoodDays[date] = date;
+    }
+  });
+
+  /** filter items for the good days */
+  const itemsGroupedByItemType = new Map<string, WidgetBase[]>();
+  props.items?.forEach(item => {
     const date = new Date(item.date).toLocaleDateString(); /** we want to count one item of itemType per day */
+    if (!datesOfItemsWithGoodDays[date])
+      return;
     const collection = itemsGroupedByItemType.get(item[WidgetBaseFields.type]);
     if (!collection)
       itemsGroupedByItemType.set(item[WidgetBaseFields.type], [item]);
@@ -83,11 +94,9 @@ export const CustomIconRatingHistorySummaryComponent = (props: { items: WidgetBa
         return; /** don't add item, we already have it for this day */
       collection.push(item);
     }
-    if (item[WidgetBaseFields.type] === props.config.itemTypeName)
-      datesOfItemsWithGoodDays[date] = date;
   });
 
-  const itemsWithGoodDays = itemsGroupedByItemType.get(props.config.itemTypeName)?.filter((item: CustomIconRatingComponentWidgetType) => item.rating === 0);
+  const itemsWithGoodDays = itemsGroupedByItemType.get(props.config.itemTypeName);
   const numGoodDays = itemsWithGoodDays?.length;
   if (!numGoodDays || numGoodDays <= 0)
     return <React.Fragment />; /** TODO: what to show when no good days?  */
